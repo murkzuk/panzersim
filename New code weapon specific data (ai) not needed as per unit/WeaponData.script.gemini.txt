@@ -1,0 +1,17 @@
+class CWeaponData
+{
+   static Map WeaponSettings = new Map([
+         [ "Tank_Panther_D_AIGun",  [150.0, 1200.0, "Tank_Panther_D_AIGunCalibreBullet" ] ]
+    ]);
+
+    static Array GetWeaponData(String _WeaponName)
+    {
+      if(WeaponSettings.find(_WeaponName))
+         return WeaponSettings.getValue();
+       else
+       {
+         logError("Invalid Weapon Name " + _WeaponName);
+         return [];
+       }
+    }
+}

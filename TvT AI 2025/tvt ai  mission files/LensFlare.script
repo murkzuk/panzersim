@@ -1,0 +1,7 @@
+// TargetPractice Mission - Lens Flare Definition
+
+// *** IMPORTANT: Rename class if mission name changes ***
+class CTargetPracticeLensFlare extends CLensFlare
+{
+  // Empty body - uses default engine lens flare behavior
+}

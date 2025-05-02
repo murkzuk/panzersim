@@ -1,0 +1,15 @@
+// TargetPractice Mission - String Definitions
+
+class CTargetPracticeMission_Strings extends CCommonStrings
+{
+  // --- Define keys for localization file ---
+  // Category "TargetPractice" should match entries in your localization data file
+
+  final static WString MissionName         = getLocalized("TargetPractice", "MissionName"); // e.g., "Target Practice"
+  final static WString BriefingText        = getLocalized("TargetPractice", "BriefingText"); // e.g., "Destroy the designated targets."
+  final static WString Objective01         = getLocalized("TargetPractice", "Objective01");  // e.g., "Destroy all T-34 targets."
+
+  // Add more objectives or NavPoint names here if needed later
+  // final static WString Objective02      = getLocalized("TargetPractice", "Objective02");
+  // final static WString str_MyNavPoint   = getLocalized("TargetPractice", "MyNavPoint");
+}

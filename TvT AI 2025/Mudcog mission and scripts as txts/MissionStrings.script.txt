@@ -1,0 +1,9 @@
+
+class CMudCogMission_Strings extends CCommonStrings
+{
+  final static WString MissionName  = getLocalized("MissionTest", "MissionName");
+  final static WString BriefingText = getLocalized("MissionTest", "BriefingText");
+  final static WString Objective01  = getLocalized("MissionTest", "Objective01");
+  final static WString Objective02  = getLocalized("MissionTest", "Objective02");
+  final static WString Objective03  = getLocalized("MissionTest", "Objective03");
+}

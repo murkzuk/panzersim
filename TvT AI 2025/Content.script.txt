@@ -1,0 +1,58 @@
+class CTargetPractice01Content {
+  static String m_ObjectListClassFile = "Missions/MyMissions/TargetPractice01/Content.script";
+  static String m_ObjectListClassName = "CTargetPractice01Content";
+
+  static Array GetMissionObjectList() {
+    return [
+      ["MainPlayerUnit", "GameObject", "CTankPzVITigerE1Unit",
+        new Matrix(
+          1, 0, 0, 4800,
+          0, 1, 0, 8500,
+          0, 0, 1, 580,
+          0, 0, 0, 1
+        ),
+        [["IsPlayer", true], ["IsManual", true], ["Affiliation", "FRIEND"], ["Number", "111"]]
+      ],
+      ["Target_T34_1", "GameObject", "CTankPzVITigerE1Unit",
+        new Matrix(
+  1, 0, 0, 5000,
+  0, 1, 0, 8600,
+  0, 0, -1, 580,
+  0, 0, 0, 1
+),
+        [["Affiliation", "ENEMY"], ["IsManual", false]]
+      ],
+      ["Target_T34_2", "GameObject", "CTankPzVITigerE1Unit",
+        new Matrix(
+  1, 0, 0, 5080,
+  0, 1, 0, 8600,
+  0, 0, -1, 580,
+  0, 0, 0, 1
+),
+        [["Affiliation", "ENEMY"], ["IsManual", false]]
+      ],
+      ["Target_T34_3", "GameObject", "CTankPzVITigerE1Unit",
+        new Matrix(
+  1, 0, 0, 5160,
+  0, 1, 0, 8600,
+  0, 0, -1, 580,
+  0, 0, 0, 1
+),
+        [["Affiliation", "ENEMY"], ["IsManual", false]]
+      ],
+      ["Target_T34_4", "GameObject", "CTankPzVITigerE1Unit",
+        new Matrix(
+  1, 0, 0, 5240,
+  0, 1, 0, 8600,
+  0, 0, -1, 580,
+  0, 0, 0, 1
+),
+        [["Affiliation", "ENEMY"], ["IsManual", false]]
+      ]
+    ];
+  }
+
+  static Array GetMissionCameraScriptList() {
+    return [];
+  }
+}

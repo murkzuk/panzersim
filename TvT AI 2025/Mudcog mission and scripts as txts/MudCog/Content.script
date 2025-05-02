@@ -1,0 +1,125 @@
+ 
+class MudCogContent 
+{ 
+  static String m_ObjectListClassFile = "Missions/MyMission/MudCog/Content.script"; 
+  static String m_ObjectListClassName = "MudCogContent"; 
+ 
+  static Array  m_MissionObjectList   = [ 
+    [ 
+      "Atmosphere", 
+      "", 
+      "", 
+      new Matrix( 
+      1.000000, 0.000000, 0.000000, 0.000000, 
+      0.000000, 1.000000, 0.000000, 0.000000, 
+      0.000000, 0.000000, 1.000000, 0.000000, 
+      0.000000, 0.000000, 0.000000, 1.000000 
+      ), 
+      [ 
+        ["FogColorXPos", new Color(0.815686, 0.850980, 0.882353, 1.000000)], 
+        ["FogColorXNeg", new Color(0.815686, 0.850980, 0.882353, 1.000000)], 
+        ["FogColorYPos", new Color(0.815686, 0.850980, 0.882353, 1.000000)], 
+        ["FogColorYNeg", new Color(0.815686, 0.850980, 0.882353, 1.000000)], 
+        ["FogNear", 10.000000], 
+        ["FogFar", 800.000000], 
+        ["FogFarMax", 3500.000000], 
+        ["EnableHorizontAdjustment", true], 
+        ["SunColor", new Color(0.937255, 0.925490, 0.905882, 1.000000)], 
+        ["SunIntensity", 1.000000], 
+        ["AntiSunColor", new Color(0.811765, 0.819608, 0.854902, 1.000000)], 
+        ["AntiSunIntensity", 0.300000], 
+        ["AntiSunAngle", 10.000000], 
+        ["SunDirection", new Vector(-0.005952, -0.155542, -0.305348)], 
+        ["AmbientLight", new Color(0.200000, 0.200000, 0.200000, 1.000000)], 
+        ["ShadowColor", new Color(0.400000, 0.400000, 0.400000, 1.000000)], 
+        ["FogMode", "Exp"], 
+        ["FogDensity", 0.000300], 
+        ["TreeLightKoef", 0.000000], 
+        ["TreeNormalRelax", 0.000000] 
+      ] 
+    ], 
+ 
+      [ 
+        "MainPlayerUnit", 
+        "GameObject", 
+        "CTankT34_85_44Unit", 
+        new Matrix( 
+        0.978839, 0.204633, 0.000000, 3684.518555,
+        -0.204633, 0.978839, 0.000000, 3682.898926,
+        0.000000, 0.000000, 1.000000, 575.520630,
+        0.000000, 0.000000, 0.000000, 1.000000
+        ), 
+        [ 
+          ["IsPlayer", true], 
+          ["IsManual", true], 
+          ["Affiliation", "FRIEND"], 
+["SurfaceControl", "None"] 
+        ] 
+      ], 
+ 
+        [ 
+          "Terrain", 
+          "", 
+          "", 
+          new Matrix( 
+          1.000000, 0.000000, 0.000000, 0.000000, 
+          0.000000, 1.000000, 0.000000, 0.000000, 
+          0.000000, 0.000000, 1.000000, 0.000000, 
+          0.000000, 0.000000, 0.000000, 1.000000 
+          ), 
+          [ 
+            ["ForestTextureScale", 0.500000], 
+            ["ForestShadowBorderScale", 0.400000], 
+            ["ForestShadowAlphaScale", 0.500000], 
+            ["ForestBeginFadeDist", [250.000000, 480.000000]], 
+            ["VertForestDistMin", 800.000000], 
+            ["VertForestDistMax", 8000.000000], 
+            ["VertForestAngleMin", 0.000000], 
+            ["VertForestAngleMax", 45.000000], 
+            ["VertForestBeginFadeDist", [250.000000, 410.000000]], 
+            ["TerrainShadowPower", 1.000000], 
+            ["IsAntiLighting", true], 
+            ["WaterFresnelPower", 2.000000] 
+          ] 
+        ] 
+  ]; 
+ 
+  static Array  m_MissionCameraScriptList  = [ 
+    [ 
+      0.000000, 
+      "KEY_START", 
+      [ 
+        ["CinemaID", "Default"], 
+        [] 
+      ] 
+    ] 
+  ]; 
+ 
+  static Array  m_TriggersList = [ 
+  ]; 
+ 
+  Array GetMissionObjectList() 
+  { 
+    return m_MissionObjectList; 
+  } 
+ 
+  Array GetMissionCameraScriptList() 
+  { 
+    return m_MissionCameraScriptList; 
+  } 
+ 
+  Array GetTriggersList() 
+  { 
+    return m_TriggersList; 
+  } 
+ 
+  String GetObjectListClassFile() 
+  { 
+    return m_ObjectListClassFile; 
+  } 
+ 
+  String GetObjectListClassName() 
+  { 
+    return m_ObjectListClassName; 
+  } 
+} 

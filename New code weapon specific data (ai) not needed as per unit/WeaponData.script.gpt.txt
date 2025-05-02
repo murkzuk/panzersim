@@ -1,0 +1,23 @@
+// WeaponData.script
+// This script defines weapon-specific settings for various weapons in the game.
+
+class CWeaponData {
+    // Map to hold weapon settings with key as weapon name and value as an array of settings
+    static Map WeaponSettings = new Map([
+        ["Tank_Panther_D_AIGun", [250.0, 650.0, "Panther_D_AIGunCalibreBullet"]],
+        ["Tank_Tiger_I_AIGun", [300.0, 700.0, "Tiger_I_AIGunCalibreBullet"]],
+        ["Artillery_Cannon", [500.0, 1200.0, "ArtilleryShell"]],
+        // Add more weapons as needed
+    ]);
+
+    // Method to retrieve weapon data by weapon name
+    static Array GetWeaponData(String _WeaponName) {
+        if (WeaponSettings.exists(_WeaponName)) {
+            return WeaponSettings.get(_WeaponName);
+        } else {
+            // Log error or return default values if the weapon name is not found
+            logError("Invalid Weapon Name: " + _WeaponName);
+            return [100.0, 500.0, "DefaultBullet"];  // Default values
+        }
+    }
+}

@@ -1,0 +1,18 @@
+  *   `CWeaponRanges` Class:
+     *   A static map that contains weapon name, and their ranges.
+    ```script
+       class CWeaponRanges {
+          static Map<string, float[]> Ranges = [
+              ["DefaultGun",       [250.0, 650.0]],
+               // Place for all weapon data:  "weapon name", [ minRange, maxRange]
+               // Example:
+               ["Tank_Panther_D_AIGun", [150.0, 1200.0]],
+              ["Tank_Panther_D_AICoaxialMachineGun", [25.0, 400.0]],
+              ["Tank_Panther_75mmMachineGun", [25.0, 200.0]],
+              ["Tank_Panther_75mmCalibreAmmo", [150.0, 1000.0]],
+              ["Tank_Panther_75mmSubcalibreAmmo", [150.0, 1100.0]],
+              ["Tank_Panther_75mmHEAmmo", [100.0, 700.0]]
+            // Add other weapons here...
+          ];
+       }
+    ```

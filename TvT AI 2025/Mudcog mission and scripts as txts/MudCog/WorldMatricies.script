@@ -1,0 +1,47 @@
+
+class MudCogWorldMatricies extends CWorldMatrices
+{
+  final static float MatrixWidth  = 9000.000000;
+  final static float MatrixHeight = 9000.000000;
+}
+
+
+class MudCogLandscapeLayer extends CLandscapeLayer
+{
+  final static int     ImageWidth              = 2049;
+  final static int     ImageHeight             = 2049;
+
+  final static String ImageFileName           = "Missions/MyMission/MudCog/hmap.raw";
+
+  final static float  FloatValueFactor        = 0.070000*257.0;
+
+}
+
+class MudCogWaterHeights extends CBaseWaterHeightsLayer
+{
+  final static String ImageFileName           = "Missions/MyMission/MudCog/hwater.raw";
+
+  final static float  FloatValueFactor        = 0.070000*257.0;
+}
+
+class MudCogTerrainZoneLayer extends CTerrainZoneLayer, CBaseZoneMap
+{
+  final static int     ImageWidth              = 1024;
+  final static int     ImageHeight             = 1024;
+
+  final static String ImageFileName           = "Missions/MyMission/MudCog/TerrainZone.bmp";
+}
+
+class MudCogRouterZoneLayer extends CTerrainZoneLayer, CBaseZoneMap
+{
+  final static int     ImageWidth              = 1024;
+  final static int     ImageHeight             = 1024;
+
+  final static String ImageFileName           = "Missions/MyMission/MudCog/RouterZone.bmp";
+}
+
+
+class MudCogMicroTextures extends CMicroTexLayer
+{
+  final static String ImageFileName           = "Missions/MyMission/MudCog/micro.bmp";
+}

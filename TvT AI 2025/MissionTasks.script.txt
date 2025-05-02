@@ -1,0 +1,5 @@
+class CTargetPractice01Tasks {
+  void Execute() {
+    // No AI behavior in this test mission
+  }
+}

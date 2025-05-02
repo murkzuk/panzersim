@@ -1,0 +1,31 @@
+class CTargetPractice01Mission extends CSPMission {
+  String m_LocalTime = "12:00:00";
+  static String m_MissionBriefingPicMaterial = "C2M1BriefingPic";
+
+  static Array m_MissionObjectives = [
+    [MOTID_Primary, CTargetPractice01Strings::Objective01, MOSID_InProgress, true]
+  ];
+
+  static WString ObjectivesText = CTargetPractice01Strings::ObjectivesText;
+
+  Array KillList = ["Target_T34_1", "Target_T34_2", "Target_T34_3", "Target_T34_4"];
+  boolean MainPlayerStart = false;
+
+  void CTargetPractice01Mission() {
+    CSPMission("CTargetPractice01Mission", "CTargetPractice01Content");
+    SetMissionTerrain(new #ChunkedTerrain<CC2M1Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<CC2M1Atmosphere>());
+    SetMissionSky(new #SkyObject<CSky01Model>());
+    SetMissionWorldMatrices(new #WorldMatrices<CC2M1WorldMatrices>(), [
+      [LAYER_TERRAIN_NAME, "CC2M1LandscapeLayer"],
+      [LAYER_TERRAIN_ZONE, "CC2M1TerrainZoneLayer"],
+      [LAYER_ROUTER_ZONE, "CC2M1RouterZoneLayer"],
+      [LAYER_MICROTEXTURE_MAP1, "CC2M1MicroTextures1"],
+      [LAYER_TERRAIN_WATERHEIGHTS, "CC2M1WaterHeights"]
+    ]);
+  }
+
+  void StartMission() {
+    CSPMission::StartMission();
+  }
+}

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TvT Editor Boilerplate Generator v8 (MudCog Base)</title>
+  <style>
+    /* CSS Styles remain largely the same */
+    body { font-family: sans-serif; margin: 20px; background: #f4f4f4; counter-reset: step; font-size: 14px; }
+    h1 { font-size: 24px; text-align: center; margin-bottom: 30px; color: #333; }
+    label.step-label, .step-label-block { display: block; margin-top: 15px; margin-bottom: 3px; font-weight: bold; counter-increment: step; color: #444; }
+    label.step-label::before, .step-label-block::before { content: counter(step) ". "; font-weight: bold; }
+    input[type="text"], input[list], select, textarea, button { margin-top: 2px; margin-bottom: 10px; padding: 8px; width: 100%; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    input[type="checkbox"] { width: auto; margin-right: 5px; vertical-align: middle; }
+    label[for="isPlayerCheck"] { display: inline-block; margin-top: 10px; font-weight: normal; }
+    label[for="isPlayerCheck"]::before { content: ""; }
+    input.error, select.error, textarea.error { border: 2px solid red; background-color: #ffecec; }
+    textarea { height: 100px; font-family: monospace; font-size: 13px; line-height: 1.4; }
+    textarea#contentOutput { height: 180px; }
+    textarea#menuOutput { height: 50px;}
+    .section { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 1px solid #ddd;}
+    .help { font-size: 12px; color: #555; margin-top: 0px; margin-bottom: 15px; line-height: 1.5; }
+    code { background: #eee; padding: 2px 5px; font-size: 95%; border-radius: 3px; border: 1px solid #ddd; font-family: monospace;}
+    optgroup[label] { font-weight: bold; font-style: italic; background-color: #f0f0f0; padding: 3px;}
+    button { background-color: #4CAF50; color: white; border: none; cursor: pointer; transition: background-color 0.2s; padding: 10px 15px; font-size: 15px; margin-top: 10px; }
+    button:hover { background-color: #45a049; }
+    details { background: #fafafa; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.05); border: 1px solid #ddd;}
+    details summary { cursor: pointer; font-weight: bold; font-size: 18px; margin: -15px -15px 10px -15px; padding: 12px 15px; background-color:#e0e0e0; border-radius: 8px 8px 0 0; border-bottom: 1px solid #ccc; color: #333;}
+    details[open] summary { border-radius: 8px 8px 0 0; background-color: #d0d0d0;}
+    details[open] { background: #fff; }
+    .error-message { color: red; font-weight: bold; margin-top: 5px; font-size: 13px; min-height: 1em; }
+    .important-note { background-color: #fff3cd; border: 1px solid #ffeeba; padding: 10px; border-radius: 4px; margin-top: 15px; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<h1>TvT Editor Boilerplate Generator v8 (MudCog Base)</h1>
+<p class="help" style="text-align:center; font-size: 14px; max-width: 800px; margin:auto; margin-bottom: 25px;">Generates script structure based on the working 'MudCog' mission. <strong style="color: red;">REQUIRES manual data file copying/renaming (SEE INSTRUCTIONS), MenuConfig edit, loading in Editor & IMMEDIATE SAVE</strong> before further editing.</p>
+
+<details open>
+  <summary>Mission Setup</summary>
+  <div class="section">
+    <label class="step-label" for="installPath">Path to TvT Install Folder (Optional)</label>
+    <input type="text" id="installPath" placeholder="e.g., C:\\Games\\T34vsTiger" />
+    <div class="help">Optional. For help text only.</div>
+
+    <label class="step-label" for="missionName">Mission Folder Name</label>
+    <input type="text" id="missionName" placeholder="e.g., gem1" value="gem1" />
+    <div class="help">Folder name inside `Missions\MyMissions\`. No spaces. **Required.**</div>
+
+    <label class="step-label" for="classPrefix">Script Class Prefix</label>
+    <input list="prefixOptions" id="classPrefix" placeholder="e.g., Cgem1" value="Cgem1" />
+    <datalist id="prefixOptions">
+       <option value="Cgem1">
+       <option value="CMudCog">
+       <option value="CMurkz2025">
+    </datalist>
+    <div class="help">Prefix for script class names (e.g., `Cgem1`Mission). **Must start with 'C'**. **Required.**</div>
+
+    <label class="step-label" for="menuLabel">Menu Label</label>
+    <input type="text" id="menuLabel" placeholder="e.g., Gem Mission 1" value="Gem Mission 1"/>
+    <div class="help">Text in TvT Editor's 'Load level...' menu. **Required.**</div>
+
+    <div class="step-label-block">Generate `MenuConfig.script` Entry</div>
+    <button onclick="generateMenuEntry()">Generate Entry Line</button>
+    <textarea id="menuOutput" readonly placeholder="Generated line for MenuConfig.script will appear here..."></textarea>
+    <div class="error-message" id="menuError"></div>
+    <div class="help" id="menuPathHelp">Paste the generated line into the `MissionLoadList` array within your main game's `Scripts\Editor\MenuConfig.script` file.</div>
+  </div>
+</details>
+
+<details>
+  <summary>Add Units & Objects (Optional Pre-fill)</summary>
+  <div class="section">
+     <p class="help">Generate basic object definitions for `Content.script`. Positions are placeholders; use TvT Editor to place and SAVE.</p>
+    <label class="step-label" for="objectName">Unit/Object Internal Name</label>
+    <input type="text" id="objectName" placeholder="e.g., MyTank_1 (No spaces!)" />
+    <div class="help">Unique script name. No spaces. **Required if adding.**</div>
+
+    <label class="step-label" for="objectClass">Object Class</label>
+    <select id="objectClass">
+      <!-- Options remain the same -->
+      <optgroup label="-- AI Tanks --"><option value="CTankT34_76_42AIUnit">T-34/76 mod. 1942 (AI)</option><option value="CTankT34_85AIUnit">T-34/85 (AI)</option><option value="CTankPzIVF2AIUnit">Panzer IV F2 (AI)</option><option value="CTankPzV_Panther_D_AIUnit">Panther D (AI)</option><option value="CTankPzVI_E1_AI_Unit">Tiger I E (AI)</option><option value="CTankKV1s_HvyUnit">KV-1s Heavy (AI)</option><option value="CTankKV85HvyUnit">KV-85 Heavy (AI)</option></optgroup>
+      <optgroup label="-- Player Tanks --"><option value="CTankT34_76_42Unit">T-34/76 mod. 1942 (Player)</option><option value="CTankT34_85_44Unit">T-34/85 mod. 1944 (Player)</option><option value="CTankPzVITigerE1Unit" selected>Tiger I E (Player)</option><option value="CTank_Panther_D_PlayableUnit">Panther D (Player)</option></optgroup>
+      <optgroup label="-- AT Guns (AI) --"><option value="CGunZis3Unit">Zis-3 76mm Field Gun</option><option value="CGunPak40Unit">Pak 40 75mm AT Gun</option></optgroup>
+      <optgroup label="-- Other Vehicles (AI) --"><option value="CTruckZis5Unit">Zis-5 Truck</option><option value="CTruckOpelBlitzUnit">Opel Blitz Truck</option><option value="CGaz67BUnit">GAZ-67B Jeep</option><option value="CBtrHanomag251AusfCUnit">Sd.Kfz. 251/C Halftrack</option><option value="CBtrM3A1HalftruckUnit">M3A1 Halftrack</option></optgroup>
+      <optgroup label="-- Infantry (AI) --"><option value="CGermanSoldierRifleUnit">German Soldier (Rifle)</option><option value="CSovietSoldierRifleUnit">Soviet Soldier (Rifle)</option></optgroup>
+      <optgroup label="-- Scenery & Props --"><option value="CUSRHouseWoodUnit">Wooden House (USSR)</option><option value="CUSRShedWoodUnit">Wooden Shed (USSR)</option><option value="CWaterWell_1Unit">Water Well Type 1</option><option value="CWaterWell_2Unit">Water Well Type 2</option><option value="CFenceWickerUnit">Wicker Fence</option><option value="CFencePalisadeUnit">Palisade Fence</option><option value="CAntiTankSingleUnit">Anti-Tank Hedgehog</option><option value="CBarricadePakUnit">AT Gun Barricade</option><option value="CWeaponBoxSmallUnit">Small Weapon Box</option></optgroup>
+      <optgroup label="-- Logic / Helpers --"><option value="CZAxisCylNavPoint">NavPoint (Cylinder)</option><option value="CBoxNavPoint">NavPoint (Box)</option><option value="CObjectsGroup">Object Group</option><option value="CUnitGroup">Unit Group</option></optgroup>
+    </select>
+    <div class="help">Select engine class.</div>
+
+    <label class="step-label" for="affiliation">Affiliation</label>
+    <select id="affiliation"><option value="FRIEND">FRIEND</option><option value="ENEMY">ENEMY</option><option value="NEUTRAL" selected>NEUTRAL</option></select>
+    <div class="help">Faction allegiance (IFF).</div>
+
+    <label class="step-label" for="task">AI Task (If Applicable)</label>
+    <input list="taskOptions" id="task" placeholder="e.g., CBaseAITankTask or leave blank" />
+    <datalist id="taskOptions"><option value="CBaseAITask"></option><option value="CBaseAITankTask">Basic Tank AI</option><option value="CBaseAISAUTask">Basic SPG AI</option><option value="CBaseAIBtrTask">Basic Halftrack AI</option><option value="CBaseAIGunTask">Basic AT Gun AI</option><option value="CBaseAIInfantryTask">Basic Infantry AI</option></datalist>
+    <div class="help">Assign base AI task or leave blank.</div>
+
+    <label for="isPlayerCheck"><input type="checkbox" id="isPlayerCheck"/> Is Player Start Unit? (Only ONE!)</label>
+    <div class="help">Sets flags & FRIEND affiliation.</div>
+
+
+    <div class="step-label-block">Add Object to Content Script Preview</div>
+    <button onclick="addObjectScript()">Add Snippet to Preview Below</button>
+    <textarea id="contentOutput" readonly placeholder="Generated object snippets for Content.script will appear here..."></textarea>
+    <div class="help">Snippets for `Content.script` generated here.</div>
+  </div>
+</details>
+
+<details open>
+  <summary>Final Export</summary>
+  <div class="section">
+    <div class="step-label-block">Generate and Download Script Files</div>
+    <button onclick="downloadZip()">Download Boilerplate Scripts ZIP</button>
+    <div class="important-note">
+      <strong>Crucial Next Steps:</strong><ol><li>Unzip.</li><li>Manually copy map data (`.raw`, `.bmp`) and textures (`.tex`) from a working mission AND RENAME BMP/TEX FILES to match `WorldMatricies.script` and `Terrain.script` (e.g., `TerrainZone.bmp`, `lnd.tex`). Verify BMP dimensions match script (default 1024x1024 for Zone BMPs in this template).</li><li>Add entry line to `MenuConfig.script`.</li><li>Load mission in TvT Editor.</li><li>**IMMEDIATELY `File > Save Level`**.</li><li>Place/move objects using editor.</li><li>Save level again.</li><li>Edit localization files.</li><li>Test!</li></ol>
+    </div>
+    <div class="error-message" id="zipError"></div>
+  </div>
+</details>
+
+<!-- Load JSZip Locally -->
+<script src="jszip.min.js"></script>
+
+<!-- Main Generator Logic -->
+<script>
+// --- Global Variable ---
+let missionObjectSnippets = [];
+
+// --- Helper Functions ---
+function highlightError(el, isError) { if (!el) return; if (isError) { el.classList.add("error"); } else { el.classList.remove("error"); } }
+function getInputValue(id) { const el = document.getElementById(id); return el ? el.value.trim() : ""; }
+function setElementText(id, text) { const el = document.getElementById(id); if (el) el.textContent = text; }
+function setElementHTML(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
+function setElementValue(id, value) { const el = document.getElementById(id); if (el) el.value = value; }
+
+// --- Core Logic ---
+function generateMenuEntry() { /* ... (same as v6) ... */
+  const nameInput=document.getElementById("menuLabel");const prefixInput=document.getElementById("classPrefix");const installPathValue=getInputValue("installPath");
+  const name=nameInput.value.trim();let prefix=prefixInput.value.trim();let hasError=false;
+  if(!name){highlightError(nameInput,true);hasError=true;}else{highlightError(nameInput,false);}
+  if(!prefix){highlightError(prefixInput,true);hasError=true;}else{highlightError(prefixInput,false);}
+  if(hasError){setElementValue("menuOutput","");setElementHTML("menuPathHelp","Paste line into `Scripts\\Editor\\MenuConfig.script`.");setElementText("menuError","Please enter Menu Label & Class Prefix.");return;}
+  if(!prefix.startsWith("C")){prefix="C"+prefix;setElementText("menuError","Prefix corrected: 'C' added.");setElementValue("classPrefix",prefix);}else{setElementText("menuError","");}
+  const missionClassName=prefix+"Mission";const line=`["${name}", "${missionClassName}"],`;setElementValue("menuOutput",line);
+  const fullPath=installPathValue?`${installPathValue}\\Scripts\\Editor\\MenuConfig.script`:"[TvT path]\\Scripts\\Editor\\MenuConfig.script";
+  setElementHTML("menuPathHelp",`Paste this line into:<br><code>${fullPath}</code><br>Add inside the 'MissionLoadList' array definition.`);
+}
+
+function addObjectScript() { /* ... (same as v6, minor tweaks) ... */
+  const nameInput=document.getElementById("objectName");const objectClassSelect=document.getElementById("objectClass");const affiliationSelect=document.getElementById("affiliation");
+  const taskInput=document.getElementById("task");const isPlayerCheck=document.getElementById("isPlayerCheck");const contentOutput=document.getElementById("contentOutput");
+  const name=nameInput.value.trim().replace(/\s+/g,'_');const objectClass=objectClassSelect.value;let affiliation=affiliationSelect.value;
+  const task=taskInput.value.trim();const isPlayer=isPlayerCheck?isPlayerCheck.checked:false;
+  let nameMissing=!name;highlightError(nameInput,nameMissing);if(nameMissing){alert("Please enter an internal name (no spaces).");return;}nameInput.value=name;
+  let properties=[];
+  if(isPlayer){properties.push(`["IsPlayer", true]`);properties.push(`["IsManual", true]`);affiliation="FRIEND";properties.push(`["Affiliation", "${affiliation}"]`);setElementValue("affiliation","FRIEND");}
+  else{properties.push(`["Affiliation", "${affiliation}"]`);}
+  if(task&&(objectClass.toLowerCase().includes('aiunit')||objectClass.toLowerCase().includes('gun'))){properties.push(`["Task", "${task}"]`);}
+  if(!isPlayer&&(objectClass.toLowerCase().includes('tank')||objectClass.toLowerCase().includes('btr')||objectClass.toLowerCase().includes('truck')||objectClass.toLowerCase().includes('gun'))){properties.push(`["Number", ""]`);}
+  if(objectClass.toLowerCase().includes('house')||objectClass.toLowerCase().includes('shed')||objectClass.toLowerCase().includes('box')||objectClass.toLowerCase().includes('hedge')||objectClass.toLowerCase().includes('fence')||objectClass.toLowerCase().includes('well')||objectClass.toLowerCase().includes('barricade')){properties.push(`["HitPoints", 100.0]`);properties.push(`["SurfaceControl", "PutonGround"]`);}
+  else if(objectClass.toLowerCase().includes('navpoint')){properties=properties.filter(p=>!p.startsWith('["Affiliation"'));properties.push(`["Range", 10.0]`);}
+  else if(objectClass.toLowerCase().includes('group')){properties=[];}
+  const propertiesString=properties.length>0?properties.map(p=>`    ${p}`).join(',\n'):"";
+  let objectTypeHint="GameObject";
+  if(objectClass.includes('NavPoint'))objectTypeHint="NavPoint";else if(objectClass.includes('Group'))objectTypeHint=objectClass;else if(objectClass.includes('House')||objectClass.includes('Shed')||objectClass.includes('Fence')||objectClass.includes('Well')||objectClass.includes('Hedge')||objectClass.includes('Box')||objectClass.includes('Barricade'))objectTypeHint="InteriorObject";else if(objectClass.includes('Patch'))objectTypeHint="Locator";
+  const scriptSnippet=`[ /* ${name} */\n  "${name}",\n  "${objectTypeHint}",\n  "${objectClass}",\n  new Matrix(1,0,0,4000, 0,1,0,4000, 0,0,1,580, 0,0,0,1), /* Placeholder Pos */\n  [\n${propertiesString}\n  ]\n]`;
+  missionObjectSnippets.push(scriptSnippet);contentOutput.value=missionObjectSnippets.join(',\n\n// ---- Next Object ----\n\n');
+  nameInput.value="";taskInput.value="";if(isPlayerCheck)isPlayerCheck.checked=false;objectClassSelect.selectedIndex=0;affiliationSelect.value="NEUTRAL";
+}
+
+function downloadZip() {
+    // Check for JSZip
+    if (typeof JSZip === 'undefined') { setElementText("zipError", "ERROR: JSZip library not loaded. Ensure jszip.min.js is in the same folder."); return; }
+
+    const zip = new JSZip();
+    const missionNameInput = document.getElementById("missionName"); const prefixInput = document.getElementById("classPrefix");
+    const menuLabelInput = document.getElementById("menuLabel"); const zipError = document.getElementById("zipError");
+    setElementText("zipError", ""); const missionName = missionNameInput.value.trim(); let prefix = prefixInput.value.trim();
+    const menuLabel = menuLabelInput.value.trim(); let hasError = false;
+    if (!missionName) { highlightError(missionNameInput, true); hasError = true; } else { highlightError(missionNameInput, false); }
+    if (!prefix) { highlightError(prefixInput, true); hasError = true; } else { highlightError(prefixInput, false); }
+    if (!menuLabel) { highlightError(menuLabelInput, true); hasError = true; } else { highlightError(menuLabelInput, false); }
+    if (hasError) { setElementText("zipError", "Please fill in Mission Name, Class Prefix, and Menu Label."); return; }
+    if (!prefix.startsWith("C")) { prefix = "C" + prefix; setElementValue("classPrefix", prefix); }
+    const missionFolderName = missionName; const missionScriptPathBase = `Missions/MyMissions/${missionFolderName}`;
+
+    // --- Script Templates (v8 - Based on MudCog structure) ---
+
+    // 1. WorldMatricies.script
+    const worldMatriciesContent = `// ${missionFolderName} - World Matrices (${prefix}WorldMatrices)
+class ${prefix}WorldMatrices extends CWorldMatrices {
+  final static float MatrixWidth=9000.0; final static float MatrixHeight=9000.0; // MudCog uses 9km, adjust if using different map data!
+}
+class ${prefix}LandscapeLayer extends CLandscapeLayer {
+  final static int ImageWidth=2049; final static int ImageHeight=2049; // Dimension for hmap.raw
+  final static String ImageFileName="${missionScriptPathBase}/hmap.raw";
+  final static float FloatValueFactor=0.070000*257.0;
+}
+class ${prefix}WaterHeights extends CBaseWaterHeightsLayer {
+  final static int ImageWidth=2049; final static int ImageHeight=2049; // Dimension for hwater.raw
+  final static String ImageFileName="${missionScriptPathBase}/hwater.raw";
+  final static float FloatValueFactor=0.070000*257.0;
+}
+class ${prefix}TerrainZoneLayer extends CTerrainZoneLayer, CBaseZoneMap {
+  final static int ImageWidth=1024; final static int ImageHeight=1024; // MudCog used 1024, verify your copied BMP!
+  final static String ImageFileName="${missionScriptPathBase}/TerrainZone.bmp"; // Simplified name
+}
+class ${prefix}RouterZoneLayer extends CTerrainZoneLayer, CBaseZoneMap {
+  final static int ImageWidth=1024; final static int ImageHeight=1024; // MudCog used 1024, verify your copied BMP!
+  final static String ImageFileName="${missionScriptPathBase}/RouterZone.bmp"; // Simplified name
+}
+class ${prefix}MicroTextures extends CMicroTexLayer { // Simpler name like MudCog
+  final static int ImageWidth=1024; final static int ImageHeight=1024; // MudCog might use 1024 here too? Verify BMP!
+  final static String ImageFileName="${missionScriptPathBase}/micro.bmp"; // Simplified name
+}`;
+    // 2. Atmosphere.script (Using user provided example, now named correctly)
+    const atmosphereContent = `// ${missionFolderName} - Atmosphere Settings (${prefix}Atmosphere)
+class ${prefix}Atmosphere extends CCommonAtmosphere {
+  boolean IsLightEnabled = true; boolean IsAntiSunEnabled = true; Vector SunDirection = new Vector(-0.051952,-0.155542,-0.155348);
+  Color AmbientLight = new Color(47.0/255.0,47.0/255.0,62.0/255.0); Color SunColor = new Color(239.0/255.0,236.0/255.0,231.0/255.0);
+  Color AntiSunColor = new Color(162.0/255.0,174.0/255.0,185.0/255.0); float DistanceToSun = 2000.0; Array HorizontPos = [100.0f,1000.0f];
+  String DefaultFogMode = "Exp"; float FogDensity = 0.0007; float FogNear = 10.0; float FogFar = 800.0; float FogFarMax = 3000.0;
+  Color FogColorXPos = new Color(137.0/255.0,146.0/255.0,156.0/255.0); Color FogColorXNeg = FogColorXPos; Color FogColorYPos = FogColorXPos; Color FogColorYNeg = FogColorXPos;
+  Color ShadowColor = new Color(96.0/255.0,117.0/255.0,128.0/255.0); float ShadowFar = FogFar * 0.7; Vector WindVector = new Vector(0.0,1.5,0.0);
+  boolean IsIllumination = false; boolean IsSunVisible = true; float AntiSunIntensity = 0.7; float SunIntensity = 1.2; float AntiSunAngle = -10.0;
+  float SunSpecularIntensity = 1.0; float AntiSunSpecularIntensity = 0.0; boolean EnableHorizontAdjustment = false;
+  float TreeLightKoef = 0.0; float TerrainShadowPower = 2.0;
+}`;
+    // 3. Terrain.script (Based on MudCog - CBaseTerrain inheritance)
+    const terrainContent = `// ${missionFolderName} - Terrain Configuration (${prefix}Terrain)
+class ${prefix}Terrain extends CBaseTerrain, CBaseZoneMap { // Inherit from CBaseTerrain like MudCog
+  ${prefix}Terrain() { if (!CDebugSettings::LoadWater) WaterRegions = []; }
+  void CreateForesRegions() {
+    Component Materials = new #MaterialManager<CSTBaseForestC1Skin>();
+    RegisterForestRegion([ZMC_Forest01], Materials, "${missionScriptPathBase}/forest.tex", // Simplified name
+      ["L1","L2","L2","L3","L3"], [0.0,8.0,11.0,13.0,14.0], [500.0,500.0,1000.0,1500.0,2000.0], [1500.0,1500.0,2000.0,2500.0,2500.0]); // MudCog values
+    RegisterVerticalForest([ZMC_Forest01],"textures/foreststripe.tex",[0.8],17.0f); // MudCog values
+    CBaseTerrain::CreateForesRegions(); // Use CBaseTerrain base class
+  }
+  String SkinClass = "${prefix}TerrainSkin"; // Link to skin class below
+  float SeaLevel = 450.0; float BaseDensity = 0.125;
+  Array WaterRegions = [ new CWaterRegion(new Vector(23532.10,29461.19,1165.0), 1165.0) ]; // Example water region
+  Array WaterMirrorMasks = [ [[],[CLASSIFICATOR_SHADOW,CLASSIFICATOR_UI,CLASSIFICATOR_TERRAINPATCH]] ];
+  float TerrainShadowPower = 10.5; // MudCog value
+  boolean IsAntiLighting = true; boolean IsPlanarWater = true;
+}
+class ${prefix}TerrainSkin extends CBaseTerrainSkin { // This inheritance might still need CBaseMegaTerrainSkin? Test.
+  ${prefix}TerrainSkin() { SetupTerrainMainMaterial("${missionScriptPathBase}/lnd.tex"); } // Simplified name
+}`;
+    // 4. Strings Script
+    const stringsContent = `// ${missionFolderName} - String Definitions (${prefix}Strings)
+class ${prefix}Strings {
+  static WString MissionName = "${menuLabel}";
+  // Use "MudCog" or similar as placeholder category for getLocalized if no localization file exists yet
+  static WString BriefingText = getLocalized("${missionName}", "BriefingText");
+  static WString ObjectivesText = getLocalized("${missionName}", "ObjectivesText");
+  static WString Objective01 = getLocalized("${missionName}", "Objective01");
+}`;
+    // 5. LensFlare.script (Optional but safe to include)
+    const lensFlareContent = `// ${missionFolderName} - Lens Flare Definition (${prefix}LensFlare)
+class ${prefix}LensFlare extends CLensFlare {}`;
+    // 6. MissionTasks.script (Empty)
+    const missionTasksContent = `// ${missionFolderName} - AI Tasks (${prefix}Tasks - currently empty)`;
+    // 7. Content.script (Assemble from snippets, add default Env objects like MudCog)
+    let objectListString;
+    const defaultAtmosphere = `[ "Atmosphere", "", "", new Matrix(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1), [] ]`;
+    const defaultTerrain = `[ "Terrain", "", "", new Matrix(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1), [] ]`;
+    if (missionObjectSnippets.length === 0) {
+        // Default player + Env objects
+        const defaultPlayer = `[ "PlayerStartTank","GameObject","CTankT34_85_44Unit", new Matrix(1,0,0,3684, 0,1,0,3682, 0,0,1,575, 0,0,0,1), [["IsPlayer",true],["IsManual",true],["Affiliation","FRIEND"]] ]`; // Using T34-85 like MudCog
+        objectListString = `${defaultAtmosphere},\n${defaultTerrain},\n${defaultPlayer}`;
+    } else {
+        // Join snippets and prepend Env objects
+        objectListString = `${defaultAtmosphere},\n${defaultTerrain},\n${missionObjectSnippets.join(',\n')}`;
+    }
+    const fullContentScript = `// ${missionFolderName} - Content (${prefix}Content)
+class ${prefix}Content {
+  static String m_ObjectListClassFile = "${missionScriptPathBase}/Content.script";
+  static String m_ObjectListClassName = "${prefix}Content";
+  static Array m_MissionObjectList = [
+${objectListString}
+  ]; // End m_MissionObjectList
+  static Array m_MissionCameraScriptList = []; static Array m_TriggersList = [];
+  Array GetMissionObjectList(){return m_MissionObjectList;} Array GetMissionCameraScriptList(){return m_MissionCameraScriptList;}
+  Array GetTriggersList(){return m_TriggersList;} String GetObjectListClassFile(){return m_ObjectListClassFile;}
+  String GetObjectListClassName(){return m_ObjectListClassName;}
+}`;
+    // 8. Mission.script (Using Full Constructor based on MudCog)
+    const missionContent = `// ${missionFolderName} - Main Logic Script (${prefix}Mission)
+// *** Load in Editor and SAVE LEVEL immediately! ***
+class ${prefix}Mission extends CSPMission {
+  String m_LocalTime = "14:20:00"; // MudCog time
+  String m_TerrainMapTextureName = "Textures/C1M3_Map.tex"; // Placeholder
+  static String m_MissionBriefingPicMaterial = "C1M3BriefingPic"; // Placeholder
+  static Array m_MissionObjectives = []; // Start with no objectives
+  static WString ObjectivesText = ""; // Start empty
+  boolean isDebug = false;
+  // Array KillList_Example = [];
+
+  // --- Constructor (Based on MudCog) ---
+  ${prefix}Mission() {
+    CSPMission("${prefix}Mission", "${prefix}Content"); // Links self and content class
+
+    // Set components using correctly named classes
+    SetMissionTerrain(new #ChunkedTerrain<${prefix}Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<${prefix}Atmosphere>());
+    SetMissionSky(new #SkyObject<CSky01Model>());
+
+    // Set World Matrices with explicit layer mapping
+    SetMissionWorldMatrices(new #WorldMatrices<${prefix}WorldMatrices>(), [
+      [LAYER_TERRAIN_NAME,        "${prefix}LandscapeLayer"      ],
+      [LAYER_TERRAIN_ZONE,        "${prefix}TerrainZoneLayer"    ],
+      [LAYER_ROUTER_ZONE,         "${prefix}RouterZoneLayer"     ],
+      [LAYER_MICROTEXTURE_MAP1,   "${prefix}MicroTextures"       ], // MudCog uses this name
+      [LAYER_TERRAIN_WATERHEIGHTS,"${prefix}WaterHeights"        ]
+    ]);
+
+    // Optional Includes (Keep commented out initially)
+    // if (CDebugSettings::LoadForest) SetMissionForest(new CSTBaseForestC1(GetMissionAtmosphere()));
+    // if (CDebugSettings::LoadRoads) SetMissionRoadsParms(new CBaseRoadC1());
+    // if (CDebugSettings::LoadGrass) RegisterObject("Grass", new #Grass<CBaseGrassC1>());
+
+    // Standard Router Setup (Using CBaseRouterMap like MudCog)
+    SetRouterPrecalculatedGraph(new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+    final static Array RouterWorkingZones = [[100.0,100.0,8900.0,8900.0]]; // Adjusted for 9km map?
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CBaseRouterMap>(), 64, RouterWorkingZones);
+  }
+  String GetMainRadioHomePoint(){ return ""; } // Added from MudCog
+  void StartMission() { CSPMission::StartMission(); }
+  event void OnObjectDestroyed( String _ObjectID) { CMission::OnObjectDestroyed(_ObjectID); /* Add objective logic later */ }
+  void OnObjectEnterNavPoint(String _NavPointID, String _ObjectID) { /* Add trigger logic later */ }
+  void OnObjectLeaveNavPoint(String _NavPointID, String _ObjectID) { } // Added from MudCog
+  void Shutdown() { CSPMission::Shutdown(); }
+}`;
+
+    // --- Create ZIP File ---
+    try {
+        const folder = zip.folder(missionFolderName);
+        folder.file("WorldMatricies.script", worldMatriciesContent);
+        folder.file("Atmosphere.script", atmosphereContent);
+        folder.file("Terrain.script", terrainContent);
+        folder.file(`${prefix}Strings.script`, stringsContent);
+        // Include empty optional files based on MudCog structure (or lack thereof)
+        // folder.file("LensFlare.script", ""); // Optional: Include if editor expects it
+        folder.file("MissionTasks.script", missionTasksContent); // Include empty tasks file
+        folder.file("Content.script", fullContentScript);
+        folder.file("Mission.script", missionContent);
+        folder.file("_INSTRUCTIONS_READ_ME_v8.txt",
+           `INSTRUCTIONS for Boilerplate v8 (Based on MudCog):\n\n`+
+           `1. Unzip to get the '${missionFolderName}' folder.\n` +
+           `2. Manually copy DATA FILES from a working mission (e.g., Campaign_2/Mission_1 OR MudCog if you have it) into '${missionFolderName}'.\n`+
+           `   >>> RENAME the copied files to match the names in the scripts:\n`+
+           `       hmap.raw, hwater.raw, TerrainZone.bmp, RouterZone.bmp, micro.bmp, lnd.tex, forest.tex\n`+
+           `   >>> VERIFY BMP dimensions in WorldMatricies.script match your files (Template uses 1024x1024 for Zone BMPs).\n\n`+
+           `3. Add the generated entry line (from tool) to your main 'Scripts/Editor/MenuConfig.script'.\n\n`+
+           `4. Start the TvT Level Editor.\n\n`+
+           `5. Go to 'File > Load level...' and select '${menuLabel}'.\n\n`+
+           `6. It *should* load now. If it loads, proceed.\n`+
+           `   If it crashes, check editor.log.txt for the FIRST error after "[GameController] Game controller loaded".\n\n`+
+           `7. *** IMMEDIATELY go to 'File > Save Level'. ***\n`+
+           `   This lets the editor finalize the script links.\n\n`+
+           `8. Place/move PlayerStartTank, targets, etc. using the editor.\n\n`+
+           `9. Save level again.\n\n`+
+           `10. Edit localization file(s) for category [${missionName}].\n\n`+
+           `11. Test!`
+        );
+
+        zip.generateAsync({ type: "blob" }).then(function (blob) {
+            const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
+            link.download = `${missionFolderName}_Boilerplate_v8.zip`;
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            URL.revokeObjectURL(link.href); setElementText("zipError", "");
+            missionObjectSnippets = []; document.getElementById("contentOutput").value = '';
+        }, function (err) { console.error("ZIP gen error:", err); setElementText("zipError", "Error creating ZIP: " + err); });
+    } catch (error) { console.error("ZIP setup error:", error); setElementText("zipError", "Error setting up ZIP: " + error); }
+}
+
+window.onload = () => { missionObjectSnippets = []; document.getElementById('contentOutput').value = ''; };
+</script>
+
+</body>
+</html>

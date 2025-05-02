@@ -1,0 +1,6 @@
+class CTargetPractice01Strings {
+  static WString MissionName = "Target Practice 01";
+  static WString BriefingText = "Welcome, commander. Use this mission to practice engaging stationary targets.";
+  static WString ObjectivesText = "Destroy all enemy targets ahead.";
+  static WString Objective01 = "Eliminate all four stationary T-34/76 tanks.";
+}
