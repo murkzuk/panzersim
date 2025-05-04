@@ -9,7 +9,7 @@
 | [export_threads.py](export_threads.py) | 1 KB | 2025-05-04 |
 | [forum_topics.csv](forum_topics.csv) | 6 KB | 2025-05-04 |
 | [GPT Handoff_Notes.txt](GPT Handoff_Notes.txt) | 8 KB | 2025-05-04 |
-| [index.md](index.md) | 85 KB | 2025-05-04 |
+| [index.md](index.md) | 86 KB | 2025-05-04 |
 | [index_forum.py](index_forum.py) | 0 KB | 2025-05-04 |
 | [MainMenuBackground_1.dds](MainMenuBackground_1.dds) | 384 KB | 2025-05-02 |
 | [MenuBackground_Germany.dds](MenuBackground_Germany.dds) | 384 KB | 2025-05-02 |
@@ -17,6 +17,8 @@
 | [Panzersim_T34_vs_Tiger_Threads.zip](Panzersim_T34_vs_Tiger_Threads.zip) | 58 KB | 2025-05-04 |
 | [properties radar.png](properties radar.png) | 12 KB | 2025-05-02 |
 | [replace_mission_names.py - Shortcut.lnk](replace_mission_names.py - Shortcut.lnk) | 0 KB | 2025-05-02 |
+| [T-34 vs Tiger Library _ panzersim.url](T-34 vs Tiger Library _ panzersim.url) | 0 KB | 2025-05-02 |
+| [TVT Mission Builder.url](TVT Mission Builder.url) | 0 KB | 2025-05-01 |
 | [tvt.reg](tvt.reg) | 11 KB | 2025-05-02 |
 | [TvT_GitHub_Suggestions.txt](TvT_GitHub_Suggestions.txt) | 0 KB | 2025-05-04 |
 | [TvT_Locale_Fix_v1.0.zip](TvT_Locale_Fix_v1.0.zip) | 1 KB | 2025-05-02 |
@@ -222,6 +224,15 @@
 | [TvT AI 2025\TvTzw miss1Camp2.script as .txt\Terrain.txt](TvT AI 2025/TvTzw miss1Camp2.script as .txt/Terrain.txt) | 3 KB | 2025-05-02 |
 | [TvT AI 2025\TvTzw miss1Camp2.script as .txt\WorldMatricies.txt](TvT AI 2025/TvTzw miss1Camp2.script as .txt/WorldMatricies.txt) | 1 KB | 2025-05-02 |
 | [TvT AI 2025\WW2 Tank Mod Mission Script He _ Google AI Studio.url](TvT AI 2025/WW2 Tank Mod Mission Script He _ Google AI Studio.url) | 0 KB | 2025-05-02 |
+
+## tvt_web
+| File | Size | Modified |
+|------|------|----------|
+| [tvt_web\__pycache__\mission_builder.cpython-313.pyc](tvt_web/__pycache__/mission_builder.cpython-313.pyc) | 11 KB | 2025-05-01 |
+| [tvt_web\mission_builder.py](tvt_web/mission_builder.py) | 7 KB | 2025-05-01 |
+| [tvt_web\templates\form.html](tvt_web/templates/form.html) | 1 KB | 2025-05-01 |
+| [tvt_web\TvsT mission generator.png](tvt_web/TvsT mission generator.png) | 25 KB | 2025-05-01 |
+| [tvt_web\tvt_web.py](tvt_web/tvt_web.py) | 2 KB | 2025-05-01 |
 
 ## Whirlwinds over Vietnan (WOV) important
 | File | Size | Modified |
