@@ -1,0 +1,443 @@
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+class CC1M1PlayerUnit_Transport_Watcher
+  extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "C1M1WingmanGroup";     // кто следимт
+  final static Array  ControlPoints = ["MainPlayerUnit", "NavPoint_Way_3", "NavPoint_Landing_Plei_Me_MainPlayerUnit", "NavPoint_LZ_Falcon"]; // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                    200.0,
+                                    400.0,
+                                    600.0,
+                                    1500.0
+                                  ];
+
+  final static int PlayerUnitIdx    = 0;
+  final static int EndFirstPartRout = 1;
+  final static int PointXRay        = 2;
+  final static int LZ_Falcon        = 3;
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+  final static int ZoneMask2 = 4;
+  final static int ZoneMask3 = 8;
+
+
+  final float SpeedZone0      = 45;    // меньше 200
+  final float SpeedZone1      = 35;    // меньше 400
+  final float SpeedZone2      = 25;    // меньше 600
+  final float SpeedZone3      = 20;    // меньше 1000
+  final float SpeedZoneOut    = 10;    // больше 1000  то бишь ZoneOut
+
+  // добавка к скорости когда MainPlayerUnit впереди нас
+  final float SpeedZone0additive      = 0;
+  final float SpeedZone1additive      = 5;
+  final float SpeedZone2additive      = 10;
+  final float SpeedZone3additive      = 15;
+  final float SpeedZoneOutadditive    = 20;
+
+  float CurrentMovingSpeed;
+  float CurrentDistance;
+
+  Component WhoWatches;
+  Component WhomWatches;
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+    WhoWatches  = GetMission().GetObject(Positionable);       // кто следит WingmanGroup
+    WhomWatches = GetMission().GetObject(ControlPoints[0]);   // за кем следим MainPlayerUnit
+  }
+
+  // service
+
+  boolean IsRing0()
+  {
+    return 0 != (m_RegionMask & ZoneMask0) ;
+  }
+
+  boolean IsRing1()
+  {
+    return 0 == (m_RegionMask & ZoneMask0) && 0 != (m_RegionMask & ZoneMask1) ;
+  }
+
+  boolean IsRing2()
+  {
+    return 0 == (m_RegionMask & ZoneMask1) && 0 != (m_RegionMask & ZoneMask2) ;
+  }
+
+  boolean IsRing3()
+  {
+    return 0 == (m_RegionMask & ZoneMask2) && 0 != (m_RegionMask & ZoneMask3) ;
+  }
+
+  boolean IsOut()
+  {
+    return 0 == m_RegionMask;
+  }
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    Array PosInfo = _PositionWatcher.GetPointInfo(PlayerUnitIdx);
+    Array PositionInfo = _PositionWatcher.GetPositionInfo();
+    boolean IsFront = (PosInfo[INDEX_Angle] >= - Math_HALFPI) && (PosInfo[INDEX_Angle] <= Math_HALFPI);
+    //logError("[PointRegionChanged] for " + new String(ControlPoints[_Point]));
+
+    /*
+    if (GetMission().m_DistanceMPU_WG < PosInfo[INDEX_Distance])
+        if (!GetMission().m_WorkEnginePlayer && !GetMission().TalkPlayerWarning5000)
+        {
+          GetMission().TalkPlayerWarning5000 = true;
+          GetMission().StartDialog("PlayerWarning5000");
+        }
+     */
+
+      //logMessage("  RelSpeed = " + new String(PosInfo[INDEX_RelSpeed]));
+      //logMessage("  Speed " + ControlPoints[_Point] + "  " + new String(PosInfo[INDEX_Speed]));
+      //logMessage("  Speed " + Positionable+ "  " + new String(PositionInfo[INDEX_Speed]));
+      //logMessage("  Distance = " + new String(PosInfo[INDEX_Distance]));
+      //logMessage("  XAngle   = " + new String(PosInfo[INDEX_Angle]));
+
+    //logWarning("CC1M2PlayerUnit_Transport_Watcher");
+
+/*    if (_Point == PlayerUnitIdx)
+    {
+      _PositionWatcher.SetUpdatePeriod(20000);
+      if (GetMission() != null)
+      {
+        if (IsFront)        //  MainPlayer обгоняет WingmanGroup
+        {
+          if (IsRing0())
+            CurrentMovingSpeed = SpeedZone0 + SpeedZone0additive;
+          else if (IsRing1())
+            CurrentMovingSpeed = SpeedZone0 + SpeedZone1additive;
+          else if (IsRing2())
+            CurrentMovingSpeed = SpeedZone0 + SpeedZone2additive;
+          else if (IsRing3())
+            CurrentMovingSpeed = SpeedZone0 + SpeedZone3additive;
+          else if (IsOut())
+            CurrentMovingSpeed = SpeedZone0 + SpeedZoneOutadditive;
+
+
+          //logWarning("[PointRegionChanged] Speed change CurrentSpeed = " + new String(WhoWatches.m_CurrentOrder.m_MovingSpeed) + " new speed " + new String(CurrentMovingSpeed));
+          WhoWatches.ChangeMoveSpeed(CurrentMovingSpeed, CurrentMovingSpeed);
+        }
+        else                // WingmanGroup обгоняет MainPlayerUnit
+        {
+          if (IsRing0())
+            CurrentMovingSpeed = SpeedZone0;
+          else if (IsRing1())
+            CurrentMovingSpeed = SpeedZone1;
+          else if (IsRing2())
+            CurrentMovingSpeed = SpeedZone2;
+          else if (IsRing3())
+            CurrentMovingSpeed = SpeedZone3;
+          else if (IsOut())
+            CurrentMovingSpeed = SpeedZoneOut;
+
+          //logWarning("[PointRegionChanged] Speed change CurrentSpeed = " + new String(WhoWatches.m_CurrentOrder.m_MovingSpeed) + " new speed " + new String(CurrentMovingSpeed));
+          WhoWatches.ChangeMoveSpeed(CurrentMovingSpeed);
+        }
+
+        //logWarning("[PointRegionChanged] IsFront=" + new String(IsFront));
+        //logWarning("[PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+        //logWarning("[PointRegionChanged] Distance" + new String(PosInfo[INDEX_Distance]));
+      }
+    }
+    else */ if (!GetMission().WingmanGroupRoost)
+    {
+      if (_Point == EndFirstPartRout)
+      {
+        Array PosInfo = _PositionWatcher.GetPointInfo(EndFirstPartRout);
+        logMessage("[PointRegionChanged] Point NavPoint_Way_3 Distance = " + new String(PosInfo[INDEX_Distance]));
+        if (PosInfo[INDEX_Distance] < 1500.0)
+        {
+          WhoWatches.SetFormation("CWedgeFormation", 50, true, false);
+          GetMission().Roost();
+          GetMission().WingmanGroupRoost = true;
+        }
+      }
+      if (_Point == PointXRay)
+      {
+        Array PosInfo = _PositionWatcher.GetPointInfo(PointXRay);
+        logMessage("[PointRegionChanged] Point NavPoint_Landing_Plei_Me_MainPlayerUnit Distance = " + new String(PosInfo[INDEX_Distance]));
+        if (PosInfo[INDEX_Distance] < 1500.0)
+        {
+          WhoWatches.SetFormation("CWedgeFormation", 50, true, false);
+          GetMission().Roost();
+          GetMission().WingmanGroupRoost = true;
+
+/*
+          // Alarm smoke signal
+          sendEvent(10.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_1", "GreenSmokeEffect"]);
+          sendEvent(15.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_1_1", "GreenSmokeEffect"]);
+          sendEvent(15.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_2", "RedSmokeEffect"]);
+          sendEvent(17.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_2_1", "RedSmokeEffect"]);
+        // Alarm smoke signal
+ */
+        }
+      }
+    }
+  }
+
+  void Update(Component _Watcher)
+  {
+    Array PosInfo = _Watcher.GetPointInfo(PlayerUnitIdx);
+    Array PositionInfo = _Watcher.GetPositionInfo();
+/*
+    if (getDotProduct(PosInfo[INDEX_Velocity], PositionInfo[INDEX_Velocity]) < 0)
+      //logError("getDotProduct(vec1, vec2)<" + new String(getDotProduct(PosInfo[INDEX_Velocity], PositionInfo[INDEX_Velocity])));
+ */
+
+    PointRegionChanged(_Watcher, 0, PosInfo[INDEX_RegionMask]); // 0 - потому что в массиве ControlPoints MainPlayerUnit первый элемент
+  }
+
+  void PointRelativeSpeedChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      float     _RelativeSpeed
+    )
+  {
+    //logMessage("RelSpeed = " + new String(_RelativeSpeed));
+  }
+
+}
+
+//    NavPoint_WayMainPlayerUnit_1  3748.480469
+//    NavPoint_WayMainPlayerUnit_2  12430.878906
+//    NavPoint_WayMainPlayerUnit_3  21564.111328
+//    NavPoint_WayMainPlayerUnit_4  20337.560547
+//    NavPoint_WayMainPlayerUnit_5  10168.313477
+//    NavPoint_WayMainPlayerUnit_6  1989.209717
+//      NavPoint_Way_1  3717.083496
+//      NavPoint_Way_2  12385.758789
+//      NavPoint_Way_3  21683.000000
+//      NavPoint_Way_4  20345.550781
+//      NavPoint_Way_5  10226.804688
+//      NavPoint_Way_6  2019.850708
+
+class CC1M1Chinuk2Watcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "MainPlayerUnit";     // кто следимт
+  final static Array  ControlPoints = ["Ch47Unit_3_1", "NavPoint_XRay", "NavPoint_LZ_Falcon"]; // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                    700.0,
+                                    1000.0,
+                                    2500.0,
+                                    4000.0,
+                                    7000.0
+                                  ];
+
+  final static int ChinukUnitIdx    = 0;
+  final static int XRayNavPointdx   = 1;
+  final static int LZ_Falcon        = 2;
+
+  boolean CountChinuk = false;
+  boolean CountXRayForward   = false;
+  boolean CountXRayBackward  = false;
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    Array PosInfo = _PositionWatcher.GetPointInfo(_Point);
+    Array PositionInfo = _PositionWatcher.GetPositionInfo();
+    boolean IsFront = (PosInfo[INDEX_Angle] >= - Math_HALFPI) && (PosInfo[INDEX_Angle] <= Math_HALFPI);
+      logError("  " + ControlPoints[_Point]);
+      logMessage("  RelSpeed = " + new String(PosInfo[INDEX_RelSpeed]));
+      logMessage("  Speed " + ControlPoints[_Point] + "  " + new String(PosInfo[INDEX_Speed]));
+      logMessage("  Speed " + Positionable+ "  " + new String(PositionInfo[INDEX_Speed]));
+      logMessage("  Distance = " + new String(PosInfo[INDEX_Distance]));
+      logMessage("  XAngle   = " + new String(PosInfo[INDEX_Angle]));
+
+    if (_Point == LZ_Falcon && !GetMission().StartCh47_Group1)   // не забыть про единственный старт ролика
+    {
+      Array PosInfo = _PositionWatcher.GetPointInfo(LZ_Falcon);
+      logMessage("[PointRegionChanged] Point NavPoint_LZ_Falcon Distance = " + new String(PosInfo[INDEX_Distance]));
+      if (PosInfo[INDEX_Distance] < 4000.0)
+      {
+        GetMission().StartCh47_Group1 = true;
+        sendEvent( 0.0, "C1M1Ch47Group1", "StartChinuk", []);
+        sendEvent( 10.0, "C1M1Ch47Group1", "VisibleChinuk", []);
+        sendEvent( 20.0, "C1M1Ch47Group1", "StartCinema", []);
+
+        fireEvent(0.0, [], "FireToMotarPosition", []);
+
+        sendEvent( 20.0, SOID_MissionController, "StartDialog", ["MeetingChinuk1"]);
+        //sendEvent( 0.0, "C1M1Ch47Group1_tv", "StartChinuk_tv", []);
+        //sendEvent( 25.0, "C1M1Ch47Group1", "VisibleChinuk", []);
+      }
+    }
+
+    if (_Point == ChinukUnitIdx  && !CountChinuk)
+    {
+      Array PosInfo = _PositionWatcher.GetPointInfo(ChinukUnitIdx);
+      Array PositionInfo = _PositionWatcher.GetPositionInfo();
+
+      if (PosInfo[INDEX_Distance]< 2500.0)
+      {
+        sendEvent(0.0, SOID_MissionController, "StartDialog", ["MeetingChinuk2"]);
+        CountChinuk = true;
+      }
+    }
+    else if (_Point == XRayNavPointdx && !CountXRayForward)
+    {
+      Array PosInfo = _PositionWatcher.GetPointInfo(XRayNavPointdx);
+      Array PositionInfo = _PositionWatcher.GetPositionInfo();
+
+      if (PosInfo[INDEX_Distance]< 7000.0)
+      {
+        GetMission().SendPersonalCockpitMessage("MainPlayerUnit", CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_09,
+            CCockpitColorMap::m_NeutralNewsColor, "str_c1m1_Breadshow_Moving2_09");
+
+        GetMission().SetFlyingHeightWingmanGroup(65.0, 50.0);
+        GetMission().SetFlyingHeightPlayer(65.0);
+        logError("SetFlyingHeightWingmanGroup and MainPlayerUnit");
+
+        sendEvent(20.0, SOID_MissionController, "StartDialog", ["HelicopterReducedHeight"]);
+        CountXRayForward = true;
+      }
+    }
+/*    else if (_Point == XRayNavPointdx && !CountXRayBackward)
+    {
+      Array PosInfo = _PositionWatcher.GetPointInfo(XRayNavPointdx);
+      Array PositionInfo = _PositionWatcher.GetPositionInfo();
+
+      if (PosInfo[INDEX_Distance] > 2500.0)
+          if (checkMask(GetMission().GetObject("C1M1WingmanGroup"), [WingmanGroupToHome], []))
+          {
+            sendEvent(20.0, SOID_MissionController, "StartDialog", ["BeforeXRays"]);
+            CountXRayBackward = true;
+          }
+    }
+ */
+
+    if ( CountChinuk && CountXRayForward /*&& CountXRayBackward*/)
+      GetMission().ShutDownWatcherChinuk2();
+
+  }
+
+  void Update(Component _Watcher)
+  {
+    Array PosInfo = _Watcher.GetPointInfo(PlayerUnitIdx);
+    Array PositionInfo = _Watcher.GetPositionInfo();
+/*
+    if (getDotProduct(PosInfo[INDEX_Velocity], PositionInfo[INDEX_Velocity]) < 0)
+      //logError("getDotProduct(vec1, vec2)<" + new String(getDotProduct(PosInfo[INDEX_Velocity], PositionInfo[INDEX_Velocity])));
+ */
+
+    PointRegionChanged(_Watcher, 0, PosInfo[INDEX_RegionMask]); // 0 - потому что в массиве ControlPoints MainPlayerUnit первый элемент
+  }
+}
+
+
+class CC1M1MainPlayerUnit_WatcherBack extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "NavPoint_Plei_Me_Base";     // кто следимт
+  final static Array  ControlPoints = ["Plei_Me_Uh1d_1", "MainPlayerUnit"]; // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                    3000.0
+                                  ];
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+
+  final static int WingmanGroupIdx    = 0;
+  final static int MainPlayerUnitIdx   = 1;
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  // service
+
+  boolean IsRing0()
+  {
+    return 0 != (m_RegionMask & ZoneMask0) ;
+  }
+
+  boolean IsOut()
+  {
+    return 0 == m_RegionMask;
+  }
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    logError("[CC1M1MainPlayerUnit_WatcherBack::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+
+    Array PosInfo = _PositionWatcher.GetPointInfo(0);
+    Array PositionInfo = _PositionWatcher.GetPositionInfo();
+
+     logWarning("    Distance    " +  new String(PosInfo[INDEX_Distance]));
+
+    if (_Point == WingmanGroupIdx)
+     if (PosInfo[INDEX_Distance]< 3000.0)
+      if (checkMask(GetMission().Player, [GetMission().PlayerWasAttack, GetMission().PlayerBack],
+                   [ GetMission().PlayerForward]))
+      {
+        sendEvent( 5.0, SOID_MissionController, "StartDialog", ["NearPleyMe"]);
+        sendEvent( 0.0, "C1M1WingmanGroup", "GroupReachZAtEarlyPoint", [true]);
+        sendEvent( 0.0, SOID_MissionController, "SetFlyingHeightWingmanGroup", [90.0, 70.0]);
+      }
+
+    if (_Point == MainPlayerUnitIdx)
+     if (PosInfo[INDEX_Distance]< 3000.0)
+      if (checkMask(GetMission().Player, [GetMission().PlayerWasAttack, GetMission().PlayerBack], [ GetMission().PlayerForward, GetMission().PlayerAttack]))
+        sendEvent( 0.0, SOID_MissionController, "SetFlyingHeightPlayer", [ 90.0]);
+
+  }
+
+  void Update(Component _Watcher)
+  {
+    Array PosInfo = _Watcher.GetPointInfo(PlayerUnitIdx);
+    Array PositionInfo = _Watcher.GetPositionInfo();
+/*
+    if (getDotProduct(PosInfo[INDEX_Velocity], PositionInfo[INDEX_Velocity]) < 0)
+      //logError("getDotProduct(vec1, vec2)<" + new String(getDotProduct(PosInfo[INDEX_Velocity], PositionInfo[INDEX_Velocity])));
+ */
+
+    PointRegionChanged(_Watcher, 0, PosInfo[INDEX_RegionMask]); // 0 - потому что в массиве ControlPoints MainPlayerUnit первый элемент
+  }
+}
+

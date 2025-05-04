@@ -1,0 +1,11 @@
+Key                          | Full Name                               | Short Name          | Description
+------------------------------|-----------------------------------------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------
+str_Empty_Weapon             | None                                    | —                   | —
+str_KwK36_FullName           | 8.8 cm KwK 36 L/56                      | KwK 36              | The KwK 36 is the standard 88 mm tank gun fitted to the Tiger I. Its barrel length (L/56) delivers excellent muzzle velocity (about 773 m/s) and armor-penetration out to 2000 m.
+
+str_MG34_Coax_FullName       | 7.92 mm MG 34 Coaxial Machine Gun       | MG 34 Coax          | A belt-fed, air-cooled 7.92 mm machine gun mounted coaxially alongside the main gun. Fires at roughly 900 rounds per minute and shares the gunner’s sight.
+
+str_MG34_Hull_FullName       | 7.92 mm MG 34 Hull Machine Gun          | MG 34 Hull          | Identical to the coaxial MG 34 but mounted in the hull for anti-infantry use. Traverses 15° left/right, with an ammo drum of 150 rounds.
+
+str_SmokeLauncher_FullName   | 8-Barrel Smoke Discharger               | Smoke Discharger    | An eight-tube smoke projector fitted on the turret sides. Fires M8 smoke cartridges in salvo to screen the tank’s advance or retreat.
+

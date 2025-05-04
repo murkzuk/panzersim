@@ -18,20 +18,30 @@ def clone_and_rename(src, dst, old, new, exts):
                         fd.write(new_text)
     print(f"Renamed occurrences of '{old}' → '{new}'")
 
+import os
+
 def write_rsr(install, new, title, brief, objs):
     rsr_dir = os.path.join(install, 'Resources')
     os.makedirs(rsr_dir, exist_ok=True)
     rsr_path = os.path.join(rsr_dir, f'Mission{new}.rsr')
-    lines = [f'[Mission{new}]\n',
-             f'MissionName    ="{title}"\n',
-             f'BriefingText   ="{brief}"\n',
-             f'ObjectivesText ="{'\\n'.join(objs)}"\n']
-    for i, obj in enumerate(objs, 1):
-        lines.append(f'Objective{str(i).zfill(2)}    ="{obj}"\n')
+    # Build the header and metadata
+    lines = [
+        f'[Mission{new}]\n',
+        f'MissionName    ="{title}"\n',
+        f'BriefingText   ="{brief}"\n',
+        # Properly escape the newline‐joined list
+        f'ObjectivesText ="{chr(10).join(objs)}"\n'
+    ]
+    # Add each objective as its own key
+    for i, obj in enumerate(objs, start=1):
+        idx = str(i).zfill(2)
+        lines.append(f'Objective{idx}    ="{obj}"\n')
+    # Write out as UTF-16 (little endian with BOM)
     with open(rsr_path, 'w', encoding='utf-16') as f:
         f.writelines(lines)
     print(f"Created RSR: {rsr_path}")
     return rsr_path
+
 
 def backup(file_path):
     bak = file_path + '.bak'

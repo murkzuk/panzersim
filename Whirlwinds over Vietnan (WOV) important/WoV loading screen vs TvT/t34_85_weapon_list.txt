@@ -1,0 +1,10 @@
+Key                          | Full Name                        | Short Name         | Description
+-----------------------------|----------------------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------
+str_Empty_Weapon             | None                             | —                  | —
+str_ZiSS53_FullName          | 85 mm ZiS‑S‑53 Tank Gun          | ZiS‑S‑53           | The 85 mm ZiS‑S‑53 is the main gun of the T‑34‑85, firing 85×760 mm R rounds at ~792 m/s, with around 100 mm penetration at 1 km.
+
+str_DTCoax_FullName          | 7.62 mm DT Coaxial Machine Gun   | DT Coax            | A belt-fed 7.62 mm machine gun mounted coaxially with the main gun; ~600 rpm, shares the gunner’s sight for engaging infantry and soft targets.
+
+str_DTHull_FullName          | 7.62 mm DT Hull Machine Gun      | DT Hull            | A belt-fed 7.62 mm machine gun mounted in the hull for anti‑infantry defense; ±10° traverse, loaded with a 100‑round belt.
+
+
