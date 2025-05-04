@@ -79,16 +79,75 @@ Jeff (aka PanzerSim, murkz, murkzuk, mudcog) — non‑coder modder, heavy AI‑
 * **Confirm each change** by describing expected CLI output and in‑game results.
 * **Respect frustration**: prioritize small wins and clear success indicators.
 
-**🚀 Recommended Next Steps:**
+PanzerSim — TvT Modding Handoff Summary
 
-1. **Apply RSR f-string fix** (`Objective{idx:02d}`) and validate.
-2. **Harden CLI argparse** for `--title`, `--brief`, `--obj`, `--campaign`, `-y`.
-3. **Embed v6.1 menu‑patch logic** with robust comma/bracket handling for USSR & Germany arrays.
-4. **Update scaffolding** to include all file types and briefing templates (per checklist).
-5. **Design AI‑task fallback** using periodic `AITaskMove` if `AITaskFollow` remains stubbed.
-6. **Automate end‑to‑end tests** with clear pass/fail logs and success messages.
+1. Project Context
+- Game Engine: Whirlwinds Over Vietnam (WoV) forked into T-34 vs Tiger (TvT) by LHI.
+- Modder: Jeff (“PanzerSim,” murkzuk) — non-coder relying on AI to script missions, patch menus, swap assets.
+- Goal: Deep mission modding for TvT (terrain, visuals, AI, briefings, audio), leveraging WoV resources.
 
-*Ready for Phase 2 CLI refinement and mission‑builder stabilization.*
+2. Repo & Branch Structure
+- `vanillaTvT` branch: clean snapshot of TvT’s script/templates (.script, .rsr, .tex, .raw, .bmp, .scc) only; large binaries excluded via .gitignore.
+- `mod-phase1` branch: active development — CLI tools, test missions, asset swaps, menu patches.
+
+3. File & Folder Conventions
+T34vsTiger/
+├─ Missions/
+│   └─ <MissionID>/          
+│       ├─ Mission.script    
+│       ├─ MissionIntro.script
+│       ├─ Resources/        
+│       ├─ Mission<MissionID>.rsr
+│       └─ MissionStrings.script
+├─ Textures/
+├─ Sounds/
+├─ MissionsMenu.script
+├─ MenuConfig.script
+├─ Global Data/
+└─ Tools/
+
+4. Key Issues & Resolutions
+Issue                                     | Diagnosis & Fix
+-----------------------------------------|---------------------------------------------------------
+Broken RSR objectives                    | Errant space in f-string (“{idx:02d }”) → fixed to (“{idx:02d}”), or str(i).zfill(2).
+AITaskFollow non-functional              | Stubbed out in engine; fallback via periodic AITaskMove loops.
+Menu-patch failures                      | Trailing commas/mismatched braces; built robust patch_menu() routine.
+Missing mission assets                   | Updated CLI to copy all necessary file types.
+Texture swaps for UI                     | Swap .tex containers directly or extract/pack DDS as needed.
+Orphaned WoV WeaponNames.rsr             | Confirmed unused by TvT; safe to delete or repurpose.
+
+5. Tools & Scripts
+- tvt_mission_builder_cli.py: scaffolding, metadata flags, menu-patch logic; recent RSR fix.
+- import_wov_mission.py: imports WoV mission folder, renames IDs, patches menus.
+- GitHub Workflow: use Desktop for branches; tag milestones (v0.2-rsr-fix, v1.0-vanilla).
+
+6. Script & Data Syntax
+.rsr (UTF-16):
+[MissionID]
+MissionName    ="Your Title"
+BriefingText   ="Your briefing"
+ObjectivesText ="Line1\nLine2"
+Objective01    ="Line1"
+Objective02    ="Line2"
+
+.script:
+class MissionID : MissionBase {
+  BackgroundTexture = "Textures/Briefing.tex"
+  AITaskMove(unit1, {x=50,y=0,z=75})
+  OnTime(60) { CompleteObjectives() }
+}
+
+Menu arrays:
+USSRMissions = { "C1M1", "WoVtest", }
+GermanyMissions = { "WoVtest", }
+
+7. Recommended Next Steps
+1. Commit & tag RSR fix.
+2. Finalize menu-patch logic.
+3. Automate full pipeline: scaffold → metadata → menu → test.
+4. Small confidence wins: texture swaps, audio hook, test import.
+
+End of Handoff Summary
 
 
 🔗 Project Hub:
