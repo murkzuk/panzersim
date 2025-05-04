@@ -1,0 +1,24 @@
+
+class CRed_u_veh_PzVI_MAINModel extends Cu_veh_PzVI_MAINModel
+{
+  String     SkinClass       = "CRed_u_veh_PzVI_MAINModelSkin";
+}
+
+class CRed_u_veh_PzVI_MAINModelSkin extends CBase_u_veh_PzVI_MAINModelSkin
+{
+  static String mesh1       = "Textures/Skins/Red/u_veh_PzVI_MAIN1.tex";
+  static String mesh1_crash = "Textures/Skins/Red/u_veh_PzVI_MAIN_track_Crashed.tex";
+  static String mesh2       = "Textures/Skins/Red/u_veh_PzVI_MAIN2.tex";
+  static String mesh2_crash = "Textures/Skins/Red/u_veh_PzVI_MAIN2_Crashed.tex";
+}
+
+class CRedTankPzVIAusfEUnit extends CTankPzVIAusfEUnit
+{
+  String getMeshObjectName()
+  {
+    return "CRed_u_veh_PzVI_MAINModel";
+  }
+  CRedTankPzVIAusfEUnit()
+  {
+  }
+}

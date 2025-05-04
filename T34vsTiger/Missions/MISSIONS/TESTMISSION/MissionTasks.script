@@ -1,0 +1,50 @@
+//-----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-----------------------------------------------------------------
+
+//--------------------------------------------------------------------------------
+//Make Array KillList with ERT_AGGRESSIVE must attack ignored other units
+//--------------------------------------------------------------------------------
+
+class tmp_AttackTigers extends CBaseUnitGroup
+{
+  Array KillList = [
+                     "tmp_GermanTiger1",
+                     "tmp_GermanTiger2",
+                     "tmp_GermanT4_1",
+                     "MainPlayerUnit"
+                                 ];
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    logWarning("TSovietKillGroup void Init");
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    ActivateRadar(true);
+    ActivateFire(true);
+
+   }
+
+ }
+
+ class testresst extends CC1M1Gr_BaseInfantry
+{
+  float m_InfantrySpeed = 2.00;
+
+  void OnPathEndReached()
+  {
+     CC1M1Gr_BaseInfantry::Brighten(m_StartPosition);
+  }
+}
+
+// Left Infantry One Group
+class testresst2 extends testresst
+{
+  String m_PointAttack = "SoldNP2";
+}
+
+

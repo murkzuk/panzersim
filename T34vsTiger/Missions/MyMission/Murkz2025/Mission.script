@@ -1,0 +1,113 @@
+
+class CMurkz2025Mission extends CSPMission
+{
+  static WString ObjectivesText = L"Objectives:\n- Advance to the crossroads\n- Locate enemy anti-tank positions\n- Engage and destroy enemy forces\n- Return safely if possible";
+  //static WString ObjectivesText = Murkz2025Mission_Strings::ObjectivesText;
+  //
+  // Contruction and initialization
+  //
+
+  String  m_LocalTime       = "14:20:00";
+  String m_TerrainMapTextureName = "Textures/C1M3_Map.tex";
+
+  static String m_MissionBriefingPicMaterial = "C1M3BriefingPic";
+
+  Array  m_MissionObjectives = [
+  "Scout and neutralize enemy forces ahead."
+          ];
+
+  boolean isDebug = true;
+
+  Array m_NavpointsForPlayerMap = [
+
+  ];
+
+  float  CockpitMapMinRange  = 1000.0;
+  float  CockpitMapMaxRange  = 4500.0;
+  int    CockpitMapZoomSteps = 10;
+  Vector MarksInitPoint      = new Vector(1000.0, 1000.0, 0.0);
+  float  CockpitMapNavNameMaxRange  = 2000.0;
+  Array  CockpitMapAccessBox  = [ new Vector(2742, 1775.0, 0.0), new Vector(7242.0, 6275.0, 0.0)];
+
+  final static Array RouterWorkingZones = [
+    ];
+
+  final static Array   DefaultMask = [["ENEMY", "MainMesh"], ["NEUTRAL"]];
+  final static Array          Mask = [["ENEMY", "MainMesh"], ["NEUTRAL", "InvisibleOnRadar"]];
+
+
+
+  boolean OnTarg = false;
+  boolean TigerAggr = false;
+
+  boolean MainPlayerStart = false;
+
+  void CMurkz2025Mission()
+  {
+    // Construct mission
+    CSPMission("CMurkz2025Mission", "Murkz2025Content");
+
+    // Set mission properties
+    SetMissionTerrain(new #ChunkedTerrain<CMurkz2025Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<Murkz2025Atmosphere>());
+    SetMissionSky(new #SkyObject<CSkyModel>());
+
+    if (CDebugSettings::LoadForest)
+      SetMissionForest(new CSTBaseForestC1(GetMissionAtmosphere()));
+    if (CDebugSettings::LoadRoads)
+      SetMissionRoadsParms(new CBaseRoadC1());
+    if (CDebugSettings::LoadGrass)
+      RegisterObject("Grass", new #Grass<CBaseGrassC1>());
+
+
+    SetMissionWorldMatrices(new #WorldMatrices<Murkz2025WorldMatrices>(), [
+        [ LAYER_TERRAIN_NAME, "Murkz2025LandscapeLayer"   ],
+        [ LAYER_TERRAIN_ZONE, "Murkz2025TerrainZoneLayer" ],
+        [ LAYER_ROUTER_ZONE,  "Murkz2025RouterZoneLayer"     ],
+        [ LAYER_MICROTEXTURE_MAP1, "Murkz2025MicroTextures1" ],
+        [ LAYER_TERRAIN_WATERHEIGHTS, "Murkz2025WaterHeights"]
+      ]);
+
+    SetRouterPrecalculatedGraph(
+      new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CBaseRouterMap>(), 64, RouterWorkingZones);
+  }
+
+// TODO
+
+  String GetMainRadioHomePoint()
+  {
+    return "";
+  }
+
+  void StartMission()
+  {
+    // call inherited
+    CSPMission::StartMission();
+
+   Component console = new #GameController().GetObject(SOID_Console);
+//   console.disablebeh();
+   //console.showbehinf(true);
+
+  }
+  
+  void OnObjectEnterNavPoint(String _NavPointID, String _ObjectID)
+  {
+    if (_ObjectID == "MainPlayerUnit")
+    {
+      sendEvent(1.0, getIdentificator(this), "CloseMission", [MOSID_Completed]);
+    }
+  }
+  
+  void OnObjectLeaveNavPoint(String _NavPointID, String _ObjectID)
+  {
+  }
+
+
+  void Shutdown()
+  {
+
+    CSPMission::Shutdown();
+  }
+ }

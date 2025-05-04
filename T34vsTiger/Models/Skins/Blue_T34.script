@@ -1,0 +1,25 @@
+
+class CBlue_u_veh_t34_85_44Model extends Cu_veh_t34_85_44Model
+{
+  String     SkinClass       = "CBlue_u_veh_t34_85_44ModelSkin";
+}
+
+class CBlue_u_veh_t34_85_44ModelSkin extends CBaseu_veh_t34_85_44ModelSkin
+{
+  static String mesh1 = "Textures/Skins/Blue/u_veh_t34_85.tex";
+  static String mesh1_crash = "Textures/Skins/Blue/u_veh_t34_85_Crashed.tex";
+  static String mesh2 = "Textures/Skins/Blue/u_veh_t34_85_turret.tex";
+  static String mesh2_crash = "Textures/Skins/Blue/u_veh_t34_85_turret_Crashed.tex";
+}
+
+class CBlueTankT34_85_44Unit extends CTankT34_85_44Unit
+{
+  String getMeshObjectName()
+  {
+    return "CBlue_u_veh_t34_85_44Model";
+  }
+  
+  CBlueTankT34_85_44Unit()
+  {
+  }
+}

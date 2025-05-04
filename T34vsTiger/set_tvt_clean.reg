@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\G5 Software\T-34 vs Tiger]
+"InstallPath"="M:\\T34vsTiger"
+"ExeName"="tvt.exe"
+"Version"="1.0"
+"Publisher"="Lighthouse Interactive"
+"ProductName"="T-34 vs Tiger"

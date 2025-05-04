@@ -1,0 +1,12 @@
+class CTestPhase3Mission_Strings
+{
+  static WString MissionName = L"Forward Probe";
+  static WString BriefingText = L"OVERALL SITUATION:\n\nSoviet forces have detected possible enemy activity near a key crossroads 1 kilometer ahead. A lone T-34 is dispatched to probe the area. Expect resistance: reconnaissance indicates possible anti-tank positions and armored support. Proceed with caution.\n\nMISSION DESCRIPTION:\n\nAdvance to the crossroads, locate enemy positions, engage as necessary, and return if possible.";
+
+  static WString ObjectivesText = L"Advance to the crossroads\nLocate enemy anti-tank positions\nEngage and destroy enemy forces\nReturn safely if possible";
+
+  static WString Objective01 = L"Advance to the crossroads";
+  static WString Objective02 = L"Locate enemy anti-tank positions";
+  static WString Objective03 = L"Engage and destroy enemy forces";
+  static WString Objective04 = L"Return safely if possible";
+}

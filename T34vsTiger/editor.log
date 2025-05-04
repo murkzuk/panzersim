@@ -1,0 +1,1517 @@
+[Locale] Multiply definition of section [Weapon]
+[Locale] Key str_Empty_Weapon doesn't belong to any section
+[Locale] Key str_M134_FullName doesn't belong to any section
+[Locale] Key str_M134_ShortName doesn't belong to any section
+[Locale] Key str_M60_FullName doesn't belong to any section
+[Locale] Key str_M60_ShortName doesn't belong to any section
+[Locale] Key str_MA2_FullName doesn't belong to any section
+[Locale] Key str_MA2_ShortName doesn't belong to any section
+[Locale] Key str_M134_Description doesn't belong to any section
+[Locale] Key str_M60_Description doesn't belong to any section
+[Locale] Key str_MA2_Description doesn't belong to any section
+[Locale] There is no key str_ROTATE_LR_AXIS_ABS in section [Action]
+[Locale] There is no key str_MOVE_FB_AXIS_ABS in section [Action]
+[Locale] There is no key str_MOVE_LR_AXIS_ABS in section [Action]
+[Locale] There is no key str_TRIM_ENABLE in section [Action]
+[Locale] There is no key str_TRIM_DISABLE in section [Action]
+[Locale] There is no key str_LOCK_HEIGHT in section [Action]
+[Locale] There is no key str_GEAR_CONTROL in section [Action]
+[Locale] There is no key str_EJECT_PLAYER in section [Action]
+[Locale] There is no key str_SPEED in section [Action]
+[Locale] There is no key str_COLLECTIVE_PITCH_UP in section [Action]
+[Locale] There is no key str_COLLECTIVE_PITCH_DOWN in section [Action]
+[Locale] There is no key Objective02 in section [MissionTest]
+[Locale] There is no key Objective03 in section [MissionTest]
+[Locale] There is no key Objective02 in section [MissionTest]
+[Locale] There is no key Objective03 in section [MissionTest]
+Variable VersionID not found in script
+Try to get String type value from ERROR (error) type variable
+Can not assign value (error) to typed variable (String)
+[GameSettings] Current game settings:
+[GameSettings]   Video:
+[GameSettings]     nVideoDevice:              0
+[GameSettings]     nScreenWidth:              1024
+[GameSettings]     nScreenHeight:             768
+[GameSettings]     nRefreshRate:              60
+[GameSettings]     nColorDepth:               32
+[GameSettings]     bWindowMode:               false
+[GameSettings]     LightingModel:             2
+[GameSettings]     UseInstancing:             true
+[GameSettings]     fRenderDetail:             1.000000
+[GameSettings]     fForestDetail:             1.000000
+[GameSettings]     fGrassDetail:              1.000000
+[GameSettings]     fTerrainDetail:            1.000000
+[GameSettings]     fWaterDetail:              1.000000
+[GameSettings]     fGammaCoef:                0.000000
+[GameSettings]     nMaxLightsQty:             4
+[GameSettings]     nTextureBestLOD:           0
+[GameSettings]     nShadowDetail:             4
+[GameSettings]     fInteriorDetail:           1.000000
+[GameSettings]     fObjectsDetail:            1.000000
+[GameSettings]     nAntiAliasing:             3
+[GameSettings]   Effects:
+[GameSettings]     IsBloomEnabled:            true
+[GameSettings]     BloomScale:                0.260000
+[GameSettings]     LuminanceCoefficient       0.570000
+[GameSettings]     MiddleGrayCoefficient      0.100000
+[GameSettings]     WhiteCutoffCoefficient     0.310000
+[GameSettings]   Sound:
+[GameSettings]     nChannelsQty:              2
+[GameSettings]     nSoundFrequency:           22050
+[GameSettings]     nSoundBitRate:             16
+[GameSettings]     fSoundVolume:              0.000000
+[GameSettings]     fMusicVolume:              0.000000
+[GameSettings]   Game:
+[GameSettings]     nDifficultyLevel:          1
+[GameSettings]     TargetingMode:             0
+[GameSettings]     Crosshair:                 1
+[GameSettings]     bInverseY:                 false
+[GameSettings]     fMouseSensitivity:         0.500000
+[GameSettings]     fJoystickSensitivity:      0.500000
+[GameSettings]     fJoystickDeadZone:         0.500000
+[GameSettings]     fArcadeSliderDeadZone:     0.050000
+[GameSettings]     MinJoystickDeadZone:       0.100000
+[GameSettings]     MaxJoystickDeadZone:       0.500000
+[GameSettings]     MinJoystickSensitivity:    0.030000
+[GameSettings]     MaxJoystickSensitivity:    1.000000
+[GameSettings]     WingmanMenuStyle:          0
+[GameSettings]     nCockpitDevicesColor:      1
+[GameSettings]     ManualControlMode:         1
+[GameSettings]     bForceFeedbackEnabled:     false
+[GameSettings]     fForceFeedbackStrength:    0.500000
+[GameSettings]     bDynamicLift:              false
+[GameSettings]     bIntelligentCompass:       false
+[GameSettings]     bRetreatingBladeStallMode: true
+[GameSettings]     bAircushionMode:           true
+[GameSettings]     bFlaterMode:               true
+[GameSettings]     bPayloadMode:              true
+[GameSettings]     bShockwaveMode:            true
+[GameSettings]     bWindEffectMode:           true
+[GameSettings]     bVortexRingMode:           true
+[GameSettings]     bIsTorqueControl:          false
+[GameSettings]     FlaresControlMode:         0
+[GameSettings]     InjuryMode:                0
+[GameSettings]     CockpitMode:               0
+[GameSettings]     bInvertRotateLRAxis:       false
+[GameSettings]     bInvertMoveFBAxis:         false
+[GameSettings]     bInvertMoveLRAxis:         false
+[GameSettings]     bInvertSpeedAxis:          false
+[GameSettings]     bInvertCameraZoom:         false
+[GameSettings]     bInvertBladesSpeedAxis:    false
+[GameSettings]     bInvertSoundFB:            false
+[GameSettings]     bInvertSoundLR:            false
+[GameSettings]     bUseEAX:                   true
+[GameSettings]     bJoystickEnabled:          true
+[GameSettings]     bNavpointNavigationMode:   true
+[3DDriver] Adapter detected: NVIDIA GeForce RTX 4070
+[3DDriver]  ----- Identifier
+[3DDriver]   Driver version: 32.0.15.7628
+[3DDriver]   VendorID:       0x10de (NVIDIA)
+[3DDriver]   DeviceID:       0x2786
+[3DDriver]  ----- Caps
+[3DDriver]   Max texture width:     16384
+[3DDriver]   Max texture height:    16384
+[3DDriver]   Max texture repeat:    8192
+[3DDriver]   Tex repeat not scaled: 1
+[3DDriver]   Max primitive count:   ffffff
+[3DDriver]   Max vertex index:      ffffff
+[3DDriver]   Max active lights:     8
+[3DDriver]   Max texture stages:    8
+[3DDriver]   Max simultaneous tex:  8
+[3DDriver]   Max streams:           16
+[3DDriver]   Projective tex crd:    1
+[3DDriver]   Max anisotropy:        16
+[3DDriver]   Bump map:              1
+[3DDriver]   Volume map:            1
+[3DDriver]   Max volume extent:     2048
+[3DDriver]   Two sided stencil:     1
+[3DDriver]   N Patches:             0
+[3DDriver]   RT Patches:            0
+[3DDriver]   VS 2.0
+[3DDriver]     Dynamic FC Depth:  24
+[3DDriver]     Num Temps:         32
+[3DDriver]     Static FC Depth:   4
+[3DDriver]   PS 2.0
+[3DDriver]     Dynamic FC Depth:  24
+[3DDriver]     Temps Registers:   32
+[3DDriver]     Static FC Depth:   4
+[3DDriver]     Instruction Slots: 512
+[3DDriver] Adapter detected: NVIDIA GeForce RTX 4070
+[3DDriver]  ----- Identifier
+[3DDriver]   Driver version: 32.0.15.7628
+[3DDriver]   VendorID:       0x10de (NVIDIA)
+[3DDriver]   DeviceID:       0x2786
+[3DDriver]  ----- Caps
+[3DDriver]   Max texture width:     16384
+[3DDriver]   Max texture height:    16384
+[3DDriver]   Max texture repeat:    8192
+[3DDriver]   Tex repeat not scaled: 1
+[3DDriver]   Max primitive count:   ffffff
+[3DDriver]   Max vertex index:      ffffff
+[3DDriver]   Max active lights:     8
+[3DDriver]   Max texture stages:    8
+[3DDriver]   Max simultaneous tex:  8
+[3DDriver]   Max streams:           16
+[3DDriver]   Projective tex crd:    1
+[3DDriver]   Max anisotropy:        16
+[3DDriver]   Bump map:              1
+[3DDriver]   Volume map:            1
+[3DDriver]   Max volume extent:     2048
+[3DDriver]   Two sided stencil:     1
+[3DDriver]   N Patches:             0
+[3DDriver]   RT Patches:            0
+[3DDriver]   VS 2.0
+[3DDriver]     Dynamic FC Depth:  24
+[3DDriver]     Num Temps:         32
+[3DDriver]     Static FC Depth:   4
+[3DDriver]   PS 2.0
+[3DDriver]     Dynamic FC Depth:  24
+[3DDriver]     Temps Registers:   32
+[3DDriver]     Static FC Depth:   4
+[3DDriver]     Instruction Slots: 512
+[3DDriver] _Device(0)
+[3DDriver] InitDirect3D
+[3DDriver] CreateDevice
+[3DDriver] Creating 3D device (1045 x 611)
+[3DDriver] CreateZBuffer
+[3DDriver] Z buffer format: 1920 x 1080, D24S8
+[3DDriver] Texture formats:
+[3DDriver]   R8G8B8:    false
+[3DDriver]   A8R8G8B8:  true
+[3DDriver]   X8R8G8B8:  true
+[3DDriver]   R5G6B5:    true
+[3DDriver]   A1R5G5B5:  true
+[3DDriver]   A4R4G4B4:  true
+[3DDriver]   L8:        true
+[3DDriver]   A8:        true
+[3DDriver]   L6V5U5:    false
+[3DDriver]   V8U8:      true
+[3DDriver]   Q8W8V8U8:  true
+[3DDriver]   DXT1:      true
+[3DDriver]   DXT2:      true
+[3DDriver]   DXT3:      true
+[3DDriver]   DXT4:      true
+[3DDriver]   DXT5:      true
+[3DDriver]   G8R8_G8B8: false
+[3DDriver]   R8G8_B8G8: false
+[3DDriver]   UYVY:      false
+[3DDriver]   YUY2:      false
+[3DDriver] step
+[3DDriver] 3DDriver: texture and render target format found: R32F
+[3DDriver] 3DDriver: texture and render target format found: R5G6B5
+[3DDriver] 3DDriver: texture and render target format found: A8R8G8B8
+[3DDriver] CreatePredefinedPlaneTexture size(512)
+[3DDriver] Create predefined texture: 512 x 512 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] CreatePredefinedPlaneTexture size(512)
+[3DDriver] Create predefined texture: 512 x 512 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] IsEnabledScreenEffects
+[3DDriver] Create predefined texture: 1920 x 1080 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Create predefined texture: 480 x 270 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Create predefined texture: 480 x 270 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] direct3d initialized successfully
+[3DDriver] surfaces restored successfully
+[SoundDriver] EAX support not found
+[InputController] Special mouse processing enabled
+[InputController] set action map : partitial success.return code b
+[InputController] set action map : partitial success.return code b
+[InputController] Found a joystick (CORSAIR M65 RGB ELITE Gaming Mouse)
+[InputController] Found a joystick (HyperX Cloud III)
+[InputController] Found a joystick (HyperX Cloud III)
+[InputController] Found a joystick (HyperX Cloud III)
+[InputController] Found a joystick (HyperX Cloud III)
+[InputController] Found a joystick (RGB Keyboard)
+[InputController] Found a joystick (RGB Keyboard)
+[InputController] Found a joystick (RGB Keyboard)
+[InputController] Found a joystick (CORSAIR M65 RGB ELITE Gaming Mouse)
+[InputController] Found a joystick (CORSAIR M65 RGB ELITE Gaming Mouse)
+[InputController] Found a joystick (CORSAIR M65 RGB ELITE Gaming Mouse)
+[InputController] Detected trackIR software version 5.00
+[InputController] No Force Feedback devices found
+[InputController] set action map : partitial success.return code b
+[3DDriver] Found nearest render target texture
+[3DDriver]   requested: 1920 x 1080, format: A8R8G8B8
+[3DDriver]   found:     1920 x 1080, format: A8R8G8B8
+[3DDriver] Found nearest render target texture
+[3DDriver]   requested: 480 x 270, format: A8R8G8B8
+[3DDriver]   found:     480 x 270, format: A8R8G8B8
+[3DDriver] Found nearest render target texture
+[3DDriver]   requested: 480 x 270, format: A8R8G8B8
+[3DDriver]   found:     480 x 270, format: A8R8G8B8
+Start game
+LoadFontsTable
+SetInputFilter
+[GameController] Object [Camera] successfully loaded
+RegisterObject
+[GameController] Object [Console] successfully loaded
+[GameController] Object [RenderStats] successfully loaded
+[GameController] Object AudioPlayer successfully loaded
+[GameController] Object VideoPlayer successfully loaded
+[GameController] Object MusicController successfully loaded
+[GameController] Object ScreenCapture successfully loaded
+[GameController] Object MoviesList successfully loaded
+[GameController] Object Intro successfully loaded
+[GameController] Game controller loaded
+GenerateCustomLevelNames
+  found 4 files
+    found class CMission1Mission
+    found class CMurkz2025Mission
+    found class CTestPhase3Mission
+    found class CTestingMission2Mission
+  log: [["Mission1", "CMission1Mission"], ["Murkz2025", "CMurkz2025Mission"], ["TestPhase3", "CTestPhase3Mission"], ["TestingMission2", "CTestingMission2Mission"]]
+  found 0 files
+  log: []
+[CacheControl] Release cache group file: Scripts
+load level object: CC2M1Mission
+[GameController] Object GameMenu successfully loaded
+Play music: RusMain
+[ScriptManager] "Scripts\Menus\StartMissionMenu.script", 22(5): Invalid this reference
+[ScriptManager] "Scripts\Menus\StartMissionMenu.script", 26(5): Invalid this reference
+[ScriptManager] "Scripts\Menus\StartMissionMenu.script", 27(5): Invalid this reference
+[ScriptManager] "Scripts\Menus\StartMissionMenu.script", 28(5): Invalid this reference
+[ReadonlyMesh] Loading complete
+[MissionController] Object Grass successfully loaded at 8777
+[WaterWakeEffect] Water wake effect created...
+construct 0: textures/Effect_01.tex NORMAL
+[MissionController] Object EffectsArray successfully loaded at 9179
+[ReadonlyMesh] Loading complete
+[MissionController] Object BulletsArray successfully loaded at 9191
+[MissionController] Object ExplosionsArray successfully loaded at 9193
+[MissionController] Object SoundsArray successfully loaded at 9241
+[MissionController] Object DialogsManager successfully loaded at 9241
+[MissionController] Object ScriptedCamera successfully loaded at 9243
+[InputController] set action map : partitial success.return code b
+[MissionController] Object FreeCamera successfully loaded at 9798
+[MissionController] Object UnitsCollisionControl successfully loaded at 9798
+[MissionController] Object Atmosphere successfully loaded at 9798
+[MissionController] Object WorldMatrices successfully loaded at 9799
+[3DDriver] Evict all managed resources
+[Logger] Resource in DEFAULT pool created after resource in MANAGED pool
+[Logger]   MANAGED resource: VB (ChunkedTerrain), pool: VERTEXDATA, usage: 8, size: 2572656
+[Logger]   DEFAULT resource: IB (), pool: INDEX16, usage: 8, size: 255948
+[3DDriver] Found nearest render target texture
+[3DDriver]   requested: 512 x 512, format: A8R8G8B8
+[3DDriver]   found:     512 x 512, format: A8R8G8B8
+[MissionController] Object TerrainPerlinNoise successfully loaded at 10022
+[MissionController] Object Terrain successfully loaded at 10039
+[MissionController] Object TerrainZone successfully loaded at 10039
+[MissionController] Object RouterPrecalculatedGraph successfully loaded at 10040
+[MissionController] Object RouterMap_Layer1 successfully loaded at 10040
+[MissionController] Object Sky successfully loaded at 10040
+[MissionController] Object Forest successfully loaded at 10042
+[MissionController] Object TreeController successfully loaded at 10042
+Forest Creation
+[3DDriver] Evict all managed resources
+[Logger] Resource in DEFAULT pool created after resource in MANAGED pool
+[Logger]   MANAGED resource: MemoryTex (Textures/grass.tex, Textures/grass.tex), pool: DXT3, usage: 0, size: 699088
+[Logger]   DEFAULT resource: VB (GrassVB), pool: VERTEXDATA, usage: 208, size: 1834980
+[MissionController] Object Roads successfully loaded at 10079
+[ReadonlyMesh] Loading complete
+[MissionController] Object Village_Viso4ani_USRCorralWood_1 successfully loaded at 10111
+[ReadonlyMesh] Loading complete
+[MissionController] Object Village_Viso4ani_USRHouseWood_1 successfully loaded at 10147
+[ReadonlyMesh] Loading complete
+[MissionController] Object Village_Viso4ani_USRShedWood_1 successfully loaded at 10170
+[MissionController] Object NavPoint_Village_Viso4ani successfully loaded at 10170
+[MissionController] Object Village_Kurtenki1 successfully loaded at 10172
+[MissionController] Object Village_Kurtenki1_micro successfully loaded at 10172
+[MissionController] Object Kurtenki1House1 successfully loaded at 10187
+[MissionController] Object Kurtenki1House2 successfully loaded at 10190
+[MissionController] Object Kurtenki1House3 successfully loaded at 10192
+[MissionController] Object Kurtenki1House4 successfully loaded at 10195
+[MissionController] Object Kurtenki1House5 successfully loaded at 10198
+[MissionController] Object Kurtenki1House6 successfully loaded at 10201
+[ReadonlyMesh] Loading complete
+[MissionController] Object Kurtenki1Well successfully loaded at 10204
+[ReadonlyMesh] Loading complete
+[MissionController] Object Kurtenki1House1_fence_03 successfully loaded at 10208
+[MissionController] Object Kurtenki1House1_fence_06 successfully loaded at 10210
+[MissionController] Object Kurtenki1House1_fence_02 successfully loaded at 10212
+[MissionController] Object Kurtenki1House1_fence_08 successfully loaded at 10215
+[MissionController] Object Kurtenki1House6_fence_10 successfully loaded at 10216
+[MissionController] Object Kurtenki1House6_fence_03 successfully loaded at 10218
+[MissionController] Object Kurtenki1House6_fence_13 successfully loaded at 10220
+[MissionController] Object Kurtenki1House6_fence_01 successfully loaded at 10222
+[MissionController] Object Kurtenki1House6_Shed successfully loaded at 10225
+[MissionController] Object Kurtenki1House3_Corral successfully loaded at 10228
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_11 successfully loaded at 10230
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_02 successfully loaded at 10232
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_01 successfully loaded at 10234
+[MissionController] Object Kurtenki1House2_fence_03 successfully loaded at 10235
+[MissionController] Object Kurtenki1House2_fence_01 successfully loaded at 10237
+[MissionController] Object Kurtenki1House2_fence_06 successfully loaded at 10240
+[MissionController] Object Kurtenki1House2_fence_04 successfully loaded at 10242
+[MissionController] Object Kurtenki1House5_fence_04 successfully loaded at 10244
+[MissionController] Object Kurtenki1House5_fence_01 successfully loaded at 10247
+[MissionController] Object Kurtenki1House6_fence_07 successfully loaded at 10249
+[MissionController] Object Kurtenki1House1_Shed successfully loaded at 10251
+[MissionController] Object Kurtenki1House4_fence_04 successfully loaded at 10253
+[MissionController] Object Kurtenki1House4_fence_01 successfully loaded at 10255
+[MissionController] Object Kurtenki1House4_fence_02 successfully loaded at 10257
+[MissionController] Object Kurtenki1House7 successfully loaded at 10261
+[MissionController] Object Kurtenki1House1Group successfully loaded at 10261
+[MissionController] Object Kurtenki1House2Group successfully loaded at 10261
+[MissionController] Object Kurtenki1House3Group successfully loaded at 10262
+[MissionController] Object Kurtenki1House4Group successfully loaded at 10262
+[MissionController] Object Kurtenki1House5Group successfully loaded at 10262
+[MissionController] Object Kurtenki1House6Group successfully loaded at 10262
+[MissionController] Object Kurtenki1House7Group successfully loaded at 10262
+[MissionController] Object Kurtenki1House5_Shed1 successfully loaded at 10264
+[MissionController] Object Kurtenki1House7_Shed1 successfully loaded at 10266
+[MissionController] Object Kurtenki1House4_Corral successfully loaded at 10269
+[MissionController] Object Kurtenki1House3_Shed1 successfully loaded at 10271
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_12 successfully loaded at 10273
+[MissionController] Object Kurtenki1House8_fences successfully loaded at 10274
+[MissionController] Object Kurtenki1House8 successfully loaded at 10276
+[MissionController] Object Kurtenki1House8Group successfully loaded at 10277
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_09 successfully loaded at 10279
+[MissionController] Object Kurtenki1House8_Shed successfully loaded at 10281
+[MissionController] Object Kurtenki1House1_fence_01 successfully loaded at 10283
+[MissionController] Object Kurtenki1House2_Corral successfully loaded at 10285
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 10287
+[MissionController] Object Village_Kurtenki_2_micro successfully loaded at 10287
+[MissionController] Object House1 successfully loaded at 10298
+[MissionController] Object House2 successfully loaded at 10300
+[MissionController] Object House3 successfully loaded at 10303
+[MissionController] Object House4 successfully loaded at 10305
+[MissionController] Object House5 successfully loaded at 10309
+[MissionController] Object House6 successfully loaded at 10312
+[MissionController] Object Well successfully loaded at 10313
+[MissionController] Object House1_fences successfully loaded at 10314
+[MissionController] Object House6_fences successfully loaded at 10314
+[MissionController] Object House6_Shed successfully loaded at 10316
+[MissionController] Object House3_Corral successfully loaded at 10318
+[MissionController] Object House3_fences successfully loaded at 10319
+[MissionController] Object _Shed successfully loaded at 10321
+[MissionController] Object House2_fences successfully loaded at 10321
+[MissionController] Object House5_fences successfully loaded at 10321
+[MissionController] Object House1_Shed successfully loaded at 10323
+[MissionController] Object House4_fences successfully loaded at 10324
+[MissionController] Object House7 successfully loaded at 10327
+[MissionController] Object House7_fences successfully loaded at 10327
+[MissionController] Object House1Group successfully loaded at 10327
+[MissionController] Object House2Group successfully loaded at 10328
+[MissionController] Object House3Group successfully loaded at 10328
+[MissionController] Object House4Group successfully loaded at 10328
+[MissionController] Object House5Group successfully loaded at 10328
+[MissionController] Object House6Group successfully loaded at 10329
+[MissionController] Object House7Group successfully loaded at 10329
+[MissionController] Object House5_Shed1 successfully loaded at 10331
+[MissionController] Object House7_Shed1 successfully loaded at 10333
+[MissionController] Object House4_Corral successfully loaded at 10336
+[MissionController] Object House3_Shed1 successfully loaded at 10338
+[MissionController] Object House8_fences successfully loaded at 10338
+[MissionController] Object House8 successfully loaded at 10341
+[MissionController] Object House8Group successfully loaded at 10341
+[MissionController] Object House8_Shed successfully loaded at 10343
+[MissionController] Object House2_Corral successfully loaded at 10345
+[MissionController] Object CrossRoad1_micro successfully loaded at 10347
+[MissionController] Object Kurtenki1Well1 successfully loaded at 10350
+[MissionController] Object CrossRoad2_micro successfully loaded at 10350
+[MissionController] Object CrossRoad3_micro successfully loaded at 10352
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_04 successfully loaded at 10355
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_01 successfully loaded at 10357
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_11 successfully loaded at 10360
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_05 successfully loaded at 10362
+[MissionController] Object Kurtenki1House4_fence_06 successfully loaded at 10364
+[MissionController] Object Kurtenki1House1_fence_04 successfully loaded at 10366
+[ReadonlyMesh] Loading complete
+[MissionController] Object Kurtenki1WaterWell successfully loaded at 10368
+[MissionController] Object Kurtenki1WaterWell1 successfully loaded at 10369
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_01 successfully loaded at 10371
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_02 successfully loaded at 10373
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_05 successfully loaded at 10375
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_07 successfully loaded at 10377
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_09 successfully loaded at 10379
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_05 successfully loaded at 10381
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_08 successfully loaded at 10384
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_02 successfully loaded at 10386
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_07 successfully loaded at 10388
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_04 successfully loaded at 10390
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_03 successfully loaded at 10392
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_06 successfully loaded at 10394
+[MissionController] Object Kurtenki1House7_fences_FenceWicker_08 successfully loaded at 10397
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_03 successfully loaded at 10399
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_04 successfully loaded at 10401
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_06 successfully loaded at 10403
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_07 successfully loaded at 10405
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_09 successfully loaded at 10407
+[MissionController] Object Kurtenki1House3_fences_FenceWicker_10 successfully loaded at 10409
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_03 successfully loaded at 10411
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_06 successfully loaded at 10413
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_08 successfully loaded at 10415
+[MissionController] Object Kurtenki1House8_fences_FenceWicker_10 successfully loaded at 10418
+[MissionController] Object Kurtenki1House1_fence_05 successfully loaded at 10420
+[MissionController] Object Kurtenki1House1_fence_07 successfully loaded at 10422
+[MissionController] Object Kurtenki1House1_fence_09 successfully loaded at 10424
+[MissionController] Object Kurtenki1House2_fence_02 successfully loaded at 10426
+[MissionController] Object Kurtenki1House2_fence_05 successfully loaded at 10428
+[MissionController] Object Kurtenki1House2_fence_07 successfully loaded at 10430
+[MissionController] Object Kurtenki1House4_fence_03 successfully loaded at 10432
+[MissionController] Object Kurtenki1House4_fence_05 successfully loaded at 10435
+[MissionController] Object Kurtenki1House6_fence_02 successfully loaded at 10437
+[MissionController] Object Kurtenki1House6_fence_04 successfully loaded at 10439
+[MissionController] Object Kurtenki1House6_fence_05 successfully loaded at 10441
+[MissionController] Object Kurtenki1House6_fence_06 successfully loaded at 10444
+[MissionController] Object Kurtenki1House6_fence_08 successfully loaded at 10446
+[MissionController] Object Kurtenki1House6_fence_09 successfully loaded at 10448
+[MissionController] Object Kurtenki1House6_fence_11 successfully loaded at 10450
+[MissionController] Object Kurtenki1House6_fence_12 successfully loaded at 10452
+[MissionController] Object Kurtenki1House5_fence_02 successfully loaded at 10454
+[MissionController] Object Kurtenki1House5_fence_03 successfully loaded at 10457
+[MissionController] Object NavPoint_Village_Kurtenki successfully loaded at 10457
+[ReadonlyMesh] Loading complete
+SetupPhysicsController
+[MissionController] Object SovietProtection_GunZis1 successfully loaded at 10480
+[ReadonlyMesh] Loading complete
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[ReadonlyMesh] Loading complete
+[MissionController] Object SovietSoldierCrewZis1_1 successfully loaded at 10501
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietSoldierCrewZis1_2 successfully loaded at 10509
+[MissionController] Object SovietZis1Group successfully loaded at 10511
+SetupPhysicsController
+[MissionController] Object SovietProtection_GunZis2 successfully loaded at 10512
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietSoldierCrewZis2_1 successfully loaded at 10521
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietSoldierCrewZis2_2 successfully loaded at 10529
+[MissionController] Object SovietZis2Group successfully loaded at 10530
+SetupPhysicsController
+[MissionController] Object SovietProtection_GunZis3 successfully loaded at 10531
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietSoldierCrewZis3_1 successfully loaded at 10540
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietSoldierCrewZis3_2 successfully loaded at 10547
+[MissionController] Object SovietZis3Group successfully loaded at 10549
+[MissionController] Object SovietBase_micro successfully loaded at 10549
+[MissionController] Object GroupUnit_USRIL2 successfully loaded at 10558
+[ReadonlyMesh] Loading complete
+[MissionController] Object USR_IL2_01 successfully loaded at 10562
+[MissionController] Object USR_IL2_02 successfully loaded at 10564
+[MissionController] Object USR_IL2_03 successfully loaded at 10565
+[MissionController] Object IL2AttackNP_01 successfully loaded at 10565
+[MissionController] Object IL2AttackNP_02 successfully loaded at 10567
+[MissionController] Object IL2AttackNP_03 successfully loaded at 10567
+[MissionController] Object IL2BombNPStart_01 successfully loaded at 10568
+[MissionController] Object IL2BombNPStart_02 successfully loaded at 10568
+[MissionController] Object IL2BombNPEnd_01 successfully loaded at 10568
+[MissionController] Object IL2BombNPEnd_02 successfully loaded at 10569
+[ReadonlyMesh] Loading complete
+[ReadonlyMesh] Loading complete
+[AutoShooter] Loading...
+Try to get Array type value from ?unknown type? (?unknown type?) type variable
+Try to get Component type value from int (0) type variable
+[ScriptManager] "Scripts\Common\PlayerUnit.script", 830(5): Invalid this reference
+HKoeff: 0.781000
+VKoeff: 0.781000
+HKoeff: 0.781000
+VKoeff: 0.781000
+Can not assign value (Color(1.000000, 1.000000, 1.000000, 1.000000)) to typed variable (int)
+[9] entry is invalid
+Can not assign value (0.301587) to typed variable (Color)
+[10] entry is invalid
+[12] entry is invalid
+Can not assign value (Color(1.000000, 1.000000, 1.000000, 1.000000)) to typed variable (int)
+[9] entry is invalid
+Can not assign value (0.301587) to typed variable (Color)
+[10] entry is invalid
+[12] entry is invalid
+Can not assign value (Color(1.000000, 1.000000, 1.000000, 1.000000)) to typed variable (int)
+[9] entry is invalid
+Can not assign value (0.301587) to typed variable (Color)
+[10] entry is invalid
+[12] entry is invalid
+[3DDriver] Found nearest render target texture
+[3DDriver]   requested: 512 x 512, format: A8R8G8B8
+[3DDriver]   found:     512 x 512, format: A8R8G8B8
+[AutoCommander] Loading...
+[3DDriver] Unable to find free predefined resource for render target texture, try to create directly
+[3DDriver] Evict all managed resources
+[Logger] Resource in DEFAULT pool created after resource in MANAGED pool
+[Logger]   MANAGED resource: MemoryTex (Textures/RealCamera_Gunlayer_tiger_1024_768.tex, Textures/RealCamera_Gunlayer_tiger_1024_768.tex), pool: A8R8G8B8, usage: 0, size: 1048576
+[Logger]   DEFAULT resource: PlaneTex, pool: A8R8G8B8, usage: 1, size: 1048576
+Can not assign value (false) to typed variable (float)
+[1] entry is invalid
+Try to get float type value from boolean (false) type variable
+Can not assign value (false) to typed variable (float)
+[1] entry is invalid
+Try to get float type value from boolean (false) type variable
+Can not assign value (false) to typed variable (float)
+[1] entry is invalid
+Try to get float type value from boolean (false) type variable
+!!!!!!!!!!!!!!!!!!! SG KILL AUTO !!!!!!!!!!!!!!!!!!
+[SoundDriver] Unable to open wav file : 
+[VoiceMessenger] Unable to load sound file: 
+[VoiceMessenger] Unable to load sound file: 
+[VoiceMessenger] Unable to load sound file: 
+[MissionController] Object MainPlayerUnit successfully loaded at 10955
+[AITankVehicle] Collision shapes: 28
+SetupPhysicsController
+[MissionController] Object MPU_PZ6_1 successfully loaded at 11012
+[MissionController] Object CC2M1GerMPU_Group successfully loaded at 11025
+SetupPhysicsController
+[MissionController] Object SovietHidden_GunZis1 successfully loaded at 11026
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietHidden_GunZis1Soldier_1 successfully loaded at 11034
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietHidden_GunZis1Soldier_2 successfully loaded at 11043
+[MissionController] Object SovietZis1HiddenGroup successfully loaded at 11045
+SetupPhysicsController
+[MissionController] Object SovietHidden_GunZis2 successfully loaded at 11046
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietHidden_GunZis2Soldier_1 successfully loaded at 11053
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object SovietHidden_GunZis2Soldier_2 successfully loaded at 11062
+[MissionController] Object SovietZis2HiddenGroup successfully loaded at 11063
+[MissionController] Object T34Hidden_Group1 successfully loaded at 11063
+[ReadonlyMesh] Loading complete
+[AITankVehicle] Collision shapes: 16
+SetupPhysicsController
+[MissionController] Object T3476Hidden1 successfully loaded at 11155
+[AITankVehicle] Collision shapes: 16
+SetupPhysicsController
+[MissionController] Object T3476Hidden2 successfully loaded at 11202
+[AITankVehicle] Collision shapes: 16
+SetupPhysicsController
+[MissionController] Object T3476Hidden3 successfully loaded at 11219
+[MissionController] Object NavPoint_C2M1_Ger1_Patrol_1 successfully loaded at 11231
+[MissionController] Object NavPoint_C2M1_Ger1_Patrol_2 successfully loaded at 11232
+[MissionController] Object NavPoint_C2M1_HiddenRu1_Patrol_1 successfully loaded at 11232
+[MissionController] Object NavPoint_C2M1_HiddenRu1_Patrol_2 successfully loaded at 11233
+[MissionController] Object NavPoint_C2M1_HiddenRu1_Patrol_3 successfully loaded at 11233
+[ReadonlyMesh] Loading complete
+[AITankVehicle] Collision shapes: 5
+SetupPhysicsController
+[MissionController] Object StayGerman_BtrHanomag251AusfC successfully loaded at 11298
+[MissionController] Object GermanSoldierStay_Group1 successfully loaded at 11299
+[ReadonlyMesh] Loading complete
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object GermanSoldierStay_1 successfully loaded at 11308
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object GermanSoldierStay_2 successfully loaded at 11317
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object GermanSoldierStay_3 successfully loaded at 11326
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object GermanSoldierStay_4 successfully loaded at 11333
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object GermanSoldierStay_5 successfully loaded at 11342
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object KurtenkiGermanSoldierStay_1 successfully loaded at 11349
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object KurtenkiGermanSoldierStay_2 successfully loaded at 11358
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object KurtenkiGermanSoldierStay_3 successfully loaded at 11365
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object KurtenkiGermanSoldierStay_4 successfully loaded at 11375
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object KurtenkiGermanSoldierStay_5 successfully loaded at 11383
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object KurtenkiGermanSoldierStay_6 successfully loaded at 11391
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object KurtenkiGermanSoldierStay_7 successfully loaded at 11399
+[ReadonlyMesh] Loading complete
+[MissionController] Object ammobox_1 successfully loaded at 11402
+[MissionController] Object ammobox_2 successfully loaded at 11403
+[MissionController] Object ammobox_3 successfully loaded at 11404
+[MissionController] Object ammobox_4 successfully loaded at 11405
+[MissionController] Object ammobox_5 successfully loaded at 11406
+[MissionController] Object ammobox_6 successfully loaded at 11407
+[MissionController] Object ammobox_7 successfully loaded at 11407
+[MissionController] Object ammobox_8 successfully loaded at 11407
+[MissionController] Object ammobox_9 successfully loaded at 11409
+[MissionController] Object ammobox_10 successfully loaded at 11409
+[MissionController] Object NavPoint_PZ6_Begin_1 successfully loaded at 11410
+[MissionController] Object NavPoint_PZ6_Attack_AT successfully loaded at 11410
+[MissionController] Object NavPoint_PZ6_Attack_T34 successfully loaded at 11410
+[MissionController] Object RepairZis_Group successfully loaded at 11411
+[ReadonlyMesh] Loading complete
+SetupPhysicsController
+[MissionController] Object ZIS_Repair_1 successfully loaded at 11443
+SetupPhysicsController
+[MissionController] Object ZIS_Repair_2 successfully loaded at 11447
+[MissionController] Object Sappers_Group1 successfully loaded at 11448
+[MissionController] Object Sappers_Group2 successfully loaded at 11448
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object sov_sapper1_1 successfully loaded at 11456
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object sov_sapper1_2 successfully loaded at 11467
+[MissionController] Object box_material_1 successfully loaded at 11469
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object sov_sapper1_3 successfully loaded at 11476
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object sov_sapper1_4 successfully loaded at 11484
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object sov_sapper2_1 successfully loaded at 11493
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object sov_sapper2_2 successfully loaded at 11500
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object sov_sapper2_3 successfully loaded at 11509
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object sov_sapper2_4 successfully loaded at 11517
+[MissionController] Object NavPointBridge successfully loaded at 11518
+[MissionController] Object NavPointKurt successfully loaded at 11518
+[MissionController] Object NavPoint_C2M1_Fire_1_1A successfully loaded at 11519
+[MissionController] Object NavPoint_C2M1_Fire_1_2A successfully loaded at 11519
+[MissionController] Object NavPoint_C2M1_Fire_1_3A successfully loaded at 11520
+[MissionController] Object NavPoint_C2M1_Fire_1_4A successfully loaded at 11520
+[MissionController] Object NavPoint_C2M1_Fire_1_5A successfully loaded at 11521
+[MissionController] Object NavPoint_C2M1_Fire_1_1B successfully loaded at 11521
+[MissionController] Object NavPoint_C2M1_Fire_1_2B successfully loaded at 11522
+[MissionController] Object NavPoint_C2M1_Fire_1_3B successfully loaded at 11522
+[MissionController] Object NavPoint_C2M1_Fire_1_4B successfully loaded at 11522
+[MissionController] Object NavPoint_C2M1_Fire_1_5B successfully loaded at 11523
+[MissionController] Object NavPoint_C2M1_Fire_1_1C successfully loaded at 11523
+[MissionController] Object NavPoint_C2M1_Fire_1_2C successfully loaded at 11524
+[MissionController] Object NavPoint_C2M1_Fire_1_3C successfully loaded at 11524
+[MissionController] Object NavPoint_C2M1_Fire_1_4C successfully loaded at 11525
+[MissionController] Object NavPoint_C2M1_Fire_1_5C successfully loaded at 11525
+[MissionController] Object NavPoint_C2M1_Fire_2_1A successfully loaded at 11525
+[MissionController] Object NavPoint_C2M1_Fire_2_2A successfully loaded at 11527
+[MissionController] Object NavPoint_C2M1_Fire_2_3A successfully loaded at 11527
+[MissionController] Object NavPoint_C2M1_Fire_2_4A successfully loaded at 11527
+[MissionController] Object NavPoint_C2M1_Fire_2_5A successfully loaded at 11528
+[MissionController] Object NavPoint_C2M1_Fire_2_1B successfully loaded at 11528
+[MissionController] Object NavPoint_C2M1_Fire_2_2B successfully loaded at 11529
+[MissionController] Object NavPoint_C2M1_Fire_2_3B successfully loaded at 11529
+[MissionController] Object NavPoint_C2M1_Fire_2_4B successfully loaded at 11530
+[MissionController] Object NavPoint_C2M1_Fire_2_5B successfully loaded at 11530
+[MissionController] Object NavPoint_C2M1_Fire_2_1C successfully loaded at 11530
+[MissionController] Object NavPoint_C2M1_Fire_2_2C successfully loaded at 11531
+[MissionController] Object NavPoint_C2M1_Fire_2_3C successfully loaded at 11532
+[MissionController] Object NavPoint_C2M1_Fire_2_4C successfully loaded at 11532
+[MissionController] Object NavPoint_C2M1_Fire_2_5C successfully loaded at 11532
+[MissionController] Object NavPoint_C2M1_Sapp_Retreat1_1 successfully loaded at 11533
+[MissionController] Object NavPoint_C2M1_Sapp_Retreat1_2 successfully loaded at 11533
+[MissionController] Object NavPoint_C2M1_Sapp_Retreat1_3 successfully loaded at 11533
+[MissionController] Object NavPoint_C2M1_Sapp_Retreat1_4 successfully loaded at 11534
+[MissionController] Object NavPoint_C2M1_Sapp_Retreat2_1 successfully loaded at 11534
+[MissionController] Object NavPoint_C2M1_Sapp_Retreat2_2 successfully loaded at 11535
+[MissionController] Object NavPoint_C2M1_Sapp_Retreat2_3 successfully loaded at 11535
+[MissionController] Object NavPoint_C2M1_Sapp_Retreat2_4 successfully loaded at 11535
+[MissionController] Object NavPoint_C2M1_Zis_Retreat_1 successfully loaded at 11536
+[MissionController] Object NavPoint_C2M1_Zis_Retreat_2 successfully loaded at 11537
+[MissionController] Object NP_Zone_1 successfully loaded at 11537
+[MissionController] Object NavPoint_PZ6_Attack_AT_ successfully loaded at 11537
+[MissionController] Object NavPoint_PZ6_Begin_Look successfully loaded at 11538
+[MissionController] Object NavPoint_PZ6_Begin_2 successfully loaded at 11538
+[MissionController] Object IL2BombNPStart_03 successfully loaded at 11538
+[MissionController] Object IL2BombNPEnd_03 successfully loaded at 11539
+[MissionController] Object NavPoint_PZ6_Begin_3 successfully loaded at 11539
+[MissionController] Object NavPoint_PZ6_MoveToBegin_1 successfully loaded at 11540
+[MissionController] Object NavPoint_PZ6_MoveToBegin_2 successfully loaded at 11540
+[MissionController] Object NavPoint_PZ6_MoveToBegin_3 successfully loaded at 11541
+[MissionController] Object NavPoint_PZ6_MoveToBegin_4 successfully loaded at 11541
+[ReadonlyMesh] Loading complete
+[MissionController] Object igels1 successfully loaded at 11544
+[MissionController] Object igels2 successfully loaded at 11545
+[MissionController] Object igels3 successfully loaded at 11545
+[MissionController] Object igels4 successfully loaded at 11547
+[MissionController] Object igels5 successfully loaded at 11548
+[MissionController] Object igels6 successfully loaded at 11549
+[MissionController] Object igels7 successfully loaded at 11550
+[ReadonlyMesh] Loading complete
+[MissionController] Object igels8pal successfully loaded at 11553
+[MissionController] Object igels9pal successfully loaded at 11555
+[MissionController] Object igels_bl_p successfully loaded at 11555
+[MissionController] Object igels_bl_h1 successfully loaded at 11557
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object gersold_bl_2 successfully loaded at 11565
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object gersold_bl_1 successfully loaded at 11573
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh9": (0.324770, 0.393569, 0.151501, 0.846567) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh8": (0.252925, 0.660529, 0.253884, 0.659752) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh10": (0.393569, 0.324770, 0.846567, 0.151501) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh11": (0.660529, 0.252925, 0.659752, 0.253884) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh2": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh1": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh6": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh7": (0.534873, 0.462505, 0.534873, 0.462505) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh5": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh4": (0.462505, 0.534873, 0.462505, 0.534873) (must be: 0,0,0,1)
+[AbstractJoint] Invalid rotation of collision mesh "CollisionMesh3": (0.500000, 0.500000, 0.500000, 0.500000) (must be: 0,0,0,1)
+[MissionController] Object gersold_bl_3 successfully loaded at 11582
+[MissionController] Object igels_bl_h2 successfully loaded at 11583
+[MissionController] Object igels_bl_h3 successfully loaded at 11584
+[MissionController] Object NavPoint_PZ6_MoveToBegin_2_1 successfully loaded at 11584
+[MissionController] Object NavPoint_PZ6_MoveToBegin_2_2 successfully loaded at 11585
+[MissionController] Object igels8pal1-1 successfully loaded at 11586
+[ScriptManager] "Scripts\Buildings\BridgeWoodUnit.script", 35(15): Failed to invoke constructor with 1 arguments of component #GridObject
+[ReadonlyMesh] Loading complete
+[MissionController] Object Bridge_1 successfully loaded at 11590
+[ReadonlyMesh] Loading complete
+SetupPhysicsController
+[MissionController] Object Blitz_1 successfully loaded at 11623
+SetupPhysicsController
+[MissionController] Object Blitz_2 successfully loaded at 11627
+[ReadonlyMesh] Loading complete
+[MissionController] Object Barrels_1 successfully loaded at 11630
+[MissionController] Object Barrels_2 successfully loaded at 11631
+[MissionController] Object Barrels_3 successfully loaded at 11632
+[MissionController] Object CZheadgehog_1 successfully loaded at 11633
+[MissionController] Object CZheadgehog_2 successfully loaded at 11634
+SetupPhysicsController
+[MissionController] Object Blitz_3 successfully loaded at 11637
+SetupPhysicsController
+[MissionController] Object Blitz_4 successfully loaded at 11641
+[ReadonlyMesh] Loading complete
+[MissionController] Object Logs_1 successfully loaded at 11644
+[MissionController] Object Barrels_4 successfully loaded at 11647
+[AITankVehicle] Collision shapes: 5
+SetupPhysicsController
+[MissionController] Object sdkfz_1 successfully loaded at 11652
+[ReadonlyMesh] Loading complete
+Unable to load texture file Textures/u_veh_StuG40_crashed_s.tex
+Unable to load texture file Textures/u_veh_StuG40_track_s.tex
+[AbstractJoint] Invalid position of collision mesh "Turret_A_CM": (0.000000, 0.000000, 0.001153) (must be: 0,0,0)
+Weapon fire deviation for StuG_1=1.200000
+[AITankVehicle] Collision shapes: 6
+SetupPhysicsController
+[MissionController] Object StuG_1 successfully loaded at 11737
+Number == DefaultNumberMaterialName
+[MissionController] Object StuG_Group1 successfully loaded at 11738
+[ChunkedTerrain] Create vertical forest pool on 22109 elements
+[ChunkedTerrain] Vertical forest generation time: 0.165000 sec
+[GameController] Object [Mission] successfully loaded
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Kurtenki1House1Group deleted
+[MissionController] Object Kurtenki1House2Group deleted
+[MissionController] Object Kurtenki1House3Group deleted
+[MissionController] Object Kurtenki1House4Group deleted
+[MissionController] Object Kurtenki1House5Group deleted
+[MissionController] Object Kurtenki1House6Group deleted
+[MissionController] Object Kurtenki1House7Group deleted
+[MissionController] Object Kurtenki1House8Group deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11974
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11978
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11978
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11979
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11980
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11980
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11981
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11981
+[MissionController] Object Kurtenki1House8_fences deleted
+[MissionController] Object Kurtenki1House8_fences successfully loaded at 11982
+[MissionController] Object Village_Kurtenki1 deleted
+[MissionController] Object Kurtenki1House8_fences deleted
+[MissionController] Object Village_Kurtenki1 successfully loaded at 11983
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House1Group deleted
+[MissionController] Object House2Group deleted
+[MissionController] Object House3Group deleted
+[MissionController] Object House4Group deleted
+[MissionController] Object House5Group deleted
+[MissionController] Object House6Group deleted
+[MissionController] Object House7Group deleted
+[MissionController] Object House8Group deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11984
+[MissionController] Object House1_fences deleted
+[MissionController] Object House1_fences successfully loaded at 11985
+[MissionController] Object House6_fences deleted
+[MissionController] Object House6_fences successfully loaded at 11985
+[MissionController] Object House3_fences deleted
+[MissionController] Object House3_fences successfully loaded at 11986
+[MissionController] Object House2_fences deleted
+[MissionController] Object House2_fences successfully loaded at 11986
+[MissionController] Object House5_fences deleted
+[MissionController] Object House5_fences successfully loaded at 11987
+[MissionController] Object House4_fences deleted
+[MissionController] Object House4_fences successfully loaded at 11987
+[MissionController] Object House7_fences deleted
+[MissionController] Object House7_fences successfully loaded at 11987
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House1_fences deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11987
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House2_fences deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11988
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House3_fences deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11988
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House4_fences deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11989
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House5_fences deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11990
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House6_fences deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11990
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House7_fences deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11991
+[MissionController] Object House8_fences deleted
+[MissionController] Object House8_fences successfully loaded at 11992
+[MissionController] Object Village_Kurtenki_2 deleted
+[MissionController] Object House8_fences deleted
+[MissionController] Object Village_Kurtenki_2 successfully loaded at 11992
+[MissionController] Object StuG_Group1 deleted
+[MissionController] Object StuG_Group1 successfully loaded at 12019
+[MissionController] Object AllVillageNavPoints successfully loaded at 12022
+[MissionController] Object AllVillageNavPoints deleted
+[MissionController] Object NavPoint_Village_Viso4ani deleted
+[MissionController] Object NavPoint_Village_Kurtenki deleted
+[MissionController] Object AllVillageNavPoints successfully loaded at 12022
+[Router] Could not create script host "CBaseHoverBehavior"
+[Router] RouterMap generation time: 0.018000 sec
+[STTreeReadonlyMesh] Create Models/Trees/Fir_short.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Fir_short.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/BulfordHolly.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/BulfordHolly.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Linden.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Linden.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Birch.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Birch.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Birch.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Birch.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Fir_tall_bend.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Fir_tall_bend.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Fir_tall.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/Fir_tall.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/FirScotch.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/FirScotch.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/FirScotch.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/FirScotch.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/BulfordHolly.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/BulfordHolly.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/AppleTree.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/AppleTree.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/AppleTree.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/AppleTree.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/LiveOak.spt tree
+[STTreeReadonlyMesh] Create Models/Trees/LiveOak.spt tree
+[STForest] 30043 trees generated
+MainPlayerUnit GodMode false
+Mission loading duration: 3.482000
+Play music: RusMain
+[ScriptManager] "Scripts\Menus\StartMissionMenu.script", 22(5): Invalid this reference
+[ScriptManager] "Scripts\Menus\StartMissionMenu.script", 26(5): Invalid this reference
+[ScriptManager] "Scripts\Menus\StartMissionMenu.script", 27(5): Invalid this reference
+[ScriptManager] "Scripts\Menus\StartMissionMenu.script", 28(5): Invalid this reference
+[3DDriver] Evict all managed resources
+[Logger] Resource in DEFAULT pool created after resource in MANAGED pool
+[Logger]   MANAGED resource: IB (RoadIB), pool: INDEX16, usage: 8, size: 28368
+[Logger]   DEFAULT resource: VB (ProgressiveTerrain), pool: VERTEXDATA, usage: 208, size: 2097152
+[STForestRender] vertex_counter = 0
+[MissionController] Object MissionEditor successfully loaded at 12825
+[MissionController] Object TerrainEditor successfully loaded at 12829
+[MissionController] Object EditorCursor successfully loaded at 12829
+[MissionController] Object C2M1_MainPlayerUnit_Watcher successfully loaded at 12829
+[GameController] MainPlayerUnit object activated
+[GameController] MainPlayerUnit object activated
+SovietZis1Group::SetFormation(Independent)
+Human Move end
+Human Move end
+SovietZis2Group::SetFormation(Independent)
+Human Move end
+Human Move end
+SovietZis3Group::SetFormation(Independent)
+Human Move end
+Human Move end
+GroupUnit_USRIL2::SetFormation(CWideWedgeFormation)
+CC2M1GerMPU_Group::SetFormation(Independent)
+SovietZis1HiddenGroup::SetFormation(Independent)
+Human Move end
+Human Move end
+SovietZis2HiddenGroup::SetFormation(Independent)
+Human Move end
+Human Move end
+T34Hidden_Group1::SetFormation(CWedgeFormation)
+GermanSoldierStay_Group1::SetFormation(Independent)
+Human Move end
+Human Move end
+Human Move end
+Human Move end
+Human Move end
+RepairZis_Group::SetFormation(Independent)
+RepairZis_Group::SetFormation(CWedgeFormation)
+ZIS_Repair_1:: SetOrder_MoveTo 
+[Router] order_MoveTo
+Sappers_Group1::SetFormation(Independent)
+Human Move end
+Human Move end
+Human Move end
+Human Move end
+Sappers_Group2::SetFormation(Independent)
+Human Move end
+Human Move end
+Human Move end
+Human Move end
+[ScriptManager] "Scripts\Units\TankPzVIAusfEUnit.script", 1690(25): Invalid this reference
+[ScriptManager] "Scripts\Units\TankPzVIAusfEUnit.script", 1691(26): Invalid this reference
+[ScriptManager] "Scripts\Units\TankPzVIAusfEUnit.script", 1693(17): Failed to get member variable LightOn
+[ScriptManager] "Scripts\Units\TankPzVIAusfEUnit.script", 1693(5): Invalid type of condition expression, should be 'bool'
+[ScriptManager] "Scripts\Units\TankPzVIAusfEUnit.script", 1696(17): Failed to get member variable LightOff
+[ScriptManager] "Scripts\Units\TankPzVIAusfEUnit.script", 1696(5): Invalid type of condition expression, should be 'bool'
+[AnimatedObject] anim name  not found for StayGerman_BtrHanomag251AusfC
+[AnimatedObject] anim name  not found for sdkfz_1
+[AnimatedObject] anim name gun_c_leftdn not found for MainPlayerUnit
+[AnimatedObject] anim name gun_c_leftup not found for MainPlayerUnit
+[AnimatedObject] anim name gun_c_rightdn not found for MainPlayerUnit
+[AnimatedObject] anim name gun_c_rightup not found for MainPlayerUnit
+[AnimatedObject] anim name tacho not found for MainPlayerUnit
+[AnimatedObject] anim name speed not found for MainPlayerUnit
+[AnimatedObject] anim name water_temperature not found for MainPlayerUnit
+[AnimatedObject] anim name oil_pressure not found for MainPlayerUnit
+[ShadingEffect] Unable to find valid version for technique Font in shading effect Shaders\Font.fxo, Result for last version: 88760821
+Play music: Main
+[InputController] set action map : partitial success.return code b
+Unsupported command in game script: 268472321
+[GameController] Object [Mission] deleted
+[3DDriver] Mark predefined texture as freee 512 x 512, format: A8R8G8B8, pool: DEFAULT
+[GameController] Object GameMenu deleted
+[MenuGroup] Object with identifier "EscTimer" not found
+[3DDriver] Mark predefined texture as freee 512 x 512, format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Mark predefined texture as freee 480 x 270, format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Mark predefined texture as freee 480 x 270, format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Mark predefined texture as freee 1920 x 1080, format: A8R8G8B8, pool: DEFAULT
+[3DDriver] surfaces unloaded successfully
+[3DDriver] UninitDirect3D
+[3DDriver] ReleasePredefinedResources
+[3DDriver] m_PredefinedTextures size(5)
+[3DDriver] RegisterResourceRelease step(0)
+[3DDriver] Texture->Release()
+[3DDriver] RegisterResourceRelease step(1)
+[3DDriver] Texture->Release()
+[3DDriver] RegisterResourceRelease step(2)
+[3DDriver] Texture->Release()
+[3DDriver] RegisterResourceRelease step(3)
+[3DDriver] Texture->Release()
+[3DDriver] RegisterResourceRelease step(4)
+[3DDriver] Texture->Release()
+[3DDriver] ReleasePredefinedResources end
+[3DDriver] ReleaseZBuffer
+[3DDriver] SetDepthStencilSurface
+[3DDriver] m_pZBuffer->Release()
+[3DDriver] ReleaseZBuffer end
+[3DDriver] m_StateManager begin
+[3DDriver] m_pDirect3DDevice->Release()
+[3DDriver] Device release counter 1
+[3DDriver] direct3d uninitialized successfully
+Components quantity:
+  Component 3DDriver 1
+  Component 3DScene 1
+  Component AbstractJoint 375
+  Component AbstractObject 66
+  Component AmmoContainer 2
+  Component AnimatedJoint 375
+  Component AnimatedObject 65
+  Component ArrayVariable 2750
+  Component Atmosphere 1
+  Component BitmapButton 2
+  Component BoxShape 109
+  Component BulletsArray 1
+  Component Camera 1
+  Component CapsuleShape 6
+  Component CockpitControl 1
+  Component ColorVariable 2215
+  Component CubeTexture 1
+  Component CylinderShape 114
+  Component EffectsArray 1
+  Component Emitter 46
+  Component EventController 56
+  Component GameSettings 1
+  Component GameTimer 1
+  Component GeometryGroup 1
+  Component Grass 1
+  Component GroupObject 2
+  Component HingeJoint 16
+  Component IndexBuffer 12
+  Component InputController 1
+  Component LineAnimator 35
+  Component Locale 1
+  Component MapVariable 54
+  Component MaterialManager 78
+  Component MatrixLayerHeightField 1
+  Component MatrixVariable 35
+  Component MenuController 1
+  Component NormalizeTexture 1
+  Component ObjectObjectLink2 1
+  Component ObjectPhysicsController 63
+  Component PackedControl 1
+  Component PackedFile 11
+  Component PackedFileSystem 1
+  Component ParentInstance 2426
+  Component PartObject 1
+  Component PerlinNoiseTerrain 1
+  Component PhysicalBody 80
+  Component PrimBuffer 1
+  Component ReadonlyMesh 11
+  Component RegistryStorage 1
+  Component STForestRender 1
+  Component SceneRender 1
+  Component ScriptClass 110
+  Component ScriptDebugger 1
+  Component ScriptHost 897
+  Component ShadersGroup 11
+  Component ShadingEffect 25
+  Component ShadowMapArray 1
+  Component ShadowRender 1
+  Component SkinJoint 31
+  Component SkyObject 1
+  Component SliderCursorControl 1
+  Component SoundDriver 1
+  Component SpriteRender 1
+  Component StringVariable 8443
+  Component TankAutoThingControl 1
+  Component TankVehicle 1
+  Component TerrainZoneMap 1
+  Component TextControl 1
+  Component TextRender 1
+  Component Texture 105
+  Component UIRender 1
+  Component UpdateGroup 1
+  Component VectorVariable 91
+  Component VertexBuffer 34
+  Component WStringVariable 126
+  Component Weapon 52
+  Component Weapon2 4
+  Component Wind 1
+  Component WorldMatrices 1
+  Component ZoneMap 1
+  Total 18976
+Script Classes quantity:
+  Script Class CAnimatedMaterial 1
+  Script Class CAntiTankSingleUnit 12
+  Script Class CBackgroundsMenu 1
+  Script Class CBaseAtmosphere 1
+  Script Class CBaseGrassC1 1
+  Script Class CBaseGrassSkin 1
+  Script Class CBaseManualControl 1
+  Script Class CBaseMenu 1
+  Script Class CBaseStateControl 97
+  Script Class CBaseSubstance 63
+  Script Class CBaseUIControl 2
+  Script Class CBaseUtilities 64
+  Script Class CBaseZoneMap 2
+  Script Class CBodySubstance 33
+  Script Class CBtrHanomag251AusfCSubstance 2
+  Script Class CBtrHanomag251AusfCUnit 2
+  Script Class CBuilding 12
+  Script Class CBuildingStateControl 12
+  Script Class CC2M1Atmosphere 1
+  Script Class CC2M1LandscapeLayer 1
+  Script Class CC2M1TerrainZoneLayer 1
+  Script Class CCamera 1
+  Script Class CCockpit 2
+  Script Class CColorTableMaker 1
+  Script Class CCommonAtmosphere 1
+  Script Class CConstraintProperties 64
+  Script Class CDebugSettings 1
+  Script Class CDestructibleBuildingItem 1
+  Script Class CDevicesController 52
+  Script Class CEditable 65
+  Script Class CEffectDescr 80
+  Script Class CEscapeControls 1
+  Script Class CEscapeMenu 1
+  Script Class CExtendUnit 2
+  Script Class CGameSettings 1
+  Script Class CGermanSoldierRifleUnit 15
+  Script Class CGrassBillboardMaterial 1
+  Script Class CGrassType 10
+  Script Class CGrassType0 1
+  Script Class CGrassType1 1
+  Script Class CGrassType2 1
+  Script Class CGrassType3 1
+  Script Class CGrassType4 2
+  Script Class CGrassType5 1
+  Script Class CGrassType6 1
+  Script Class CGrassType7 1
+  Script Class CGrassType8 1
+  Script Class CGroundBuilding 12
+  Script Class CGunZis3Substance 5
+  Script Class CGunZis3Unit 5
+  Script Class CHumanStateControl 33
+  Script Class CHumanUnit 33
+  Script Class CLandscapeLayer 1
+  Script Class CMaterialStructure 485
+  Script Class CMenuSkin 1
+  Script Class CMenuWrapper 3
+  Script Class CMetalSubstance 30
+  Script Class CModelMaterial 387
+  Script Class CObject 64
+  Script Class CPhysicaleObject 19
+  Script Class CPlayerCamera 1
+  Script Class CPlayerStateControl 2
+  Script Class CPlayerUnit 2
+  Script Class CPropertiesMap 2
+  Script Class CPushObject 19
+  Script Class CPushVehicleObject 14
+  Script Class CSAUStuG40Substance 1
+  Script Class CSAUStuG40Unit 1
+  Script Class CSovietSoldierRifleUnit 18
+  Script Class CSpecialSettings 1
+  Script Class CT34_76_85Substance 3
+  Script Class CTankPlayerUnit 2
+  Script Class CTankPzIVGSubstance 1
+  Script Class CTankPzVIAusfEAmmoContainer 2
+  Script Class CTankPzVIAusfEEngineSystem 1
+  Script Class CTankPzVIAusfEMainWheel 16
+  Script Class CTankPzVIAusfEManualControl 1
+  Script Class CTankPzVIAusfEUnit 2
+  Script Class CTankT34_76_42Unit 3
+  Script Class CTankUnit 4
+  Script Class CTerrainZoneLayer 1
+  Script Class CTruckOpelBlitzSubstance 4
+  Script Class CTruckOpelBlitzUnit 4
+  Script Class CTruckZis5Substance 2
+  Script Class CTruckZis5Unit 2
+  Script Class CUIMaterial 93
+  Script Class CUIOnDemand2Material 3
+  Script Class CUIOnDemandMaterial 89
+  Script Class CUIPosition 4
+  Script Class CUIScrollBar 1
+  Script Class CUIScrollableTextField 1
+  Script Class CUITextField 1
+  Script Class CUIVerticalScrollBar 1
+  Script Class CUnit 50
+  Script Class CUnitItemDescriptor 81
+  Script Class CUnitStateControl 85
+  Script Class CWeaponConfig 6
+  Script Class Cbld_PileLogsModelSkin 2
+  Script Class Cenv_Antitank_singleModelSkin 13
+  Script Class Chum_GermanSoldierRifleModelSkin 16
+  Script Class Chum_SovietSoldierRifleModelSkin 19
+  Script Class Cu_stat_zis3ModelSkin 6
+  Script Class Cu_veh_Hanomag_251CModelSkin 3
+  Script Class Cu_veh_OpelBlitzModelSkin 5
+  Script Class Cu_veh_PzVI_LATEModelSkin 3
+  Script Class Cu_veh_SAU_Stug40ModelSkin 2
+  Script Class Cu_veh_t34_76_42ModelSkin 4
+  Script Class Cu_veh_zis5ModelSkin 3
+  Script Class IObject 64
+  Script Class ISerializeable 64
+  Total 2426
+Video resources list:
+Video resources groups:
+  DefaultPoolSize  0
+  ManagedPoolSize  0
+  SysmemPoolSize   0
+  ScratchPoolSize  0
+  AllAllocatedSize 0

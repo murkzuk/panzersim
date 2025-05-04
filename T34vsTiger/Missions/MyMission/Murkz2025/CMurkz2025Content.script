@@ -1,0 +1,6 @@
+class CMurkz2025Content extends CSingleMissionContent
+{
+  String MissionName = "Forward Probe";
+
+  String MissionDescription = "Soviet forces have detected possible enemy activity near a key crossroads 1 kilometer ahead. A lone T-34 is dispatched to probe the area. Expect resistance: reconnaissance indicates possible anti-tank positions and armored support. Proceed with caution. Identify, engage, and eliminate the threat if possible.";
+}

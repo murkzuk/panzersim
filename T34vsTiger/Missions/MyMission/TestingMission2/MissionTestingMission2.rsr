@@ -1,0 +1,6 @@
+[MissionTestingMission2]
+MissionName    ="Jeff’s Test Mission"
+BriefingText   ="Advance to the crossroads\nEngage all targets"
+ObjectivesText ="Advance to the crossroads\nEngage all targets"
+Objective01    ="Advance to the crossroads"
+Objective02    ="Engage all targets"
