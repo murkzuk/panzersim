@@ -1,5 +1,96 @@
 PanzerSim Hand-off Summary for T-34 vs Tiger ww2 battletanks by g5 GPT Support
 
+**PanzerSim GPT Handoff Summary — Phase 2**
+
+**📌 Project Hub:**
+[https://murkzuk.github.io/panzersim/](https://murkzuk.github.io/panzersim/)
+
+**👤 Modder:**
+Jeff (aka PanzerSim, murkz, murkzuk, mudcog) — non‑coder modder, heavy AI‑assisted scripting, long‑term TvT researcher.
+
+**🎯 Project Goals:**
+
+* Deep modding of *T-34 vs Tiger* (TvT) missions.
+* Terrain, visuals, foliage enhancements.
+* Functional AI scripting (wingman behavior, follow tasks).
+* Robust mission logic, briefings, audio immersion.
+* Leverage WoV (Whirlwinds Over Vietnam) systems where applicable.
+
+**📦 Key Resources:**
+
+* **GitHub Repo**: mission templates, CLI tools, TXT analyses.
+* **Exported Forum Threads**: 52 threads covering scripting failures, parser errors, community patches.
+* **Primary Docs**: Modder’s Handbook, flowcharts, checklist PDFs/ODTs.
+* **Editor Companion**: HTML + JS boilerplate generator.
+* **AI Comparison Files**: WoV vs TvT scripts, radio chatter notes, cross‑reference matrices.
+
+**🛠️ Known Issues & Symptom Map:**
+
+1. **AI Scripting & Tasking**
+
+   * `AITaskFollow` stubbed/ignored → parse crashes or no behavior.
+   * Wingman/group behaviors splinter to individuals.
+
+2. **Unit Grouping & Array Syntax**
+
+   * Editor‑grouped units drop orders.
+   * Manual array inserts in `MissionsMenu.script` introduce trailing commas, missing braces.
+
+3. **Menu Patching**
+
+   * New missions do not appear in game/editor menus.
+   * `MenuConfig.script` logic changed in v6.1; half‑patched lists.
+
+4. **Mission File Scaffolding & Load Failures**
+
+   * Missing `.rsr`, `.tex`, `.raw`, briefing files → load crashes or greyed‑out missions.
+   * Web UI generator omits key templates.
+
+5. **CLI Bugs & Format Errors**
+
+   * Errant space in f-string: `ValueError: Invalid format specifier '02d '`.
+   * PowerShell quoting prevents single‑line invocation.
+
+6. **Visual & Terrain Mods**
+
+   * Low tree LOD, pop‑in glitches.
+   * Inconsistent lighting vs WoV engine.
+
+7. **Editor Companion & Tooling**
+
+   * JSZip integration broken in embedded browser.
+   * Omits `MenuConfig` patch file in ZIP.
+
+8. **Audio & Asset Fixes**
+
+   * Missing/garbled WAV files (bullethit\_armour04.wav).
+
+**🧩 Context & History:**
+
+* Jeff has iterated for over a year, with high frustration from repeated failures.
+* Phase 1 (scaffold & rename) of CLI works; Phase 2 (metadata & menu patch) prototype exists but incomplete.
+* Community patches (v6.1) and forum‑supplied JS snippets have partially solved some issues.
+
+**✅ Best Practices for Next GPT Session:**
+
+* **Read all GitHub code & TXT analyses** before suggesting fixes.
+* **Avoid any previously failed fixes** (broken group syntax, stubbed `AITaskFollow`).
+* **Provide exact, copy‑and‑paste–ready scripts** and CLI examples (single‑line, Windows‑friendly).
+* **Confirm each change** by describing expected CLI output and in‑game results.
+* **Respect frustration**: prioritize small wins and clear success indicators.
+
+**🚀 Recommended Next Steps:**
+
+1. **Apply RSR f-string fix** (`Objective{idx:02d}`) and validate.
+2. **Harden CLI argparse** for `--title`, `--brief`, `--obj`, `--campaign`, `-y`.
+3. **Embed v6.1 menu‑patch logic** with robust comma/bracket handling for USSR & Germany arrays.
+4. **Update scaffolding** to include all file types and briefing templates (per checklist).
+5. **Design AI‑task fallback** using periodic `AITaskMove` if `AITaskFollow` remains stubbed.
+6. **Automate end‑to‑end tests** with clear pass/fail logs and success messages.
+
+*Ready for Phase 2 CLI refinement and mission‑builder stabilization.*
+
+
 🔗 Project Hub:
 https://murkzuk.github.io/panzersim/
 

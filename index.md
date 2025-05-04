@@ -5,10 +5,15 @@
 |------|------|----------|
 | [build_index.py](build_index.py) | 1 KB | 2025-05-02 |
 | [dummy_missing_wavs.zip](dummy_missing_wavs.zip) | 1 KB | 2025-05-02 |
-| [index.md](index.md) | 14 KB | 2025-05-02 |
+| [export_threads.py](export_threads.py) | 1 KB | 2025-05-04 |
+| [forum_topics.csv](forum_topics.csv) | 6 KB | 2025-05-04 |
+| [GPT Handoff_Notes.txt](GPT Handoff_Notes.txt) | 8 KB | 2025-05-04 |
+| [index.md](index.md) | 75 KB | 2025-05-04 |
+| [index_forum.py](index_forum.py) | 0 KB | 2025-05-04 |
 | [MainMenuBackground_1.dds](MainMenuBackground_1.dds) | 384 KB | 2025-05-02 |
 | [MenuBackground_Germany.dds](MenuBackground_Germany.dds) | 384 KB | 2025-05-02 |
 | [MenuBackground_Germany.png](MenuBackground_Germany.png) | 859 KB | 2025-05-02 |
+| [Panzersim_T34_vs_Tiger_Threads.zip](Panzersim_T34_vs_Tiger_Threads.zip) | 58 KB | 2025-05-04 |
 | [properties radar.png](properties radar.png) | 12 KB | 2025-05-02 |
 | [replace_mission_names.py - Shortcut.lnk](replace_mission_names.py - Shortcut.lnk) | 0 KB | 2025-05-02 |
 | [tvt.reg](tvt.reg) | 11 KB | 2025-05-02 |
@@ -59,6 +64,62 @@
 | [New code weapon specific data (ai) not needed as per unit\WeaponData.script.gpt.txt](New code weapon specific data (ai) not needed as per unit/WeaponData.script.gpt.txt) | 0 KB | 2025-05-02 |
 | [New code weapon specific data (ai) not needed as per unit\WeaponRanges.script](New code weapon specific data (ai) not needed as per unit/WeaponRanges.script) | 0 KB | 2025-05-02 |
 | [New code weapon specific data (ai) not needed as per unit\WeaponRanges.script.txt](New code weapon specific data (ai) not needed as per unit/WeaponRanges.script.txt) | 0 KB | 2025-05-02 |
+
+## Panzersim_T34_vs_Tiger_Threads
+| File | Size | Modified |
+|------|------|----------|
+| [Panzersim_T34_vs_Tiger_Threads\__Join Our PanzerSims Discord Server!__.txt](Panzersim_T34_vs_Tiger_Threads/__Join Our PanzerSims Discord Server!__.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\A _T-34 vs Tiger_ Player's Take on _Whirlwind Over Vietnam_ Features.txt](Panzersim_T34_vs_Tiger_Threads/A _T-34 vs Tiger_ Player's Take on _Whirlwind Over Vietnam_ Features.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\A complete mission editor guide!.txt](Panzersim_T34_vs_Tiger_Threads/A complete mission editor guide!.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\A Legacy of Authenticity and Challenge.txt](Panzersim_T34_vs_Tiger_Threads/A Legacy of Authenticity and Challenge.txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\A Look Back_.txt](Panzersim_T34_vs_Tiger_Threads/A Look Back_.txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\A Reflection on ZeeWolf's Mod and Its Future.txt](Panzersim_T34_vs_Tiger_Threads/A Reflection on ZeeWolf's Mod and Its Future.txt) | 10 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\A tiny mod.txt](Panzersim_T34_vs_Tiger_Threads/A tiny mod.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Apologies to NEW USERS!.txt](Panzersim_T34_vs_Tiger_Threads/Apologies to NEW USERS!.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Attempt to Increase Terrain LOD in WWII Battle Tanks_.txt](Panzersim_T34_vs_Tiger_Threads/Attempt to Increase Terrain LOD in WWII Battle Tanks_.txt) | 3 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Breathing New Life into Old Tracks.txt](Panzersim_T34_vs_Tiger_Threads/Breathing New Life into Old Tracks.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Comprehensive Key Bindings Guide for WWII Battle Tanks_ T-34 vs. Tiger.txt](Panzersim_T34_vs_Tiger_Threads/Comprehensive Key Bindings Guide for WWII Battle Tanks_ T-34 vs. Tiger.txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Enhancing Atmosphere and Lighting....txt](Panzersim_T34_vs_Tiger_Threads/Enhancing Atmosphere and Lighting....txt) | 6 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Enhancing Shadows in T-34 vs. Tiger_ A Simple Modding Guide.txt](Panzersim_T34_vs_Tiger_Threads/Enhancing Shadows in T-34 vs. Tiger_ A Simple Modding Guide.txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Enhancing Shadows....txt](Panzersim_T34_vs_Tiger_Threads/Enhancing Shadows....txt) | 4 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Fixed Sound for TvT_ Mmp7 Missing bullethit_armour04.wav (JSGME-Ready).txt](Panzersim_T34_vs_Tiger_Threads/Fixed Sound for TvT_ Mmp7 Missing bullethit_armour04.wav (JSGME-Ready).txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Game only opens until it starts.txt](Panzersim_T34_vs_Tiger_Threads/Game only opens until it starts.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\how to do it_.txt](Panzersim_T34_vs_Tiger_Threads/how to do it_.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\I didn't last long!.txt](Panzersim_T34_vs_Tiger_Threads/I didn't last long!.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\I've dusted it off and started modding it again.txt](Panzersim_T34_vs_Tiger_Threads/I've dusted it off and started modding it again.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Improving Tree LODs....txt](Panzersim_T34_vs_Tiger_Threads/Improving Tree LODs....txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Improving Tree Rendering....txt](Panzersim_T34_vs_Tiger_Threads/Improving Tree Rendering....txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Interesting Find_ Velocity Scaling....txt](Panzersim_T34_vs_Tiger_Threads/Interesting Find_ Velocity Scaling....txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Interesting T-34_76 Discovery in WWII Battle Tanks_ T-34 vs. Tiger.txt](Panzersim_T34_vs_Tiger_Threads/Interesting T-34_76 Discovery in WWII Battle Tanks_ T-34 vs. Tiger.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\MMP5 Download Link.txt](Panzersim_T34_vs_Tiger_Threads/MMP5 Download Link.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\MMp6.1 Beta Download.txt](Panzersim_T34_vs_Tiger_Threads/MMp6.1 Beta Download.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Mmp7 and final release by Monkwarrior..txt](Panzersim_T34_vs_Tiger_Threads/Mmp7 and final release by Monkwarrior..txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\MMP7 BETA release is imminent..txt](Panzersim_T34_vs_Tiger_Threads/MMP7 BETA release is imminent..txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\MonkWarrior's Mod_ Multiplayer Testers Needed for 'T-34 vs. Tiger.txt](Panzersim_T34_vs_Tiger_Threads/MonkWarrior's Mod_ Multiplayer Testers Needed for 'T-34 vs. Tiger.txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\New Mod No Tree Wall.txt](Panzersim_T34_vs_Tiger_Threads/New Mod No Tree Wall.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\New SP Mission.txt](Panzersim_T34_vs_Tiger_Threads/New SP Mission.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\New T-34 vs Tiger Single-Player Mission Created!.txt](Panzersim_T34_vs_Tiger_Threads/New T-34 vs Tiger Single-Player Mission Created!.txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\New T34 vs Tiger icon for our modern o_s's.txt](Panzersim_T34_vs_Tiger_Threads/New T34 vs Tiger icon for our modern o_s's.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\New to t34 vs tiger need help _mods_.txt](Panzersim_T34_vs_Tiger_Threads/New to t34 vs tiger need help _mods_.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Noticing a Performance Drop When Using F9 Debug Mode in TvsT.txt](Panzersim_T34_vs_Tiger_Threads/Noticing a Performance Drop When Using F9 Debug Mode in TvsT.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\R.I.P Monkwarrior (mmp creator).txt](Panzersim_T34_vs_Tiger_Threads/R.I.P Monkwarrior (mmp creator).txt) | 4 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Ray Tracing Global Illumination.txt](Panzersim_T34_vs_Tiger_Threads/Ray Tracing Global Illumination.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Release Announcement for ZeeWolf's Mod.txt](Panzersim_T34_vs_Tiger_Threads/Release Announcement for ZeeWolf's Mod.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Release of T34 vs Tiger Modder's Handbook with AI Analysis - Dive into Modding!.txt](Panzersim_T34_vs_Tiger_Threads/Release of T34 vs Tiger Modder's Handbook with AI Analysis - Dive into Modding!.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Skins for a remarkable tank sim.txt](Panzersim_T34_vs_Tiger_Threads/Skins for a remarkable tank sim.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\T-34 vs Tiger Web Mission Generator (Sneak Peek).txt](Panzersim_T34_vs_Tiger_Threads/T-34 vs Tiger Web Mission Generator (Sneak Peek).txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\T-34 vs Tiger – Mission Modding Bible v1.0.txt](Panzersim_T34_vs_Tiger_Threads/T-34 vs Tiger – Mission Modding Bible v1.0.txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\T34 vs Tiger - Distant Terrain Enhancement Mod (Microtexture Fix).txt](Panzersim_T34_vs_Tiger_Threads/T34 vs Tiger - Distant Terrain Enhancement Mod (Microtexture Fix).txt) | 5 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\T34 vs Tiger 1.1 patch.txt](Panzersim_T34_vs_Tiger_Threads/T34 vs Tiger 1.1 patch.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\T34 vs Tiger Screenshots.txt](Panzersim_T34_vs_Tiger_Threads/T34 vs Tiger Screenshots.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\The updated manual, _Export Manual_ Tutorial 1 2024 Revision,_.txt](Panzersim_T34_vs_Tiger_Threads/The updated manual, _Export Manual_ Tutorial 1 2024 Revision,_.txt) | 0 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Try MMP 7 HERE.txt](Panzersim_T34_vs_Tiger_Threads/Try MMP 7 HERE.txt) | 7 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Tuning Into the Past_ The Potential of Radio Comms in T-34 vs. Tiger.txt](Panzersim_T34_vs_Tiger_Threads/Tuning Into the Past_ The Potential of Radio Comms in T-34 vs. Tiger.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\TvT Mission Editor - Correct Radar Setup for Objects.txt](Panzersim_T34_vs_Tiger_Threads/TvT Mission Editor - Correct Radar Setup for Objects.txt) | 1 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Two New objects imported into TvT (HOWTO).txt](Panzersim_T34_vs_Tiger_Threads/Two New objects imported into TvT (HOWTO).txt) | 3 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\Why I will not continue to mod T34 vs Tiger anymore (And What I've Learned).txt](Panzersim_T34_vs_Tiger_Threads/Why I will not continue to mod T34 vs Tiger anymore (And What I've Learned).txt) | 6 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\ZeeWolf T34 vs Tiger screenshots.txt](Panzersim_T34_vs_Tiger_Threads/ZeeWolf T34 vs Tiger screenshots.txt) | 2 KB | 2025-05-04 |
+| [Panzersim_T34_vs_Tiger_Threads\ZeeWolf's Christmas gift found_ Link here..txt](Panzersim_T34_vs_Tiger_Threads/ZeeWolf's Christmas gift found_ Link here..txt) | 2 KB | 2025-05-04 |
 
 ## Silent wavs
 | File | Size | Modified |
