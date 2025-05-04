@@ -1,0 +1,16 @@
+python tvt_mission_builder_cli.py -i "M:\T34vsTiger" -s "Missions\Campaign_2\Mission_1" -n Kurtenki2 -e .script .rsr .tex .raw .bmp .scc --title "Securing Kurtenki 2" --brief "Advance to the river crossing\nEngage all targets" --obj "Advance to the bridge" --obj "Engage all targets" --campaign ussr -y
+or
+
+python tvt_mission_builder_cli.py `
+  -i "M:\T34vsTiger" `
+  -s "Missions\Campaign_2\Mission_1" `
+  -n Kurtenki2 `
+  -e .script .rsr .tex .raw .bmp .scc `
+  --title "Securing Kurtenki 2" `
+  --brief "Advance to the river crossing\nEngage all targets" `
+  --obj "Advance to the bridge" `
+  --obj "Engage all targets" `
+  --campaign ussr `
+  -y
+
+
