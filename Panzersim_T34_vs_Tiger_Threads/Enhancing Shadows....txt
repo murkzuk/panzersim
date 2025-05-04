@@ -1,0 +1,62 @@
+Enhancing Shadows and Tree Rendering in WWII Battle Tanks: T-34 vs. Tiger
+Hello Everyone,
+I wanted to share some adjustments I’ve made to improve the visual quality in WWII Battle Tanks: T-34 vs. Tiger. After a bit of digging into the game’s scripts, I’ve managed to improve the rendering of shadows and trees, resulting in a far more immersive experience. However, these changes come at a slight performance cost, so feel free to tweak them based on your hardware.
+Tree Rendering Adjustments
+In the BaseForest.script file (found in Scripts/Common), I increased the tree rendering distances so that trees are always visible from a farther distance. This change removes the 'pop-in' effect where trees suddenly appear as you get closer. Below are the key changes I made:
+Path: Scripts/Common/BaseForest.script
+class CBaseForest
+{
+int     QuadtreeDepth     = 8;
+int     TemplateSize      = 128;
+Array   LevelDistribution = [ 1600,   3200,   4800,   6400,   8000   ];
+Array   LevelRangeMin     = [ 2600.0, 2100.0, 1600.0, 1100.0, 600.0  ];
+Array   LevelRangeMax     = [ 2600.0, 2400.0, 2200.0, 2000.0, 1800.0 ];
+float   BurnDelay         = 10.0;
+float   ModelDistance     = 950.0; // Increased for better tree rendering at a distance
+float   ShiftRange        = 0.01;
+float   HighDensityFactor = 16.0;
+// Distances for non-bordered cells
+float MinVariableDistance = 300.0;  // Forces trees to render even at far distances
+float MaxVariableDistance = 950.0;  // Increases maximum rendering distance for trees
+// Distances for bordered cells
+int     BorderCells                  = 2;
+float   MinVariableDistanceForBorder = 900.0;
+float   MaxVariableDistanceForBorder = 1000.0;
+}
+By setting ModelDistance to 950, trees remain rendered even when you're fairly far away. Originally, the settings were much lower, causing trees to vanish and 'pop-in' as you moved. However, increasing these values too much can tank (pun intended) your frame rate. In my tests, this setting kept my FPS around 70, but pushing it higher (e.g., 10000) caused noticeable performance issues.
+Shadow Optimizations
+We’ve also significantly improved shadow rendering, both for trees and vehicles, by tweaking the shadow distance settings. The following scripts were adjusted:
+Path: Scripts/Common/Shadows.script
+This script applies a shadow optimization called SVCM_LightRange, which ensures shadows are only rendered within a certain distance of the light source (i.e., the sun). This helps save performance while keeping visuals intact. Below is an excerpt:
+class CShadows
+{
+static void InitializeShadows()
+{
+Cu_air_FW_190Model::ShadowCheckMode        = SVCM_LightRange;
+Cu_air_IL2MModel::ShadowCheckMode          = SVCM_LightRange;
+// Apply to other models to save performance
+Cu_veh_PzIVGModel::ShadowCheckMode         = SVCM_LightRange;  // Panzer IV tank
+Cu_veh_t34_76_42Model::ShadowCheckMode     = SVCM_LightRange;  // T-34/76 tank
+Chum_GermanSoldierRifleModel::ShadowCheckMode = SVCM_LightRange;  // German soldier
+Cu_veh_PzVI_MAINModel::ShadowCheckMode     = SVCM_LightRange;  // Panzer VI tank
+}
+}
+Additional Tweaks
+In addition to the main CShadows.script, I adjusted the following shadow-related scripts to optimize performance while retaining visual quality:
+ShadowsHide.script: Tweaked to ensure shadows are visible at longer distances without significant performance loss.
+ShadowsChange.script: Adjusted shadow rendering for various vehicles and artillery.
+BaseForest.script: Improved tree LOD settings so that trees appear more consistently at a distance.
+Path: Scripts/Common/
+Shadows.script
+ShadowsHide.script
+ShadowsChange.script
+BaseForest.script
+Performance Trade-offs
+While these changes greatly enhance the visual experience, keep in mind that they come at a performance cost. On my system, I noticed that increasing tree rendering distances too much caused frame rates to drop significantly, especially when rotating the camera. After some testing, I found the sweet spot that kept my FPS around 70, but your mileage may vary based on your hardware.
+Original Settings for Context
+The original settings in BaseForest.script had much lower values for tree rendering, which caused trees to disappear when far away. These were the original values before I made changes:
+float   ModelDistance     = 15.0;
+float   MaxVariableDistance = 650.0;
+I encourage you to tweak these values to suit your preferences and hardware setup.
+"wingman spotted target!"
+

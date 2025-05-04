@@ -1,0 +1,20 @@
+but how do you install the mod a mission of zeewolf with the game without any mods installed ??? then there are other improvements for single player ?? where? then i installed mmp5 and it works right although the external view is gone and it's bad! how do you put back the external camera??? then i installed mmp7 and it doesn't work anymore!!! when i load the mission i see that it turns blue blue and goes back to the besktop!! i don't understand since with mmp5 everything goes right!!! help me make me understand!!! thanks and congratulatio
+[i]
+
+If you have the ZW mod, it is nearly a complete install, if I remember correctly. You only need to copy over the TvT exe, again this is from memory and a long time ago.
+
+
+
+Murkz wrote:
+If you have the ZW mod, it is nearly a complete install, if I remember correctly. You only need to copy over the TvT exe, again this is from memory and a long time ago.
+thanks, but tvt exe "Zee" do I have to put it in place of tvt exe in the game folder?
+
+michele pieri wrote:
+Murkz wrote:
+If you have the ZW mod, it is nearly a complete install, if I remember correctly. You only need to copy over the TvT exe, again this is from memory and a long time ago.
+thanks, but tvt exe "Zee" do I have to put it in place of tvt exe in the game folder?
+hi ,
+everything is fine I managed it was very simple thanks to all your fantastic efforts.
+
+
+

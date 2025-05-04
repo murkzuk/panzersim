@@ -1,0 +1,60 @@
+When placing units in TvT, the radar behavior is critical.
+By default, AI can "see" enemies through terrain within a certain detection range (~4km).
+If you want
+proper stealth, surprise, and realistic behavior
+, you must
+manually set up the radar properties
+.
+Here is the correct method:
+1.
+Right-click on your object (e.g., tank, gun, etc.) and open
+Properties
+.
+2.
+Untick the
+Default
+box to unlock editing.
+3.
+Right-click in the property area →
+Add → String
+and call it
+BehRadarMask
+.
+4.
+Inside
+BehRadarMask
+, add
+three strings
+:
+"ENEMY"
+"MainMesh"
+"INVISIBLE_ON_RADAR"
+Example from Jeff's mission:
+Code:
+Affiliation: ENEMY
+BehRadarMask: [Array 1]
+[0]: ENEMY
+[1]: MainMesh
+[2]: INVISIBLE_ON_RADAR
+What this does:
+Marks the object as an ENEMY.
+Links radar visibility to the object's main 3D mesh.
+Makes the object invisible on radar until you manually trigger it.
+Why use it?
+- Create
+surprise ambushes
+.
+- Force players to
+scout visually
+, not rely on radar.
+-
+Hide objectives
+until mission phases progress.
+- Make enemy units behave
+realistically
+— not godlike radar spotting!
+Summary:
+This method gives you full control over when and how radar is used in your missions.
+If you want TvT missions that feel serious and tactical — you MUST set this up!
+This can also be done on the .script files but I am no coder.
+

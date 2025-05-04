@@ -1,0 +1,82 @@
+Two New Objects for TvT
+Here are two new objects for TvT, the first is just a textured cylinder, the second is the toolbox I created in SketchUp, UV'd in Max and exported to Maya 5 for export to the G5 engine (TvT).
+The scale is way off for the toolbox, as I have never used Maya 5 before and guessed the scale. Though these are the scripts that will require editing and creating in order to add new content to TvT.
+There are at least 3 files needed for every new object. Two are created by the Maya 5 TvT exporter and belong in the
+Models
+folder. The third belongs in the
+Scripts/Buildings
+in our case, as they are classed as buildings. The third script will need to be created, or you can modify mine, replace my model name with yours.
+The file to edit is the MenuConfig Script found in the
+Scripts/Editor
+folder. Again you can edit the lines I have added to reflect your model names.
+If there is a why now, I have learned a great deal over the last 8+ years and found myself playing TvT for the first time in a long time. I have a few models I created for other engines that are able to import into TvT. So I gave it a go, bounced some ideas of my good friend Slomo and we got it done!
+PDF for offline
+Jeff
+
+Hi Jeff!
+You couldn't create mine model for TvT for creation of minefields, it is desirable with a warning board.
+The mine shouldn't give a shadow, because with its transparent texture it will be all the same noticeable. I can write scripts.
+These two new models will bring more benefit.
+Nikolay
+
+
+
+Hi Jeff!
+You are still living? I already strongly worry, why you don't answer? I hope that with you everything is all right. I changed a script of Mortar a little, now there is a High trajectory and the mine model for Mortar is necessary and for Nebelwerfer the model of a mine would be by the way.
+Respond!
+Nikolay
+
+Hi!
+There was a miracle and I found Maya 5.0.
+In what format it is necessary to keep the created models, or some plug-in is necessary?
+Teach please!
+Nikolay
+
+I am still alive Dr, just busy with my new project.
+https://www.youtube.com/watch?feature=player_embedded&v=FbDyzeUDG6k
+
+Hi Jeff!
+Thanks for video, now there is a sense to study the Maya 5.0.
+Many thanks!
+Nikolay
+
+Hi Jeff!
+Maybe I do something not so but I can't find in the materials G5EngineShader1.
+Explain please in detail.
+Nikolay
+
+Hi Jeff!
+Now I downloaded and I established WWII.Battle.Tanks.T-34.Vs.Tiger-FLT.
+In it there is a Tools folder, in the Russian version it isn't present.
+I copied MayaExp.mll in "C:\Program Files\AliasWavefront\Maya5.0\bin\plug-ins", but G5EngineShader1 didn't appear.
+What do I do not so? Teach!
+Nikolay
+
+I understood!
+I learned how to register plug-ins and to Tutorial it is written nothing about the scripts folder.
+Already at heart it became easier, I thought I won't understand to pension.
+Nikolay
+
+Dr. Foofenshmirtz wrote:
+I understood!
+I learned how to register plug-ins and to Tutorial it is written nothing about the scripts folder.
+Already at heart it became easier, I thought I won't understand to pension.
+Nikolay
+Well done Nikolay.
+
+Hi Jeff!
+Forgive for concern, but I have nobody to ask.
+In game there is such thing as Collision Shapes, but how to edit them?
+Help please if you know as, otherwise many models aren't present sense to export to game.
+Nikolay
+
+Hi Nikolay,
+I do not have an answer for you, I would think the collision model would be referenced in one of the scripts, or may be the model has to be physicalized.
+Jeff
+
+Hi Jeff!
+Thanks for the answer.
+Nikolay
+
+
+

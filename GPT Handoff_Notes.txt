@@ -1,0 +1,118 @@
+PanzerSim Hand-off Summary for T-34 vs Tiger ww2 battletanks by g5 GPT Support
+
+🔗 Project Hub:
+https://murkzuk.github.io/panzersim/
+
+👤 Modder:
+Jeff (PanzerSim, murkz, murkzuk, mudcog) – Long-time modder and technical researcher on T-34 vs Tiger (TvT), with cross-referencing work from Whirlwinds over Vietnam (WoV). Heavy reliance on AI assistance for scripting as is a NON coder, mission logic, and game file structures.
+
+🎯 Project Goal:
+- Deep modding of TvT
+- Terrain, visuals, and foliage improvements
+- Functional AI scripting (e.g., wingman behavior)
+- Enhanced mission logic, briefings, and audio immersion
+- Borrowing visual and logical systems from WoV
+
+📦 Key Resources:
+- GitHub: Hosts mission templates, CLI tool, and working examples
+- Shared documents:
+  - WoV_vs_TvT_detailed_analysis.txt
+  - WoV_radio_chatter_notes.txt
+  - WoV_to_TvT_possible_uses.txt
+  - TvT_GitHub_Suggestions.txt
+- Python: tvt_mission_builder_cli.py (automates basic mission file scaffolding)
+
+📘 Known Issues:
+- AITaskFollow function does not work reliably or as documented
+- AI unit grouping through the editor is inconsistent or broken
+- Custom missions often fail to load with unclear errors
+- User is extremely frustrated due to many failed past attempts
+
+🧠 Key Context:
+- Jeff has spent over a year on this
+- Repeated attempts using scripting advice have failed
+- He has mapped out WoV structures to try to enhance TvT
+- Past AI responses that "should have worked" caused disillusionment
+
+✅ Best Practice for a New GPT Session:
+- Read all included documentation in the repo and .txt files
+- Do NOT repeat already failed fixes (e.g., broken group syntax or AITaskFollow variants)
+- Offer working examples and exact scripts if possible
+- Confirm scripts by using the CLI tool or verified test mission logic
+- Respect user frustration – avoid false positives
+
+🧩 External Links:
+- Forum (PanzerSim/Forumotion): https://panzerelite.proboards.com/
+- Related: Whirlwinds Over Vietnam (sister engine)
+
+Purpose of this handoff is to continue work *without loss of context*.
+
+Recent Chat Summary (2025-05-02)
+
+Topic: Debugging and refining the tvt_web and mission_builder tools for T-34 vs Tiger.
+
+Core Issues Identified:
+
+Strings class naming mismatches (e.g., missing C prefix in Mission_Strings).
+
+Syntax errors in generated Mission.script files (trailing commas causing parse failures).
+
+Black tank map loading and missing terrain due to incomplete file scaffolding.
+
+New mission not appearing in in-game and editor menus (missing or incorrect array patches in MissionsMenu.script and MenuConfig.script).
+
+Progress Made: CLI-based mission generation works end-to-end; web UI generator partially scaffolds missions but still needs briefing/objectives integration and menu patch fixes.
+
+Next Steps:
+
+Refactor web UI logic to ensure full folder copy and accurate file renaming.
+
+Correct automated generation of Mission_Strings.script with proper class names and escape sequences.
+
+Verify MissionsMenu.script and MenuConfig.script patching logic to include new missions reliably.
+
+Implement thorough end-to-end testing (CLI and web) before user validation.
+
+User Feedback:
+
+High frustration noted; prioritize stability and clear success indicators.
+
+User is not a coder and relies entirely on the tool’s reliability.
+
+Recent Chat Summary (2025-05-03)
+
+Topic: Phase 1 & 2 CLI Mission Builder Refinement
+
+🔧 Core Work:
+- Expanded `tvt_mission_builder_cli.py` to support:
+  - Arbitrary source missions (`-s`), new mission names (`-n`), and install roots (`-i`).
+  - File-type filtering (`-e .script .rsr .tex .raw .bmp .scc`) during rename.
+  - Metadata flags in Phase 2: `--title`, `--brief`, `--obj` (multiple), and `--campaign`.
+  - Automatic backups (`.bak`) of both `MissionsMenu.script` and `MenuConfig.script`.
+  - Menu patching into the correct USSR or Germany lists.
+
+🐞 Key Issues Identified:
+- Format specifier bug in RSR generation (`ValueError: Invalid format specifier '02d '`).
+- Trailing-comma syntax errors in menu array inserts.
+- Misalignment between class names, RSR sections, and `_Strings` scripts.
+- User confusion over single-line invocation on Windows (escaping and quoting).
+
+✅ Progress Made:
+- Phase 1 (scaffold & rename) works end-to-end: clone, rename, RSR scaffold.
+- Phase 2 (metadata & menu patch) partially implemented; Phase 2 CLI prototype exists.
+- Established reliable single-line examples for CMD/PowerShell.
+- Documented required mission files beyond `.script` (.rsr, .tex, .raw, .bmp, .scc).
+
+🚀 Next Steps:
+- Fix format-specifier bug in RSR writer (`Objective{index:02d}`).
+- Harden argparse to accept and parse `--title`, `--brief`, `--obj`, `--campaign`, and `-y`.
+- Add validation and clearer error messages for Windows quoting rules.
+- Complete Phase 2 menu-patch logic and test in both game and editor contexts.
+- Provide copy-and-paste ready examples and cleanup of legacy commands.
+
+👤 User Feedback:
+- Strong preference for a single-line, no-fence Python script invocation.
+- Need for “noob-friendly” guidance and confirmation of success.
+- Ongoing frustration with mission-naming conventions and menu array syntax.
+
+— End of Chat Summary —

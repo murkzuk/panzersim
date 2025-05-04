@@ -1,0 +1,3 @@
+I’ve been tinkering with T-34 vs. Tiger as usual and stumbled across something interesting. While running FRAPS to monitor my frame rates, I hit F9 to bring up the debug information, and I noticed an immediate drop in FPS (10-15). It’s surprising how much of a hit this seems to cause, even though I wasn’t expecting it. This was how we checked fps, as it seemed odd to have FRAPS running, when TvT had a built in FPS counter.
+For those who haven’t tried it, F9 shows quite a bit of in-game data, so it’s possible this extra processing is affecting the frame rate. I’d be curious if anyone else has noticed similar performance issues while using debug tools or if this might be something unique to my setup.
+

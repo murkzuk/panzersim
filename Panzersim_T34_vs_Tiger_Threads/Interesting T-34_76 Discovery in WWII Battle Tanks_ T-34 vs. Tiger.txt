@@ -1,0 +1,6 @@
+While tinkering with the game's scripts, I came across something that caught my attention: it looks like the devs might have been planning to include a fully playable T-34/76 tank in WWII Battle Tanks: T-34 vs. Tiger.
+The evidence is right there in the scripts—there's a reference to a "Cu_veh_t34_76_42_InsideModel." It seems like they were going to implement the interior for the T-34/76, but, for reasons unknown, it never made it into the final build.
+Given that the T-34/85 is fully realized and playable in the game, it's not a huge stretch to think they intended the T-34/76 to follow suit. Maybe it was one of those features that just fell off the table due to time constraints or resource limitations.
+Here’s the interesting part: since the T-34/85 interior is already fully realized, I’m wondering if it’s possible to adapt the interior from the T-34/85 for the T-34/76. They’re pretty close cousins, after all, and this might be a quick win to get the T-34/76 into playable shape, even if it wasn’t officially completed.
+I thought it was a neat little find that shows how much more was planned for this game. If anyone else has come across similar "hidden" content or unfinished features, let me know—there's always more to uncover in the files!
+

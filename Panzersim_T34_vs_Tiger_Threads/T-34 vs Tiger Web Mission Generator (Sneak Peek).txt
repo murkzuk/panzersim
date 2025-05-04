@@ -1,0 +1,18 @@
+Hello fellow tankers,
+Every time I want to start a new scenario in T-34 vs Tiger, I end up spending an age editing multiple scripts—and the built-in editor won’t even let you create a blank mission slot. So, with AI’s help, I’ve put together a small tool to streamline the process.
+What It Does
+Clone & rename an existing mission folder in one click
+Auto-generate all the .script and .rsr boilerplate:
+Mission class (C
+Mission)
+Strings class (
+Mission_Strings) with MissionName, ObjectivesText, and Objective01…Objective05
+Patch the in-game and editor menu arrays so your new mission actually appears
+Working via command-line today, with a basic Flask web UI coming soon
+Why It Matters
+TVT’s scenario system is powerful, but the setup overhead can be tedious. This tool cuts out the repetitive search-and-replace work so you can get straight into designing your mission.
+What’s Next
+Finish hooking up briefing/objectives in the Flask UI (CLI already works end-to-end)
+Add support for pre-placing props via scripted templates
+Polish the interface and release a public beta
+

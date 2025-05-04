@@ -1,0 +1,10 @@
+Hello,
+After a long time I want to play the game again. Unfortunately everything only opens until the tank track is executed at the bottom of the screen - then my normal screen appears again. Win 10 /6 bit is installed on an Acer Predator notebook. I would be grateful for any help.
+Best greetings
+Guenther
+
+Other than the usual Koenigstiger, reinstall, try adding the DLLs that are on this site to the root of TvT and that is all I do.
+https://panzersim.forumotion.com/t453-zeewolf-s-christmas-gift-found-link-here
+Try these DLL's from ZeeWolf's gift, see if that helps
+Back everything up yada, yada, yada.
+

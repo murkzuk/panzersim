@@ -1,0 +1,85 @@
+Dear Community,
+I've been contemplating a matter close to my heart as an enthusiast of T34 vs Tiger, and I wish to share these thoughts with you all, seeking your insights and guidance.
+As many of you know, ZeeWolf's mod, a creation that can only be described as his magnum opus, stands as a testament to his skill, passion, and dedication to T34 vs Tiger. This piece of work has significantly enriched the T34 vs Tiger gaming experience, yet, it currently remains accessible to only a very few of us.
+ZeeWolf, unfortunately, has not been active or seen in any tank sim community for the past four years. His absence raises a poignant question about the future of his exceptional work. It's a creation too remarkable from a single developer to reside unnoticed on a handful of our hard drives. The idea that it could be shared and appreciated by anyone with a love or interest in T34 vs Tiger is one I find compelling.
+However, I'm torn by the ethical considerations of releasing ZeeWolf's work without his explicit consent. The respect for his rights as a creator, and the integrity of honoring his intentions weigh on me. It's a dilemma between preserving and honoring his legacy and respecting the rights and wishes he has over his work.
+In light of this, I propose a discussion within our community. What are our thoughts on potentially making ZeeWolf's mod more accessible? How might we approach this sensitively, ensuring that we're acting ethically and respectfully? Could there be a way to reach out or find consensus that honors ZeeWolf's contributions and intentions?
+I am also pondering the idea of establishing a tribute to ZeeWolf's work (while the information is still around) in this forum - a testament to the impact his creativity has had on T34 vs Tiger. Such a tribute could serve as both an acknowledgment of his contributions and a platform through which, if the chance arises, he or those close to him might guide us on how to proceed with his work.
+This is a call to reflection and conversation. I welcome your thoughts, suggestions, and any insights you might have on this matter. Let's approach this with the respect, sensitivity, and camaraderie that our community is known for.
+
+New German Armored Units added by ZeeWolf!
+1. Hummel 155mm
+2. Marder II 75mm Pak40
+3. Nashorn 88mm Pak43
+4. Panther Ausf A
+5. Panther Ausf D Playable
+6. Panzer II Ausf C
+7. Panzer III Ausf J 50mm L60
+8. Panzer III Ausf J 75mm L24
+9. Panzer IV Ausf G
+10. sIG-33B Pz III
+11. Sturmgeschütz 75mm L24
+12. Sturmgeschütz 75mm L48
+13. SturmHaubitze 105mm
+14. Tiger E1 AI
+15. Tiger E1 Playable
+16. Wespe 105mm
+A list was never completed for the Soviet side but there was this one image.
+
+
+
+Murkz,
+I have had similar discussions since I first started modding.  When I first started, I was firmly in the camp of if it is published on the web, it is fair game.  My opinion had grown to a polar opposite and mellowed (a little) with the decline of tank sim activity.
+You mention respect for the author.  This was clearly a for pay project.  The strongest respect (in my opinion) is it is untouchable until it meets the standards of abandonware or copyright expire.  Now that copyright is 75 years, this is a no consideration factor.  You can not sell it, or products that are derived from it until one of those two rules expire.  What you do without pay is between you and the copyright owners of T34 and/or the Z mod.  Unless you ruin the game, the worst you can expect is a cease and desist order.
+But, T34 is unique in that the tools for modding and the code language for scripts are (or have been made) public by the original authors.  If I remember correctly, the map maker and scenario creator were released on the CD, the objects are Maya 3D, and the scripts are Python.  T34 was created with user content in mind.  You are not violating law (opinion: I am not a lawyer) if you show examples of how 'things' look in the public domain tools.  IF tutorials has been released, the world would have forgotten PE.
+The major flaw of the game was the AI's ability to see through elevation because the games use of SpeedTree V1.0.  I know Vase quit championing this game because of that and Monk's passing.
+G5 has disavowed any participation with T34.  I do not presume to speak for Z, or know him, as I chose to isolate myself within PE.
+You asked for opinion.  I have given mine.  Now I tell you my ethical conundrum.  Am I learning the art of tank warfare, for selfish reasons, only to publish a learning tool of death and domination.  Computer simulations teach, video games entertain. I am open to discussion of my opinion, and I am not offended if you disagree with me
+Aldo
+
+Hi Brit44, great to see you here. I was messaged a few weeks ago and informed that ZW had passed away. I don't know if this is true, so I've kept that information very low key.
+That said, there is so little interest in TvT today that I'm sure if ZW were still around, he would have moved on from TvT, as there is no community to sell his mod to. I hope he's sat on a beach somewhere enjoying life.
+I was torn for the longest time, and with the greatest respect for ZW and his work, it is a real pity it is not enjoyed by others.
+The Tiger II is modelled and in the editor. He must have stopped working on the interior when he closed the project or whatever befell him.
+The Panther campaign is only three missions, with the fourth started but incomplete. This is based on my limited poking around in his mod, without much clue as to what is what.
+ZWMod, Monkwarrior (Mmp Mod), and NSU (Map Creator) were the main modders of TvT. Monkwarrior has passed away, ZW might not be here either, and NSU is now the voice-over guru for many WW2 games.
+So, unless someone new pops up, this is as far as TvT will go. There is no Brit44 of PEDG to keep the wheels turning. It was a great ride and I made life long friends because of it.
+
+Always good to communicate with you and good for NSU.
+I did not join to form your opinion.  My only hope is to spark conversation about an old game who's only glaring flaw is the AI ability to see through landscape and objects.  My understanding is that error can only be cured by hooking the calls of the SpeedTree module into a later module of that SDK.  I have not studied TvT or SpeedTree, I only give an opinion.
+TvT does deserve a look from anyone desiring WW2 tank simulation.  The creators made it extremely moddable.  ;P I had no clue what I was looking at when I first looked under the hood of PE.  Though I do not visit the web on a daily basis, I do have a copy of the original TvT and would be happy to give an opinion of how it works.  I do not claim to be an expert.
+
+Brit44 'Aldo' wrote:
+Always good to communicate with you and good for NSU.
+I did not join to form your opinion.  My only hope is to spark conversation about an old game who's only glaring flaw is the AI ability to see through landscape and objects.  My understanding is that error can only be cured by hooking the calls of the SpeedTree module into a later module of that SDK.  I have not studied TvT or SpeedTree, I only give an opinion.
+TvT does deserve a look from anyone desiring WW2 tank simulation.  The creators made it extremely moddable.  ;P I had no clue what I was looking at when I first looked under the hood of PE.  Though I do not visit the web on a daily basis, I do have a copy of the original TvT and would be happy to give an opinion of how it works.  I do not claim to be an expert.
+I am always ready to listen about the history of PE, it was the initial glue of mine and Slomo's friendship.
+TvT does have that major flaw and I would love to be rid of it and I bow to your knowledge on this Brit44, I am but a rookie. If the view through the landscape could be fixed I am sure I/we could make a song and dance about via all the avenues I have available.
+I have installed an XP virtualbox on my win11 pc and maya 5 runs fine on there. I could do with an old copy of photoshop 4 or 5, I have been looking on the marketplace but no joy yet.
+I do have a copy of the original TvT and would be happy to give an opinion of how it works.  I do not claim to be an expert
+.
+If you have the time Al that would be very welcome!
+Thanks for the chat Brit44 it is always good to hear from you.
+
+Brit44 'Aldo' wrote:
+Always good to communicate with you and good for NSU.
+My only hope is to spark conversation about an old game who's only glaring flaw is the AI ability to see through landscape and objects.  My understanding is that error can only be cured by hooking the calls of the SpeedTree module into a later module of that SDK.  I have not studied TvT or SpeedTree, I only give an opinion.
+We have some script files (java) that seem to have something to do with the AI and shooting, I am no coder but if classes(guessing) could be added to take into account the terrain, target and trees, it might resolve the issue.
+AutoShooter.script
+RadarView.script
+found in scripts/common
+contents of autoshooter
+class CAutoShooter {
+float ViewAngle = 8.0f;
+float RadarUpdateTime = 0.5f;
+float RadarMaxDistance = 3100.0f;
+};
+
+Like most games not created by a major company, TvT uses modules to fill the code they do not have time to write.  For some of the landscape, TvT uses SpeedTree.
+Let me backup.  I am a self-learned, with the help of many people, modder.  I am not an expert. and I am far behind the times from modern software.  my words are an opinion, not a bible.
+Independent developers use modules of code they do not have time to write.  The root executable calls these routines through "hooks" to DLL libraries.  You can use compiler software to find the "hooks" that the executable uses for these modules.  My understanding is that TvT uses SpeedTree 1.0 for landscape.  Speedtree 1.0 was graphics orientated, but has flaws.  IF TvT relied upon SpeedTree 1.0 for line of sight calculations, you can use, maybee, a later version of SpeedTree.  IF and only IF they did not change the calls for the version you use.
+IF TvT knows the elevation of objects and there density, not relying upon a DLL, then it may be possible to manipulate through a script.  Vase and his group abandoned TvT because they could not crack this nut.
+This bug has less weight in single player battles.
+
+
+

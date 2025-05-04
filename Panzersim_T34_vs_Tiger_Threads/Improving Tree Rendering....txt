@@ -1,0 +1,22 @@
+Improving Tree Rendering in TVT Using CBaseForest Script: Balancing Performance and Visual Quality
+I’ve been tweaking the CBaseForest script (located in Scripts/Common) to enhance tree rendering in WWII Battle Tanks: T-34 vs. Tiger. While it’s tempting to push the settings for a dense, immersive forest, doing so can significantly drop frame rates. Below is a summary of what I’ve achieved, including the original settings for context, and what worked for me.
+Key Changes:
+Script Location: Scripts/Common/CBaseForest.script
+Goal: Increase tree rendering distance and visual density without severely impacting performance.
+Original Settings:
+ModelDistance = 15.0
+MaxVariableDistance = 650.0
+HighDensityFactor = 16.0
+These original settings produced decent tree rendering but had trees popping in too close, which felt jarring for larger maps.
+Adjusted Settings:
+ModelDistance = 15.0 (unchanged): This maintains a reasonable distance for tree rendering, ensuring trees don’t appear too abruptly.
+MaxVariableDistance = 950.0 (was 650.0): I increased this to allow trees to render farther away, making the landscape feel more continuous.
+HighDensityFactor = 16.0 (unchanged): This controls the density of the trees, and keeping it at 16.0 still offers good performance.
+Additional Variables to Explore: There are more variables in the CBaseForest script that may impact tree rendering and overall performance, but I haven’t fully tested their effects yet. These include:
+ShiftRange: Controls how the trees shift, possibly influencing the smoothness of their rendering at a distance.
+MinVariableDistance / MaxVariableDistanceForBorder: These seem to control how far trees render near map borders. Adjusting these might help balance performance vs. visuals in larger maps.
+BurnDelay: This might affect how trees respond to environmental effects like fire or destruction.
+Results: With these settings, my FPS now holds steady around 70. If I push the ModelDistance or MaxVariableDistance much higher, the visual density increases, but so does the frame drop. Keeping MaxVariableDistance at 950.0 is the sweet spot for me, offering a good balance between a visually rich forest and smooth gameplay.
+For anyone looking to tweak tree rendering, these variables are a great starting point, but be careful—pushing them too far will impact performance.
+"wingman spotted target!"
+

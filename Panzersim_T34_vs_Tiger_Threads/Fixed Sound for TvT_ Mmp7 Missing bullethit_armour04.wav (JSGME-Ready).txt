@@ -1,0 +1,14 @@
+Hey tankers!
+While tinkering with T-34 vs. Tiger, I found and fixed the missing bullethit_armour04.wav sound that was causing error messages and breaking immersion. If you've been seeing this error pop up, here’s an easy fix that restores the sound file. I’ve made it JSGME-ready, so it’s simple to install.
+What’s Included:
+Sound Fix for bullethit_armour04.wav – The missing sound is restored, no more errors popping up.
+JSGME-Ready – Just drop it in and enable through JSGME; no need to edit files yourself.
+How to Install:
+Download the package (link below).
+Extract it to your Mods folder in T-34 vs Tiger.
+Open JSGME, activate the fix, and you’re good to go!
+Notes:
+Tested and confirmed to remove sound errors in-game.
+Feedback is welcome—let me know if it works for you!
+Download Link: SoundFix
+

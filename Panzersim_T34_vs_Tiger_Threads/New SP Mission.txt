@@ -1,0 +1,48 @@
+Hi,
+I would love to hear how to add a new level SP mission (7) ?
+I cannot find any script to deal with it.
+Thanks in advance for a tip.
+
+It is very difficult to add new missions, I think only Zeewolf has managed to do this. The missions are hard coded. I did manage to replace the German mission 1 with a new one (on the South Russia map), but am still struggling to get all the units to perform their tasks. I hope some day to create a new set of missions, replacing the default ones with a new cmpaign of 7 misions, but it is difficult and very time consuming.. Real Life (read: my wife
+) does not permit me to spend too much time on this, and the fact that IL2 Sturmovik just went 3d also does not help.
+
+
+
+Try this dude
+http://www.datafilehost.com/download-623e1661.html
+
+I have notice the Editor Manual has been updated.
+Nice Work!
+Now I would like to know how to play the
+Mission1
+explained in Tutorial?
+
+hi i have been playing TVT for years now i also downloaded some of zeewolf missions but it made my game unplayable
+i love to see SP missions posted on this forum i will try to do some myself.
+
+I know now how to add SP missions. ('
+')
+I have already made some, and I will post the whole Expansion missions here.
+
+that's great news but can you intstall one new mission at a time in tvt the more mods/Expansions  you put into TVT the more its hard to run
+
+TANKACE wrote:
+that's great news but can you intstall one new mission at a time in tvt the more mods/Expansions  you put into TVT the more its hard to run
+YES !!!
+I will include the PDF guide how to do it, is quite simple.
+The only think that takes time, and could be hard is missions itself.
+
+
+
+Who except ZeeWolf created SP missions? Share experience.
+http://depositfiles.com.ua/uv1nht4oyen0.html
+Here my very simple mission.
+
+Dr. Foofenshmirtz wrote:
+Who except ZeeWolf created SP missions? Share experience.
+http://depositfiles.com.ua/uv1nht4oyen0.html
+Here my very simple mission.
+NON SI SCARICA , NON Cè NIENTE!!
+
+
+

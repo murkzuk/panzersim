@@ -1,0 +1,48 @@
+I'm happy to announce that after more than 10 years since the ZW missions, a brand new single-player mission for T-34 vs Tiger is now working!
+It’s a basic test mission, but fully functional:
+Custom mission folder
+Full objectives and briefing text
+New .rsr resource file integration
+Mission appears properly in the menu
+Radar (enemy markers) disabled for full realism (SetShowRadar(false))
+Mission Name: Forward Probe
+Mission Description:
+"Soviet forces have detected possible enemy activity near a key village 1 kilometer ahead.
+A lone T-34 is dispatched to probe the area. Expect resistance: reconnaissance indicates possible anti-tank positions and armored support.
+Proceed with caution. Identify, engage, and eliminate the threat if possible."
+Important note:
+This mission is not available for download at the moment.
+It requires:
+Adding a new .rsr resource file
+Manual editing of the MissionsMenu.script
+to appear and function correctly.
+This is mainly a proof-of-concept to show that new single-player missions are possible again — even in 2025!
+If there’s enough interest, I may create a public-friendly version with easier installation later.
+Feel free to ask if you’re curious about modding TvT or working on your own missions!
+#T34vsTiger #TankSim #RetroGaming
+
+Murkz wrote:
+I'm happy to announce that after more than 10 years since the ZW missions, a brand new single-player mission for T-34 vs Tiger is now working!
+It’s a basic test mission, but fully functional:
+Custom mission folder
+Full objectives and briefing text
+New .rsr resource file integration
+Mission appears properly in the menu
+Radar (enemy markers) disabled for full realism (SetShowRadar(false))
+Mission Name: Forward Probe
+Mission Description:
+"Soviet forces have detected possible enemy activity near a key village 1 kilometer ahead.
+A lone T-34 is dispatched to probe the area. Expect resistance: reconnaissance indicates possible anti-tank positions and armored support.
+Proceed with caution. Identify, engage, and eliminate the threat if possible."
+Important note:
+This mission is not available for download at the moment.
+It requires:
+Adding a new .rsr resource file
+Manual editing of the MissionsMenu.script
+to appear and function correctly.
+This is mainly a proof-of-concept to show that new single-player missions are possible again — even in 2025!
+If there’s enough interest, I may create a public-friendly version with easier installation later.
+Feel free to ask if you’re curious about modding TvT or working on your own missions!
+#T34vsTiger #TankSim #RetroGaming
+CIAO SCUSATE SI PUO SCARICARE LA MISSIONE?? GRAZIE
+

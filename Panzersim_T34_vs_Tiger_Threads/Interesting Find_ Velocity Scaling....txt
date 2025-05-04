@@ -1,0 +1,24 @@
+Interesting Find: Velocity Scaling in WWII Battle Tanks: T-34 vs. Tiger Script
+Hi everyone,
+I wanted to share a curious discovery that has been made by diving into the scripts of WWII Battle Tanks: T-34 vs. Tiger. Specifically, 602RAF_Puff noticed that the projectile velocities for the T84 85 where off. I found the correct script and in the
+Piercing.script
+file they are scaled down by a factor of 0.8 for all the tank guns, including the T-34/85, Tiger I, and others.
+For example, here’s how it’s set up for the T-34/85:
+final static float TankT34_85_44CalibreBulletSpeed = 792.0 * 0.8;
+This means that, while the historical velocity for the T-34/85’s AP shell should be 792 m/s, the in-game value ends up at 633.6 m/s.
+It’s not just limited to the T-34/85 either. The Tiger I and PzIV projectiles are also scaled down in this way. For instance:
+Tiger I AP velocity: 773 m/s, scaled to 618.4 m/s
+PzIV AP velocity: 750 m/s, scaled to 600 m/s
+Why the Scaling?
+I’m speculating here, but it seems G5 Software applied this scaling for a number of potential reasons:
+Gameplay balance: Slower velocities might give the AI more time to react and make engagements more tactical.
+Engine limitations: Reducing velocity might have been necessary to ensure smooth performance, particularly in large-scale tank battles.
+Map scale: With smaller maps than real-world battlefields, this might make engagements feel more appropriate in the game’s environment. ZeeWolf and I am sure NSU has already doubled map size, so this should not be an issue, it just needs adding to the to-do list.
+Restoring Historical Accuracy
+If you’re interested in restoring historical velocities, you can simply remove the * 0.8 scaling from the script. Here’s what that would look like:
+final static float TankT34_85_44CalibreBulletSpeed = 792.0;  // Historically accurate
+Keep in mind though, the reduced velocities were likely intentional for balancing purposes, so this might affect the game’s dynamics.
+Just thought I’d share this find with the community. If anyone’s tried adjusting these values or has more insights into why this scaling was implemented, I’d love to hear your thoughts!
+Cheers,
+murkz
+

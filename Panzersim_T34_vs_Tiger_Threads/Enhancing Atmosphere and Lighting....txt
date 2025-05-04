@@ -1,0 +1,100 @@
+Enhancing Atmosphere and Lighting in WWII Battle Tanks: T-34 vs. Tiger
+Hello tankers,
+I wanted to share some recent progress and insights from my ongoing project to enhance the atmosphere and lighting in WWII Battle Tanks: T-34 vs. Tiger. Through a series of tweaks and troubleshooting steps, I've managed to achieve a more immersive early morning scene. Here's a detailed breakdown of what I've accomplished and the challenges I encountered along the way.
+1. Refining Atmospheric Settings
+Objective: Improve the overall environmental ambiance to better match an early morning setting.
+Actions Taken:
+Edited
+Atmosphere.script
+: Adjusted key parameters to control lighting, fog, and shadow behaviours.
+Key Parameters Adjusted:
+class CC2M2Atmosphere extends CCommonAtmosphere
+{
+boolean IsLightEnabled   = true;
+boolean IsAntiSunEnabled = true;
+Vector  SunDirection   = new Vector(0.700000, -0.670000, -0.350000); // Adjusted for morning sun
+Color   AmbientLight   = new Color(0.800000, 0.850000, 0.900000, 1.000000); // Soft, cool ambient light
+Color   SunColor       = new Color(0.988235, 0.784314, 0.580392, 1.000000); // Warm sunrise sunlight
+Color   AntiSunColor   = new Color(0.584314, 0.584314, 0.784314, 1.000000); // Ambient opposite light
+float   DistanceToSun  = 2000.0;
+Array   HorizontPos    = [100.0f, 1000.0f];
+String  DefaultFogMode = "Exp";
+float   FogNear        = 500.0;
+float   FogFar         = 2500.0;
+float   FogFarMax      = 3000.0;
+Color   FogColorXPos   = new Color(0.950000, 0.760000, 0.700000, 1.000000); // Warm fog towards the sun
+Color   FogColorXNeg   = new Color(0.549020, 0.623529, 0.572549, 1.000000); // Cooler fog elsewhere
+Color   FogColorYPos   = new Color(0.850000, 0.900000, 0.950000, 1.000000);
+Color   FogColorYNeg   = new Color(0.850000, 0.900000, 0.950000, 1.000000);
+Color   ShadowColor    = new Color(0.500000, 0.500000, 0.500000, 1.000000);
+float   ShadowFar      = FogFar * 0.7;
+Vector  WindVector     = new Vector(0.0, 1.5, 0.0);
+boolean IsIllumination = false;
+boolean IsSunVisible   = true;
+boolean IsLightEnabled = true;
+float   AntiSunIntensity         = 0.3;
+float   SunIntensity             = 1.0;
+float   SunSpecularIntensity     = 1.0;
+float   AntiSunSpecularIntensity = 0.0;
+boolean EnableHorizontAdjustment = true;
+float   TreeLightKoef      = 0.3; // Controls tree lighting smoothness
+float   TerrainShadowPower = 5.0; // Terrain shadow contrast
+}
+Outcome:
+Sun Position: Positioned the sun to somewhere near the right with an appropriate height to simulate early morning light.
+Lighting: Balanced warm sunlight with cool ambient light to create a realistic dawn atmosphere.
+Fog: Adjusted fog settings to blend terrain smoothly into the horizon, enhancing depth without overpowering clarity.
+2. Synchronizing with Skybox Sun Position
+Objective: Align in-game sun settings with the skybox to ensure consistency in lighting and shadows.
+Actions Taken:
+SunDirection Adjustment: Modified the sun's vector to better match its position in the skybox.
+Vector SunDirection = new Vector(0.700000, -0.670000, -0.350000); // Moved sun to the right
+Verified Skybox Alignment: Ensured that the sun's position in the skybox corresponds with the in-game sun direction for seamless integration.
+Outcome:
+Consistent Lighting: The in-game sun is still not aligning with the skybox sun.
+3. Troubleshooting Sun Settings Not Reflecting In-Game
+Issue: After making changes to Atmosphere.script, no visible difference was observed in-game.
+Actions Taken:
+Script Verification: Ensured that the correct Atmosphere.script file was being edited and that changes were saved properly.
+Priority Check: Noticed that both
+Atmosphere.script
+and
+Content.script
+were referencing the sun, causing potential conflicts.
+Adjusted Script Hierarchy: Focused on
+Atmosphere.script
+for global settings and minimized conflicting references in
+Content.script
+.
+Outcome:
+Effective Changes: After ensuring only one primary script managed sun settings, the in-game lighting adjustments began to reflect more accurately, work still required.
+4. Addressing Tree Shadows Not Casting on Objects
+Issue: Tree shadows were not appearing on other objects, breaking immersion.
+Actions Taken:
+Script Review: Checked both
+Atmosphere.script
+and C
+ontent.script
+for shadow-related settings.
+Shadow Parameters: Verified and adjusted shadow parameters such as ShadowFar and ShadowColor.
+ShadowFar = 2500.0; // Reduced shadow distance for sharper shadows
+ShadowColor = new Color(0.500000, 0.500000, 0.500000, 1.000000); // Balanced shadow color
+LOD Settings: Ensured that Level of Detail (LOD) settings for trees were optimized to cast shadows properly.
+Shader Verification: Confirmed that shaders were correctly handling shadow mapping for tree objects.
+Outcome:
+Improved Shadows: Trees casting realistic shadows on objects is added to a to-do list.
+5. Finalizing and Testing
+Actions Taken:
+Iterative Testing: Made incremental changes and tested in-game to observe effects, ensuring each adjustment contributed positively.
+Log File Analysis: Reviewed editor log files to identify and resolve any remaining errors or warnings related to atmospheric settings.
+Outcome:
+Realistic Environment: Achieved a convincing early morning atmosphere with aligned sun position, balanced lighting, and improved shadow casting.
+Enhanced Immersion: The environment now feels more lifelike, enhancing the gaming experience.
+6. Key Takeaways and Best Practices
+Consistent Testing: Regularly test changes in-game to ensure settings are applied as intended.
+Detailed Log Analysis: Utilize editor logs to identify and troubleshoot script errors effectively.
+Modular Adjustments: Tackle one issue at a time, ensuring each change contributes to the overall goal without introducing new problems.
+Conclusion
+Modifying the atmosphere and lighting in WWII Battle Tanks: T-34 vs. Tiger has been a rewarding challenge. By carefully adjusting script parameters and troubleshooting conflicts between scripts, I've been able to create a more immersive and visually appealing early morning environment in Axis mission 2. I hope this breakdown helps anyone looking to enhance their missions similarly. Happy modding!
+Feel free to ask any questions or share your own experiences below!
+

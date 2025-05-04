@@ -1,0 +1,8 @@
+No Tree Wall
+Hi all,
+Today, I created a new mod for T-34 vs Tiger. This mod addresses several visual issues that have been bothering me.
+First, it removes the distant tree wall that caused strange artifacting. Additionally, I eliminated the aerial micro-texture view, originally used in Whirlwinds Over Vietnam to simulate distant forests. This texture was not useful for tankers on the ground and also contributed to artifacting.
+With these changes, the game now looks much cleaner and more realistic.
+Copy into your JSGME MOD folder and enable in JSGME.
+No Tree Wall
+

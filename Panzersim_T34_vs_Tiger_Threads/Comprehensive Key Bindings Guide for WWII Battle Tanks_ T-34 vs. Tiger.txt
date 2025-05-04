@@ -1,0 +1,58 @@
+Hello, tank enthusiasts!
+I’ve revisited the key bindings guide for "WWII Battle Tanks: T-34 vs. Tiger" to provide you with the most detailed and accurate controls, especially focusing on the gunner's role, crucial for mastering the game's tank combat mechanics. Here’s the updated comprehensive list:
+Crew Positions
+Insert: Switch to Driver
+Home: Switch to Gunner
+PageUp: Switch to Commander
+General View Controls
+F1: First Person cockpit view
+F2: First Person open hatch view
+F3: First Person optics/binocular view
+F4: First Person periscope/vision slit view
+F5: First Person fullscreen optics/binocular view
+F6: Third Person external camera
+Num9: Toggle optics/binoculars illumination
+Mouse: Camera control
+Mouse Wheel: Zoom in/out
+Multi-Function Display (MFD) Controls
+T: Toggle onscreen messages
+Y: Toggle crew station display
+U: Toggle driver’s panel
+N: Change MFD map zoom
+Num5: Center map on tank
+Auto-Crew Functionality
+F: Auto-driver
+G: Auto-gunner
+H: Auto-commander
+Gunner-Specific Controls
+Mouse: Aim turret/gun
+Left Mouse Button (LMB): Fire main gun
+Right Mouse Button (RMB): Fire coaxial machine gun
+Mouse Scroll: Adjust gunsight range
+Num4/Num6: Move turret left/right (slow with Shift)
+Num8/Num2: Elevate/depress gun
+Num9: Toggle gunsight illumination
+PageDown: Select ammo type
+Backspace: Load the selected round
+Commander-Specific Controls
+LMB/RMB: Assign/track targets with auto-gunner
+Num5: Reset auto-gunner and turret position
+Driver-Specific Controls
+Arrow Keys: Engine RPM and steering
+W/S: Accelerate/shift up, decelerate/shift down
+A/D: Steering
+E: Engine toggle
+Space: Emergency brake
+External Camera Controls
+F6: Activate external view
+Num Keys/Mouse: Camera adjustments
+Miscellaneous
+F7: Game console (Exit with ESC)
+F8: Take screenshot (saved as *.bmp files)
+F9: Info screen (including FPS overlay)
+F11: Selfdestruct (forces respawn in multiplayer)
+PAUSE: Pauses the game
+This enhanced guide includes the nuanced gunner-specific controls, essential for effective ammunition management and tactical gameplay. Whether you’re a seasoned player or new to this tank simulator, these detailed bindings will help you control your tank with precision and strategic superiority.
+Feel free to share your experiences, tips, or any additional custom key bindings you’ve found useful. Let’s help everyone in our community become adept tank commanders!
+Tank on!
+

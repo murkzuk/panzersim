@@ -1,0 +1,14 @@
+Hello fellow tank enthusiasts and modders,
+I'm excited to share a comprehensive resource that could transform your modding experience for the WWII tank combat game, T34 vs Tiger. After detailed research and compilation, the T34 vs Tiger Modder's Handbook with AI Analysis is now available for all!
+What’s Inside:
+Detailed Game Architecture Overview: Understand the backbone of the game including its custom engine, script-driven system, and the modular approach that dictates its functionality.
+Deep Dive into Key Game Systems: Insights into the terrain, forest, and water systems. Learn how these can be manipulated for enhancing game visuals and dynamics.
+Modding Guidelines and Techniques: Whether you're tweaking AI behaviors or adjusting landscapes, this guide offers valuable tips on script analysis and keyword searching to help you modify the game effectively.
+Understanding Limitations and Possibilities: The guide outlines critical limitations due to the core game engine and offers strategies to navigate these challenges.
+This handbook is designed to help both beginners and veteran modders. You'll find explanations on how the game's codebase is structured, allowing for a wide range of modifications, from simple tweaks to comprehensive overhauls.
+Who This is For: Whether you're looking to fix bugs, add new features, or just understand the game better, this handbook is your gateway to becoming a more proficient T34 vs Tiger modder.
+Download Link:
+T34 vs Tiger Modder's Handbook with AI Analysis
+Feel free to download, read, and share your thoughts! If you have any questions or need further clarification on any aspect of the handbook, don't hesitate to reach out here or via PM. Let's use this thread to discuss potential projects and share our progress as we delve deeper into the art of modding T34 vs Tiger.
+Happy Modding!
+

@@ -1,0 +1,57 @@
+T-34 vs Tiger – Mission Modding Bible v1.0
+(Includes the First-Ever RAW Terrain Editing Workflow)
+Hi everyone,
+I'm excited to share
+two major resources
+for modding
+T-34 vs Tiger
+, created through deep file analysis and step-by-step AI support. If you've ever wanted to make your own missions but felt stuck—this is your way in.
+Downloads:
+1.
+Modding Bible (PDF)
+– Complete breakdown of the mission folder, scripting, AI, and environment setup
+→ Download: TvT Mission Folder & Scripting Guide
+2.
+RAW Heightmap Editing Guide (PDF)
+– The
+first-ever
+documented method for opening, modifying, and saving .raw terrain files correctly
+→ Download: RAW Terrain Editing in GIMP (step-by-step)
+---
+What You'll Learn
+• How every script file works: Mission.script, MissionTasks.script, content.script, WorldMatrices, Terrain, and more
+• How to script AI behavior, objectives, triggers, and mission logic
+•
+How to view, edit, and save .raw terrain files
+like hmap.raw using GIMP
+• How .bmp overlays (TerrainZone_*.bmp, RouterZone_*.bmp) affect surface types and AI movement
+• Which tools you need (GIMP, Notepad++, Paint.NET, etc.) and how to save in the right format
+• Feasibility estimates for mission types like ambush, defend, escort, patrol, and more
+---
+.RAW Terrain Editing Is Now Possible
+Until now, no clear method existed for editing .raw terrain in T-34 vs Tiger. This guide provides the
+first working workflow
+, including:
+• How to open hmap.raw in GIMP
+• Choosing correct settings (endianness, resolution, format)
+• Painting terrain height using grayscale values
+• Saving back in 16-bit unsigned raw format the game accepts
+This means custom terrain is
+finally
+possible for mission creators.
+---
+A Note on How This Was Made
+I’m not a coder—but I love tanks simulations. These guides were only made possible using
+Gemini 2.5 AI
+, which helped me understand the file structure, decode formats, and build working steps.
+AI made this possible—genuinely.
+If you’ve ever wanted to mod TvT but felt out of your depth, these tools can help you get started.
+---
+🧠 Based on reverse-engineering Campaign_2\Mission_1  of the ZeeWolf mod
+️ Created by a curious simmer with AI assistance
+No fluff — just real steps that work
+Feedback welcome — and if you use the guides, please share your results!
+Cheers,
+Jeff
+(Tank simmer and AI-aided explorer)
+

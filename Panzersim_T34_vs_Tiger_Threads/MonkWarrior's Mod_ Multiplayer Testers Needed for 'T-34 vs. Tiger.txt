@@ -1,0 +1,43 @@
+gameranger by jeff murkz, on Flickr
+Hey everyone,
+As many of you know, this month marks the 14th anniversary of Albert "MonkWarrior's" passing. He left us with the unfinished masterpiece, 'MonkWarrior's Multiplayer 7.1' mod for 'WWII Battle Tanks: T-34 vs. Tiger'. I've spent some time with AI tools to iron out the script issues with the T34 76, and I'm happy to report that the mod works beautifully in solo play against bots on GameRanger.
+But now, it's time to take it to the next level — real multiplayer. I'm looking for volunteers to join me in a true test of MonkWarrior's last creation. Whether you're a veteran of the game or new to the scene and curious, your help would be invaluable.
+You will reqiure a copy of the Mmp mod (ask) to play.
+Then, just hop onto GameRanger. You'll find the room under 'T-34 vs. Tiger', hosted by 'Murkz'. Let's see if we can get this mod the multiplayer experience it was meant to have. It's a great way to pay homage to a fellow tank enthusiast and to enjoy some good old tank warfare.
+See you on the battlefield,
+Murkz
+
+Hi Murkz - I have got the install disk for this fab game somewhere and will have to dig it out and re-install it. Loved the game as was sorry that it did not have MP in at the beginning. Could you send me the MMP mod and I will go hunting for my disc
+Cheers
+Glyn
+
+
+
+Glynd02 wrote:
+Hi Murkz - I have got the install disk for this fab game somewhere and will have to dig it out and re-install it. Loved the game as was sorry that it did not have MP in at the beginning. Could you send me the MMP mod and I will go hunting for my disc
+Cheers
+Glyn
+Hi Glyn, here you go.
+Mmp7
+
+Hello Murkz,
+How is it going? The last time we texted was in Feb 2011, when I was involved in correcting and testing MMP1 code.
+Could you please send me the latest MMP7 mod? I would like to give T-34 vs Tiger another go.
+
+Falco250 wrote:
+Hello Murkz,
+How is it going? The last time we texted was in Feb 2011, when I was involved in correcting and testing MMP1 code.
+Could you please send me the latest MMP7 mod? I would like to give T-34 vs Tiger another go.
+Hi Falco,
+Here is your link and long time no chat, I hope you are keeping well.
+Mmp7
+
+Thank You Murkz. Does MMP7 still generate errors when compiled? I must still have MMP1 source code on my old decommissioned PC. Were there many corrections implemented in progressing towards MMP7?
+
+Falco250 wrote:
+Thank You Murkz. Does MMP7 still generate errors when compiled? I must still have MMP1 source code on my old decommissioned PC. Were there many corrections implemented in progressing towards MMP7?
+Hi Falco, as you recall Monkwarrior was the coder and Vase carried on as best he could after Monkwarrior passed, looking at the execution.log it still has some errors but that is way beyond me as to what they mean or how to fix them.
+That said it plays ok in SP with no crashes
+
+
+

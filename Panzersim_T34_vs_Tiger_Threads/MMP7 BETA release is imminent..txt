@@ -1,0 +1,29 @@
+The BETA release is imminent.
+Here is a section from the read me.
+Installing:
+Create and new install of T34 vs Tiger. If you are a windows 7 user we suggest you install into c:\games\... folder and not the program files folder, which is the default path.
+Extract the contents of the zip into the new install, say YES to overwrite... Done.
+Windows 7 users, if you have a black screen at launch you will require the dll's from the dll.zip extracted to the T34 vs Tiger directory ( where the TvsT exe is).
+If TvT stays black at start despite the dll's.
+Go to Compatibility, activate compatibility mode Win XP SP 3 and deactivate the aero desktop
+Multiplayer:
+You will require Gameranger to play online with other MMP7 players.
+http://www.gameranger.com/
+Create a room, wait for you're friends to join, click host. Pick the map, choose you're tank, press play.
+It is very important that you all have exactly the same version of the game!
+Known Issues:
+Sometimes you will spawn into the enemy's camp.
+We have had the odd invincible tank, usually a T34.
+To hear the ambient sounds you will need to go to Single Player choose a side. You will then hear the ambient sounds. Navigate back to the MP screens and play as normal.
+THIS IS A BETA
+We are working on improving TvT and there are still some problems. This is a beta so it is not final. If you are a coder with C++ experience and would like to help out please get in touch.
+https://panzersim.forumotion.com/forum
+
+Any word on this new beta?...is there a download for it yet?
+
+
+
+Any download link for mmp7 or ZeeWolf mod?? .. Can't find it .. its really death??
+
+
+

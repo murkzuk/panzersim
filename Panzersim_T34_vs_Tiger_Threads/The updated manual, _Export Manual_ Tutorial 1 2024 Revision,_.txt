@@ -1,0 +1,8 @@
+The updated manual, "Export Manual: Tutorial 1 2024 Revision,"
+Here
+]
+Clipboard-1 by jeff murkz, on Flickr" />
+Effectively outlines the process for using the Maya Exporter for "T-34 vs Tiger." It covers initial setup steps, such as ensuring the presence of the D3DX9_28.DLL and copying necessary files.
+The tutorial then guides users through using Maya to create a model, apply materials and textures, and finally, the export process.
+This concise guide provides clear instructions, making it accessible for users at different levels of experience with Maya and game modding.
+

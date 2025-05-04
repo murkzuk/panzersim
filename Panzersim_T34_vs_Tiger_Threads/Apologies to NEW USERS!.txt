@@ -1,0 +1,4 @@
+A long time ago, I enabled Admin authorization for new users to prevent the site from being spammed every 5 minutes. However, I should have been receiving email notifications for new users requiring validation, but I did not receive them!
+It should now be working as advertised, and you will need to use your email to validate yourself.
+I am very sorry for the mix-up and look forward to welcoming more tankers here.
+

@@ -1,0 +1,46 @@
+Hi everyone,
+I wanted to share a modification I've been working on to address the issue of "missing polygons" or white patches in the distant terrain as seen in the third-person camera view in T34 vs Tiger. This mod doesn't fix the core engine limitations but it does improve the look of the distant terrain by adjusting some of the texture settings, to make the textures more complete.
+**What This Mod Does:**
+This mod primarily modifies the microtexture scales, the fade distances, and the water settings in the `BaseTerrain.script` file. These changes result in a noticeable improvement in how the distant terrain is rendered in the third-person view, making it appear more complete and also more detailed, while also improving the look of the water, and the way that it is being displayed in the game.
+**Key Changes:**
+Here are the specific settings that are being changed:
+*   **Microtexture Scales:**
+*  `CloseMicroTextureScale`: Modified to a smaller value (from `0.5` to `0.0625`)
+*  `NearMicroTextureScale`: Modified to a smaller value (from `2.0` to `1.0`)
+*   `FarMicroTextureScale`: Modified to a smaller value (from `32.0` to `16.0`)
+*   **Impact**: These changes reduce the size of the microtextures, which allow the game to display more of those textures and to show the details more clearly in the distant parts of the game world.
+*   **Microtexture Fade Distances:**
+*   `MicroTexNearMin`: Modified to `0.0` (from `10.0`)
+*   `MicroTexNearMax`: Modified to `200.0` (from `80.0`)
+*   `MicroTexFarMin`: Modified to `1000.0` (from `300`)
+*  `MicroTexFarMax`: Modified to `2500.0` (from `800`)
+*   **Impact**: These changes will smooth the transition between the microtextures as they are being displayed in the game.
+*   **Water Texture Settings still a WIP but better than stock**
+*   `WaterTexScale`: Changed from `4.0;` to `2.0;`
+*   **Impact:**  The lower value for this setting will render the water at a higher level of detail.
+*   `WaterMicroTexScale`: Changed from `32.0;` to `8.0;`
+*   `WaterPenaTexScale`: Changed from `32.0;` to `30.0;`
+*   **Impact:** The changes to these settings make the water look more detailed, and also to make the water and the terrain interact more smoothly.
+*  `ClipPlaneShift` Changed from `0.0;` to `1.0;`
+*   **Impact:** This setting will change how the water is being rendered, and will fix some visual issues in that rendering system.
+*   `AnimationSpeed`: Changed from `0.05;` to `2.0;`
+*   **Impact:** The changes in this setting make the water animations to look much more dynamic.
+**Installation Instructions:**
+1.  Locate the original `BaseTerrain.script` file in your "T34 vs Tiger" game directory (usually found in the `Scripts\Common` folder).
+2.  Make a backup copy of the original file before making any changes.
+3.  Open the `BaseTerrain.script` file with a text editor.
+4.  Modify the microtexture and water settings based on the values provided above.
+5.  Save the modified `BaseTerrain.script`.
+6.  Start the game, and enjoy the improvements to the visual quality of the terrain and water!
+**Important Notes:**
+*   This mod does *not* modify the core game engine or change the terrain rendering system, and that the changes are primarily focused on the textures, and that these settings have the most influence on the third person camera view, rather than the first person view.
+*  This mod does not remove or fix *all* of the visual issues that are present in the game, and there may be limitations related to the core rendering engine, that are beyond the capabilities of this mod.
+*   The settings that are listed above may be changed or modified further to create different combinations of settings.
+*  It is recommended that you back up your original settings before implementing this, or any other type of modification.
+Please share your experience, feedback, and screenshots if you decide to test this mod, and also let me know if you have any questions, and I'll be happy to provide some assistance.
+Happy modding!
+
+One thing I would like to point out is that different video card drivers use slightly different math.  I had to use 2 computers when I was playing at this type of thing for PE.  One computer had GeForce and the other had ATI.  A 'happy' medium had to be found.  To bad 3Dfx did not become the standard as my work for PE dawn and dusk looked best on my Banshee card.  Dawn and dusk is code (scripts) that change the skybox and cloud colors during specific times of day.  It is very basic, but it is this type of mod that starts the path down the rabbit hole.
+I post to encourage any, that venture into self taught, are not discouraged when some end users do not see what you see.  That was my hardest hurdal to accept as a new modder.
+TVT is an exceptional platform for creating WW2 tank simulation of it's graphics caliber, but it does have a flaw that it uses SpeedTree 1.0 for AI line of sight ( my guess as to where the flaw lies ).  It is possible that later versions of SpeedTree can fix the problems by updating the DLL calls to the newer lib.  If that can not fix it, then the source code is the only 'easy' fix.  Either way, TVT is an exceptional tool to learn 3D modeling, scenario scripting, and code writing.
+

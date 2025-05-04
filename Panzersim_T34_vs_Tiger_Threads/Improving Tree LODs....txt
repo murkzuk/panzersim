@@ -1,0 +1,32 @@
+Improving Tree LODs in WWII Battle Tanks: T-34 vs. Tiger
+Hi fellow tankers and modders!
+I wanted to share an exciting discovery that greatly improves the visual experience of WWII Battle Tanks: T-34 vs. Tiger—particularly when it comes to the immersion-breaking for me "pop-in" effect caused by tree LOD (Level of Detail) transitions.
+The Problem: One of the issues that always bothered me was the abrupt changes in tree detail as you approached them. Trees would suddenly shift from low detail to high detail as you got close, which ruined the immersion for me.
+The Solution: After digging into the game's files, I found that adjusting the LOD distances for trees in the BaseSTTree.script file solves this issue! Here's the section you need to modify:
+Array ModelLOD = [40, 70, 180, 250]; // original settings
+I increased these values to push the high-detail trees further out from the player, resulting in a much smoother and more immersive transition:
+Array ModelLOD = [80, 140, 360, 500]; // adjusted settings
+How it Works: These numbers control at what distance the trees switch from one level of detail to another. By increasing them, we keep higher-detail tree models visible farther from the player, reducing the jarring "pop-in" effect.
+Performance Impact: The change noticeably improves the visual quality of forests in the game. So far, the performance hit has been minimal for me, but I’d recommend adjusting these values based on your system’s capabilities. Start with something like [80, 140, 360, 500] and tweak from there.
+How to Implement:
+Open the BaseSTTree.script file.
+Find the line: Array ModelLOD = [40, 70, 180, 250];
+Replace it with the new values or use your own pc dependent: Array ModelLOD = [80, 140, 360, 500];
+Save and test it in-game!
+I’m looking forward to hearing about your results! If you try this out, let me know if you see improvements or have any further suggestions to enhance the game’s environment.
+Happy modding!
+
+Many thanks for your efforts. this worked well for me using suggested settings
+bb1
+
+
+
+bb1 wrote:
+Many thanks for your efforts. this worked well for me using suggested settings
+bb1
+You are welcome bb1, are you a new player to TvT?
+
+Yes I am at the age of 83 - have mostly been flight simming all my life but now find my reflexes are not up to par - Tanks are not quite so demanding and I am enjoying T34 v Tiger and Steel Fury Kharkov. Enjoying the info in this forum. Regards
+
+
+

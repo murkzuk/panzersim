@@ -1,0 +1,16 @@
+Hi All
+Its been a long time I know but I have started modding TvT again int MP space, I am converting all of the Campaign scenarios to Co -Op Multiplay.
+I have got one scenario working and Proof of concept tested it with two pc's on a LAN and it seems to work ok you can spawn and respawn ok.
+I'll keep you all posted
+
+I now have all of the German SP scenarios displayable in the MP DM Menu Screens,  I can now move on to sorting the mission scripts to make them DMM mp classes. (this makes the SP scenario a MP scenario)
+I have also made a discovery whilst looking around the general coding forums white space and notation in the scripts takes up parsing time when the engine is loading the script. TvT has a significant amount of this in the scripts so I will start to optimise the production scripts by removing them.
+
+
+
+I have managed to work out that the mainplayer engine start is what drives the whole AI in the scenarios, setting this to false brings all of the AI to life
+
+Sounds very promising! Always got excited when someone starts to mod TvsT, i still keep playing it every now and then because no new ww2 tank sims seems to be coming in foreseeable future.
+
+
+

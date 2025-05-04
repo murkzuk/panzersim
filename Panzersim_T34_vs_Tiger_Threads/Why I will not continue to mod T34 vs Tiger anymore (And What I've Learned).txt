@@ -1,0 +1,53 @@
+Hi,
+I've spent a considerable amount of time diving deep into "T34 vs Tiger," and while I've learned a lot, I've also reached a point where I've decided to step away from active modding of this game. I wanted to share my reasons why, and also to make those experiences and insights available to other members of the modding community.
+The Journey:
+My modding journey started with a desire to address some core issues that I found particularly frustrating: the AI's ability to "see through walls" and the jarring distant terrain rendering in the first-person view. I was also trying to see if I could create new and more challenging AI behaviours, by combining different settings that I was discovering throughout the project.
+What followed was a deep exploration of the game's script files, AI systems, and rendering mechanics. I also tried to identify other systems, and to see how those systems are interacting with each other, and if they could be used to influence the game behaviours, or to create new and interesting visual settings, or to improve the core limitations of the game.
+The Limitations I Encountered:
+Despite the progress that I was making, and also all of the knowledge that I was acquiring, I began to realize the limitations of modding a game with a closed and limited scripting system:
+The "All-Seeing" AI:
+The AI units in the game possess a "radar vision" that allows them to detect and engage the player through objects, the terrain, and other game elements. This is clearly an immersion-breaking aspect of the game, and that the current AI system does not implement any form of line of sight or occlusion system.
+The First-Person Jank:
+I also found that the first-person rendering has many limitations, and that the game engine is probably using different rendering pipelines for the first and third-person views. Although the third-person view has greatly improved, the first-person view remains problematic, with noticeable visual artifacts.
+Core Engine Control:
+The core rendering pipeline and the level of detail system, for the AI units, and for all other objects in the game, are controlled by the game engine itself and are not accessible through the script settings. This limited the degree to which I could try and fix the issues related to rendering, texture quality, and the level of detail for the different game objects.
+Limited Script Access:
+The scripting system is also limited, and it is not a full development kit, and that many of the settings that are used by the core engine are not directly exposed or accessible to the scripting system, or by any other part of the code that we can modify.
+Lack of Mod Folder Support:
+The game does not use a separate "mod" folder, and that it requires direct modifications to the core game files, which also limits the ability of the modders to properly manage and test different mod combinations.
+Time and Skills:
+Although this modding effort was an interesting journey, it also required a lot of time, and that it also requires a level of technical skill that is beyond my current knowledge, and that that required an understanding of reverse engineering, and other advanced modding techniques.
+What I Learned:
+This experience, despite its frustrations, has been very valuable:
+Understanding Limitations:
+I've learned a lot about the limitations of modding, and that not every problem can be solved using script settings, or other available modding tools.
+Importance of Focus:
+I've also learned that it's important to prioritize mods that target areas that can be changed, and to avoid focusing on problems or limitations that are beyond the scope of your resources.
+Game Development Complexity:
+This project also highlighted the complexities involved in game development, and that a seemingly small problem can require the modification of a large number of interlinked systems, and that it may not be easy to simply change or bypass a single setting, or a specific part of the game’s logic.
+The Value of Community:
+Modding is a community-driven effort, and that it is important to share your findings and experiences with others, and also to make sure that other users have access to the information that was generated during your own modding projects.
+Acceptance:
+I have also learned to accept the limitations that can not be bypassed, and to focus on what I can change and what I can not change, and that those limitations are also an important part of the modding process.
+Moving Forward:
+I've decided that I will no longer be delving into and modding "T34 vs Tiger". I will still play the game, but the flaws, especially the AI's ability to see through the terrain, are too immersion-breaking for me.
+I want to thank everyone for their support and interest, and I hope that this detailed report of my findings and my experiences will be a useful resource for other modders, and that they will use the information in this project to continue their own investigation into the possibilities, and limitations of modding "T34 vs Tiger."
+Happy gaming!
+
+My compliments and admiration to you Murkz.  I know well the road you have traveled, except that I was granted access to a source code.  I can only imagine the frustration from lack of the missing piece caused.  But, I tell you from experience that source code is also muted by the advance of hardware.  TvT is not alone.  The jump from DX6 to DX9 is almost impossible to find, leaving one to rewrite the entire rendering process.
+You are correct about AI spotting and this is why Vase and his team abandoned TvT.
+Rendering LODs is almost always hard coded as code is written for near future hardware at best.  PE has a math array in it's core that MY and myself independently modded to gain our distance requirements.  Hardware advance is what allowed us to increase these settings.
+Mod folder support can be overcome with compiler coded Dll/folder calls, but that does not help modders.
+In TvT's defence, they were the first tankers to use a script (Python) programing language.  PE has many ini tables, but TvT was the first that gave access to more than raw numbers through scripts.  TvT is still a valuable tool for entry level modders.  In fact, it is great for vehicle 3D unit Modding.
+My advice, enjoy what you have learned, take a rest from any modding and return to modding when you find it to be fun, or you wish to share your knowledge.  Each years is a new chance the game you wish is created.
+Respect to you!
+
+
+
+Thank you for all your hard work on T34 vs Tiger.
+Have you given consideration to continue your work on another game and if so, have you looked at Arma 3 and the new CDLC WW2 mod Spearhead?
+https://store.steampowered.com/app/1175380/Arma_3_Creator_DLC_Spearhead_1944/
+There are other WW2 free mods that might interest you.
+
+
+

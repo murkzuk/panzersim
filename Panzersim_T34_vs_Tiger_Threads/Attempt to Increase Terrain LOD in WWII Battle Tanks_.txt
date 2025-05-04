@@ -1,0 +1,36 @@
+"Attempt to Increase Terrain LOD in WWII Battle Tanks: T-34 vs. Tiger – Challenges in Matching Binocular View Detail"
+I've been trying to increase terrain LOD in WWII Battle Tanks: T-34 vs. Tiger to get the regular camera view to render terrain as fully detailed as it appears in binocular view. Here’s a breakdown of what I’ve done so far:
+ZNear Setting (
+PlayerUnit.script
+): The binocular view uses a ZNear of 0.1f, so I tried applying that to the regular camera (default is 1.5f). I thought it might impact LOD by reducing the near clipping distance, but no improvement—no visible change in distant terrain detail.
+Field of View (FOV) (
+PlayerUnit.script
+): The binoculars use a narrower FOV, which might be forcing maximum LOD at further distances (just our guess). Tried applying this FOV setting to the normal camera, but it didn’t affect terrain detail outside binocular mode.
+Control State and Link Settings (
+PlayerUnit.script
+): The binocular view uses SetControlState(0) and ForceLinkToObject(true) to tightly fix the view on the player, which could influence LOD. Applied these settings to regular views, but it didn’t replicate the LOD quality seen in binocular mode.
+BaseTerrain.script Adjustments: I explored entries in
+BaseTerrain.script
+to see if terrain LOD could be adjusted globally. Specifically, I experimented with parameters like LODLevel, RenderDistance, and DetailFactor, trying to push the max LOD rendering further out. Unfortunately, adjusting these had no impact on terrain detail in regular views. It seems the binocular view might have an override that forces higher LOD independently.
+Current Conclusion: The binocular view appears to have a unique setting (likely tied to its narrow FOV—just our guess) that forces maximum terrain LOD at all distances, but I haven’t figured out how to extend this to other views. If anyone has insights on view-specific LOD controls that work for regular and third-person views, I’d appreciate the help.
+
+After further testing, I’ve discovered a key relationship between FOV and LOD behavior in WWII Battle Tanks: T-34 vs. Tiger.
+Key Takeaway:
+Narrow FOV (around 15.0f) forces the game to render all objects (like trees and terrain) at their highest LOD. This likely happens because the engine prioritizes rendering detail within a smaller field of view, ensuring distant objects are fully detailed.
+However, wider FOV values (25.0f or more) allow the engine to reduce object detail at a distance, causing trees and terrain to pop out of full LOD to maintain performance.
+Scripts Edited:
+PlayerUnit.script
+and
+Cockpit.script:
+In these scripts, we modified the FOV settings for different views (commander, gunner, and third-person).
+The key lines were:
+CameraLink.SetCurrentFOV(m_GunnerFOV); // Gunner FOV
+CameraLink.SetCurrentFOV(m_CommanderFOV); // Commander FOV
+CameraLink.SetCurrentFOV(15.0f); // Experimented with 15.0f for max LOD
+Findings:
+Using a 15.0f FOV forces full LOD, but the narrow FOV makes regular gameplay difficult.
+Wider FOVs (like 25.0f or more) result in LOD popping out at distance.
+I’ve since reverted to stock settings due to
+NO FPS
+as it was 1 fps.
+

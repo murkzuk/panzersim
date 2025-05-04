@@ -1,0 +1,24 @@
+Can anyone help have the t34 vs tiger demo and the game CD but I can't run that can I put mods in the demo
+
+I think you need the whole game and not the Demo to get mods working =)
+
+
+
+I have the game but won't run keeps saying MSVCP71.dll is missing
+
+Aha. its easy, just google for those .dll. they are free downloads from microsoft!
+Check this thread on some other forum: http://www.subsim.com/radioroom/showthread.php?t=156465
+
+Thanks for your help I try that and get back to you.  Cheers
+
+Got the game tvt up and running will post later on how I did it and if I can anyone can  Thanks to all tankers who helped me  And anyone still trying it is well worth it.  Will post later on
+
+Thanks Donken
+
+Great, you got it to work?
+Im glad i could be of some help =)
+
+Without the DLL s I was at notting  now to load up with mods
+
+
+

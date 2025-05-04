@@ -1,0 +1,43 @@
+Hello fellow tankers,
+I have found ZeeWolf's Christmas gift, which he shared as a sample of the ZeeWolf mod. For anyone still searching for it, you can download it here:
+ZeeWolf Christmas gift Oct 2010
+I'm also looking for a way to release the full mod without running into any legal issues. If you have any suggestions, I'd love to hear them.
+Here is he included readme and the DLL's you might require. There go in the root directory of the game (where the TvsT.exe is).
+Please note: Do not run the shadows on full as it causes a graphical error. The same applies to anti-aliasing (AA); use your graphic card control panel for the AA settings. Set terrain, forest, and water all to the lowest settings for optimal performance.
+Greetings Tankers and Merry Christmas, Ver 2.0
+My gift to you as I promised.
+You have now two new mission-1 scenarios one for each campaign.
+Both are on my new mid-sized (11 miles by 11 miles) map.
+I will list some things that are also included.
+1.) New F6 view with zoom out (hit F6 then the keypad + and - keys)
+2.) New and improved vehicles with a better more robust damage model
+and the ability to Re-load/Repair you tank. (When close press your "b"
+key) .
+3.) New AI tanks that have an improved damage model and the ability
+to customize the ammo power and skins without affecting the Player
+tanks (didn't forget about those multi-players).
+4.)New improvements to the Human animation behavior. Added also
+a more complete German uniform skin.
+5.)New Concrete PilBox with 3 MGs. This model is a freebie.
+6.)New barrier Gun Position added. Another model freebie I think
+you will enjoy.
+7.) Added a 'working' NebelWafer with sound and a powerful HE round.
+This unit will reload automatically every 90 seconds, 6rds. Their
+not accurate on purpose.
+8.) New Tiger engine sounds that are I believe are a wonderful
+improvement, adds to the enjoyment level. As a new inside main gun
+fire sound that doesn't keep the neighbors awake.
+9.) added some additional sound files that are resized and sampled
+for a optimized performance.
+10.) Added a tool to aid in measuring while building and positioning
+stuff of your own.It's a 10 meter scale.
+That's some of them you will probably notice more when you start playing.
+Please remember this gift is beta release authorized for use in T34 vs
+Tiger version 1 only.
+Install this at your own risk over a default install of T34 vs Tiger.
+I will provide support, contact me at
+http://www.subsim.com/radioroom/forumdisplay.php?f=203
+On the thread: Zanta is Here! Merry Christmas!
+In hope of a very merry Christmas,
+ZeeWolf
+
