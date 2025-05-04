@@ -3,12 +3,13 @@
 ## Root files
 | File | Size | Modified |
 |------|------|----------|
+| [.gitignore](.gitignore) | 0 KB | 2025-05-04 |
 | [build_index.py](build_index.py) | 1 KB | 2025-05-02 |
 | [dummy_missing_wavs.zip](dummy_missing_wavs.zip) | 1 KB | 2025-05-02 |
 | [export_threads.py](export_threads.py) | 1 KB | 2025-05-04 |
 | [forum_topics.csv](forum_topics.csv) | 6 KB | 2025-05-04 |
 | [GPT Handoff_Notes.txt](GPT Handoff_Notes.txt) | 8 KB | 2025-05-04 |
-| [index.md](index.md) | 75 KB | 2025-05-04 |
+| [index.md](index.md) | 85 KB | 2025-05-04 |
 | [index_forum.py](index_forum.py) | 0 KB | 2025-05-04 |
 | [MainMenuBackground_1.dds](MainMenuBackground_1.dds) | 384 KB | 2025-05-02 |
 | [MenuBackground_Germany.dds](MenuBackground_Germany.dds) | 384 KB | 2025-05-02 |
@@ -135,16 +136,25 @@
 ## T-34 vs Tiger Custom Mission Name
 | File | Size | Modified |
 |------|------|----------|
-| [T-34 vs Tiger Custom Mission Name\Forward Probe.png](T-34 vs Tiger Custom Mission Name/Forward Probe.png) | 1683 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\T-34 vs Tiger Custom Mission Name Checklist.odt](T-34 vs Tiger Custom Mission Name/T-34 vs Tiger Custom Mission Name Checklist.odt) | 25 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\T-34 vs Tiger Custom Mission Name Checklist.pdf](T-34 vs Tiger Custom Mission Name/T-34 vs Tiger Custom Mission Name Checklist.pdf) | 65 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\T34vTiger_Custom_Mission_Checklist.odt](T-34 vs Tiger Custom Mission Name/T34vTiger_Custom_Mission_Checklist.odt) | 31 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\T34vTiger_Custom_Mission_Checklist.pdf](T-34 vs Tiger Custom Mission Name/T34vTiger_Custom_Mission_Checklist.pdf) | 38 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\T34vTiger_Custom_Mission_Checklist.txt](T-34 vs Tiger Custom Mission Name/T34vTiger_Custom_Mission_Checklist.txt) | 2 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\tvt_mission_builder_cli Phase 1.py](T-34 vs Tiger Custom Mission Name/tvt_mission_builder_cli Phase 1.py) | 3 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\TvT_Mission_Creator - Phase1.py](T-34 vs Tiger Custom Mission Name/TvT_Mission_Creator - Phase1.py) | 1 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\TvT_Mission_Creator Phase2.py](T-34 vs Tiger Custom Mission Name/TvT_Mission_Creator Phase2.py) | 3 KB | 2025-05-02 |
-| [T-34 vs Tiger Custom Mission Name\TvT_Mission_Creator.py](T-34 vs Tiger Custom Mission Name/TvT_Mission_Creator.py) | 5 KB | 2025-05-02 |
+| [T-34 vs Tiger Custom Mission Name\Forward Probe.png](T-34 vs Tiger Custom Mission Name/Forward Probe.png) | 1683 KB | 2025-04-29 |
+| [T-34 vs Tiger Custom Mission Name\T-34 vs Tiger Custom Mission Name Checklist.odt](T-34 vs Tiger Custom Mission Name/T-34 vs Tiger Custom Mission Name Checklist.odt) | 25 KB | 2025-04-29 |
+| [T-34 vs Tiger Custom Mission Name\T-34 vs Tiger Custom Mission Name Checklist.pdf](T-34 vs Tiger Custom Mission Name/T-34 vs Tiger Custom Mission Name Checklist.pdf) | 65 KB | 2025-04-29 |
+| [T-34 vs Tiger Custom Mission Name\T34vTiger_Custom_Mission_Checklist.odt](T-34 vs Tiger Custom Mission Name/T34vTiger_Custom_Mission_Checklist.odt) | 31 KB | 2025-04-29 |
+| [T-34 vs Tiger Custom Mission Name\T34vTiger_Custom_Mission_Checklist.pdf](T-34 vs Tiger Custom Mission Name/T34vTiger_Custom_Mission_Checklist.pdf) | 38 KB | 2025-04-29 |
+| [T-34 vs Tiger Custom Mission Name\T34vTiger_Custom_Mission_Checklist.txt](T-34 vs Tiger Custom Mission Name/T34vTiger_Custom_Mission_Checklist.txt) | 2 KB | 2025-04-29 |
+| [T-34 vs Tiger Custom Mission Name\tvt_mission_builder_cli Phase 1.py](T-34 vs Tiger Custom Mission Name/tvt_mission_builder_cli Phase 1.py) | 3 KB | 2025-04-30 |
+| [T-34 vs Tiger Custom Mission Name\TvT_Mission_Creator - Phase1.py](T-34 vs Tiger Custom Mission Name/TvT_Mission_Creator - Phase1.py) | 1 KB | 2025-04-29 |
+| [T-34 vs Tiger Custom Mission Name\TvT_Mission_Creator Phase2.py](T-34 vs Tiger Custom Mission Name/TvT_Mission_Creator Phase2.py) | 3 KB | 2025-04-29 |
+| [T-34 vs Tiger Custom Mission Name\TvT_Mission_Creator.py](T-34 vs Tiger Custom Mission Name/TvT_Mission_Creator.py) | 5 KB | 2025-04-29 |
+
+## T34vsTiger
+| File | Size | Modified |
+|------|------|----------|
+| [T34vsTiger\Video\g5.7z](T34vsTiger/Video/g5.7z) | 106191 KB | 2025-04-26 |
+| [T34vsTiger\Video\g5.avi](T34vsTiger/Video/g5.avi) | 0 KB | 2025-04-26 |
+| [T34vsTiger\Video\g5intro.avi](T34vsTiger/Video/g5intro.avi) | 0 KB | 2025-04-26 |
+| [T34vsTiger\Video\intro.avi](T34vsTiger/Video/intro.avi) | 0 KB | 2025-04-26 |
+| [T34vsTiger\Video\lh.avi](T34vsTiger/Video/lh.avi) | 0 KB | 2025-04-26 |
 
 ## Tank scripts viewed by ai
 | File | Size | Modified |
@@ -556,6 +566,13 @@
 | [Whirlwinds over Vietnan (WOV) important\WoV_radio_chatter_notes.txt](Whirlwinds over Vietnan (WOV) important/WoV_radio_chatter_notes.txt) | 2 KB | 2025-05-04 |
 | [Whirlwinds over Vietnan (WOV) important\WoV_to_TvT_possible_uses.txt](Whirlwinds over Vietnan (WOV) important/WoV_to_TvT_possible_uses.txt) | 3 KB | 2025-05-04 |
 | [Whirlwinds over Vietnan (WOV) important\WoV_vs_TvT_detailed_analysis.txt](Whirlwinds over Vietnan (WOV) important/WoV_vs_TvT_detailed_analysis.txt) | 4 KB | 2025-05-04 |
+
+## WORKING tvt mission builder CLI
+| File | Size | Modified |
+|------|------|----------|
+| [WORKING tvt mission builder CLI\PROMPT tvt_mission_builder_cli.txt](WORKING tvt mission builder CLI/PROMPT tvt_mission_builder_cli.txt) | 0 KB | 2025-05-01 |
+| [WORKING tvt mission builder CLI\TvsT Manual and Guide.url](WORKING tvt mission builder CLI/TvsT Manual and Guide.url) | 0 KB | 2025-05-01 |
+| [WORKING tvt mission builder CLI\tvt_mission_builder_cli.py](WORKING tvt mission builder CLI/tvt_mission_builder_cli.py) | 5 KB | 2025-05-01 |
 
 ## ZW scripts 2025
 | File | Size | Modified |
