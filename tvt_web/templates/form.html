@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TVT Mission Builder</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; }
+    textarea, input, select { width: 100%; margin-bottom: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Create a New Mission</h1>
+  <form method="POST">
+    <label>Base Mission to Clone</label>
+    <select name="source">
+      {% for m in missions %}
+      <option value="{{ m }}">{{ m }}</option>
+      {% endfor %}
+    </select>
+
+    <label>New Mission Folder Name</label>
+    <input name="new_name" required>
+
+    <label>Mission Title (Menu)</label>
+    <input name="title" required>
+
+    <label>Briefing Overview (top text)</label>
+    <textarea name="briefing" rows="3"></textarea>
+
+    <label>Orders / Narrative</label>
+    <textarea name="orders" rows="3"></textarea>
+
+    <label>Objectives (up to 5)</label>
+    {% for i in range(1, 6) %}
+    <input name="obj{{ i }}" placeholder="Objective {{ i }}">
+    {% endfor %}
+
+    <label>Campaign</label>
+    <select name="campaign">
+      <option value="ussr">USSR</option>
+      <option value="germany">Germany</option>
+    </select>
+
+    <label><input type="checkbox" name="editor"> Editor Mode (future)</label><br><br>
+    <button type="submit">Clone Mission</button>
+  </form>
+
+  {% if message %}
+  <p><strong>{{ message }}</strong></p>
+  {% endif %}
+</body>
+</html>
