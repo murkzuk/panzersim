@@ -1,0 +1,501 @@
+
+
+class CBaseBehaviorParams
+{
+  // for transport heli
+  float   TransportRunOffDistance = 5.0;  // distance from loader joint (direction from transport's side)
+  float   TransportPreloadDistance = 10.0; // distance from transport (direction from transport's front(back))
+
+  // for human
+  float    NonRotatableAngle = 30.0;  // doesnt rotate if angle is less then this or value set by SetWeaponAnimatedHAngle
+}
+
+class CBaseBehavior
+{
+  final static Component SpecParams = new CBaseBehaviorParams();
+
+  boolean  FireControlOnly = false;
+
+  int AttackStyle = 0; //#TMP
+
+  boolean  CanMove    = false;        // non-moveable, by default
+  boolean  CanRotate  = false;        // can rotate ,disabled by def. work if CanMove = false only
+
+  boolean  HasRouter  = false;        // no router, by default
+  boolean  HasRadar   = false;        // no radar, by default
+
+  boolean  CanEvadeMissiles = false;
+
+  float   FlyingHeight = 0.0;            // stub value
+  float   StealthHeight = 0.0;
+  float   CeilingByZ   = -1.0;
+  boolean KamikazeUnit  = false;
+
+  float   AttackDistanceMin = 250.0;
+  float   AttackDistanceMax = 650.0;
+
+  float   LeaderPosTolerance = 0.0;
+
+  boolean IsTransport = false;             // if true unit can carry other units on/inside
+
+  void CBaseBehavior()
+  {
+    //#TODO: uncomment to deactivate all newly created behaviors
+    //ActivateBehavior( false);
+
+    //#TODO: uncomment to show debug information
+    //ShowDebugInfo( true);
+
+    //#TODO: comment / uncomment to set information type that will be showed in debug info
+    if ( isFunctionExist( user, "SetShowInfoStyle", 1))
+    {
+      SetShowInfoStyle( 0
+        | BEHINF_ID
+        | BEHINF_ORDER
+      //| BEHINF_SCRIPT
+        | BEHINF_INFO
+        | BEHINF_PATH
+        | BEHINF_TARGET
+      //| BEHINF_CUSTOM
+      );
+    }
+
+    //#TODO: uncomment to debug router for unreacheable
+    //SetDebugRouterMode( true);
+  }
+
+  void Setup()
+  {
+  }
+}
+
+//
+// Naval
+//
+
+class CBaseNavalBehavior extends CBaseBehavior, CBaseZoneMap
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 1500; // [m]
+  float  MinRadarDistance = 5;    // [m]
+
+  int    UpdateRadarPeriod        = 3000; // [ms]
+  int    UpdateRadarPeriodRandAdd = 1000; // [ms]
+
+  // *** movement physical parameters
+
+  float   FlyingHeight = 1;
+
+  // physical parameters
+  Vector  MaxSpeed                     = new Vector( 35, 0, 0);  // m/s
+  Vector  MaxNegativeSpeed             = new Vector( 0, 0, 0);   // m/s
+  Vector  MaxAccelleration             = new Vector( 1, 0, 0);   // m/(s*s)
+  Vector  MaxNegativeAccelleration     = new Vector( 1, 0, 0);   // m/(s*s)
+  Vector  MaxBrakingAccelleration      = new Vector( 2, 0, 0);   // m/(s*s)
+  Vector  MaxAngleSpeed                = new Vector( 0, 0, 1);  // [rad/s]
+  Vector  MaxAngleAccelleration        = new Vector( 0, 0, 0.2);  // [rad/(s*s)]
+  Vector  MaxAngleBrakingAccelleration = new Vector( 0, 0, 0.4);  // [rad/(s*s)]
+
+  // physical limitations
+  float  MinRotateRadius = 100; // unit can turn when staying
+
+  // controlling parameters
+  Vector  BrakingFactor          = new Vector( 20, 0, 0);//5; // good = 20;
+  Vector  AngleBrakingFactor     = new Vector( 0, 0, 1);
+  Vector  StartBrakingDistance   = new Vector( 50, 0, 0);  // distance to target where begin stopping
+  Vector  StartBrakingAngle      = new Vector( 0, 0, 0.3);    // angle to target direction where begin stopping rotation
+  Vector  DistanceEpsilon        = new Vector( 1, 0, 0);
+  Vector  SpeedEpsilon           = new Vector( 0.1, 0, 0);
+  Vector  AngleEpsilon           = new Vector( 0, 0, 0.01);
+  Vector  AngleSpeedEpsilon      = new Vector( 0, 0, 0.01);
+  float   TurnHysteresisAngleCos = 0.0;
+
+  // inclination parameters
+  float  MoveBank   = 0;
+  float  RotateBank = 0.001;
+
+  // *** Router parameters
+  int   VehicleType         = VT_HV_WATER;
+  float CostWeight          = 1.0;
+  float HeightWeight        = 0.0;
+  float HeuristicWeight     = 10.0;
+
+  float CellSize            = 40;
+  float ZoneFactor          = 1;
+  float HeightFactor        = 1; // ignore heights - it does not affect to router for water units
+  Array ZoneCosts           = [];
+  Array RouterMapLayerNames = ["RouterMap_Layer1"];
+
+
+  // *** Mover parameters
+
+  float SmoothingCorridorSizeXY = 20;
+  float SmoothingCorridorSizeZ  = -1; // do not test z coordinate
+  int   SmoothingLookUpIndexNum = 5;
+  int   SmoothingCellBypass     = 20;
+}
+
+class CBaseLightNavalBehavior extends CBaseNavalBehavior
+{
+  int   VehicleType         = VT_LT_WATER;
+  Array ZoneCosts           = [
+                                [ZMC_Water01,        2.0],
+                                [ZMC_ShallowWater01, 60.0],
+                                [ZMC_BeachWater01,   100.0]
+                              ];
+}
+
+class CBaseHeavyNavalBehavior extends CBaseNavalBehavior
+{
+  Array ZoneCosts           = [
+                                [ZMC_Water01,        2.0],
+                                [ZMC_ShallowWater01, 300.0]
+                              ];
+}
+
+//
+// Ground
+//
+
+class CBaseGroundBehavior extends CBaseBehavior, CBaseZoneMap
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+  float  MaxRadarDistance         = 1000; // m
+  float  MinRadarDistance         = 5;   // m
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+  // *** movement physical parameters
+  float   FlyingHeight = 1;
+
+  // physical parameters
+  Vector  MaxSpeed                      = new Vector( 30, 0, 0);   // m/s
+  Vector  MaxNegativeSpeed              = new Vector( 15, 0, 0);   // m/s
+  Vector  MaxAccelleration              = new Vector( 3, 0, 0);    // m/(s*s)
+  Vector  MaxNegativeAccelleration      = new Vector( 0.3, 0, 0);  // m/(s*s)
+  Vector  MaxBrakingAccelleration       = new Vector( 10, 0, 0);   // m/(s*s)
+  Vector  MaxAngleSpeed                 = new Vector( 0, 0, 2);    // [rad/s]
+  Vector  MaxAngleAccelleration         = new Vector( 0, 0, 1);  // [rad/(s*s)]
+  Vector  MaxAngleBrakingAccelleration  = new Vector( 0, 0, 2); //1);  // [rad/(s*s)]
+
+  // physical limitations
+  float  MinRotateRadius = 10; // unit can turn when staying
+
+  // controlling parameters
+  Vector  BrakingFactor         = new Vector( 20, 0, 0);//5; // good = 20;
+  Vector  AngleBrakingFactor    = new Vector( 0, 0, 1);
+  Vector  StartBrakingDistance  = new Vector( 25, 0, 0);  // distance to target where begin stopping
+  Vector  StartBrakingAngle     = new Vector( 0, 0, 0.3);    // angle to target direction where begin stopping rotation
+  Vector  DistanceEpsilon       = new Vector( 1, 0, 0);
+  Vector  SpeedEpsilon          = new Vector( 0.1, 0, 0);
+  Vector  AngleEpsilon          = new Vector( 0, 0, 0.1);
+  Vector  AngleSpeedEpsilon     = new Vector( 0, 0, 0.1);
+  float  TurnHysteresisAngleCos = 0.5;
+
+  // inclination parameters
+  float  MoveBank   = 0;
+  float  RotateBank = 0;
+
+
+  // *** Router parameters
+  int   VehicleType         = VT_GROUND;
+  float CostWeight          = 1.0;
+  float HeightWeight        = 1.0;
+  float HeuristicWeight     = 10.0;
+
+  float CellSize            = 100;
+  float ZoneFactor          = 1;
+  float HeightFactor        = 1; // ignore heights - it does not affect to router for water units
+  Array ZoneCosts           = [
+                                [ZMC_Grass01,      200.0],
+                                [ZMC_OffRoad01,    200.0],
+                                [ZMC_OffRoad02,    400.0],
+                                [ZMC_OffRoad03,    800.0],
+                                [ZMC_Road01,         2.0],
+                                [ZMC_Road01Add,      2.0],
+                                [ZMC_Road02,         2.0],
+                                [ZMC_Road02Add,      2.0],
+                                [ZMC_RoadObject,     2.0],
+                                [ZMC_AllPassable,    2.0]
+
+                              ];
+  Array RouterMapLayerNames = ["RouterMap_Layer1"];
+
+
+  // *** Mover parameters
+
+  float SmoothingCorridorSizeXY = 100; //5;
+  float SmoothingCorridorSizeZ  = -1; // do not test z coordinate
+  int   SmoothingLookUpIndexNum = 20; //5;
+  int   SmoothingCellBypass     = 20; //5;
+}
+
+class CHumanBehavior extends CBaseGroundBehavior
+{
+  boolean  CanMove   = true;
+  boolean  CanRotate = true;
+
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+  int AttackStyle = 2;
+
+  float   AttackDistanceMin = 5.0;
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( 6, 0, 0);
+  Vector MaxNegativeSpeed = new Vector( 0, 0, 0);
+  Vector MaxAcceleration = new Vector( 6, 0, 0);
+  Vector MaxBrakingAcceleration = new Vector( 6, 0, 0);
+  Vector MaxAngleSpeed = new Vector( 0, 0, 6.28);
+  Vector MaxAngleAcceleration = new Vector( 0, 0, 10);
+  Vector MaxAngleBrakingAcceleration = new Vector( 0, 0, 10);
+  float  MinRotateRadius = 0; // unit can turn when staying
+
+  // *** Router parameters
+  int   VehicleType         = VT_GROUND;
+  float CostWeight          = 1.0;
+  float HeightWeight        = 1.0;
+  float HeuristicWeight     = 10.0;
+
+  float CellSize            = 100;
+  float ZoneFactor          = 1;
+  float HeightFactor        = 1; // ignore heights - it does not affect to router for water units
+  Array ZoneCosts           = [
+                                [ZMC_Grass01,      200.0],
+                                [ZMC_OffRoad01,    200.0],
+                                [ZMC_OffRoad02,    200.0],
+                                [ZMC_OffRoad03,    800.0],
+                                [ZMC_Road01,         2.0],
+                                [ZMC_Road01Add,      2.0],
+                                [ZMC_Road02,         2.0],
+                                [ZMC_Road02Add,      2.0],
+                                [ZMC_RoadObject,     2.0],
+                                [ZMC_AllPassable,    2.0],
+                                [ZMC_Forest01,     400.0],
+                                [ZMC_Forest02,     400.0],
+                                [ZMC_Forest03,     400.0]
+                              ];
+}
+
+//
+// Heli
+//
+
+class CBaseHelicopterBehavior extends CBaseBehavior
+{
+  int AttackStyle = 1; //#TMP
+
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+  // *** radar parameters
+  float  MaxRadarDistance         = 1300; // m
+  float  MinRadarDistance         = 5;    // m
+  int    UpdateRadarPeriod        = 2000; // ms
+  int    UpdateRadarPeriodRandAdd = 500;  // ms
+
+  boolean CanEvadeMissiles = true;
+
+  // *** coordination parameters
+  float   LeaderPosTolerance = 10.0;
+
+  // *** movement physical parameters
+  float   FlyingHeight = 90.0;
+  float   StealthHeight = 30.0;
+
+  float   AttackDistanceMin = 350.0;
+  float   AttackDistanceMax = 850.0;
+
+  // physical parameters
+  Vector  MaxSpeed                     = new Vector( 65, 25, 8);  // m/s
+  Vector  MaxNegativeSpeed             = new Vector( 25, 25, 8);  // m/s
+  Vector  MaxAccelleration             = new Vector( 5, 3, 1.5);   // m/(s*s)
+  Vector  MaxNegativeAccelleration     = new Vector( 5, 3, 1.5);   // m/(s*s)
+  Vector  MaxBrakingAccelleration      = new Vector( 10, 4, 4);   // m/(s*s)
+  Vector  MaxAngleSpeed                = new Vector( 0, 0, 2); //1);     // [rad/s]
+  Vector  MaxAngleAccelleration        = new Vector( 0.1f, 0.1f, 0.4); //2);  // [rad/(s*s)]
+  Vector  MaxAngleBrakingAccelleration = new Vector( 0.1f, 0.1f, 0.8); //4); //2);  // [rad/(s*s)]
+
+  Vector  AngleSpeedStayDeviation      = new Vector(0.05, 0.0f, 0.05f);
+  Vector  SpeedStayDeviation           = new Vector(0.5, 0.5f, 0.3f);
+  Vector  MaxAngleStayDeviation        = new Vector(0.5, 0.0f, 0.2f);
+  Vector  MaxStayDeviation             = new Vector(1.0, 0.0f, 1.0f);
+  float   MaxDeviationTime             = 2.0f;
+
+  // physical limitations
+  float  MinRotateRadius = 0; // unit can turn when staying
+  float  CeilingByZ = 5000;   // max flying height is 500m
+
+  // controlling parameters
+  Vector  BrakingFactor         = new Vector( 20, 20, 20);//5; // good = 20;
+  Vector  AngleBrakingFactor    = new Vector( 1, 1, 1);
+  Vector  StartBrakingDistance  = new Vector( 100, 100, 100);  // distance to target where begin stopping
+  Vector  StartBrakingAngle     = new Vector( 0, 0, 1); // angle to target direction where begin stopping rotation
+  Vector  DistanceEpsilon       = new Vector( 1, 1, 1);
+  Vector  SpeedEpsilon          = new Vector( 0.1, 0.1, 0.1);
+  Vector  AngleEpsilon          = new Vector( 0.01, 0.01, 0.01);
+  Vector  AngleSpeedEpsilon     = new Vector( 0.01, 0.01, 0.01);
+  float  TurnHysteresisAngleCos = 0; // no turn hysteresis
+
+  // inclination parameters
+  float  MoveBank   = 0.003;
+  float  RotateBank = 0.0;
+
+  // *** Router parameters
+  int   VehicleType         = VT_AIR;
+  float CostWeight          = 0.0;
+  float HeightWeight        = 1.0;
+  float HeuristicWeight     = 200.0;
+
+  float CellSize            = 100;
+  float ZoneFactor          = 0.0; // ignore zones - it does not affect to router for flying units
+  float HeightFactor        = 1.0;
+  Array ZoneCosts           = [];
+  Array RouterMapLayerNames = ["RouterMap_Layer1"];
+
+
+  // *** Mover parameters
+
+  float SmoothingCorridorSizeXY = 500;
+  float SmoothingCorridorSizeZ  = 20;
+  int   SmoothingLookUpIndexNum = 20;
+  int   SmoothingCellBypass     = -1;
+}
+
+//
+// Heli
+//
+
+class CBaseAirCraftBehavior extends CBaseHelicopterBehavior
+{
+  int AttackStyle = 1; //#TMP
+
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+  // *** radar parameters
+  float  MaxRadarDistance         = 1300; // m
+  float  MinRadarDistance         = 5;    // m
+  int    UpdateRadarPeriod        = 2000; // ms
+  int    UpdateRadarPeriodRandAdd = 500;  // ms
+
+  boolean CanEvadeMissiles = false;
+
+  // *** coordination parameters
+  float   LeaderPosTolerance = 10.0;
+
+  // *** movement physical parameters
+  float   FlyingHeight = 50.0;
+  float   StealthHeight = 50.0;
+
+  float   AttackDistanceMin = 0.0;
+  float   AttackDistanceMax = 1000.0;
+
+  // physical parameters
+  Vector  MaxSpeed                     = new Vector( 163, 0, 18);  // m/s
+  Vector  MaxNegativeSpeed             = new Vector( 0, 0, 25);  // m/s
+  Vector  MaxAccelleration             = new Vector( 25, 0.1, 10);   // m/(s*s)
+  Vector  MaxNegativeAccelleration     = new Vector( 0, 0, 4);   // m/(s*s)
+  Vector  MaxBrakingAccelleration      = new Vector( 5, 0.1, 1);   // m/(s*s)
+  Vector  MaxAngleSpeed                = new Vector( 0, 0.0, 0.4); //1);     // [rad/s]
+  Vector  MaxAngleAccelleration        = new Vector( 0, 0.0, 0.4); //2);  // [rad/(s*s)]
+  Vector  MaxAngleBrakingAccelleration = new Vector( 0, 0.0, 0.4); //4); //2);  // [rad/(s*s)]
+
+  // physical limitations
+  float  MinRotateRadius = 300;
+  float  CeilingByZ = 10000;    // max flying height
+  float  MinSpeed   = 80;       // min flying speed
+
+  // controlling parameters
+  Vector  BrakingFactor         = new Vector( 20, 20, 20);//5; // good = 20;
+  Vector  AngleBrakingFactor    = new Vector( 1, 1, 1);
+  Vector  StartBrakingDistance  = new Vector( 100, 100, 100);  // distance to target where begin stopping
+  Vector  StartBrakingAngle     = new Vector( 0, 0, 1); // angle to target direction where begin stopping rotation
+  Vector  DistanceEpsilon       = new Vector( 1, 1, 1);
+  Vector  SpeedEpsilon          = new Vector( 0.1, 0.1, 0.1);
+  Vector  AngleEpsilon          = new Vector( 0.01, 0.01, 0.01);
+  Vector  AngleSpeedEpsilon     = new Vector( 0.01, 0.01, 0.01);
+  float  TurnHysteresisAngleCos = 0; // no turn hysteresis
+
+  // inclination parameters
+  float  MoveBank           = 0.0;  // rad. tangage = MoveBank * Speed
+  float  RotateBank         = - 1.0;
+  float  InverseMoveBank    = - 0.1 * MinSpeed;  // rad. tangage = InverseMoveBank / max(Speed, MinSpeed) .
+
+  // *** Router parameters
+  int   VehicleType         = VT_AIR;
+  float CostWeight          = 0.0;
+  float HeightWeight        = 1.0;
+  float HeuristicWeight     = 200.0;
+
+  float CellSize            = 100;
+  float ZoneFactor          = 0.0; // ignore zones - it does not affect to router for flying units
+  float HeightFactor        = 1.0;
+  Array ZoneCosts           = [];
+  Array RouterMapLayerNames = ["RouterMap_Layer1"];
+
+
+  // *** Mover parameters
+
+  float SmoothingCorridorSizeXY = 500;
+  float SmoothingCorridorSizeZ  = 20;
+  int   SmoothingLookUpIndexNum = 20;
+  int   SmoothingCellBypass     = -1;
+}
+
+//
+// Heli Fire Control behavior
+//
+
+class CBaseHeliFireBehavior
+{
+  boolean  FireControlOnly = true;
+  boolean  CanMove         = false;
+  boolean  HasRouter       = false;
+  boolean  HasRadar        = true;
+
+  // *** radar parameters
+  float  MaxRadarDistance         = 1300; // m
+  float  MinRadarDistance         = 5;    // m
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 0;  // ms
+
+  float   AttackDistanceMin = 0.0;
+  float   AttackDistanceMax = 1000.0;
+
+  CBaseHeliFireBehavior()
+  {
+    if ( isFunctionExist( user, "SetShowInfoStyle", 1))
+    {
+      SetShowInfoStyle( 0
+        | BEHINF_ID
+      //  | BEHINF_ORDER
+      //| BEHINF_SCRIPT
+        | BEHINF_INFO
+      //  | BEHINF_PATH
+        | BEHINF_TARGET
+      //| BEHINF_CUSTOM
+      );
+    }
+  }
+
+  void Setup()
+  {
+  }
+}

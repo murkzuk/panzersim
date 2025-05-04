@@ -1,0 +1,275 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+class CControlsMenu
+  extends CBaseMenu, CControlsControls
+{
+  static String m_MenuClassName = "CControlsMenu";
+
+  static String BackMenu = "";
+
+  Array m_CtrlFields = [];
+
+  Array DefaultElementProps = [
+        ["InputCommand", "", false],
+        ["Text", ["Action", ""], false],
+        ["ActionMapID",                                      1,   false],
+        ["TextColor", new Color(0.835000, 0.940000, 0.553000, 1.000000), false],
+        ["Z", 0.020000000, true],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["LeftIndent", 0.000000000, true],
+        ["Alignment", 0.500000000, false],
+        ["NormalTextColor", new Color(0.835000, 0.940000, 0.553000, 1.000000), false],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), false],
+        ["TextAlignment", 0.000000000, false],
+        ["Hint", "", true],
+        ["ControlOrder", 0, false],
+        ["FrameColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), false]
+    ];
+
+  Array m_Controls = [
+//                       ["CTLCMD_ROTATE_LR_AXIS_DELTA", "str_ROTATE_LR_AXIS_DELTA", 1],
+//                       ["CTLCMD_ROTATE_UD_AXIS_DELTA", "str_ROTATE_UD_AXIS_DELTA", 1],
+
+//                       ["", "", 0],
+                       ["CTLCMD_STRAFE_LEFT", "str_STRAFE_LEFT", 1],
+                       ["CTLCMD_STRAFE_RIGHT", "str_STRAFE_RIGHT", 1],
+                       ["CTLCMD_FORWARD", "str_FORWARD", 1],
+                       ["CTLCMD_BACKWARD", "str_BACKWARD", 1],
+                       ["CTLCMD_LEFT", "str_LEFT", 1],
+                       ["CTLCMD_RIGHT", "str_RIGHT", 1],
+                       ["CTLCMD_RESET_CONTROLS", "str_RESET_CONTROLS", 1],
+                       ["CTLCMD_GOVERNOR_SWITCH", "str_GOVERNOR_SWITCH", 1],
+                       ["CTLCMD_GOV_SPEED_UP", "str_GOV_SPEED_UP", 1],
+                       ["CTLCMD_GOV_SPEED_DOWN", "str_GOV_SPEED_DOWN", 1],
+                       ["CTLCMD_INCSPEED", "str_INCSPEED", 1],
+                       ["CTLCMD_DECSPEED", "str_DECSPEED", 1],
+                       ["CTLCMD_COLLECTIVE_PITCH_UP", "str_COLLECTIVE_PITCH_DOWN", 1],
+                       ["CTLCMD_COLLECTIVE_PITCH_DOWN", "str_COLLECTIVE_PITCH_UP", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_0", "str_CP_PERCENT_00", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_1", "str_CP_PERCENT_20", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_2", "str_CP_PERCENT_30", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_3", "str_CP_PERCENT_40", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_4", "str_CP_PERCENT_50", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_5", "str_CP_PERCENT_60", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_6", "str_CP_PERCENT_70", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_7", "str_CP_PERCENT_80", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_8", "str_CP_PERCENT_90", 1],
+                       ["CTLCMD_WINGMAN_COMMAND_9", "str_CP_PERCENT_100", 1],
+                       ["CTLCMD_AUTOPILOT", "str_AUTOPILOT", 1],
+                       ["CTLCMD_ENGINE_CONTROL", "str_ENGINE_CONTROL", 1],
+                       ["CTLCMD_LOCK_HEIGHT", "str_LOCK_HEIGHT", 1],
+
+                       ["", "", 0],
+                       ["CTLCMD_CHANGE_SIT", "str_CHANGE_SIT", 1],
+                       ["CTLCMD_SET_SIT_0", "str_SET_SIT_0", 1],
+                       ["CTLCMD_SET_SIT_1", "str_SET_SIT_1", 1],
+                       ["CTLCMD_SET_SIT_3", "str_SET_SIT_2", 1],
+                       ["CTLCMD_SET_SIT_2", "str_SET_SIT_3", 1],
+
+                       ["", "", 0],
+                       ["CTLCMD_TOGGLE_SIGHT", "str_TOGGLE_SIGHT", 1],
+                       ["CTLCMD_SIGHT_BRIGHTNESS_1", "str_SIGHT_BRIGHTNESS_1", 1],
+                       ["CTLCMD_SIGHT_BRIGHTNESS_2", "str_SIGHT_BRIGHTNESS_2", 1],
+                       ["CTLCMD_SHOW_SIGHT", "str_SHOW_SIGHT", 1],
+                       ["CTLCMD_SIGHT_DISTANCE_1", "str_SIGHT_DISTANCE_1", 1],
+                       ["CTLCMD_SIGHT_DISTANCE_2", "str_SIGHT_DISTANCE_2", 1],
+                       ["CTLCMD_TOGGLE_MFD1", "str_TOGGLE_MFD1", 1],
+                       ["CTLCMD_TOGGLE_MFD2", "str_TOGGLE_MFD2", 1],
+                       ["CTLCMD_SHOW_CURSOR", "str_SHOW_CURSOR", 1],
+
+                       ["", "", 0],
+                       ["CTLCMD_CAMERA_ZOOM_OUT", "str_CAMERA_ZOOM_OUT", 1],
+                       ["CTLCMD_CAMERA_ZOOM_DEF", "str_CAMERA_ZOOM_DEF", 1],
+                       ["CTLCMD_CAMERA_ZOOM_IN", "str_CAMERA_ZOOM_IN", 1],
+                       ["CTLCMD_SET_VIEW_NEAREST", "str_SET_VIEW_NEAREST", 1],
+                       ["CTLCMD_SET_VIEW_PERSON3RD", "str_SET_VIEW_PERSON3RD", 1],
+                       ["CTLCMD_FREE_PLAYER_CAMERA", "str_FREE_PLAYER_CAMERA", 1],
+                       ["CTLCMD_NEXT_NAVPOINT", "str_NEXT_NAVPOINT", 1],
+                       ["CTLCMD_MAP_ZOOM_IN", "str_MAP_ZOOM_IN", 1],
+                       ["CTLCMD_MAP_ZOOM_OUT", "str_MAP_ZOOM_OUT", 1],
+
+                       ["", "", 0],
+                       ["CTLCMD_WEAPON_UP", "str_WEAPON_UP", 1],
+                       ["CTLCMD_WEAPON_LEFT", "str_WEAPON_LEFT", 1],
+                       ["CTLCMD_WEAPON_RIGHT", "str_WEAPON_RIGHT", 1],
+                       ["CTLCMD_WEAPON_DOWN", "str_WEAPON_DOWN", 1],
+                       ["CTLCMD_FIRE_PRIMARY", "str_FIRE_PRIMARY", 1],
+                       ["CTLCMD_FIRE_SECONDARY", "str_FIRE_SECONDARY", 1],
+                       ["CTLCMD_FIRE_THIRD", "str_FIRE_THIRD", 1],
+
+                       ["", "", 0],
+                       ["CTLCMD_POV_ROTATE_AXIS", "str_POV_ROTATE_AXIS", 1],
+                       ["CTLCMD_POV_SIDE_L", "str_POV_SIDE_L", 1],
+                       ["CTLCMD_POV_SIDE_LT", "str_POV_SIDE_LT", 1],
+                       ["CTLCMD_POV_SIDE_LB", "str_POV_SIDE_LB", 1],
+                       ["CTLCMD_POV_SIDE_R", "str_POV_SIDE_R", 1],
+                       ["CTLCMD_POV_SIDE_RT", "str_POV_SIDE_RT", 1],
+                       ["CTLCMD_POV_SIDE_RB", "str_POV_SIDE_RB", 1],
+                       ["CTLCMD_POV_SIDE_T", "str_POV_SIDE_T", 1],
+                       ["CTLCMD_POV_SIDE_B", "str_POV_SIDE_B", 1],
+                       ["CTLCMD_POV_SIDE_NEAR", "str_POV_SIDE_NEAR", 1],
+
+                       ["", "", 0],
+                       ["CTLCMD_SHOW_STATISTICS", "str_SHOW_STATISTICS", 1],
+                       ["CTLCMD_OPENCONSOLE", "str_OPENCONSOLE", 1],
+                       ["CTLCMD_CAPTURE_SCREEN", "str_CAPTURE_SCREEN", 1],
+                       ["CTLCMD_PLAY_MUSIC", "str_PLAY_MUSIC", 1],
+                       ["CTLCMD_NEXT_TRACK", "str_NEXT_TRACK", 1],
+                       ["CTLCMD_PREV_TRACK", "str_PREV_TRACK", 1],
+                       ["CTLCMD_MUSIC_VOLUME_DOWN", "str_MUSIC_VOLUME_DOWN", 1],
+                       ["CTLCMD_MUSIC_VOLUME_UP", "str_MUSIC_VOLUME_UP", 1],
+                       ["CTLCMD_TIMER_INCREASE", "str_TIMER_INCREASE", 1],
+                       ["CTLCMD_TIMER_NORMAL", "str_TIMER_NORMAL", 1],
+                       ["CTLCMD_TIMER_DECREASE", "str_TIMER_DECREASE", 1],
+                       ["CTLCMD_PAUSE_GAME", "str_PAUSE_GAME", 1]
+                     ];
+
+
+
+  void OnInitMenu()
+  {
+    Component Game = new #GameController();
+    Component InputController = new #InputController();
+    Component MenuController = Game.GetMenuController();
+    MenuController.SetDefaultCommands("Default", "Back");
+    InputController.EnableInputConfigurationMode(true);
+
+    Component ControlsList = GetObject("ControlsList");
+    Component Position = new CUIPosition(0.0, 0.0, ControlsList.GetUIPosition().Width, 25.0 / 768.0);
+
+    for (int i = 0; i < m_Controls.size(); i++)
+    {
+      if (m_Controls[i][0] != "")
+      {
+        DefaultElementProps[0][1]    = m_Controls[i][0];
+        DefaultElementProps[1][1][1] = m_Controls[i][1];
+        DefaultElementProps[2][1]    = m_Controls[i][2];
+
+        final String NewID = "CTRLFLD_" + new String(i);
+        Component Element = CreateUIControl(
+            NewID, 
+            "",
+            "CUIAdvancedControlField",
+            Position, 
+            clone(DefaultElementProps)
+          );
+        ControlsList.AddControl(NewID);
+        RegisterCtrlField(GetObject(NewID + "_Control_Primary"));
+        RegisterCtrlField(GetObject(NewID + "_Control_Secondary"));
+      }
+      else
+      {
+        final String NewID = "DIV_" + new String(i);
+        Component Element = CreateUIControl(
+            NewID, 
+            "TextControl",
+            "CUITextField",
+            Position, 
+            clone(DefaultElementProps)
+          );
+        Element.SetText(L"");
+        ControlsList.AddControl(NewID);
+      }
+    }
+    ControlsList.SetSlaveScroller(GetObject("ControlsScroll"));
+    ControlsList.SetListScrollStep(12.5 / 768.0);
+
+    GetObject("Joystick").SetDisabled(!InputController.IsJoystickAvailable());
+    GetObject("Apply").SetDisabled(true);
+    OnActionMappingChanged();
+
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+
+    if ("ControlsScroll_Arrow1" == _ID)
+      GetObject("ControlsList").ScrollUp(12.5 / 768.0);
+    else                                 
+    if ("ControlsScroll_Arrow2" == _ID)
+      GetObject("ControlsList").ScrollDown(12.5 / 768.0);     
+    else
+    if ("Back" == _ID)
+    {
+      (new #InputController()).EnableInputConfigurationMode(false);
+      for (int i = 0 ; i < m_CtrlFields.size(); i++)
+      {
+        m_CtrlFields[i].UndoChanges();
+      }    
+      if (BackMenu == "")
+        GoBack();
+      else
+        Invoke(BackMenu);
+    }
+    else
+    if ("Joystick" == _ID)
+      Invoke("JoystickControlsMenu");
+    else
+    if ("Apply" == _ID)
+    {
+      (new #InputController()).EnableInputConfigurationMode(false);
+      (new #InputController()).UpdateActionMap(AMID_HeliSim);
+
+      for (int i = 0 ; i < m_CtrlFields.size(); i++)
+      {
+        m_CtrlFields[i].FixChanges();
+      }    
+
+      GetObject("Apply").SetDisabled(true);
+      (new #InputController()).EnableInputConfigurationMode(true);
+//      GoBack();
+    }
+    else
+    // Set default control settings.
+    if (_ID == "Default")
+    {
+      (new #InputController()).EnableInputConfigurationMode(false);
+      (new #InputController()).FillActionMap(CDefaultControls::HeliSimDefaultKeys, 
+                                               AMID_HeliSim);
+      // Обновляем контролсы...
+      OnActionMappingChanged();
+      (new #InputController()).EnableInputConfigurationMode(true);
+      GetObject("Apply").SetDisabled(false);
+    }
+    else
+    if (_ID.IsStartsWith("CTRLFLD"))
+    {
+      GetObject(_ID).ActivateEditMode();      
+      GetObject("Apply").SetDisabled(false);
+    }
+
+  }
+
+  //  Event handler
+  void OnActionMappingChanged()
+  {
+    for (int i = 0 ; i < m_CtrlFields.size(); i++)
+    {
+      m_CtrlFields[i].Update();
+    }    
+  }
+
+  void RegisterCtrlField(
+      Component _CtrlField
+    )
+  {    
+    m_CtrlFields.add(_CtrlField);
+  }
+
+  void OnUnmapFixedControl()
+  {
+    // OpenWindow("CreateCantAssignWindow");
+  }
+
+}

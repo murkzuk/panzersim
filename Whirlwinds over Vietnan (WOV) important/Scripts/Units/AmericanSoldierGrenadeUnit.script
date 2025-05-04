@@ -1,0 +1,124 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+class CAmericanSoldierGrenadeLoadTransportAnim
+{
+  final static String  AnimationName     = "load";
+  final static float   AnimationTime     = 1.0;
+}
+
+class CAmericanSoldierGrenadeUnloadTransportAnim
+{
+  final static String  AnimationName     = "unload";
+  final static float   AnimationTime     = 1.0;
+}
+
+//Grenade
+class CAmericanSoldierGrenadeBulletExplosion
+  extends CMachineGunBulletExplosion
+{
+  float  Damage   = 5.0;
+}
+
+class CAmericanSoldierGrenadeBulletControl
+  extends CMachineGunBulletControl
+{
+  float     MaxDistance   = 500.0;
+  Vector    GravityAccel  = CWorldPhysics::GravityVector;
+
+  String    ExplosionId  = "AmericanSoldierGrenadeBulletExplosion";
+  Component BulletRender = new #StaticEffect<CMachineGunBulletEffect>();
+}
+
+class CAmericanSoldierGrenade
+  extends CMachineGun
+{
+  final static float  InitBulletSpeed = 76.0;
+
+  final static String BulletPatternId = "AmericanSoldierGrenadeBullet";
+
+  final static String FireSoundId     = "M79GunFireSound";
+
+  final static float LockAngleHMin = - 46;
+  final static float LockAngleHMax =   46;
+  final static float LockAngleVMin = - 46;
+  final static float LockAngleVMax =   46;
+
+  final static Vector GravityVector   = CWorldPhysics::GravityVector;
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod        = 250; // ms
+  final static int  FirePeriodRandAdd = 50;  // ms
+
+  final static float MinDistance      = 20;
+  final static float MaxDistance      = 200;
+
+  final static boolean BurstFire      = false;
+
+  // gun specific fire mask with priorities
+  final static Array GunSpecificFireMask = [
+                                [["HUMAN"],[]],  // high priority mask
+                                [["AIR"],  []],  // low priority mask
+                                [[],       []]   // low priority mask: RestrictTo, Exclude
+                              ];
+}
+
+// Behavior
+class CAmericanSoldierGrenadeBehavior extends CHumanBehavior
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 700; // m
+  float  MinRadarDistance = 5;    // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+}
+
+class CAmericanSoldierGrenadeUnit
+  extends CHumanUnit
+{
+  final static float DefaultHitPoints = CHitPoints::AmericanSoldierGrenadeUnitHitPoints;
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND", "HUMAN"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CAmericanSoldierGrenadeUnit()
+  {
+    SetupMesh(new #AnimatedObject<Chum_AmericanSoldierGrenadeModel>(), [200, 100, 50, 10, 3]);
+
+    //$TODO animator
+    //GetObject("AnimWeapon").EnableAnimator(false);
+    SetupWeapon("Weapon", new #Weapon<CAmericanSoldierGrenade>(), ["Fire_A"], null);
+    SetupBehavior(new #HumanBehavior<CAmericanSoldierGrenadeBehavior>());
+
+    // Load additionals animations
+    LoadAnimations("ChumansAnimation");
+
+    SetupLoadTransportAnimation(new #LineAnimator<CAmericanSoldierGrenadeLoadTransportAnim>(),
+                                new #LineAnimator<CAmericanSoldierGrenadeUnloadTransportAnim>()
+                                );
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CHumanUnit::Construct(_Mission, _PropMap);
+  }
+}

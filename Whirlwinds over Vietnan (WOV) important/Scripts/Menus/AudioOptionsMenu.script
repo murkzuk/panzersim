@@ -1,0 +1,114 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CAudioOptionsMenu
+  extends CBaseMenu, CAudioOptionsControls, CAudioPlayerMenuBase
+{
+  static String m_MenuClassName = "CAudioOptionsMenu";
+
+  void OnInitMenu()
+  {
+    m_MenuController.SetDefaultCommands("ApplyButton", "BackButton");
+
+    CAudioPlayerMenuBase::OnInitMenu();
+  }
+
+  void OnCloseMenu()
+  {
+    CancelSettings();
+
+    CAudioPlayerMenuBase::OnCloseMenu();
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    CBaseMenu::OnControlActivated(_ID);
+/*
+    if ("VideoOptionsButton" == _ID)
+      Invoke("VideoOptionsMenu", false);
+    else
+    if ("GameOptionsButton" == _ID)
+      Invoke("GameOptionsMenu", false);
+    else
+*/
+    if ("BackButton" == _ID)
+      GoBack();
+    else
+    if ("ApplyButton"    == _ID)
+      ApplySettings();
+    else
+    if ("CancelButton"   == _ID)
+    {
+      CancelSettings();
+      GetSettings();
+      ApplySettings();
+    }
+    else
+    if ("DefaultsButton" == _ID)
+      ResetSettings();
+
+    CAudioPlayerMenuBase::OnControlActivated(_ID);
+  }
+
+  void OnControlActivatedDouble(
+      String _ID
+    )
+  {
+    CBaseMenu::OnControlActivatedDouble(_ID);
+
+    CAudioPlayerMenuBase::OnControlActivatedDouble(_ID);
+  }
+
+  void OnControlHilited(
+      String _ID
+    )
+  {
+    CBaseMenu::OnControlHilited(_ID);
+
+    if ("DefaultsButton" == _ID)
+      HighlightDescription("defaults");
+    else
+    if ("CancelButton" == _ID)
+      HighlightDescription("cancel");
+    else
+    if ("ApplyButton" == _ID)
+      HighlightDescription("apply");
+    else
+    if ("BackButton" == _ID)
+      HighlightDescription("back");
+
+  }
+
+  void OnControlDehilited(
+      String _ID
+    )
+  {
+    CBaseMenu::OnControlDehilited(_ID);
+
+    DeHighlightDescription();
+  }
+
+  void HighlightDescription(
+      String _ID
+    )
+  {
+    Component Obj;
+  
+    Obj = GetObject(_ID + "_static");
+    if (null != Obj)
+      Obj.SetTextColor(CMainMenu::HighTextColor);
+  }
+
+  void DeHighlightDescription()
+  {
+    
+  }
+}

@@ -1,0 +1,951 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//
+// CUnitItemDescriptor
+//
+
+class CUnitItemDescriptor
+{
+  void CUnitItemDescriptor(
+      String    _BaseJointName,
+      Component _Joint,
+      float     _HitPoints,
+      Array     _Explosions,
+      String    _ItemName,
+      int       _Index
+    )
+  {
+    BaseJointName     = _BaseJointName;
+    Joint             = _Joint;
+    HitPoints         = _HitPoints;
+    Explosions        = _Explosions;
+    ItemName          = _ItemName;
+    Index             = _Index;
+    CurrentHitPoints  = _HitPoints;
+    DeathPause        = 0;
+    IsUnitPart        = false;
+  }
+
+  Component Joint;
+  float     HitPoints;
+  Array     Explosions;
+  String    ItemName;
+  int       Index;
+
+  float     DeathPause;
+  boolean   IsUnitPart;
+
+  String    BaseJointName;
+  float     CurrentHitPoints;
+  String    CrashItem;
+}
+
+// Base state control for all objects
+class CBaseStateControl
+{
+  // ======================================
+  // Attributes
+  // ======================================
+
+  // last unit that inflicted damage to this one
+  String  m_LastDamager = "";
+
+  boolean m_LiveFxEnabled   = true;
+  boolean m_UnitIsHidden    = false;
+  boolean m_EngineFxEnabled = false;
+
+  // ======================================
+  // IObject Interface functions
+  // ======================================
+
+  event void OnHitByEnemy(
+      String _EnemyID
+    )
+  {
+    if (checkMask(this, [], [CLASSIFICATOR_DEAD_OBJECT]))
+      m_LastDamager = _EnemyID;
+
+    Component Behavior = GetObject("Behavior");
+    if (Behavior != null)
+    {
+      Component Task = Behavior.GetTaskScriptHost();
+      if (Task != null)
+        Task.OnHitByEnemy(_EnemyID);
+    }
+  }
+
+  String GetLastDamager()
+  {
+    return m_LastDamager;
+  }
+
+  // ===================================
+  // Initialization
+  // ===================================
+
+  void FinilizeStateControl(
+      Component _PropMap
+    )
+  {
+  }
+
+  // ===================================
+  // Effects state
+  // ===================================
+
+  void EnableEffectsForLiveState(
+      boolean _Enable
+    )
+  {
+    m_LiveFxEnabled = _Enable;
+    UpdateEffectsState();
+  }
+
+  void EnableEffectsForHiddentState(
+      boolean _Enable
+    )
+  {
+    m_UnitIsHidden = _Enable;
+    UpdateEffectsState();
+  }
+
+  void EnableEffectsForEngineState(
+      boolean _Enable
+    )
+  {
+    m_EngineFxEnabled = _Enable;
+    UpdateEffectsState();
+  }
+
+  void UpdateEffectsState()
+  {
+    if (m_UnitIsHidden)
+    {
+      EnableAllEffects(false, "", "");
+    }
+    else
+    if (!m_LiveFxEnabled)
+    {
+      EnableAllEffects(false, "", "Special");
+      EnableAllEffects(m_EngineFxEnabled, "Engine", "");
+    }
+    else
+    {
+      EnableAllEffects(true, "", "Special");
+      EnableAllEffects(true, "WindEffects", "");
+      EnableAllEffects(true, "WindEffects2", "");
+      EnableAllEffects(m_EngineFxEnabled, "Engine", "");
+    }
+  }
+}
+
+// State control for buildinds
+class CBuildingStateControl
+  extends CBaseStateControl
+{
+}
+
+// State control for units
+class CUnitStateControl
+  extends CBaseStateControl
+{
+  // =======================================
+  // Unit custom states
+  // =======================================
+
+  final static int USID_Engine       = 1;
+  final static int USID_Position     = 2;
+  final static int USID_Control      = 3;
+  final static int USID_Door         = 4;
+  final static int USID_Collision    = 5;
+  final static int USID_M60Sight     = 6;
+  final static int USID_M21Sight     = 7;
+
+  final static int US_EngineInit     = 1;
+  final static int US_EngineStart    = 2;
+  final static int US_EngineStop     = 3;
+  final static int US_EngineEject    = 4;
+
+  final static int US_PosLanded      = 1;
+  final static int US_PosLanding     = 2;
+  final static int US_PosTakeOff     = 3;
+  final static int US_PosUnlinked    = 4;
+
+  final static int US_CtrlDisabled   = 1;
+  final static int US_CtrlEnabled    = 2;
+
+  final static int US_DoorOpen       = 1;
+  final static int US_DoorClose      = 2;
+
+  final static int US_M60SightOpen   = 1;
+  final static int US_M60SightClose  = 2;
+
+  final static int US_CollDisabled   = 1;
+  final static int US_CollEnabled    = 2;
+
+  String  m_CurrLandingPoint  = "";
+  boolean m_DoorOpen          = false;
+  boolean m_UnitDamaged       = false;
+
+  int     m_DescantCount      = 0;
+
+  // =======================================
+  // Event handlers
+  // =======================================
+
+  event void OnCustomStateChanged(
+      int   _StateID,
+      int   _StateValue,
+      float _ChangeTime
+    )
+  {
+    if (USID_Engine == _StateID)
+      UpdateEngineState(_StateValue, _ChangeTime);
+    else
+    if (USID_Control  == _StateID)
+      UpdateControlState(_StateValue,   _ChangeTime);
+    else
+    if (USID_Door == _StateID)
+      UpdateDoorState(_StateValue,      _ChangeTime);
+    else
+    if (USID_Position == _StateID)
+      UpdatePositionState(_StateValue,  _ChangeTime);
+    else
+    if (USID_Collision == _StateID)
+      UpdateCollisionState(_StateValue, _ChangeTime);
+    else
+    if (USID_M60Sight == _StateID)
+      UpdateM60SightState(_StateValue,  _ChangeTime);
+    else
+    if (USID_M21Sight == _StateID)
+      UpdateM21SightState(_StateValue,  _ChangeTime);
+    else
+    if (USID_Engine == _StateID)
+      UpdateEngineState(_StateValue,    _ChangeTime);
+  }
+
+  void UpdateControlState(
+      int   _State,
+      float _Time
+    )
+  {
+    if (US_CtrlDisabled == _State)
+      SetBehActiveState(false, false, true, false);
+    else
+    if (US_CtrlEnabled == _State)
+      SetBehActiveState(true, true, true, true);
+  }
+
+  void UpdateCollisionState(
+      int   _State,
+      float _Time
+    )
+  {
+  }
+
+  void UpdateDoorState(
+      int   _State,
+      float _Time
+    )
+  {
+    Component DoorAnimator = GetObject("Door1Animator");
+    if (DoorAnimator != null)
+    {
+      if (US_DoorOpen == _State)
+        DoorAnimator.AnimateForward(_Time);
+      else
+      if (US_DoorClose == _State)
+        DoorAnimator.AnimateBackward(_Time);
+    }
+
+    Component DoorAnimator2 = GetObject("Door2Animator");
+    if (DoorAnimator2 != null)
+    {
+      if (US_DoorOpen == _State)
+        DoorAnimator2.AnimateForward(_Time);
+      else
+      if (US_DoorClose == _State)
+        DoorAnimator2.AnimateBackward(_Time);
+    }
+  }
+
+  void UpdatePositionState(
+      int   _State,
+      float _Time
+    )
+  {
+
+  }
+
+  void UpdateM60SightState(
+      int   _State,
+      float _Time
+    )
+  {
+    int EventToChangeState = 0;
+
+    Component M60RSightAnimator = GetObject("M60RSightAnimator");
+    if (null != M60RSightAnimator)
+    {
+      if (US_M60SightOpen == _State)
+      {
+        M60RSightAnimator.AnimateTo(1.0f);
+        EventToChangeState = 1;
+      }
+      else
+      if (US_M60SightClose == _State)
+      {
+        M60RSightAnimator.AnimateTo(0.0f);
+        EventToChangeState = 2;
+      }
+    }
+
+    sendEvent(0.0, getIdentificator(user), "M60Change", [EventToChangeState]);
+    sendEvent(_Time, getIdentificator(user), "M60ChangeEnd", [EventToChangeState]);
+  }
+
+  void UpdateM21SightState(
+      int   _State,
+      float _Time
+    )
+  {
+    int EventToChangeState = 0;
+
+    Component M60LSightAnimator = GetObject("M21CoPilotAnimator");
+    if (null != M60LSightAnimator)
+    {
+      if (US_M60SightOpen == _State)
+      {
+        M60LSightAnimator.MoveOutAnimation(1.0f);
+        EventToChangeState = 1;
+      }
+      else
+      if (US_M60SightClose == _State)
+      {
+        M60LSightAnimator.MoveOutAnimation(0.0f);
+        EventToChangeState = 2;
+      }
+    }
+    sendEvent(0.0,   getIdentificator(user), "M21Change", [EventToChangeState]);
+    sendEvent(_Time, getIdentificator(user), "M21ChangeEnd", [EventToChangeState]);
+  }
+
+  void UpdateEngineState(
+      int   _State,
+      float _Time
+    )
+  {
+    Component EngineAnimator   = GetObject("EngineAnimator");
+
+    if (US_EngineStart == _State)
+    {
+      if (EngineAnimator != null)
+        EngineAnimator.SwitchAnimationOn(_Time);
+      EnableEffectsForEngineState(true);
+    }
+    else
+    if (US_EngineStop == _State)
+    {
+      if (EngineAnimator != null)
+        EngineAnimator.SwitchAnimationOff(_Time);
+      EnableEffectsForEngineState(false);
+    }
+    else
+    if (US_EngineInit == _State)
+    {
+      if (EngineAnimator != null)
+        EngineAnimator.SwitchAnimationOff(0.0);
+      EnableEffectsForEngineState(false);
+    }
+    else
+    if (US_EngineEject == _State)
+    {
+      if (EngineAnimator != null)
+        EngineAnimator.SwitchAnimationOff(0.0);
+      EnableEffectsForEngineState(false);
+    }
+  }
+
+  void UpdateMainEngineState(
+      float _ControlFactor
+    )
+  {
+    Component EngineAnimator1 = GetObject("EngineAnimator1");
+    if (EngineAnimator1 != null)
+      EngineAnimator1.SwitchAnimationOn(_ControlFactor);
+  }
+
+  void UpdateTailEngineState(
+      float _ControlFactor
+    )
+  {
+    Component EngineAnimator2 = GetObject("EngineAnimator2");
+    if (EngineAnimator2 != null)
+      EngineAnimator2.SwitchAnimationOn(_ControlFactor);
+  }
+
+  event void OpenDoor()
+  {
+    if (!m_DoorOpen)
+    {
+      Component StateControl = GetStateControl();
+      if (StateControl != null)
+        StateControl.ScheduleCustomState(0.0, USID_Door, US_DoorOpen);
+      m_DoorOpen = true;
+    }
+  }
+
+  event void CloseDoor()
+  {
+    if (m_DoorOpen)
+    {
+      Component StateControl = GetStateControl();
+      if (StateControl != null)
+        StateControl.ScheduleCustomState(0.0, USID_Door, US_DoorClose);
+      m_DoorOpen = false;
+    }
+  }
+
+  void LoadSoldier()
+  {
+    m_DescantCount++;
+    Component Joint = GetMeshComponent().GetJoint("DescentSeat_0" + new String(m_DescantCount));
+    if (Joint != null)
+    {
+      setVisibleState(Joint, true);
+    }
+  }
+
+  void UnloadSoldier()
+  {
+    if (m_DescantCount > 0)
+    {
+      Component Joint = GetMeshComponent().GetJoint("DescentSeat_0" + new String(m_DescantCount));
+      if (Joint != null)
+      {
+        setVisibleState(Joint, false);
+      }
+      m_DescantCount--;
+    }
+  }
+
+  // ==================================
+  // Setup effects
+  // ==================================
+
+  void SetEngineEffects(
+      Component _Animator1,
+      Component _Animator2
+    )
+  {
+    SetupAnimator("EngineAnimator1", _Animator1);
+    SetupAnimator("EngineAnimator2", _Animator2);
+  }
+
+  void SetEngineComponents(
+      Array _Effects
+    )
+  {
+    if (!_Effects.isEmpty())
+      for (int Index = 0; Index < _Effects.size(); Index++)
+        AttachEffect(_Effects[Index][0], _Effects[Index][1], new Vector(0.0), _Effects[Index][2]);
+
+    UpdateEffectsState();
+  }
+
+  void SetMovementEffects(
+      Component _MoveSound,
+      Array     _Effects
+    )
+  {
+    if (_MoveSound != null)
+      SetupSoundEmitter("MoveSound", _MoveSound);
+
+    // Create effects
+    if (!_Effects.isEmpty())
+      for (int Index = 0; Index < _Effects.size(); Index++)
+        AttachEffect(_Effects[Index][0], _Effects[Index][1], new Vector(0.0), "Movement");
+
+    UpdateEffectsState();
+  }
+
+  void SetSightEffects(
+      Component _M60LSightAnimator,
+      Component _M60RSightAnimator,
+      Component _M60RWireSightAnimator
+    )
+  {
+    //SetupAnimator("M60LSightAnimator",     _M60LSightAnimator);
+    SetupAnimator("M60RSightAnimator",     _M60RSightAnimator);
+
+
+    //SetupAnimator("M60RWireSightAnimator", _M60RWireSightAnimator);
+  }
+
+  void SetDoorEffects(
+      Component _Door1Animator,
+      Component _Door2Animator
+    )
+  {
+    SetupAnimator("Door1Animator", _Door1Animator);
+    SetupAnimator("Door2Animator", _Door2Animator);
+  }
+}
+
+//
+// State control for player unit
+//
+
+class CPlayerStateControl
+  extends CUnitStateControl
+{
+  Array   m_SightOpen        = [ false, false ];
+  Array   m_SightState       = [ USID_M60Sight, USID_M21Sight ];
+
+  Array   m_UnitItemsList;
+
+  // ===================================
+  // Initialization
+  // ===================================
+
+  void FinilizeStateControl(
+      Component _PropMap
+    )
+  {
+    // Init base class
+    CBaseStateControl::FinilizeStateControl(_PropMap);
+
+    // Get state control object
+    Component StateControl = GetStateControl();
+    if (null == StateControl)
+      return;
+
+    if (_PropMap.Get("Location", "") != "")
+    {
+      // Init unit landing state
+      StateControl.SetCustomState(USID_Control,   US_CtrlDisabled);
+      StateControl.SetCustomState(USID_Position,  US_PosLanded);
+      StateControl.SetCustomState(USID_Collision, US_CollDisabled);
+    }
+    else
+    {
+      // Init unit flying state
+      StateControl.SetCustomState(USID_Control,   US_CtrlEnabled);
+      StateControl.SetCustomState(USID_Position,  US_PosUnlinked);
+      StateControl.SetCustomState(USID_Collision, US_CollEnabled);
+    }
+  }
+
+  // =======================================
+  // Event handlers
+  // =======================================
+
+  void UpdateControlState(
+      int   _State,
+      float _Time
+    )
+  {
+    CUnitStateControl::UpdateControlState(_State, _Time);
+
+    Component ManualControl = GetManualControl();
+    if (null != ManualControl)
+    {
+      if (US_CtrlDisabled == _State)
+       ManualControl.EnableControl(false);
+      else
+      if (US_CtrlEnabled == _State)
+        ManualControl.EnableControl(true);
+    }
+
+    Component VehicleController = GetVehicleController();
+    if (null != VehicleController)
+    {
+      if (US_CtrlDisabled == _State)
+        VehicleController.EnableControl(false);
+      else
+      if (US_CtrlEnabled == _State)
+        VehicleController.EnableControl(true);
+    }
+  }
+
+  void UpdateCollisionState(
+      int   _State,
+      float _Time
+    )
+  {
+    CUnitStateControl::UpdateCollisionState(_State, _Time);
+
+    Component CollisionControl = GetCollisionControl();
+    if (CollisionControl == null)
+      return;
+
+    if (US_CollDisabled == _State)
+      CollisionControl.EnableControl(false);
+    else
+    if (US_CollEnabled == _State)
+      CollisionControl.EnableControl(true);
+  }
+
+  void UpdatePositionState(
+      int   _State,
+      float _Time
+    )
+  {
+    CUnitStateControl::UpdatePositionState(_State, _Time);
+
+    // Get control components
+    Component LandingControl = GetLandingControl();
+
+    if (US_PosLanded == _State)
+    {
+      if (LandingControl != null)
+        LandingControl.PutonLandingGround(m_PointHostID, m_ObjectHostID);
+    }
+    else
+    if (US_PosLanding == _State)
+    {
+      if (LandingControl != null)
+        LandingControl.StartLanding(m_PointHostID, m_ObjectHostID, _Time, 5.0);
+      LinkObjectToObject(m_ObjectHostID);
+    }
+    else
+    if (US_PosTakeOff == _State)
+    {
+      if (LandingControl != null)
+        LandingControl.StartTakeOff(_Time, 5.0, 110.0);
+      LinkObjectToObject(m_ObjectHostID);
+    }
+
+    if (US_PosUnlinked == _State)
+    {
+      if (LandingControl != null)
+        LandingControl.DisableControl();
+    }
+  }
+
+  Array GetDamageEffectName(
+      String  _Name,
+      int     _DamageState
+    )
+  {
+    Array EffectName = [];
+
+    for (int Index = 0; Index < m_UnitItemsList.size(); Index += 1)
+    {
+      if (m_UnitItemsList[Index].ItemName == _Name)
+      {
+        if (_DamageState > m_UnitItemsList[Index].Explosions.size())
+          break;
+
+        EffectName.add(m_UnitItemsList[Index].Joint);
+        EffectName.add(m_UnitItemsList[Index].Explosions[_DamageState - 1]);
+
+        break;
+      }
+    }
+
+    return EffectName;
+  }
+
+  event void TakeOff()
+  {
+    logMessage(getIdentificator(user) + ": TakeOff");
+
+    Component StateControl = GetStateControl();
+    if (StateControl == null)
+      return;
+
+//    StateControl.ScheduleCustomState(0.0,  USID_Engine,    US_EngineStart);
+    // StateControl.ScheduleCustomState(6.0,  USID_Position,  US_PosTakeOff);   // 5 sec
+    // StateControl.ScheduleCustomState(7.0,  USID_Gear,      US_GearMoveUp);   // 3 sec
+    StateControl.ScheduleCustomState(0.0, USID_Position,  US_PosUnlinked);
+    StateControl.ScheduleCustomState(0.0, USID_Control,   US_CtrlEnabled);
+    StateControl.ScheduleCustomState(0.0, USID_Collision, US_CollEnabled);
+
+    //CloseDoor();
+
+    // OnGearChanged(7.0, 7.0 + 3.0, true);
+
+    sendEvent(30.0, getIdentificator(user), "ActivateRechargeDetect", []);
+  }
+
+  event void Landing(
+      String _LandingGroundID
+    )
+  {
+    logMessage(getIdentificator(user) + ": Landing");
+
+    m_PointHostID  = _LandingGroundID;
+    m_ObjectHostID = _LandingGroundID;
+
+    // calculate ids
+    Component PointObj = (new #GameController()).GetObject(m_PointHostID);
+    if (isFunctionExist(PointObj, "GetHostObject", 0))
+      m_ObjectHostID = PointObj.GetHostObject();
+    else
+    //if (checkMask(PointObj, [CLASSIFICATOR_NAVIGATION_POINT], []))
+      m_ObjectHostID = "";
+
+    // get state control
+    Component StateControl = GetStateControl();
+    if (StateControl == null)
+      return;
+
+    // fire event to inform FDC unit
+    m_CurrLandingPoint = m_PointHostID;
+
+    StateControl.ScheduleCustomState(0.0, USID_Control,   US_CtrlDisabled);
+    StateControl.ScheduleCustomState(0.0, USID_Collision, US_CollDisabled);
+    StateControl.ScheduleCustomState(0.0, USID_Position,  US_PosLanding);     // 5 sec
+    //StateControl.ScheduleCustomState(1.0, USID_Gear,      US_GearMoveDown);   // 3 sec
+    StateControl.ScheduleCustomState(5.0, USID_Position,  US_PosLanded);
+//    StateControl.ScheduleCustomState(5.0, USID_Engine,    US_EngineStop);
+
+    // OnGearChanged(1.0, 1.0 + 3.0, false);
+
+    //$TMP - should call this when exactly landed
+    sendEvent(6.0, getIdentificator(this), "OnLanded", [_LandingGroundID]);
+  }
+
+  event void ChangeSightState(int _SitMode)
+  {
+    if (_SitMode > 1)
+    {
+      logError("ChangeSightState() - incorrect sit mode " + new String(_SitMode));
+      return;
+    }
+
+    Component StateControl = GetStateControl();
+    if (StateControl != null)
+    {
+      if (!m_SightOpen[_SitMode])
+      {
+        StateControl.ScheduleCustomState(0.0, m_SightState[_SitMode], US_M60SightOpen);
+        m_SightOpen[_SitMode] = true;
+      }
+      else
+      {
+        StateControl.ScheduleCustomState(0.0, m_SightState[_SitMode], US_M60SightClose);
+        m_SightOpen[_SitMode] = false;
+      }
+    }
+  }
+
+  event void Recharge()
+  {
+    logMessage(getIdentificator(user) + ": Recharge");
+
+    //$TMP $TODO
+    return;
+
+    Component Mission        = (new #GameController()).GetMission();
+
+    Component StateControl = GetStateControl();
+    if (StateControl == null)
+      return;
+
+    // Restore unit and items
+    StateControl.SetHitPoints(m_MaxHitPoints);
+    for (int Index = 0; Index < m_UnitItemsList.size(); Index++)
+      StateControl.SetUnitItemHP(Index, m_UnitItemsList[Index].HitPoints);
+
+    // Reload ammunition
+    for (int Index = 0; Index < m_WeaponList.size(); Index++)
+      m_WeaponList[Index].ReloadAmmunition();
+  }
+
+  int CreateUnitItem(
+      String  _JointName,
+      float   _HitPoints,
+      Array   _Explosions,
+      String  _ItemName
+    )
+  {
+    Component StateControl = GetStateControl();
+    if (StateControl == null)
+      return -1;
+
+    Component Joint = GetMeshComponent().GetJoint(_JointName);
+    if (Joint == null)
+    {
+      logError("Unable to find joint " + _JointName + " in CreateUnitItem function call");
+      return -1;
+    }
+
+    int Index = StateControl.CreateUnitItem(Joint, _HitPoints);
+    Component NewItem = new CUnitItemDescriptor(
+        _JointName, Joint, _HitPoints, _Explosions, _ItemName, Index);
+    NewItem.DeathPause = rand(0.0, 2.0);
+
+    m_UnitItemsList.add(NewItem);
+    StateControl.EnableHPEvent(true);
+
+    return Index;
+  }
+
+  int CreateUnitItem(
+      String  _JointName,
+      float   _HitPoints,
+      Array   _Explosions,
+      Array   _Modifier,
+      String  _ItemName
+    )
+  {
+    int Index = CreateUnitItem(_JointName, _HitPoints, _Explosions, _ItemName);
+    if (-1 != Index)
+    {
+      GetStateControl().SetupVelocityModifiers(
+          Index, _Modifier[0], _Modifier[1], _Modifier[2], _Modifier[3]);
+    }
+    return Index;
+  }
+
+  void CreateCrashItem(
+      Component _Mesh,
+      String  _JointName,
+      String  _ItemName
+    )
+  {
+    Component Mesh = GetMeshComponent();
+
+    Component FreeFallControl = new #FreeFallControl<CCrashFreeFallControl>();
+    RegisterObject("FreeFallControl_" + _JointName, FreeFallControl);
+    setPosition(_Mesh, getPosition(Mesh));
+    setSlaveObject(FreeFallControl, Mesh);
+    FreeFallControl.SetupLandingSurface(0.5f, 0.0f);
+
+    RegisterObject(_JointName + "_CrashModel", _Mesh);    
+    setVisibleState(_Mesh, false);
+    for (int i = 0; i < m_UnitItemsList.size(); i++)
+    {
+      if (m_UnitItemsList[i].ItemName == _ItemName)
+        m_UnitItemsList[i].CrashItem = _JointName;
+    }
+
+  }
+
+  void OnLifeStateChanged(
+      int       _ItemIndex,
+      boolean   _IsAlive
+    )
+  {
+    if (!_IsAlive)
+    {
+      float DestroyPause = m_UnitItemsList[_ItemIndex].DeathPause;
+      sendEvent(DestroyPause,
+        getIdentificator(this), "DestroyItem", [m_UnitItemsList[_ItemIndex]]);
+    }
+    else
+      sendEvent(0.0,
+        getIdentificator(this), "RestoreItem", [m_UnitItemsList[_ItemIndex]]);
+  }
+
+  void OnHitPointsChanged(
+      int       _ItemIndex,
+      float     _HitPoints
+    )
+  {
+    Component Item = m_UnitItemsList[_ItemIndex];
+    if (Item.HitPoints != 0.0f)
+    {
+      // apply unit functioning
+      OnUnitItemHitPercentChanged(Item, _HitPoints / Item.HitPoints);
+    }
+    Item.CurrentHitPoints = _HitPoints;
+  }
+
+  void OnUnitDamaged(
+      float     _HitPoints
+    )
+  {
+    if (m_UnitDamaged) return;
+
+    sendEvent(0.0, getIdentificator(this), "DamageObject", []);
+    m_UnitDamaged = true;
+  }
+
+  Array GetChildrenItems(
+      Component _Descriptor
+    )
+  {
+    Array Result = [];
+
+    Component Mesh = GetMeshComponent();
+    if (Mesh == null)
+      return Result;
+
+    Array Children = Mesh.GetChildren(_Descriptor.Joint, true);
+
+    for (int i = 0; i < Children.size(); i++)
+    for (int j = 0; j < m_UnitItemsList.size(); j++)
+      if (Children[i] == m_UnitItemsList[j].Joint)
+        Result.add(j);
+
+    return Result;
+  }
+
+  Component GetItem(
+      String _ItemName
+    )
+  {
+    for (int i = 0; i < m_UnitItemsList.size(); i++)
+    {
+      if (m_UnitItemsList[i].ItemName == _ItemName)
+        return m_UnitItemsList[i];
+    }
+    return null;
+  }
+
+  void SetUnitItemHPPercent(
+      String _ItemName,
+      float  _Percent
+    )
+  {
+    Component Item = GetItem(_ItemName);
+    if (Item == null)
+    {
+      logError("Item " + _ItemName + " not found at " + getIdentificator(this));
+      return;
+    }
+
+    GetStateControl().SetUnitItemHP(Item.Index, Item.HitPoints * _Percent / 100.0);
+  }
+
+  event void SwitchEngine(
+      boolean _IsWorkEngine
+    )
+  {
+    OnEngineStateChanged(_IsWorkEngine);
+
+    Component Mission        = (new #GameController()).GetMission();
+    if (Mission == null)
+      return;
+
+    Mission.OnEngineStateChanged(_IsWorkEngine);
+
+    Component StateControl = GetObject("StateControl");
+    if (StateControl == null)
+      return;
+
+    if (_IsWorkEngine)
+      StateControl.SetCustomState(USID_Engine, US_EngineStart);
+    else
+      StateControl.SetCustomState(USID_Engine, US_EngineStop);
+  }
+
+  event void OnSetImmortalMode(
+      boolean _IsImmortal
+    )
+  {
+    Component StateControl = GetStateControl();
+    if (StateControl != null)
+      StateControl.SetImmortalMode(_IsImmortal);
+  }
+}

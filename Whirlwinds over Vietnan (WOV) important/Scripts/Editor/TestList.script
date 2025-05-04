@@ -1,0 +1,799 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CTestList
+{
+  //
+  // List
+  //
+
+  Array m_TestListGlobal =
+    [
+      [ "Helicopter Damage System Test", [
+        [ "Engine", "EngineDamageTest" ],
+        [ "Transmission", "TransmissionDamageTest" ],
+        [ "Fuel tank (rb)", "FueltankRBDamageTest" ],
+        [ "Fuel tank (lb)", "FueltankLBDamageTest" ],
+        [ "Fuel tank (rf)", "FueltankRFDamageTest" ],
+        [ "Fuel tank (lf)", "FueltankLFDamageTest" ],
+        [ "Main rotor", "MainrotorDamageTest" ],
+        [ "Second pilot", "SecondpilotDamageTest" ],
+        [ "Side gunner (left)", "SidegunnerleftDamageTest" ],
+        [ "Side gunner (right)", "SidegunnerrightDamageTest" ],
+        [ "PitoTube", "RFHeliPartDamageTest" ],
+        [ "Stabilizers", "StabilizersDamageTest" ],
+        [ "Tail rotor transmission shaft", "TailrotortransmissionshaftDamageTest" ],
+        [ "Tail rotor", "TailRotorDamageTest" ],
+        [ "Tail Unit",  "TailUnitDamageTest" ]
+
+      ]],
+      [ "Helicopter Destroy System Test", [
+        [ "RestoreAll", "RestoreAllTest" ],
+        [ "Engine", "EngineDestroyTest" ],
+        [ "Transmission", "TransmissionDestroyTest" ],
+        [ "Fuel tank (lb)", "FueltankLBDestroyTest" ],
+        [ "Fuel tank (rb)", "FueltankRBDestroyTest" ],
+        [ "Fuel tank (lf)", "FueltankLFDestroyTest" ],
+        [ "Fuel tank (rf)", "FueltankRFDestroyTest" ],
+        [ "Main rotor", "MainrotorDestroyTest" ],
+        [ "Second pilot", "SecondpilotDestroyTest" ],
+        [ "Side gunner (left)", "SidegunnerleftDestroyTest" ],
+        [ "Side gunner (right)", "SidegunnerrightDestroyTest" ],
+        [ "Stabilizers", "StabilizersDestroyTest" ],
+        [ "Tail rotor transmission shaft", "TailrotortransmissionshaftDestroyTest" ],
+        [ "Tail rotor", "TailRotorDestroyTest" ],
+        [ "Tail Unit", "TailUnitDestroyTest" ]
+
+      ]],
+      [ "Paly cinema", [
+        [ "Play Cinema #1 Meeting",            "C1M2PlayCinema1" ],
+        [ "Play Cinema #2 in TOC",             "C1M2PlayCinema2" ],
+        [ "Play Cinema #3 1st group away",     "C1M2PlayCinema3" ],
+        [ "Play Cinema #4 1st group on X-Ray", "C1M2PlayCinema4" ],
+        [ "Play Cinema #5 Player on OSB",      "C1M2PlayCinema5" ],
+        [ "Play Cinema #6 Skyrider attacks",   "C1M2PlayCinema6" ]
+      ]],
+      [ "Mission1", [
+        [ "Fire Falcom->XRay",               "C1M2FireFalconXRay" ],
+        [ "Fire XRay->XRay",                 "C1M2FireXRayXRay" ],
+        [ "Start attack American",           "C1M2StartAttack" ],
+        [ "Fire Vietnamese mortar",          "C1M2FireVietnameseMortar" ],
+        [ "Start FIGHTS",                    "C1M2Fights"],
+        [ "Destroy Amer XRay group",         "C1M2DestroyXRay"],
+        [ "Restore Amer XRay group",         "C1M2RestoreXRay"],
+        [ "Helicopter FLY",                  "C1M2HelicopterFly"],
+        [ "Helicopter SIT",                  "C1M2HelicopterSIT"],
+        [ "Helicopter desant load",          "C1M2HelicopterLoad"],
+        [ "Wingman attack Mortar",           "C1M2WingmanAttack"],
+        [ "Skyrider TV fly",                 "C1M2SkyriderTVFly"],
+        [ "Skyrider attacks",                "C1M2SkyriderAttack"],
+        [ "AutoPilot",                       "C1M2AutoPilot"],
+        [ "KillKingsley",                    "C1M2KillKingsley"]
+      ]],
+      [ "Destroy selected object",           "DestroyObj"]
+    ];
+
+  Array GetTestList()
+  {
+    m_IsTestListValid = true;
+
+    Array Result = [];
+
+    Result.append(m_TestListGlobal);
+
+    return Result;
+  }
+
+  void ExecuteTest(
+      String _TestName
+    )
+  {
+    Component TestTarget = this;
+    String    TestMethod = _TestName;
+
+    invokeObjectFunction(TestTarget, TestMethod, []);
+  }
+
+  //
+  // Tests
+  //
+
+  void TEST_Undo()
+  {
+    Component TerrainEditor = (new #GameController()).GetObject("TerrainEditor");
+    if (null != TerrainEditor)
+    {
+      Component LayerHistory = TerrainEditor.GetObject("LayerHistory");
+      LayerHistory.Location = LayerHistory.Location - 1;
+
+      logMessage("Undo: " + new String(LayerHistory.Location));
+    }
+  }
+
+  void TEST_Redo()
+  {
+    Component TerrainEditor = (new #GameController()).GetObject("TerrainEditor");
+    if (null != TerrainEditor)
+    {
+      Component LayerHistory = TerrainEditor.GetObject("LayerHistory");
+      LayerHistory.Location = LayerHistory.Location + 1;
+
+      logMessage("Redo: " + new String(LayerHistory.Location));
+    }
+  }
+
+  void EngineDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("Engine", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void TransmissionDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("Transmission", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FueltankLBDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("FuelTankLB", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FueltankRBDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("FuelTankRB", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FueltankLFDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("FuelTankLB", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FueltankRFDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("FuelTankRB", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void MainrotorDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("MainRotor", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FirstpilotDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("PilotFirst", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void SecondpilotDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("PilotSecond", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void SidegunnerleftDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("GunnerLeft", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void SidegunnerrightDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("GunnerRight", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void RFHeliPartDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("RFHeliPart", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void StabilizersDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("Stabilizers", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void TailrotortransmissionshaftDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("TailRail", 0.5f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void TailRotorDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("TailRotor", 0.3f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void TailUnitDamageTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("TailUnit", 0.3f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void RestoreAllTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.RestoreAllDevices();
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void EngineDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("Engine", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void TransmissionDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("Transmission", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FueltankLBDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("FuelTankLB", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+  void FueltankRBDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("FuelTankRB", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FueltankRFDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("FuelTankRF", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FueltankLFDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("FuelTankLF", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void MainrotorDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("MainRotor", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void FirstpilotDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("PilotFirst", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void SecondpilotDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("PilotSecond", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void SidegunnerleftDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("GunnerLeft", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void SidegunnerrightDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("GunnerRight", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void StabilizersDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("Stabilizers", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void TailrotortransmissionshaftDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("TailRail", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void TailUnitDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("TailUnit", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  void TailRotorDestroyTest()
+  {
+    Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+
+    if (null != MainPlayerUnit)
+    {
+      MainPlayerUnit.SetPartLifePercent("TailRotor", 0.0f);
+    }
+    else
+    {
+      logError("MainPlayerUnit is null!");
+    }
+  }
+
+  //
+  // Mission 1 Event test
+  //
+
+  void C1M2FireFalconXRay()
+  {
+    Component _Mission = new #GameController().GetLoadedMission();
+    if ( null != _Mission)
+    {
+      Component GroupHowitzer = new #GameController().GetObject("LZ_Falcon_HowitzerGroup_1");
+      if ( null != GroupHowitzer)
+        sendEvent( 0.0, "LZ_Falcon_HowitzerGroup_1", "Shoot", [_Mission.m_fireFalcon]);
+      else
+        logError("Component GroupHowitzer == null ");
+
+       _Mission.m_fireFalcon = !(_Mission.m_fireFalcon);
+    }
+  }
+
+  void C1M2FireXRayXRay()
+  {
+    Component _Mission = new #GameController().GetLoadedMission();
+    if ( null != _Mission)
+    {
+      Component GroupMotar = new #GameController().GetObject("GroupUnit_American_XRayMotar_1");
+      if ( null != GroupMotar)
+        sendEvent( 0.0, "GroupUnit_American_XRayMotar_1", "Shoot", [_Mission.m_fireXRay]);
+      else
+          logError("Component GroupMotar == null ");
+
+     _Mission.m_fireXRay = !(_Mission.m_fireXRay);
+    }
+  }
+
+  void C1M2DestroyXRay()
+  {
+    Component GroupMotar = new #GameController().GetObject("GroupUnit_American_XRayMotar_1");
+    if ( null != GroupMotar)
+    {
+      GroupMotar.DestroyGroup();
+    }
+    else
+      logError("Component GroupUnit_American_XRayMotar_1 == null ");
+  }
+
+  void C1M2RestoreXRay()
+  {
+    Component GroupMotar = new #GameController().GetObject("GroupUnit_American_XRayMotar_1");
+    if ( null != GroupMotar)
+    {
+      GroupMotar.RestoreGroup();
+    }
+    else
+      logError("Component GroupUnit_American_XRayMotar_1 == null ");
+  }
+
+  void C1M2StartAttack()
+  {
+    sendEvent(0.0, "GroupUnit_AmericanAttack_XRay", "AmericanAttack", []);
+  }
+
+  void C1M2FireVietnameseMortar()
+  {
+    Component _Mission = new #GameController().GetLoadedMission();
+    if ( null != _Mission)
+    {
+      Component VietnameseGroup = new #GameController().GetObject("GroupUnit_Vietnamese_XRayMotar_1");
+      if ( null != VietnameseGroup)
+        sendEvent( 0.0, "GroupUnit_Vietnamese_XRayMotar_1", "Shoot", [_Mission.m_VietnameseFire]);
+      else
+          logError("Component VietnameseGroup == null ");
+
+     _Mission.m_VietnameseFire = !(_Mission.m_VietnameseFire);
+    }
+  }
+
+  void C1M2HelicopterFly()
+  {
+    fireEvent(0.0, [], "FlyTransport", []);
+  }
+
+  void C1M2HelicopterSIT()
+  {
+    Component _Mission = new #GameController().GetLoadedMission();
+    if ( null != _Mission)
+    {
+         Component Group = _Mission.GetObject("WingmanGroup");
+         Group.SetOrder_StopEm();
+         Group.CancelAllOrders();
+
+       sendEvent(5.0, SOID_MissionController, "TestLanding", []);
+    }
+  }
+
+  void C1M2HelicopterLoad()
+  {
+    Component Mission = new #GameController().GetLoadedMission();
+    if (null != Mission)
+    {
+      Component Editor = new #GameController().GetObject("MissionEditor");
+      if (null != Editor)
+      {
+        Component SelectedObject = Editor.GetSelectedObject();
+        if (null != SelectedObject)
+        {
+          Mission.InvokeGroupTaskFunction(getIdentificator(SelectedObject) + "_DesantGroup", "SetOrder_Load", ["", getIdentificator(SelectedObject)]);
+        }
+        else
+        {
+          logError("No Unit selected!!!");
+        }
+      }
+    }
+  }
+
+  void C1M2WingmanAttack()
+  {
+    sendEvent(0.0, "MainPlayerUnit_Wingman_1", "DisconnectWingman", []);
+  }
+
+  void C1M2SkyriderAttack()
+  {
+    Component _Mission = new #GameController().GetLoadedMission();
+    if ( null != _Mission)
+    {
+      Component GroupSkyRiders = new #GameController().GetObject("GroupUnit_AmericanSkyRiders_1");
+      if ( null != GroupSkyRiders)
+        sendEvent( 0.0, "GroupUnit_AmericanSkyRiders_1", "BombAttack", []);
+      else
+          logError("Component GroupSkyRiders == null ");
+
+     //_Mission.m_fireXRay = !(_Mission.m_fireXRay);
+    }
+  }
+
+  void C1M2SkyriderTVFly()
+  {
+    Component _Mission = new #GameController().GetLoadedMission();
+    if ( null != _Mission)
+    {
+      Component GroupSkyRiders = new #GameController().GetObject("GroupUnit_AmericanSkyRiders_1_tv");
+      if ( null != GroupSkyRiders)
+        sendEvent( 0.0, "GroupUnit_AmericanSkyRiders_1_tv", "StartFly", []);
+      else
+          logError("Component GroupSkyRiders == null ");
+
+     //_Mission.m_fireXRay = !(_Mission.m_fireXRay);
+    }
+  }
+
+   void C1M2AutoPilot()
+   {
+    Component _Mission = new #GameController().GetLoadedMission();
+    if ( null != _Mission)
+    {
+      _Mission.StartAutoPilot();
+    }
+   }
+
+   void C1M2KillKingsley()
+   {
+     (new #SoundsArray()).CreateSound("BulletHit_KillPilot", getPosition((new #GameController()).GetObject("MainPlayerUnitCoPilotObject")));
+     sendEvent( 2.0, "MainPlayerUnit", "KillCoPilot", []);
+   }
+
+  void C1M2Fights()
+  {
+    sendEvent(0.0, SOID_MissionController, "AllGroupPopDelayedOrder", []);
+  }
+
+  void C1M2PlayCinema1()
+  {
+     Component _Game = new #GameController();
+    if ( null != _Game)
+      _Game.RunCinema("MissionStart");
+  }
+  void C1M2PlayCinema2()
+  {
+     Component _Game = new #GameController();
+    if ( null != _Game)
+      _Game.RunCinema("MissionStart");
+  }
+  void C1M2PlayCinema3()
+  {
+     Component _Game = new #GameController();
+    if ( null != _Game)
+      _Game.RunCinema("MissionStart");
+  }
+  void C1M2PlayCinema4()
+  {
+     Component _Game = new #GameController();
+    if ( null != _Game)
+      _Game.RunCinema("MissionStart");
+  }
+  void C1M2PlayCinema5()
+  {
+     Component _Game = new #GameController();
+    if ( null != _Game)
+      _Game.RunCinema("MissionStart");
+  }
+  void C1M2PlayCinema6()
+  {
+     Component _Game = new #GameController();
+    if ( null != _Game)
+      _Game.RunCinema("MissionStart");
+  }
+
+  void DestroyObj()
+  {
+    Component Editor = new #GameController().GetObject("MissionEditor");
+    if (null != Editor)
+    {
+      Component SelectedObject = Editor.GetSelectedObject();
+      if (null != SelectedObject)
+      {
+        Component StateControl = SelectedObject.GetStateControl();
+        if (null != StateControl)
+          StateControl.SetHitPoints(0.0);
+      }
+    }
+  }
+}

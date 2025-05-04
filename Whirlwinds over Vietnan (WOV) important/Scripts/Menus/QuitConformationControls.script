@@ -1,0 +1,148 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+//                                                                   
+//  Automatically-generated menu script file                         
+//  DO NOT EDIT!                                                     
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class CQuitConformationControls
+{
+  static String m_ControlListClassFile = "Scripts/Menus/QuitConformationControls.script";
+  static String m_ControlListClassName = "CQuitConformationControls";
+
+  static Array m_UIControls = [
+    [
+      "BackgroundDlg",
+      "BitmapControl",
+      "CUIBitmap",
+      new CUIPosition(
+          0.290217012,
+          0.201211005,
+          0.375000000,
+          0.238655999
+        ),
+      [
+        ["Material", "Background1", false],
+        ["TexMagnifyX", 3.000000000, false],
+        ["TexMagnifyY", 3.000000000, false],
+        ["TexConstAspectRatio", false, true],
+        ["FrameEnabled", false, true],
+        ["FrameColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["FrameThickness", 1.000000000, true],
+        ["Z", 0.000000000, true],
+        ["Hint", "", true],
+        ["TexU", 0.000000000, true],
+        ["TexV", 0.000000000, true]
+      ]
+    ],
+
+    [
+      "MainBackFrame",
+      "FrameControl",
+      "CUIFrame",
+      new CUIPosition(
+          0.290625006,
+          0.202083007,
+          0.374547005,
+          0.239583001
+        ),
+      [
+        ["Tickness", 0.001500000, true],
+        ["FrameColor", new Color(0.592157, 0.576471, 0.549020, 1.000000), false],
+        ["Material", "Background1", true],
+        ["Thickness", 1.000000000, true],
+        ["Z", 0.010000000, true],
+        ["Hint", "", true]
+      ]
+    ],
+
+    [
+      "TextField",
+      "TextControl",
+      "CUITextField",
+      new CUIPosition(
+          0.309721351,
+          0.252588004,
+          0.339122325,
+          0.068750001
+        ),
+      [
+        ["FontName", "Arial", false],
+        ["FontSize", 0.032000002, false],
+        ["Text", ["Menu", "str_SURE_QUIT"], false],
+        ["TextColor", new Color(0.800000, 0.800000, 0.800000, 1.000000), false],
+        ["Alignment", 0.500000000, false],
+        ["Z", 0.010000000, true],
+        ["Hint", "", true],
+        ["Shadow", 0.000000000, true],
+        ["IsMultiline", true, true]
+      ]
+    ],
+
+    [
+      "IDOK",
+      "BitmapButton",
+      "CUIButton",
+      new CUIPosition(
+          0.353327990,
+          0.358958989,
+          0.074116997,
+          0.039583001
+        ),
+      [
+        ["MaterialNormal", "Invisible", false],
+        ["MaterialHilited", "Invisible", false],
+        ["FontName", "Arial", false],
+        ["FontSize", 0.050000001, false],
+        ["Alignment", 0.500000000, false],
+        ["Text", ["Menu", "str_OK"], false],
+        ["NormalTextColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), false],
+        ["HilitedTextColor", new Color(0.800000, 0.000000, 0.000000, 1.000000), false],
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["MaterialPressed", "", true],
+        ["LeftIndent", 0.000000000, true],
+        ["IsMultiline", false, true],
+        ["NormalMaterialColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedMaterialColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true]
+      ]
+    ],
+
+    [
+      "IDCANCEL",
+      "BitmapButton",
+      "CUIButton",
+      new CUIPosition(
+          0.482823014,
+          0.358958989,
+          0.141845003,
+          0.039583001
+        ),
+      [
+        ["MaterialNormal", "Invisible", false],
+        ["MaterialHilited", "Invisible", false],
+        ["FontName", "Arial", false],
+        ["FontSize", 0.050000001, false],
+        ["Alignment", 0.500000000, false],
+        ["Text", ["Menu", "str_CANCEL"], false],
+        ["NormalTextColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), false],
+        ["HilitedTextColor", new Color(0.800000, 0.000000, 0.000000, 1.000000), false],
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["MaterialPressed", "", true],
+        ["LeftIndent", 0.000000000, true],
+        ["IsMultiline", false, true],
+        ["NormalMaterialColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedMaterialColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true]
+      ]
+    ]
+  ];
+}

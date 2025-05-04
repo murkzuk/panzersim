@@ -1,0 +1,62 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CWeaponSelector
+{
+  Array Fonts = [
+      [ "Century Gothic Bold", 0.0225 ],
+      [ "Century Gothic", 0.03 ]
+    ];
+
+  Component MatManager = new #MaterialManager<CCockpitSkin>();
+
+  float HAngleMin = -50.0;
+  float HAngleMax =  50.0;
+  float VAngleMin = -40.0;
+  float VAngleMax =  40.0;
+
+  float MouseSensitivity = 0.0015;
+
+  Array Slot0_Name = [ 0.04125, 0.27833, "N", "N", "C", "C", 0, L"" ];
+  Array Slot0_Frame     = [ 0.04125, 0.23, "N", "N", "C", "C", 0.03, 1.0, 0.0, 2.0 * Math_PI ];
+  Array Slot0_Barrels   = [ 0.0,     0.0,  "N", "N", "C", "C", 0.00729, 1.0, 0.0, 2.0 * Math_PI ];
+  Array Slot0_Fill      = [ 0.0,     0.0,  "N", "N", "C", "C", 0.14, 0.2, "rocket",  0 ];
+  float Slot0_Radius    = 0.0183;
+//  Array Slot0_FireOrder = [ 7, 2, 5, 3, 1, 6, 4 ];  // shrouded
+  Array Slot0_FireOrder = [ 1, 6, 4, 2, 7, 5, 3 ];  // unshrouded  
+
+  Array GunSlots = [
+      [
+        [ 0.0925, 0.36, "N", "N", "C", "C", 0, L"" ],               // name
+        [ 10.5 / 800.0, 186.5 / 600.0, "N", "N", "N", "N", 128.0 / 800.0, 128.0 / 600.0, "", 0 ], // image base
+        [ 0.0325, 0.3733, "N", "N", "N", "N", 0.1225,  0.015, 0.0015 ],     // progress frame
+        [ 0.0325, 0.3733, "N", "N", "N", "N", 128.0 / 800.0, 128.0 / 600.0, "progress bar", 0 ],         // progress bar fill
+        [ 0.03,   0.378333, "N", "N", "F", "C", 1, L"" ],                     // numerical value
+        true
+      ],
+      
+      [
+        [ 0.085, 0.4667, "N", "N", "C", "C", 0, L"" ],
+        [ 5.5 / 800.0, 248.5 / 600.0, "N", "N", "N", "N", 128.0 / 800.0, 128.0 / 600.0, "", 0 ],
+        [ 0.0325, 0.48167, "N", "N", "N", "N", 0.1225,  0.015, 0.0015 ],
+        [ 0.0325, 0.48167, "N", "N", "N", "N", 128.0 / 800.0, 128.0 / 600.0, "progress bar", 0 ],
+        [ 0.03,   0.48667, "N", "N", "F", "C", 1, L"" ],
+        true
+      ],
+
+      [
+        [ 0.915 - 0.05, 0.4667 + 0.1, "N", "N", "C", "C", 0, L"" ],
+        [ 668.5 / 800.0 - 0.05, 249.5 / 600.0 + 0.1, "N", "N", "N", "N", 128.0 / 800.0, 128.0 / 600.0, "", UI_FLIP_HORIZONTAL ],
+        [ 0.84125 - 0.05, 0.48167 + 0.1, "N", "N", "N", "N", 0.1225,  0.015, 0.0015 ],
+        [ 0.84125 - 0.05, 0.48167 + 0.1, "N", "N", "N", "N", 128.0 / 800.0, 128.0 / 600.0, "progress bar", 0 ],
+        [ 0.96375 - 0.05, 0.48667 + 0.1, "N", "N", "N", "C", 1, L"" ],
+        false
+      ]
+    ];
+}

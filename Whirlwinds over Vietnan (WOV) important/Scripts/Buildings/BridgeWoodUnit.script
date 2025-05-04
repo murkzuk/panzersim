@@ -1,0 +1,119 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CBridgeWoodUnit
+  extends CBaseBridgeObject
+{
+  static String  m_StartSection    = "StartSection";
+  static String  m_FinishSection   = "EndSection";
+  static String  m_CenterSection   = "CenterSection";
+
+  static int     m_InitSize        = 10;
+
+  final static float DefaultHitPoints = CHitPoints::BridgeWoodUnitHitPoints;
+
+  CBridgeWoodUnit()
+  {
+    SetupMesh(new #GridObject<Cbld_BridgeWoodModel>());
+  }
+
+  event void SetModelViewState(
+      boolean _State
+    )
+  {
+    Component Mesh = GetMeshComponent();
+    if (null == Mesh)
+      return;
+
+    Mesh.CreateLine(
+      "StartSection_Crashed",  IdentityMatrix, AXIS_X, "Start",
+      "EndSection_Crashed",    IdentityMatrix, AXIS_X, "Finish",
+      "CenterSection_Crashed", IdentityMatrix, AXIS_X, "Center_",
+      m_CurrentSize
+                   );
+  }
+}
+/*
+class CBridgeWood_CenterSectionGameUnit extends CBridgeWoodUnit
+{
+  final static Array AutomaticClassificators  = ["STRUCTURE", "GROUND"];
+
+  event void OnHitByEnemy(
+      String _EnemyID
+    )
+  {
+    CBuildingStateControl::OnHitByEnemy(_EnemyID);
+    Component Mission = (new #GameController()).GetMission();
+    if (null == Mission)
+      return null;
+
+   Mission.OnHitByEnemyGameObject(getIdentificator(this), _EnemyID);
+  }
+}
+*/
+
+
+// Unit Explosion
+class CBridgeWood_CenterSectionExplosion
+  extends CBuildingExplosion
+
+{
+  float  Damage   = 10.0;
+  float  Radius   = 15.0;
+  String    SoundId  = "BridgeWoodExplosionSound";
+}
+
+class CBridgeWood_CenterSectionGameUnit
+  extends CGroundBuilding
+{
+  final static float DefaultHitPoints = CHitPoints::BridgeWoodUnitHitPoints;
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE", "GROUND"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CGroundBuilding::Construct(_Mission, _PropMap);
+
+//    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 0.00f);
+  }
+
+  event void OnHitByEnemy(
+      String _EnemyID
+    )
+  {
+    CBuildingStateControl::OnHitByEnemy(_EnemyID);
+    Component Mission = (new #GameController()).GetMission();
+    if (null == Mission)
+      return null;
+
+   Mission.OnHitByEnemyGameObject(getIdentificator(this), _EnemyID);
+  }
+
+  void CBridgeWood_CenterSectionGameUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cbld_BridgeWood_CenterSectionModel>(), [150, 100, 50, 1]);
+
+    // Creates and register unit state component
+    //   float HitPoints
+//    SetupStateControl(200.0, "BridgeWoodExplosion");
+//       BulletHitEffect, BulletHitSound, ExplosionEffect, ExplosionSound
+//                SetDamageEffects(
+//        "MetalBulletHitEffect", "MetalBulletHitSound",
+//        "MetalExplosionEffect", "MetalExplosionSound"
+//          );
+  }
+}

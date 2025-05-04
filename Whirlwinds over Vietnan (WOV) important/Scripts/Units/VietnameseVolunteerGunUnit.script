@@ -1,0 +1,100 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//Gun
+class CVietnameseVolunteerGunBulletExplosion
+  extends CMachineGunBulletExplosion
+{
+  float  Damage   = 5.0;
+}
+
+class CVietnameseVolunteerGun
+  extends CMachineGun
+{
+  final static String BulletPatternId = "VietnameseSoldierGunFakeBullet";
+
+  Component BurstFireSound  = new #Emitter<CAK47GunFireSound>();
+
+  final static float LockAngleHMin = - 46;
+  final static float LockAngleHMax =   46;
+  final static float LockAngleVMin = - 46;
+  final static float LockAngleVMax =   46;
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod        = 110;  // ms
+  final static int  FirePeriodRandAdd = 100;  // ms
+
+  final static float MinDistance      = 1;
+  final static float MaxDistance      = 300;
+
+  final static boolean BurstFire      = true;
+  final static int  BurstTime         = 2000; // ms
+  final static int  BurstTimeRandAdd  = 0; // ms
+
+  final static int  BurstDelay        = 3000; // ms
+  final static int  BurstDelayRandAdd = 2000; // ms
+  // gun specific fire mask with priorities
+  final static Array GunSpecificFireMask = [
+                                [["HUMAN"],[]],  // high priority mask
+                                [["AIR"],  []],  // low priority mask
+                                [[],       []]   // low priority mask: RestrictTo, Exclude
+                              ];
+}
+
+// Behavior
+class CVietnameseVolunteerGunBehavior extends CHumanBehavior
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 1000; // m
+  float  MinRadarDistance = 5;    // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+}
+
+class CVietnameseVolunteerGunUnit
+  extends CHumanUnit
+{
+  final static float DefaultHitPoints = CHitPoints::VietnameseVolunteerGunUnitHitPoints;
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND", "HUMAN"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CVietnameseVolunteerGunUnit()
+  {
+    SetupMesh(new #AnimatedObject<Chum_VietnameseVolunteerGunModel>(), [200, 100, 50, 10, 3]);
+
+    //$TODO animator
+    //GetObject("AnimWeapon").EnableAnimator(false);
+    SetupWeapon("Weapon", new #Weapon<CVietnameseVolunteerGun>(), ["Fire_A"], null);
+    SetupBehavior(new #HumanBehavior<CVietnameseVolunteerGunBehavior>());
+
+    // Load additionals animations
+    LoadAnimations("ChumansAnimation");
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CHumanUnit::Construct(_Mission, _PropMap);
+  }
+
+}

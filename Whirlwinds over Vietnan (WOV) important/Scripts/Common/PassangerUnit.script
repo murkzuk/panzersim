@@ -1,0 +1,924 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CPassangerUnit
+  extends CUnit, CExtendUnit
+{
+  static final float Mass = 80.0;
+
+  static final int MT_Outside = 0;
+  static final int MT_Inside  = 1;
+  static final int MT_FromEye = 2;
+  static final int MT_None    = 3;
+
+  static final Array DeathTextures;
+  static       Array DeathTexturesTmp = new Array(4, null);
+
+  int m_Seat = 0;
+
+  boolean m_Animator = false;
+  boolean m_ManualHeli = false;
+
+  // head anims
+
+  float   m_HeadLR      = 0.5f;
+  float   m_HeadUD      = 0.5f;
+  boolean m_bHeadAction = false;
+
+  // ==================================
+  // Construction
+  // ==================================
+  
+  CPassangerUnit()
+  {
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    // Call inherited function
+    CUnit::Construct(_Mission, _PropMap);
+
+    // Setup animator
+    if (m_Animator)
+      SetupAnimator("Animator", CreateAnimator());
+
+    // Initialize linkers for inside and outside meshes
+    InitializeLinkers();
+  }
+
+  void Initialize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CUnit::Initialize(_Mission, _PropMap);
+
+    if (m_Animator)
+    {
+      InitializeAnimator();
+
+      for (int i = 0; i < DeathTextures.size(); i++)
+      {
+        if (DeathTexturesTmp[i] != null)
+          break;
+
+        DeathTexturesTmp[i] = PreLoadTexture(GetInsideMesh(), DeathTextures[i][1]);
+      }    
+    }
+    else
+    {
+      GetOutsideMesh().SetAnimationPhase("pilot_neutral", 1.0f);
+      GetOutsideMesh().SetAnimationPhase("rhand_pilot", 1.0f);
+      GetOutsideMesh().SetAnimationPhase("lhand_pilot", 1.0f);
+    }
+  }
+
+  void InitializeAnimator()
+  {
+    Component Animator = GetAnimator();
+
+    Animator.Initialize(GetOutsideMesh());
+
+    if (GetInsideMesh() != null)
+      Animator.Initialize(GetInsideMesh());
+    if (GetFromEyeMesh() != null)
+      Animator.Initialize(GetFromEyeMesh());
+
+    Component GroupObject = GetGroupObject();
+    
+    setPositionable(Animator, GroupObject);
+    setSlaveObject(Animator,  GroupObject);
+
+    if (GetInsideMesh() != null &&
+        GetHeadAnimator() != null &&
+        GetHeadAnimator() != GetAnimator())
+    {
+      setPositionable(GetHeadAnimator(), GetInsideMesh());
+      setSlaveObject(GetHeadAnimator(),  GetInsideMesh());      
+    }
+  }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+    CUnit::SetProperties(_PropMap);
+  }  
+
+  void SetSeat(
+      int _Seat
+    )
+  {
+    m_Seat = _Seat;
+  }
+
+  int GetSeat()
+  {
+    return m_Seat;
+  }
+
+  float GetMass()
+  {
+    return Mass;
+  }
+
+  void SetupPassangerMesh(
+      String _OutsideModel,
+      String _InsideModel,
+      String _FromEyeModel
+    )
+  {
+    SetupExtendMesh(_OutsideModel, _InsideModel);
+
+    // Create from eye mesh
+    Component FromEyeMesh = new #PartObject();
+    loadFromScript(FromEyeMesh, _FromEyeModel);
+    addClassificator(FromEyeMesh, "FromEyeMesh");
+
+    // Eliminate view matrix for eye mesh
+    FromEyeMesh.EnableViewMatrix(false);
+
+    // Disable renders by default
+    FromEyeMesh.EnableRenderOnlyToCamera(getIdentificator(user), true);
+    FromEyeMesh.EnableShadowOnlyToCamera(getIdentificator(user), true);
+
+    FromEyeMesh.EnableRenderToCamera(getIdentificator(user),  false);
+    FromEyeMesh.EnableShadowToCamera(getIdentificator(user),  false);
+
+    // Set near layer for object
+    FromEyeMesh.SetRenderLayer(PRIMLAYER_NEAR);
+
+    // Register from eye mesh
+    RegisterObject("FromEyeMesh", FromEyeMesh);
+
+    // Set slave objects
+    m_GroupObject.SetSlaveObjects(
+        [ GetOutsideMesh(), GetInsideMesh(), FromEyeMesh ]
+      );
+  }
+
+  Component GetFromEyeMesh()
+  {
+    return GetObject("FromEyeMesh");      
+  }
+
+  void BuildOnlyOutsideMesh()
+  {
+    // check meshes
+    boolean bHaveInsideMesh  = (null != GetInsideMesh());
+    boolean bHaveFromEyeMesh = (null != GetFromEyeMesh());
+    if (!bHaveInsideMesh && !bHaveFromEyeMesh)
+      return;
+
+    // Set slave object as outside mesh
+    m_GroupObject.SetSlaveObjects(
+        [ GetOutsideMesh() ] 
+      );
+
+    // Unregister meshes
+    if (bHaveInsideMesh)
+    {
+      UnregisterObject("InsideMesh");
+      if (GetObject("CockpitInsideLink") != null)
+        UnregisterObject("CockpitInsideLink");
+    }
+    if (bHaveFromEyeMesh)
+    {
+      UnregisterObject("FromEyeMesh");
+      if (GetObject("CockpitFromEyeLink") != null)
+        UnregisterObject("CockpitFromEyeLink");
+    }
+
+  }
+
+  // ======================================
+  // Animation controls
+  // ======================================
+
+  void LoadAnimations(
+      String _script
+    )
+  {
+    Component Mesh = GetInsideMesh();
+    if (Mesh != null)
+      Mesh.LoadAnimations(_script);
+    else
+      logError("Cant load animations. The model without mesh");
+
+    Mesh = GetOutsideMesh();
+    if (Mesh != null)
+      Mesh.LoadAnimations(_script);
+    else
+      logError("Cant load animations. The model without mesh");
+
+    Mesh = GetFromEyeMesh();
+    if (Mesh != null)
+      Mesh.LoadAnimations(_script);
+    else
+      logError("Cant load animations. The model without mesh"); 
+  }
+
+  void SwitchModels(
+      String _CameraId,
+      int    _Type
+    )
+  {
+    Component OutsideMesh = GetOutsideMesh();
+    OutsideMesh.EnableRenderToCamera(_CameraId, MT_Outside == _Type);
+    OutsideMesh.EnableShadowToCamera(_CameraId, MT_Outside == _Type);
+    
+    Component InsideMesh  = GetInsideMesh();
+    InsideMesh.EnableRenderToCamera(_CameraId, MT_Inside == _Type);
+    InsideMesh.EnableShadowToCamera(_CameraId, MT_Inside == _Type);
+
+    Component FromEyeMesh = GetFromEyeMesh();
+    FromEyeMesh.EnableRenderToCamera(_CameraId, MT_FromEye == _Type);
+    FromEyeMesh.EnableShadowToCamera(_CameraId, MT_FromEye == _Type);
+  }
+
+  void SetRenderToCamera(String _CameraId)
+  {
+    Component InsideMesh = GetInsideMesh();
+    if (null != InsideMesh)
+    {
+      InsideMesh.EnableRenderOnlyToCamera(_CameraId, true);
+      InsideMesh.EnableShadowOnlyToCamera(_CameraId, true);
+    }
+    
+    Component FromEyeMesh = GetFromEyeMesh();
+    if (null != FromEyeMesh)
+    {
+      FromEyeMesh.EnableRenderOnlyToCamera(_CameraId, true);
+      FromEyeMesh.EnableShadowOnlyToCamera(_CameraId, true);
+    }
+  }
+
+  void LinkToOutside(Component _Joint)
+  {
+    Component Linker = GetOutsideLink();
+    Component Mesh   = GetOutsideMesh();
+
+    if (Mesh != null)
+      setPosition(Mesh, getPosition(_Joint));
+    if (Linker != null)
+      setPositionable(Linker, _Joint);
+  }
+
+  void LinkToInside(Component _Joint)
+  {
+    Component Linker = GetInsideLink();
+    Component Mesh   = GetInsideMesh();
+
+    if (Mesh != null)
+      setPosition(Mesh, getPosition(_Joint));
+    if (Linker != null)
+      setPositionable(Linker, _Joint);
+  }
+
+  void LinkToFromEye(Component _Joint)
+  {
+    Component Linker = GetFromEyeLink();
+    Component Mesh   = GetFromEyeMesh();
+
+    if (Mesh != null)
+      setPosition(Mesh, getPosition(_Joint));
+    if (Linker != null)
+      setPositionable(Linker, _Joint);
+  }
+
+  void SetExtraSlaveObjects(
+      Array _Objects
+    )
+  {
+    Array Objects = [ GetOutsideMesh(), GetInsideMesh(), GetFromEyeMesh() ];
+    Objects.append(_Objects);
+
+    GetGroupObject().SetSlaveObjects(Objects);
+  }
+
+  // ==================================
+  // Service
+  // ==================================
+
+  Component GetAnimator()
+  {
+    return GetObject("Animator");
+  }
+
+  Component GetHeadAnimator()
+  {
+    return GetObject("HeadAnimator");
+  }
+
+  Component CreateAnimator()
+  {
+    return null;
+  }
+
+  void SetVehicleBody(Component _Body)
+  {
+  }
+
+  // ==================================
+  // Events
+  // ==================================
+
+  event void EnableAnimators(
+      boolean _IsEnabled
+    )
+  {
+    if (GetAnimator() != null)
+      GetAnimator().EnableControl(_IsEnabled);
+    if (GetHeadAnimator() != null)
+      GetHeadAnimator().EnableControl(_IsEnabled);
+  }
+
+  event void ShowAnimDebugInfo(
+      boolean _Show
+    )
+  {
+    if (GetAnimator() != null)
+      GetAnimator().ShowDebugInfo(_Show);
+    if (GetHeadAnimator() != null)
+      GetHeadAnimator().ShowDebugInfo(_Show);
+  }    
+
+  // ==================================
+  // Linkers
+  // ==================================
+
+  Component GetInsideLink()
+  {
+    return GetObject("CockpitInsideLink");
+  }
+
+  Component GetOutsideLink()
+  {
+    return GetObject("CockpitOutsideLink");
+  }
+
+  Component GetFromEyeLink()
+  {
+    return GetObject("CockpitFromEyeLink");
+  }
+
+  void InitializeLinkers()
+  {
+    if (GetInsideMesh() != null)
+    {
+      Component CockpitInsideLink  = new #ObjectObjectLink();
+      CockpitInsideLink.SetUpdateLayer(UPDATE_LAYER_FIGHT);
+      setSlaveObject(CockpitInsideLink,  GetInsideMesh());
+      RegisterObject("CockpitInsideLink",  CockpitInsideLink);
+    }
+
+    if (GetOutsideMesh() != null)
+    {
+      Component CockpitOutsideLink = new #ObjectObjectLink();
+      setSlaveObject(CockpitOutsideLink, GetOutsideMesh());
+      RegisterObject("CockpitOutsideLink", CockpitOutsideLink);
+    }
+
+    if (GetFromEyeMesh() != null)
+    {
+      Component CockpitFromEyeLink = new #ObjectObjectLink();
+      CockpitFromEyeLink.SetUpdateLayer(UPDATE_LAYER_FIGHT);  
+      setSlaveObject(CockpitFromEyeLink, GetFromEyeMesh());
+      RegisterObject("CockpitFromEyeLink", CockpitFromEyeLink);
+    }
+  }
+
+  // head animations  
+
+  event void SetHeadPhase(
+      float _HeadLR,
+      float _HeadUD
+    )
+  {
+    GetHeadAnimator().SetHeadPhase(_HeadLR, _HeadUD);
+  }
+
+  event void SetHeadAction(
+      float _HeadLR,
+      float _HeadUD,
+      float _DurationTime
+    )
+  {
+    if (m_bHeadAction)
+      return;
+
+    m_bHeadAction = true;
+    GetHeadAnimator().SetHeadPhase(_HeadLR, _HeadUD);
+    sendEvent(_DurationTime, getIdentificator(this), "FinishHeadAction", []);
+  }
+
+  event void FinishHeadAction()
+  {
+    m_bHeadAction = false;
+    GetHeadAnimator().SetHeadPhase(m_HeadLR, m_HeadUD);
+  }
+
+  void SetDefaultHeadPhase(
+      float _HeadLR,
+      float _HeadUD
+    )
+  {
+    m_HeadLR = _HeadLR;
+    m_HeadUD = _HeadUD;
+    if (!m_bHeadAction)
+      GetHeadAnimator().SetHeadPhase(_HeadLR, _HeadUD);      
+  }
+
+  void ChooseRandomHeadAction(
+      float _DeltaTime
+    )
+  { 
+    if (m_bHeadAction)
+      return;
+
+    if (rand(0.0, 1.0) <= 0.2 * _DeltaTime)
+    {
+      SetHeadAction(rand(0.0f, 1.0f), rand(0.0f, 1.0f), rand(0.0f, 3.0f));            
+    }
+  }
+
+  void SetGoodAnimator(
+      boolean _Enable
+    )
+  {
+    m_Animator = _Enable;
+  }
+
+  void SetManualHeli(
+      boolean _Enable
+    )
+  {
+    m_ManualHeli = _Enable;
+  }
+
+}
+
+class CPilotUnit
+  extends CPassangerUnit
+{
+  final static Array DeathTextures = [
+                          ["1", "Textures/Npc_head_Kingsley_blood.tex"],
+                          ["0", "Textures/hum_AmericanCoPilot_blood.tex"]
+                        ];
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    // Call inherited function
+    CPassangerUnit::Construct(_Mission, _PropMap);
+
+    // Setup head animator
+    if (m_Animator && m_ManualHeli)
+      SetupAnimator("HeadAnimator", new #StateAnimator<CPilotHeadAnimator>());
+
+    if (GetInsideMesh() != null)
+    {      
+      // Setup physics for death
+      SetupPhysicsController(
+          "DeathController",
+          GetInsideMesh(),
+          new #ObjectPhysicsController<CBodySubstance>(), 
+          70.0
+        );
+      GetPhysicsController("DeathController").EnableControl(false);
+      GetPhysicsController("DeathController").SetExcludeSet([ "MainPlayerUnit", CLASSIFICATOR_TERRAIN ]);
+      GetPhysicsController("DeathController").EnableCheckActive(false);  
+
+      // Setup physics controller for live
+      SetupPhysicsController(
+          "LiveController",
+          GetInsideMesh(),
+          new #ObjectPhysicsController<CBodySubstance>(), 
+          70.0
+        );
+      GetPhysicsController("LiveController").EnableControl(false);
+      GetPhysicsController("LiveController").SetExcludeSet([ "MainPlayerUnit", CLASSIFICATOR_TERRAIN ]);
+      GetPhysicsController("LiveController").EnableCheckActive(false);
+    }
+  }
+
+  void Initialize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    // Call inherited function
+    CPassangerUnit::Initialize(_Mission, _PropMap);
+
+    if (m_Animator)
+    {
+      Component Mesh = GetInsideMesh();
+
+      if (Mesh != null)
+        Mesh.SetAnimateAlways(true);
+
+      // Setup rag-doll
+      SetupDeathRagDoll();
+
+      // Initialize animator
+    
+      InitializeAnimator();
+
+      SetupLiveRagDoll();
+
+      EnableLivePhysics();
+      if (Mesh != null)
+        Mesh.SetAnimateAlways(false);
+    }        
+    else
+    {
+      GetSlaveObject().SetAnimationPhase("rudder", 0.5f);
+      GetSlaveObject().SetAnimationPhase("trottle", 0.5f);
+      GetSlaveObject().SetAnimationPhase("cyclic_bank", 0.5f);
+      GetSlaveObject().SetAnimationPhase("cyclic_tangage", 0.5f);
+    }
+  }
+
+  void SetExtraSlaveObjects(
+      Array _Objects
+    )
+  {
+    CPassangerUnit::SetExtraSlaveObjects(_Objects);
+
+    if (!m_Animator)
+    {
+      GetSlaveObject().SetAnimationPhase("rudder", 0.5f);
+      GetSlaveObject().SetAnimationPhase("trottle", 0.5f);
+      GetSlaveObject().SetAnimationPhase("cyclic_bank", 0.5f);
+      GetSlaveObject().SetAnimationPhase("cyclic_tangage", 0.5f);
+    }
+  }
+
+  // ==================================
+  // Services
+  // ==================================
+
+  Component CreateAnimator()
+  {
+    return new #StateAnimator<CPilotAnimator>();
+  }
+
+  void SetVehicleBody(Component _Body)
+  {
+    GetPhysicsController("DeathController").SetMasterBody(_Body);
+    GetPhysicsController("LiveController").SetMasterBody(_Body);
+  }
+
+  // ==================================
+  // Animation Events
+  // ==================================
+
+  event void SetThrottlePhase(
+      float _Phase
+    )
+  {
+    GetAnimator().SetThrottlePhase(_Phase);
+  }
+
+  event void SetRudderPhase(
+      float _Phase
+    )
+  {
+    GetAnimator().SetRudderPhase(_Phase);
+  }
+
+  event void SetBankTangagePhase(
+      float _Bank,
+      float _Tangage
+    )
+  {
+    GetAnimator().SetBankTangagePhase(_Bank, _Tangage);
+  }
+
+  void LinkToInside(Component _Joint)
+  {
+    CPassangerUnit::LinkToInside(_Joint);
+    // Set inside linker as ground acceleration slave transform
+    GetPhysicsController("DeathController").SetGroundAccelTransformSlave(_Joint);
+    GetPhysicsController("LiveController").SetGroundAccelTransformSlave(_Joint);
+  }
+
+  void LinkToOutside(Component _Joint)
+  {
+    CPassangerUnit::LinkToOutside(_Joint);
+    // Set outside linker as ground acceleration master transform
+    GetPhysicsController("DeathController").SetGroundAccelTransformMaster(_Joint);
+    GetPhysicsController("LiveController").SetGroundAccelTransformMaster(_Joint);
+  }
+
+  void LinkToControls(
+      Component _RHandLink,
+      Component _LHandLink
+    )
+  {
+    if (GetObject("RHandLink") != null)
+    {
+      setPosition(GetInsideMesh().GetJoint("h_Hand_Right"), getPosition(_RHandLink));
+
+      setPositionable(GetObject("RHandLink"), _RHandLink);
+    }
+    if (GetObject("LHandLink") != null)
+    {
+      setPosition(GetInsideMesh().GetJoint("h_Hand_Left"), getPosition(_LHandLink));
+
+      setPositionable(GetObject("LHandLink"), _LHandLink);
+    }
+
+  }
+
+  void SetupDeathRagDoll()
+  {
+    Component Mesh = GetInsideMesh();
+    if (Mesh == null)
+      return;
+
+    // Setup bind pose
+    Mesh.SetAnimationPhase("body_death", 1.0f);
+    Mesh.SetAnimationPhase("head_death", 1.0f);
+    Mesh.SetAnimationPhase("lArm_death", 1.0f);
+    Mesh.SetAnimationPhase("rArm_death", 1.0f);
+    Mesh.SetAnimationPhase("legs_death", 1.0f);
+
+    // Build human sceleton
+    SetupDestructibles(
+        "DeathController",
+        Mesh,
+        [
+          // Spine
+          [ CT_Hinge,      "ROOT",         "h_Spine",          "h_Spine",          0,
+              degreeToRadian(-10.0),   degreeToRadian(10.0)                                              ],
+
+          // Head
+          [ CT_Universal,  "h_Spine",      "h_Head",           "h_Head",           0, 2,
+              degreeToRadian(0.0),   degreeToRadian(10.0), degreeToRadian(-20.0), degreeToRadian(20.0) ],
+     
+          // Left arm
+          [ CT_Universal,  "h_Spine",      "h_Arm_Left",       "h_Arm_Left",       2, 1,
+              degreeToRadian(- 4.0),   degreeToRadian( 4.0), degreeToRadian(0.0),   degreeToRadian( 4.0) ],
+          [ CT_Hinge,      "h_Arm_Left",   "h_Elbow_Left",     "h_Elbow_Left",     1,
+              degreeToRadian(0.0),     degreeToRadian( 4.0)                                             ],
+
+          // Right arm
+          [ CT_Universal,  "h_Spine",      "h_Arm_Right",      "h_Arm_Right",      2, 1,
+              degreeToRadian(-2.0),   degreeToRadian(2.0), degreeToRadian(-2.0), degreeToRadian(0.0)  ],
+          [ CT_Hinge,      "h_Arm_Right",  "h_Elbow_Right",    "h_Elbow_Right",    1,
+              degreeToRadian(-4.0),  degreeToRadian(4.0)                                             ],
+          [ CT_BallAndSocket, "h_Elbow_Right","h_Hand_Right",  "h_Hand_Right"                            ]
+        ]
+      );
+
+    GetPhysicsController("DeathController").SetFixedBody("ROOT", true);
+    GetPhysicsController("DeathController").SetFixedBody("h_Hand_Right", true);
+  }
+
+  void SetupLiveRagDoll()
+  {
+    Component Mesh = GetInsideMesh();
+    if (Mesh == null)
+      return;
+
+    // Setup bind pose
+    Mesh.SetAnimationPhase("cyclic_bank", 0.5f);
+    Mesh.SetAnimationPhase("cyclic_tangage", 0.5f);
+    Mesh.SetAnimationPhase("head_left_to_right", 0.5f);    
+    Mesh.SetAnimationPhase("head_up_to_down", 0.5f);    
+    Mesh.SetAnimationPhase("body_left_to_right", 0.5f);    
+    Mesh.SetAnimationPhase("body_up_to_down", 0.5f);
+
+    // Build human sceleton
+    SetupDestructibles(
+        "LiveController",
+        Mesh,
+        [
+          // Left arm
+          [ CT_Hinge,         "ROOT",   "h_Shoulder_Left",     "h_Shoulder_Left",     1,
+              degreeToRadian(-2.0),     degreeToRadian(5.0)                            ],
+
+          [ CT_Universal,     "h_Shoulder_Left",      "h_Arm_Left",       "h_Arm_Left", 1, 2,
+              degreeToRadian(-50.0),   degreeToRadian(10.0), degreeToRadian(-30.0),   degreeToRadian(10.0) ],
+          [ CT_Hinge,         "h_Arm_Left",   "h_Elbow_Left",     "h_Elbow_Left",     1,
+              degreeToRadian(-5.0),     degreeToRadian(90.0)                                           ],
+          [ CT_BallAndSocket, "h_Elbow_Left","h_Hand_Left",  "h_Hand_Left"                            ],
+
+          // Right arm
+//          [ CT_Hinge,         "ROOT",   "h_Shoulder_Right",     "h_Shoulder_Right",     1,
+//              degreeToRadian(-2.0),     degreeToRadian(2.0)                            ],
+
+          [ CT_Universal,     "ROOT",      "h_Arm_Right",      "h_Arm_Right",      2, 1,
+              degreeToRadian(-1.0),   degreeToRadian(1.0), degreeToRadian(-20.0), degreeToRadian(20.0)  ],
+          [ CT_Universal,        "h_Arm_Right",  "h_Elbow_Right",    "h_Elbow_Right",    1, 0,
+              degreeToRadian(-20.0),  degreeToRadian(20.0), degreeToRadian(-2.0),  degreeToRadian(2.0)  ],
+          [ CT_BallAndSocket, "h_Elbow_Right","h_Hand_Right",  "h_Hand_Right"    ]
+        ]
+      );
+
+    GetPhysicsController("LiveController").SetFixedBody("ROOT", true);
+    GetPhysicsController("LiveController").SetFixedBody("h_Hand_Right", true);
+    GetPhysicsController("LiveController").SetFixedBody("h_Hand_Left", true);
+  }
+
+  void EnableDeathPhysics()
+  {
+    // set animator for eye view model only!
+    setSlaveObject(GetAnimator(), GetFromEyeMesh());
+    GetHeadAnimator().EnableControl(false);
+
+    DisablePhysics("LiveController");
+
+    Component Mesh = GetInsideMesh();
+    if (Mesh != null)
+    {
+      Mesh.SetAnimateAlways(true);
+      Mesh.SetAnimationPhase("body_death", 1.0f);
+      Mesh.SetAnimationPhase("head_death", 1.0f);
+      Mesh.SetAnimationPhase("lArm_death", 1.0f);
+      Mesh.SetAnimationPhase("rArm_death", 1.0f);
+      Mesh.SetAnimationPhase("legs_death", 1.0f);
+      Mesh.SetAnimateAlways(false);
+    }
+
+    Component OMesh = GetOutsideMesh();
+    if (OMesh != null)
+    {
+      OMesh.SetAnimateAlways(true);
+      OMesh.SetAnimationPhase("body_death", 1.0f);
+      OMesh.SetAnimationPhase("head_death", 1.0f);
+      OMesh.SetAnimationPhase("lArm_death", 1.0f);
+      OMesh.SetAnimationPhase("rArm_death", 1.0f);
+      OMesh.SetAnimationPhase("legs_death", 1.0f);
+      OMesh.SetAnimateAlways(false);
+    }
+
+    Component RHandLink = GetObject("RHandLink");
+    if (RHandLink != null)
+      setSlaveObject(RHandLink, null);
+
+    Component LHandLink = GetObject("LHandLink");
+    if (LHandLink != null)
+      setSlaveObject(LHandLink, null);
+
+    //$TODO play death animation
+    CUnit::EnablePhysics("DeathController");    
+  }
+
+  void EnableLivePhysics()
+  {    
+    CUnit::EnablePhysics("LiveController");    
+  }
+
+  event void Kill()
+  {    
+    for (int i = 0; i < DeathTextures.size(); i++)
+    {
+      SwitchTexture(GetInsideMesh(), DeathTextures[i][0], DeathTextures[i][1]);
+    }
+
+    EnableDeathPhysics();
+  }
+
+  void InitializeLinkers()
+  {
+    CPassangerUnit::InitializeLinkers();
+    Component HandLink = new #ObjectObjectLink();
+    RegisterObject("RHandLink", HandLink);
+    setSlaveObject(HandLink,  GetInsideMesh().GetJoint("h_Hand_Right"));
+
+    Component LHandLink = new #ObjectObjectLink();
+    RegisterObject("LHandLink", LHandLink);
+    setSlaveObject(LHandLink,  GetInsideMesh().GetJoint("h_Hand_Left"));
+  }
+}
+
+class CGunnerUnit
+  extends CPassangerUnit
+{
+  // gunner state
+  final static int GS_TARGET = 0;//CGunnerAnimatorConfig::STATE_Default;
+  final static int GS_FREE   = 1;//CGunnerAnimatorConfig::STATE_FreeSit;
+
+  int m_State = GS_TARGET;
+
+  Component m_Weapon;
+
+  void Initialize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CPassangerUnit::Initialize(_Mission, _PropMap);
+    if (GetAnimator() != null)
+      setPositionable(GetAnimator(), GetOutsideMesh());
+    // head anims
+    if (m_Seat % 2 == 0)
+    {
+      // left
+      m_HeadLR      = 0.2f;
+      m_HeadUD      = 0.8f;
+    }
+    else
+    {
+      m_HeadLR      = 0.8f;
+      m_HeadUD      = 0.8f;
+    }
+  }
+
+  // ==================================
+  // Services
+  // ==================================
+
+  Component CreateAnimator()
+  {    
+    Component Animator = new #StateAnimator();
+
+    if (m_Seat % 2 == 0)
+      loadFromScript(Animator, "CGunnerAnimator", [CGunnerAnimatorConfig::ANIM_LeftGunner]);
+    else
+      loadFromScript(Animator, "CGunnerAnimator", [CGunnerAnimatorConfig::ANIM_RightGunner]);
+
+    return Animator;
+  }
+
+  Component GetHeadAnimator()
+  {
+    return GetObject("Animator");
+  }
+  
+  void SetState(int _State)
+  {
+    if (m_State == _State)
+      return;
+
+    m_State = _State;
+    GetAnimator().SetState(_State);
+  }
+
+  int GetState()
+  {
+    return m_State;
+  }
+
+  void InitializeWeapon(
+      Component _Weapon
+    )
+  {
+    m_Weapon = _Weapon;
+    if (GetAnimator() != null)
+      GetAnimator().InitializeWeaponJoint(_Weapon);
+  }
+ 
+  Component GetWeapon()
+  {
+    return m_Weapon;
+  }
+
+  void ChooseRandomHeadAction(
+      float _DeltaTime
+    )
+  { 
+    if (m_bHeadAction)
+      return;
+
+    if (rand(0.0, 1.0) <= 0.2 * _DeltaTime)
+    {      
+      if (rand(0.0, 1.0) <= 0.5)
+        SetHeadAction(rand(0.0f, 1.0f), rand(0.0f, 1.0f), rand(0.0f, 3.0f));            
+      else        
+        SetFreeAction();
+    }
+  }
+
+  void SetFreeAction()
+  {
+    if (m_State != GS_FREE)
+    {
+      GetAnimator().SetFreeState(CGunnerAnimatorConfig::STATE_Default);
+      return;
+    }
+
+    m_bHeadAction = true;
+    GetAnimator().SetFreeState(CGunnerAnimatorConfig::STATE_FreeLookOut);
+    sendEvent(4.0, getIdentificator(this), "EndFreeAction", []);
+  }
+
+  event void EndFreeAction()
+  {
+    m_bHeadAction = false;
+    GetAnimator().SetFreeState(CGunnerAnimatorConfig::STATE_Default);
+  }
+
+}

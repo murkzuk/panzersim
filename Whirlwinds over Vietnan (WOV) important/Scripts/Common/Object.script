@@ -1,0 +1,1826 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//
+// CEffectDescr
+//
+
+class CEffectDescr
+{
+  CEffectDescr(
+      int     _EffectID,
+      String  _LogicType
+    )
+  {
+    EffectID  = _EffectID;
+    LogicType = _LogicType;
+  }
+
+  boolean CheckMask(
+      String _Restrict,
+      String _Exclude
+    )
+  {
+    return ("" == _Restrict || LogicType == _Restrict) &&
+           ("" == _Exclude  || LogicType != _Exclude);
+  }
+
+  int     EffectID  = INVALID_EFFECT_ID;
+  String  LogicType = "";
+}
+
+class CObjectItemDescriptor
+{
+  void CObjectItemDescriptor(
+      String    _PhysId,
+      Component _Mesh,
+      Component _Joint,
+      float     _HitPoints,
+      String    _ItemName
+    )
+  {
+    PhysId     = _PhysId;
+    Mesh       = _Mesh;
+    Joint      = _Joint;
+    HitPoints  = _HitPoints;
+    ItemName   = _ItemName;
+  }
+  
+  String    PhysId;
+  Component Mesh;
+  Component Joint;
+  float     HitPoints;
+  String    ItemName;
+}
+
+//
+// CObject
+//
+
+class CObject
+  extends IObject, CEditable, ISerializeable, CBaseUtilities
+{
+  // Label of this object
+  static String Label                      = "";
+
+  // Automatic classificators of this object
+  static Array AutomaticClassificators     = [];
+
+  // ======================================
+  // Default object properties
+  // ======================================
+
+  static float  DefaultHitPoints           = -1.0;
+  static float  DefaultDamagePercent       = 0.5;
+  static String DefaultSurfaceControl      = "None";
+  static float  DefaultPutonWaterStability = 0.0f;
+  static Array  DefaultRoute               = [];
+  static float  DefaultShadowPlaneOffset   = 0.05f;
+
+  static String DefaultAffiliation                = "NEUTRAL";
+  static String DefaultHealthParameter            = "HP_HEALTHY";
+  static int    UnitMenacePower                   = MENACE_UNARMED;  // no menace by default
+
+  static String PrevExplosionID                = "";
+  static String PrevDeathEffect                = "";
+  static String PrevDeathSound                 = "";
+
+  static String m_DamageEffect                 = "";
+
+  final static float  DeathEffectDelay         = 0.0;
+
+  static int CrashedStateChangeDelay           = 0.0;
+
+  static String PostExplosionID                = "";
+  static String PostDeathEffect                = "";
+  static String PostDeathSound                 = "";
+  static Array  LandingJoints                  = ["GroundLevel"];
+
+
+  static Array  m_SyncAnimators;
+
+  final static boolean DefaultShowInCinema     = true;
+  final static boolean DefaultShowInGame       = true;
+ 
+  // ======================================
+  // Object properties
+  // ======================================
+
+  boolean   m_ShowInCinema          = DefaultShowInCinema;
+  boolean   m_ShowInGame            = DefaultShowInGame;
+
+  float     m_MaxHitPoints;
+  boolean   m_IsAlive               = true;
+  boolean   m_IsVisible             = true;
+  boolean   m_IsEnabled             = true;
+  boolean   m_IsDamaged             = false;
+  float     m_DestroySpeed          = 0.0;
+
+  Array     m_Route                 = [];
+  Array     m_ChildMissionObjects   = [];
+
+  Array     m_WeaponList            = [];
+  Array     m_WeaponNames           = [];
+
+  String    m_PointHostID           = "";
+  String    m_ObjectHostID          = "";
+
+  String    m_CurSound              = "";
+  String    m_CurPhrase             = "";
+  Component m_Dialog;
+
+  Component m_DeathAnimator         = null;
+
+  Array     m_EffectsIdList         = [];
+  Array     m_WindEffectList;
+  Array     m_WindEffectList2;
+
+  float     ShadowPlaneOffset       = 0.0f;
+
+  // Physics items
+  Array     m_ItemsList             = [];
+  boolean   m_PlayDestroyAnimAfterFall = false;
+  boolean   m_CanChangeView         = true;
+
+  // ======================================
+  // Contruction and initialization
+  // ======================================
+
+  void CObject()
+  {
+   ShadowPlaneOffset = DefaultShadowPlaneOffset;
+    // Classify object
+    for (int i = 0; i < AutomaticClassificators.size(); i++)
+      addClassificator(user, AutomaticClassificators[i]);
+
+    m_MaxHitPoints = DefaultHitPoints;
+  }
+
+  // ======================================
+  // IObject Interface functions
+  // ======================================
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    // Set unit affiliation
+    String Affiliation = _PropMap.Get("Affiliation", "NEUTRAL");
+    SetAffiliation(Affiliation);
+
+    m_MaxHitPoints = _PropMap.Get("HitPoints", DefaultHitPoints);
+    SetupStateControl(m_MaxHitPoints);
+    SetSurfaceControl(_PropMap.Get("SurfaceControl", DefaultSurfaceControl));
+  }
+
+  void Initialize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+
+    // Set all other properties
+    SetProperties(_PropMap);
+
+    // Initially enable/disable behavior according to mission status
+    EnableBehavior(_Mission.IsBehaviorActive, false);    
+  }
+
+  void Shutdown(
+      Component _Mission
+    )
+  {
+    // $TODO
+  }
+
+  Array GetDefaultProperties()
+  {
+    Array Default = [];
+
+    Default.append([
+        [ "HitPoints",      DefaultHitPoints      ],
+        [ "SurfaceControl", DefaultSurfaceControl ],
+        [ "Affiliation",    DefaultAffiliation ],
+        [ "Route",          DefaultRoute       ],
+        [ "ShadowPlaneOffset",ShadowPlaneOffset]
+      ]);
+
+    return Default;
+  }
+
+  Array GetPropStrings()
+  {
+    return [
+        [ "SurfaceControl", [ "None", "PutonGround", "PutonGroundUpright", "PutonGroundLandingJoints", "PutonWater" ] ]
+      ];
+  }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+    // ручки для теней
+    Component Mesh = GetMeshComponent();
+    if (Mesh != null)
+    {
+      Mesh.SetShadowPlaneOffset(_PropMap.Get("ShadowPlaneOffset", DefaultShadowPlaneOffset));
+    }
+
+    Component StateControl = GetObject("StateControl");
+    if (StateControl != null)
+    {
+      StateControl.SetDamagePercent(_PropMap.Get("DamagePercent", DefaultDamagePercent));
+    }
+
+    // Set health params
+    String HealthParameter = _PropMap.Get("HealthParameter", DefaultHealthParameter);
+    SetHealthParameter(HealthParameter);
+
+    // Set menace power
+    int MenacePower = _PropMap.Get("MenacePower", UnitMenacePower);
+    SetMenacePower(MenacePower);
+
+    // Set unit route
+    m_Route = _PropMap.Get("Route", DefaultRoute);
+
+    // Set weapons to behavior
+    Component Behavior = GetBehavior();
+    if (Behavior != null)
+    {
+      Behavior.SetWeaponList(m_WeaponList);
+      SetBehRadarMask(Behavior, _PropMap);
+
+      // mission tasks
+      String DefaultMissionTask = "";
+      if (_PropMap.Get("LeaderID", "") != "")
+        DefaultMissionTask = "CWingmanTask";
+      DefaultMissionTask = _PropMap.Get("Task", DefaultMissionTask);
+      if (DefaultMissionTask != "")
+        Behavior.SetMissionTask(DefaultMissionTask);
+
+      Component Task = Behavior.GetTaskScriptHost();
+      if (Task != null)
+      {
+        String HomePoint = "";
+        HomePoint = _PropMap.Get("HomePoint", "" );
+        if (HomePoint != "")
+          Task.SetHomePoint(HomePoint);
+
+        String EnemyReactionType = _PropMap.Get("EnemyReactionType", "ERT_DEFENSIVE" );
+        int ERT;
+        if (EnemyReactionType == "ERT_DEFENSIVE" )
+          ERT = ERT_DEFENSIVE;
+        else if (EnemyReactionType == "ERT_AGGRESSIVE" )
+          ERT = ERT_AGGRESSIVE;
+        else if (EnemyReactionType == "ERT_PASSIVE")
+          ERT = ERT_PASSIVE;
+        else
+          ERT = ERT_FRIGID;
+        Task.SetEnemyReactionType(ERT);
+      }
+    }
+
+    m_MaxHitPoints = _PropMap.Get("HitPoints", DefaultHitPoints);
+    SetSurfaceControl(_PropMap.Get("SurfaceControl", DefaultSurfaceControl));
+
+    m_ShowInCinema = _PropMap.Get("ShowInCinema", DefaultShowInCinema);
+    m_ShowInGame   = _PropMap.Get("ShowInGame", DefaultShowInGame);
+    if (!m_ShowInGame)
+      setVisibleState(GetMeshComponent(), false);
+  }
+
+  void Finalize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    // Initialize unit state control
+    FinilizeStateControl(_PropMap);
+
+    Component Behavior = GetBehavior();
+    if (Behavior != null)
+    {
+      if (!Behavior.Init(_Mission.GetMissionRouterZoneMap(),
+                         _Mission.GetMissionTerrain(),
+                         _Mission.GetRouterPrecalculatedGraph()
+                       ))
+        RemoveBehavior();
+    }
+
+  }
+
+  WString GetLabel(
+      Component _Joint
+    )
+  {
+    // $TODO
+    return L"";
+  }
+
+  // ======================================
+  // Mesh functions
+  // ======================================
+
+  void SetupMesh(
+      Component _Mesh
+    )
+  {
+    RegisterObject("Mesh", _Mesh);
+    SetPositionProvider(_Mesh);
+    addClassificator(_Mesh, "MainMesh");
+
+    Component Materials = _Mesh.GetMaterials();
+    if (null != Materials)
+      Materials.LoadPhysicsTable(CSubstances::PhysicsTable);
+  }
+
+  void SetupMesh(
+      Component _Mesh,
+      Array     _Lods
+    )
+  {
+    SetupMesh(_Mesh);
+    _Mesh.SetLods(_Lods);
+  }
+  
+  void SetupCrashMesh(
+      Component _Mesh,
+      Array     _SyncAnimators
+    )
+  {
+    m_SyncAnimators = _SyncAnimators;
+    RegisterObject("CrashMesh", _Mesh);    
+    setVisibleState(_Mesh, false);
+  }
+
+  Component GetBoundingInfo()
+  {
+    return GetObject("Mesh");
+  }
+
+  Component GetMeshComponent()
+  {
+    return GetObject("Mesh");
+  }
+
+  // ======================================
+  // State control methods
+  // ======================================
+
+  void SetupStateControl(
+      float _HitPoints
+    )
+  {
+    m_MaxHitPoints = _HitPoints;
+
+    // Create state control component
+    Component StateControl = new #UnitStateControl();
+
+    // Initialize state control
+    setPositionable(StateControl, this);
+    StateControl.SetEventHandler(this);
+    StateControl.SetGeometry(GetMeshComponent());
+    StateControl.SetHitPoints(_HitPoints);
+    StateControl.SetDestroySpeed(m_DestroySpeed);
+    RegisterObject("StateControl", StateControl);
+  }
+
+  Component GetStateControl()
+  {
+    return GetObject("StateControl");
+  }
+
+  boolean GetImmortalMode()
+  {
+    return GetStateControl().GetImmortalMode();
+  }
+
+  event void SetImmortalMode(
+      boolean _Mode
+    )
+  {
+    GetStateControl().SetImmortalMode(_Mode);
+  }
+
+  void OnLifeStateChanged(
+      boolean _IsAlive
+    )
+  {
+    // check if this is destructible
+    if (-1.0 == m_MaxHitPoints)
+      return;
+
+    if (!_IsAlive)
+      sendEvent(0.0, getIdentificator(this), "DestroyObject", []);
+    else
+      sendEvent(0.0, getIdentificator(this), "RestoreObject", []);
+  }
+
+  event void DestroyObject()
+  {
+    logMessage(getIdentificator(this) + ": DestroyObject");
+
+    // Set dead classificator
+    addClassificator(this, CLASSIFICATOR_DEAD_OBJECT);
+
+    // Create explosion
+    if ("" != PrevExplosionID)
+      (new #ExplosionsArray()).
+        CreateExplosion(PrevExplosionID, getPosition(this), null, getIdentificator(this));
+
+    // Create death effect & sound
+    if ("" != PrevDeathEffect)
+      (new #EffectsArray()).
+        CreateEffect(PrevDeathEffect, getPosition(this), this);
+
+    if ("" != PrevDeathSound)
+      (new #SoundsArray()).
+        CreateSound(PrevDeathSound, getPosition(this));
+
+    // clear events scheduled earlier for this object
+    clearEventsForObject(getIdentificator(this));
+
+    // Send destruction event
+    if (m_CanChangeView)
+      sendEvent(0.0, getIdentificator(GetMission()), "OnObjectDestroyed", [getIdentificator(this)]);
+    sendEvent(0.0, getIdentificator(this), "OnObjectDestroyed", [getIdentificator(this)]);
+
+    // Delay between preveffects and posteffects
+    if (!m_PlayDestroyAnimAfterFall)
+      PlayDestroyAnimation();
+
+    // get beh component
+    Component Behavior = GetBehavior();
+    if (Behavior != null)
+    {
+      // deactivate beh
+      Behavior.ActivateBehavior(false);
+    }
+
+    // Set Destroyed unit state
+    //SetState(STATE_Destroyed, US_Destroyed);
+  }
+
+  event void RestoreObject()
+  {
+    logMessage(getIdentificator(this) + ": RestoreObject");
+
+    // restore classificators
+    removeClassificator(this, CLASSIFICATOR_DEAD_OBJECT);
+
+    // Send restore event
+    sendEvent(0.0, getIdentificator(GetMission()), "OnObjectRestored", [getIdentificator(this)]);
+    sendEvent(0.0, getIdentificator(this), "OnObjectRestored", [getIdentificator(this)]);
+
+    // Set model state
+    SetModelLifeState(true);
+
+    // Set Destroyed unit state
+    //SetState(STATE_Destroyed, US_Normal);
+
+    // restore hitpoints
+    Component StateControl = GetObject("StateControl");
+    StateControl.SetHitPoints(m_MaxHitPoints);
+
+    // get beh component
+    Component Behavior = GetBehavior();
+    if (Behavior != null)
+    {
+      // activate beh
+      Behavior.ActivateBehavior(true);
+    }
+  }
+
+  event void SetModelLifeState(
+      boolean   _State
+    )
+  {
+    if (_State)
+      removeClassificator(user, CLASSIFICATOR_DO_NOT_COLLISION_CHECK);
+    else
+      addClassificator(user, CLASSIFICATOR_DO_NOT_COLLISION_CHECK);
+
+    m_IsAlive = _State;
+
+    sendEvent(0.0, getIdentificator(this), "SetModelViewState", [_State]);
+  }
+
+  void PlayDestroyAnimation()
+  {
+    Component CrashAnimator = GetCrashAnimator();
+    Component Mesh = GetMeshComponent();
+
+    float Delay = DeathEffectDelay;
+
+    if (CrashAnimator != null)
+    {
+      setVisibleState(Mesh.GetRootJoint(), false);
+      Component CrashJoint = Mesh.GetJoint("crash");
+      if (CrashJoint != null)
+        setVisibleState(CrashJoint, true);
+
+      CrashAnimator.SetEventHandler(this);
+      CrashAnimator.AnimateForward();
+      Delay += CrashAnimator.GetAnimationTime();
+    }
+
+    sendEvent(Delay, getIdentificator(this), "DestroyProcess", []);
+  }
+
+  PlayDamageAnimation()
+  {
+    // Create damage effect
+    if ("" != m_DamageEffect)
+      (new #EffectsArray()).
+        CreateEffect(m_DamageEffect, getPosition(this), this);
+  }
+
+  event void ShowObject(
+      boolean _State
+    )
+  {
+    Component Mesh = GetMeshComponent();
+    if (Mesh == null)
+      return;
+
+    m_IsVisible = _State;
+
+    setVisibleState(Mesh, _State);
+  }
+
+  event void SetModelViewState(
+      boolean _State
+    )
+  {
+    Component Mesh = GetMeshComponent();
+    if (Mesh == null)
+      return;
+
+    Component CrashJoint   = Mesh.GetJoint("crash");
+    Component CrashedJoint = Mesh.GetJoint("crashed");
+
+    Component CrashModel   = GetObject("CrashMesh");
+
+    if (CrashModel != null)
+    {
+      SyncAnimators(CrashModel);
+      OnHideMesh();
+      setPosition(CrashModel, getPosition(user));
+      SetPositionProvider(CrashModel);
+      setVisibleState(CrashModel, !_State);            
+      setVisibleState(GetSlaveObject(), _State);            
+
+      Component FreeFallControl = GetObject("FreeFallControl");
+      if (FreeFallControl != null)
+        setSlaveObject(FreeFallControl, CrashModel); // need geometry
+    }
+
+    if (_State)
+    {
+      setVisibleState(Mesh.GetRootJoint(), _State);
+
+      if (CrashJoint != null)
+        setVisibleState(CrashJoint, !_State);
+      if (CrashedJoint != null)
+        setVisibleState(CrashedJoint, !_State);
+      UpdateVisibleState();
+    }
+    else
+    {
+      setVisibleState(Mesh.GetRootJoint(), _State);
+      if (CrashJoint != null)
+        setVisibleState(CrashJoint, _State);
+      if (CrashedJoint != null)
+        setVisibleState(CrashedJoint, !_State);
+    }    
+  }
+
+  void OnHideMesh()
+  {
+  }
+
+  event void SetCrashed()
+  {
+    if (DeathEffectDelay == 0.0)
+      sendEvent(DeathEffectDelay, getIdentificator(this), "DestroyProcess", []);
+  }
+
+  event void DestroyProcess()
+  {
+    // Create explosion
+    if ("" != PostExplosionID)
+      (new #ExplosionsArray()).
+        CreateExplosion(PostExplosionID, getPosition(this), null, getIdentificator(this));
+
+    // Create death effect & sound
+    if ("" != PostDeathEffect)
+      (new #EffectsArray()).
+        CreateEffect(PostDeathEffect, getPosition(this), this);
+
+    if ("" != PostDeathSound)
+      (new #SoundsArray()).
+        CreateSound(PostDeathSound, getPosition(this));
+
+    // clear events scheduled earlier for this object
+    clearEventsForObject(getIdentificator(this));
+
+    // Send destruction event
+    sendEvent(0.0, getIdentificator(GetMission()), "OnObjectDestroyed", [getIdentificator(this)]);
+    sendEvent(0.0, getIdentificator(this), "OnObjectDestroyed", [getIdentificator(this)]);
+
+    sendEvent(CrashedStateChangeDelay, getIdentificator(this), "SetModelLifeState", [false]);
+  }
+
+  event void UpdateVisibleState()
+  {
+    // Get mesh
+    Component Mesh = GetMeshComponent();
+    if (Mesh == null)
+      return;
+
+    setVisibleState(Mesh, IsVisible());
+    fireEvent(0.0, [], "OnObjectVisibleStateChanged", [getIdentificator(user)]);
+
+  }
+
+  boolean IsVisible()
+  {
+    return m_IsVisible && m_IsEnabled;
+  }
+
+  void SetGroupRenderUsage(
+      Component _Mesh,
+      Array     _Joints,
+      boolean   _Usage
+    )
+  {
+    for (int i = 0; i < _Joints.size(); i++)
+    {
+      _Mesh.EnableJoint(
+          _Joints[i],
+          JOINT_USAGE_RENDER,
+          0,
+          _Usage
+        );
+    }
+  }
+
+  // ======================================
+  // Setup crash animator
+  // ======================================
+
+  void SetupCrashAnimator(
+      Component _Animator
+    )
+  {
+    setSlaveObject(_Animator, GetMeshComponent());
+    RegisterObject("CrashAnimator", _Animator);
+  }
+
+  Component GetCrashAnimator()
+  {
+    Component Animator = GetObject("CrashAnimator");
+    if (Animator == null)
+      return null;
+
+    return Animator;
+  }
+
+  // ======================================
+  // Ground / water controls
+  // ======================================
+
+  void SetSurfaceControl(
+      String _SurfaceControl
+    )
+  {
+   //$TMP
+   // if (getIdentificator(this) != "AmericanSoldierGun_XRay_4_1")
+   // {
+   //   EnableSurfaceControl(false);
+   //   return;
+   // }
+
+    if ("None" == _SurfaceControl)
+    {
+      EnableSurfaceControl(false);
+    }
+    else
+    if ("PutonGround" == _SurfaceControl)
+    {
+      PutonGround();
+      EnableSurfaceControl(true);
+    }
+    else
+    if ("PutonGroundUpright" == _SurfaceControl)
+    {
+      PutonGroundUpright();
+      EnableSurfaceControl(true);
+    }
+    else
+    if ("PutonGroundLandingJoints" == _SurfaceControl)
+    {
+      PutonGround(LandingJoints);
+      EnableSurfaceControl(true);
+    }
+    else
+    if ("PutonWater" == _SurfaceControl)
+    {
+      PutonWater(DefaultPutonWaterStability);
+      EnableSurfaceControl(true);
+    }
+  }
+
+  Component SetupSurfaceControl()
+  {
+    Component SurfaceControl = GetObject("SurfaceControl");
+    if (SurfaceControl != null)
+      return SurfaceControl;
+
+    SurfaceControl = new #SurfaceControl();
+    setSlaveObject(SurfaceControl, GetMeshComponent());
+    RegisterObject("SurfaceControl", SurfaceControl);
+    if (checkMask(GetMeshComponent(), [CLASSIFICATOR_WALK_SURFACE], []))
+      SurfaceControl.SetSurfaceMask([], [getIdentificator(user)]);
+    return SurfaceControl;
+  }
+
+  void RemoveSurfaceControl()
+  {
+    Component SurfaceControl = GetObject("SurfaceControl");
+    if (null != SurfaceControl)
+      UnregisterObject("SurfaceControl");
+  }
+
+  Matrix EnableSurfaceControl(boolean _Enable)
+  {
+    Component SurfaceControl = GetObject("SurfaceControl");
+
+    if (SurfaceControl == null)
+        return;
+
+    SurfaceControl.EnableSurfaceControl(_Enable);
+    return SurfaceControl.GetCorrectedPosition();
+  }
+
+  Component PutonGround()
+  {
+    Component SurfaceControl = SetupSurfaceControl();
+
+    SurfaceControl.SetUprightMode(false);
+    SurfaceControl.SetGroundMode(true);
+    SurfaceControl.SetWaterMode(false);
+    SurfaceControl.SetCheckPointShift(new Vector(0.0, 0.0, 1000.0));
+    SurfaceControl.SetWaveStability(0.0);
+
+    return SurfaceControl;
+  }
+
+  Component PutonGround(
+      Array _LandingJoints
+    )
+  {
+    Component SurfaceControl = PutonGround();
+    SurfaceControl.SetGearJoints(GenerateJointsList(_LandingJoints));
+    return SurfaceControl;
+  }
+
+  Component PutonGroundUpright()
+  {
+    Component SurfaceControl = SetupSurfaceControl();
+
+    SurfaceControl.SetUprightMode(true);
+    SurfaceControl.SetGroundMode(true);
+    SurfaceControl.SetWaterMode(false);
+    SurfaceControl.SetCheckPointShift(new Vector(0.0, 0.0, 1000.0));
+    SurfaceControl.SetWaveStability(0.0);
+
+    return SurfaceControl;
+  }
+
+  Component PutonGroundAndWater(
+      float _Stability
+    )
+  {
+    Component SurfaceControl = SetupSurfaceControl();
+
+    SurfaceControl.SetUprightMode(false);
+    SurfaceControl.SetGroundMode(true);
+    SurfaceControl.SetWaterMode(true);
+    SurfaceControl.SetCheckPointShift(new Vector(0.0, 0.0, 1000.0));
+    SurfaceControl.SetWaveStability(_Stability);
+
+    return SurfaceControl;
+  }
+
+  Component PutonGroundAndWater(
+      float _Stability,
+      Array _GearJoints
+    )
+  {
+    Component SurfaceControl = PutonGroundAndWater(_Stability);
+    SurfaceControl.SetGearJoints(GenerateJointsList(_GearJoints));
+    return SurfaceControl;
+  }
+
+  Component PutonWater(
+      float _Stability
+    )
+  {
+    Component SurfaceControl = SetupSurfaceControl();
+
+    SurfaceControl.SetUprightMode(false);
+    SurfaceControl.SetGroundMode(false);
+    SurfaceControl.SetWaterMode(true);
+    SurfaceControl.SetWaveStability(_Stability);
+    SurfaceControl.SetSurfaceMask([CLASSIFICATOR_TERRAIN], []);
+
+    Component Mesh = GetMeshComponent();
+    Component WaterLine = Mesh.GetJoint("WaterLine");
+    if (WaterLine == null)
+    {
+      logWarning("WaterLine joint not found");
+      WaterLine = Mesh;
+    }
+
+    setPositionable(SurfaceControl, WaterLine);
+
+    return SurfaceControl;
+  }
+
+  // ======================================
+  // Behavior
+  // ======================================
+
+  void SetupBehavior(
+      Component _Behavior
+    )
+  {
+    Component Mesh = GetMeshComponent();
+    if (Mesh == null)
+    {
+      logError("Unable to setup Behavior, no Mesh object");
+      return;
+    }
+
+    if (_Behavior == null)
+    {
+      logError("Unable to setup Behavior, null object");
+      return;
+    }
+
+    setSlaveObject(_Behavior, Mesh);
+    _Behavior.SetSelf(this);
+
+    RegisterObject("Behavior", _Behavior);
+    SetRadarProvider(_Behavior);
+  };
+
+  void RemoveBehavior()
+  {
+    SetRadarProvider(null);
+
+    if (null == GetBehavior())
+      return;
+
+    Component Behavior = UnregisterObject("Behavior");
+    if (Behavior != null)
+      shutdownComponent(Behavior);
+  };
+
+  Array SetBehRadarMask(
+      Component      _Behavior,
+      Component      _PropMap
+    )
+  {
+    Array RadarMask = _PropMap.Get("BehRadarMask", [[], [], [], []]);
+    int MaskSize = RadarMask.size();
+
+    Array EnemyRestrict = [];
+    if (MaskSize > 0)
+    {
+      if (!RadarMask[0].isEmpty())
+        EnemyRestrict = RadarMask[0];
+    }
+
+    Array EnemyExclude = [];
+    if (MaskSize > 1)
+    {
+      if (!RadarMask[1].isEmpty())
+        EnemyExclude = RadarMask[1];
+    }
+
+    Array FriendRestrict = [];
+    if (MaskSize > 2)
+    {
+      if (!RadarMask[2].isEmpty())
+        FriendRestrict = RadarMask[2];
+    }
+
+    Array FriendExclude = [];
+    if (MaskSize > 3)
+    {
+      if (!RadarMask[3].isEmpty())
+        FriendsExclude = RadarMask[3];
+    }
+
+    String Affiliation = GetAffiliation();
+
+    if (EnemyRestrict.isEmpty() && EnemyExclude.isEmpty())
+    {
+      if (Affiliation != "NEUTRAL")
+        EnemyExclude = [ Affiliation, "NEUTRAL" ];  // if non specified use default according to affiliation
+      else
+        EnemyExclude = [ "ENEMY", "FRIEND", "NEUTRAL" ];
+    }
+
+    if (FriendRestrict.isEmpty() && FriendExclude.isEmpty())
+    {
+      FriendRestrict = [ Affiliation ];
+    }
+
+    if (-1 == FriendRestrict.find("MainMesh"))
+      FriendRestrict.add("MainMesh");
+
+    if (-1 == EnemyRestrict.find("MainMesh"))
+      EnemyRestrict.add("MainMesh");
+
+    if (_Behavior != null)
+      _Behavior.SetBehRadarMask(EnemyRestrict, EnemyExclude, FriendRestrict, FriendExclude);
+    else
+      logWarning(getIdentificator(this) + " : empty behavior");
+  }
+
+  void EnableBehavior(
+      boolean _Active,
+      boolean _Init
+    )
+  {
+    // this function only for live objects
+    if (!checkMask(user, [], [CLASSIFICATOR_DEAD_OBJECT]))
+      return;
+
+    // get beh component
+    Component Behavior = GetBehavior();
+    if (Behavior != null)
+    {
+      // deactivate beh
+      Behavior.ActivateBehavior(_Active);
+    }
+
+    // restart if needed
+    if (_Init)
+      Behavior.StartBehavior();
+
+    // enable auto fire
+    for (int i = 0; i < m_WeaponList.size(); i++)
+      if (isFunctionExist(m_WeaponList[i], "EnableAutoFire", 1))
+        m_WeaponList[i].EnableAutoFire(_Fire);
+
+  }
+
+  void SetBehActiveState(
+      boolean _Move,
+      boolean _Fire,
+      boolean _Radar,
+      boolean _Init
+    )
+  {
+    // get beh component
+    Component Behavior = GetBehavior();
+    if (Behavior == null)
+      return;
+
+    // activate or deactivate beh
+    Behavior.ActivateBehavior(_Move, _Fire, _Radar);
+
+    // restart if needed
+    if (_Init)
+      Behavior.StartBehavior();
+
+    // enable auto fire
+    for (int i = 0; i < m_WeaponList.size(); i++)
+      if (isFunctionExist(m_WeaponList[i], "EnableAutoFire", 1))
+        m_WeaponList[i].EnableAutoFire(_Fire);
+  }
+
+  event void ShowCells(
+      int _ShowCellsMode
+    )
+  {
+    Component Behavior = GetBehavior();
+    if (Behavior != null)
+      Behavior.ShowCells(_ShowCellsMode);
+  }
+
+  event void ShowPath(
+      int _ShowPathMode
+    )
+  {
+    Component Behavior = GetBehavior();
+    if (Behavior != null)
+      Behavior.ShowPath(_ShowPathMode);
+  }
+
+  Component GetBehavior()
+  {
+    return GetObject("Behavior");
+  }
+
+  event void ShowKinematicsDebugInfo(
+      boolean _Enable
+    )
+  {
+    Component Behavior = GetBehavior();
+    if (Behavior != null)
+      Behavior.ShowKinematicsDebugInfo(_Enable);
+  }
+
+  // ======================================
+  // Affiliation
+  // ======================================
+
+  void SetAffiliation(
+      String _Affiliation
+    )
+  {
+    int i = 0;
+
+    String OldAffiliation = GetAffiliation();
+    for (i = 0; i < m_WeaponList.size(); i++)
+      m_WeaponList[i].ClearFriendlyGunFireMask(OldAffiliation);
+
+    CBaseUtilities::SetAffiliation(_Affiliation);
+    for (i = 0; i < m_ChildMissionObjects.size(); i++)
+      m_ChildMissionObjects[i].SetAffiliation(_Affiliation);
+
+    for (i = 0; i < m_WeaponList.size(); i++)
+      m_WeaponList[i].InitMasks(_Affiliation);
+  }
+
+  // ======================================
+  // Weapon
+  // ======================================
+
+  Array GetWeaponList()
+  {
+    return m_WeaponList;
+  }
+
+  void SetupWeapon(
+      String    _WeaponID,
+      Component _Weapon,
+      Array     _Slots,
+      Component _Animator
+    )
+  {
+    SetupWeapon(_WeaponID, _Weapon, "", _Slots, _Animator);
+  }
+
+  void SetupWeapon(
+      String    _WeaponID,
+      Component _Weapon,
+      String    _HostJoint,
+      Array     _Slots,
+      Component _Animator
+    )
+  {
+    Component Mesh = GetMeshComponent();
+
+    // Get host joint
+    Component HostJoint = Mesh;
+    if ("" != _HostJoint)
+    {
+      HostJoint = Mesh.GetJoint(_HostJoint);
+      if (HostJoint == null)
+      {
+        logWarning("Weapon host joint " + _HostJoint + " not found");
+        HostJoint = Mesh;
+      }
+    }
+
+    // Setup network
+    _Weapon.SetNetworkId(_WeaponID);
+
+    // init and register weapon
+    _Weapon.AttachToModel(HostJoint, GenerateJointsList(_Slots));
+
+    m_WeaponNames.add(_WeaponID);
+    m_WeaponList.add(_Weapon);
+    RegisterObject(_WeaponID, _Weapon);
+
+    // register weapon animator
+    if (_Animator != null)
+    {
+      setPositionable(_Animator, HostJoint);
+      setPositionable(_Animator, _Weapon);
+      SetupAnimator("Anim" + _WeaponID, _Animator);
+    }
+  }
+
+  // ======================================
+  // Service
+  // ======================================
+
+  Array GenerateJointsList(
+      Array _NamesList
+    )
+  {
+    // init result
+    Array Joints = [];
+
+    // get mesh
+    Component Mesh = GetMeshComponent();
+
+    // check mesh component
+    if (Mesh == null)
+    {
+      logError(getIdentificator(user) + ".GenerateJointsList() : Could not get Mesh object");
+      return Joints;
+    }
+
+    // generate joints list
+    for (int i = 0; i < _NamesList.size(); i++)
+    {
+      Component Joint = Mesh.GetJoint(_NamesList[i]);
+      if (Joint == null)
+      {
+        logError("Invalid joint name " + _NamesList[i] + " in .GenerateJointsList() function call");
+        Joint = Mesh;
+      }
+
+      Joints.add(Joint);
+    }
+
+    return Joints;
+  }
+
+  // ======================================
+  // Animator
+  // ======================================
+
+  Component GetSlaveObject()
+  {
+    if (isFunctionExist(this, "GetGroupObject", 0))
+      return GetGroupObject();
+    return GetMeshComponent();
+  }
+
+  void SetupAnimator(
+      String    _ObjectID,
+      Component _Animator
+    )
+  {
+    if (null != _Animator)
+    {
+      setSlaveObject(_Animator, GetSlaveObject());
+      RegisterObject(_ObjectID, _Animator);
+    }
+  }
+
+  // ======================================
+  // Menace power (how dangerous unit is)
+  // ======================================
+
+  void SetMenacePower(
+      int _MenacePower
+    )
+  {
+    UnitMenacePower = _MenacePower;
+  }
+
+  int GetMenacePower()
+  {
+    return UnitMenacePower;
+  }
+
+  // ==========================================
+  // Interface for Editor
+  // ==========================================
+
+  // Returns current route as array of navpoint objects
+  Array GetNavPath()
+  {
+    Array Result = [];
+
+    Component Game = new #GameController();
+    for (int i = 0; i < m_Route.size(); i++)
+    {
+      if (getVariableType(m_Route[i]) == ST_ARRAY)
+        if (!m_Route[i].isEmpty())
+          Result.add(Game.GetObject(m_Route[i][0]));
+    }
+
+    return Result;
+  }
+
+  // ======================================
+  // Landing controls
+  // ======================================
+
+  Component SetupLandingControl(
+      Array _GearJoints
+    )
+  {
+    // check landing control already registered
+    Component LandingControl = GetLandingControl();
+    if (LandingControl != null)
+      return LandingControl;
+
+    // create and register landing control
+    LandingControl = new #LandingControl();
+    LandingControl.SetGearJoints(GenerateJointsList(_GearJoints));
+    setSlaveObject(LandingControl, GetMeshComponent());
+    RegisterObject("LandingControl", LandingControl);
+
+    return LandingControl;
+  }
+
+  Component GetLandingControl()
+  {
+    return GetObject("LandingControl");
+  }
+
+  // ======================================
+  // Animation controls
+  // ======================================
+
+  void LoadAnimations(
+      String _script
+    )
+  {
+    Component Mesh = GetMeshComponent();
+    if (Mesh != null)
+      Mesh.LoadAnimations(_script);
+    else
+      logError("Cant load animations. The model without mesh");
+  }
+
+  // ======================================
+  // Link
+  // ======================================
+
+  void SetupObjectToObjectLink()
+  {
+    Component ObjectLink = new #ObjectObjectLink();
+    setSlaveObject(ObjectLink, GetObject("Mesh"));
+    RegisterObject("ObjectLink", ObjectLink);
+  }
+
+  void LinkObjectToObject(
+      String _HostObjectID
+    )
+  {
+    m_PointHostID  = _HostObjectID;
+    m_ObjectHostID = _HostObjectID;
+
+    Component ObjectLink = GetObject("ObjectLink");
+    if (ObjectLink == null)
+      return;
+
+    Component HostObject = null;
+    if (_HostObjectID != "")
+      HostObject = (new #GameController()).GetObject(_HostObjectID);
+
+    setPositionable(ObjectLink, HostObject);
+  }
+
+  // ==========================================
+  //  Dialog support
+  // ==========================================
+
+  boolean DoDialog(
+      Component _Dialog,
+      Component _Phrase
+    )
+  {
+    logError("CObject::DoDialog not implemented");
+    _Dialog.OnPhraseCompletion(_Phrase);
+    return true;
+  }
+
+  // ==========================================
+  // Emitter and effect support
+  // ==========================================
+
+  void SetupSoundEmitter(
+      String    _ObjectID,
+      Component _Emitter
+    )
+  {
+    RegisterObject(_ObjectID, _Emitter);
+
+    Component EmitterLink = new #ObjectEmitterLink();
+    setSlaveObject(EmitterLink, _Emitter);
+    setPositionable(EmitterLink, GetMeshComponent());
+    RegisterObject(_ObjectID + "Link", EmitterLink);
+  }
+
+  int AttachEffect(
+      String    _HostJoint,
+      String    _EffectId
+    )
+  {
+    return AttachEffect(_HostJoint, _EffectId, new Vector(0.0), "");
+  }
+
+  int AttachEffect(
+      String    _HostJoint,
+      String    _EffectId,
+      Vector    _Position
+    )
+  {
+    return AttachEffect(_HostJoint, _EffectId, _Position, "");
+  }
+
+  int AttachEffect(
+      String    _HostJoint,
+      String    _EffectId,
+      Vector    _Position,
+      String    _LogicType
+    )
+  {
+    Component Mesh = GetMeshComponent();
+    if (Mesh == null)
+    {
+      logError(getIdentificator(user) + ".AttachEffect() : Could not get Mesh object");
+      return INVALID_EFFECT_ID;
+    }
+
+    // Get host joint
+    Component HostJoint = Mesh.GetJoint(_HostJoint);
+    if (HostJoint == null)
+      HostJoint = Mesh;
+
+    // calculate position
+    Matrix Position = getPosition(HostJoint);
+    Position.origin += _Position;
+
+    Vector BoundingSize = getBoundingSize(Mesh);
+    Position.xvec *= BoundingSize.x;
+    Position.yvec *= BoundingSize.y;
+    Position.zvec *= BoundingSize.z;
+
+    // Create effect and attach it
+    int EffectId = (new #EffectsArray()).CreateEffect(_EffectId, Position, HostJoint);
+
+    // store effect id
+    if (INVALID_EFFECT_ID != EffectId)
+    {
+      Component Descr = new CEffectDescr(EffectId, _LogicType);
+      m_EffectsIdList.add(Descr);
+      if (Descr.CheckMask("WindEffects2", ""))
+      {
+        m_WindEffectList2.add(EffectId);
+        (new #EffectsArray()).SetEffectScale(EffectId, 0.0f);
+      }
+      else
+      if (Descr.CheckMask("WindEffects", ""))
+      {
+        m_WindEffectList.add(EffectId);
+        (new #EffectsArray()).SetEffectScale(EffectId, 0.0f);
+      }
+
+    }
+
+    return EffectId;
+  }
+
+  void EnableAllEffects(
+      boolean _Enable,
+      String  _Restrict,
+      String  _Exclude
+    )
+  {
+    Component EffectsArray = new #EffectsArray();
+    if (EffectsArray == null)
+      return;
+
+    for (int Index = 0; Index < m_EffectsIdList.size(); Index++)
+    {
+      if (!m_EffectsIdList[Index].CheckMask(_Restrict, _Exclude))
+        continue;
+
+      if (m_EffectsIdList[Index].CheckMask("Light", ""))
+        EffectsArray.EnableEffect(m_EffectsIdList[Index].EffectID, m_IsLightEnabled && _Enable);
+      else
+      {
+        EffectsArray.EnableEffect(m_EffectsIdList[Index].EffectID, _Enable);
+      }
+    }
+  }
+
+  void SyncAnimators(
+      Component _MeshDst
+    )
+  {
+    for (int i = 0; i < m_SyncAnimators.size(); i++)
+    {
+      Component Animator = GetObject(m_SyncAnimators[i]);
+      if (Animator == null)
+      {
+        logWarning(getIdentificator(user) + " cant find animator " + m_SyncAnimators[i]);
+        continue;
+      }
+      _MeshDst.SetAnimationPhase(Animator.GetAnimationName(), Animator.GetCurrentPhase());
+    }
+  }
+
+  // ==========================================
+  // Object physics controller
+  // ==========================================
+
+  Component GetPhysicsController(String _Id)
+  {
+    return GetObject(_Id);
+  }
+
+  void SetupPhysicsController(
+      String    _Id,
+      Component _PhysicsController,
+      float     _Mass
+    )
+  {
+    SetupPhysicsController(
+        _Id,
+        GetMeshComponent(),
+        _PhysicsController,
+        _Mass
+      );
+  }
+
+  void SetupPhysicsController(
+      String    _Id,
+      Component _Mesh,
+      Component _PhysicsController,
+      float     _Mass
+    )
+  {
+    if (null == _Mesh)
+    {
+      logMessage("Mesh not found in SetupPhysicsController function call");
+      return;
+    }
+
+    // Initialize controller
+    _PhysicsController.SetEventHandler(this);
+    _PhysicsController.SetMass(_Mass);
+    setSlaveObject(_PhysicsController, _Mesh);
+
+    // Compute volume of object
+    Vector Sizes = getBoundingSize(_Mesh);
+    _PhysicsController.SetVolume(Sizes.x * Sizes.y * Sizes.z);
+
+    // Register object physics controller
+    RegisterObject(_Id, _PhysicsController);
+
+    // Enable controller by default
+    _PhysicsController.EnableControl(true);
+  }
+
+  void CreateDestructibleRoot(String _Id)
+  {
+    CreateDestructibleRoot(
+        _Id,
+        GetMeshComponent()
+      );
+  }
+
+  void CreateDestructibleRoot(
+      String    _Id,
+      Component _Mesh
+    )
+  {
+    Component StateControl = GetObject("StateControl");
+    if (StateControl == null)
+      return;
+
+    if (_Mesh == null)
+    {
+      logError("Unable to find mesh in CreateDestructibleRoot function call");
+      return;
+    }
+
+    Component Body = _Mesh.GetRootJoint();
+    if (Body == null)
+    {
+      logError("Unable to find root joint in CreateDestructibleRoot function call");
+      return;
+    }
+
+    // Register joint in state control
+    m_ItemsList.add(new CObjectItemDescriptor(
+        _Id, _Mesh, Body, 100.0, "Mesh"
+      ));
+    //StateControl.CreateUnitItem(Body, 100.0);
+
+    // Get physics controller
+    Component PhysicsController = GetObject(_Id);
+    if (null != PhysicsController)
+    {
+      // Initialize physics controller
+      Array Shapes = _Mesh.GetCollisionShapes(Body, true);
+      PhysicsController.CreateRigidBody("Mesh", _Mesh, Shapes);
+      // Append classificator for physics controllable object
+      addClassificator(user, CLASSIFICATOR_PHYSICS_CONTROLLABLE);
+    }
+  }
+
+  void CreateDestructibleItem(
+      String    _Id,
+      Component _Mesh,
+      String    _JointName,
+      float     _HitPoints
+    )
+  {
+    Component StateControl = GetObject("StateControl");
+    if (StateControl == null)
+      return;
+
+    Component Body = _Mesh.GetJoint(_JointName);
+    if (Body == null)
+    {
+      logError("Unable to find joint " + _JointName + " in CreateDestructibleItem function call");
+      return;
+    }
+
+    // Register joint in state control
+    m_ItemsList.add(new CObjectItemDescriptor(
+        _Id, _Mesh, Body, _HitPoints, _JointName
+      ));
+    //StateControl.CreateUnitItem(Body, _HitPoints);
+
+    // Get physics controller
+    Component PhysicsController = GetObject(_Id);
+    if (null != PhysicsController)
+    {
+      // Initialize physics controller
+      Array Shapes = _Mesh.GetCollisionShapes(Body, false);
+
+      if (Body != _Mesh.GetRootJoint())
+        PhysicsController.CreateRigidBody(_JointName, Body, Shapes);
+      else
+        PhysicsController.CreateRigidBody(_JointName, _Mesh, Shapes);
+
+      // Append classificator for physics controllable object
+      addClassificator(user, CLASSIFICATOR_PHYSICS_CONTROLLABLE);
+    }
+  }
+
+  void SetupDestructibles(
+      String    _Id,
+      Component _Mesh,
+      Array     _JointPairs
+    )
+  {
+    Component PhysicsController = GetPhysicsController(_Id);
+    if (null == PhysicsController)
+    {
+      logError("SetupDestructibles: setup physics controller first");
+      return;
+    }
+
+    // Fill joints set
+    Collection Joints;
+    for (int iPair = 0; iPair < _JointPairs.size(); iPair++)
+    {
+      Joints.insert(_JointPairs[iPair][1]);
+      Joints.insert(_JointPairs[iPair][2]);
+    }
+
+    // Unlink joints
+    Joints.gotoBegin();
+    while (!Joints.isAtEnd())
+    {
+      String Joint = Joints.getValue();
+      _Mesh.UnlinkJoint(_Mesh.GetJoint(Joint));
+      Joints.gotoNext();
+    }
+
+    // Create bodies
+    Joints.gotoBegin();
+    while (!Joints.isAtEnd())
+    {
+      String Joint = Joints.getValue();
+      CreateDestructibleItem(_Id, _Mesh, Joint, 10.0);
+      Joints.gotoNext();
+    }
+
+    // Link joints
+    Joints.gotoBegin();
+    while (!Joints.isAtEnd())
+    {
+      String Joint = Joints.getValue();
+      _Mesh.LinkJoint(_Mesh.GetJoint(Joint));
+      Joints.gotoNext();
+    }
+
+    // Setup joint connections
+    for (int iPair = 0; iPair < _JointPairs.size(); iPair++)
+    {
+      Array JointDescriptor;
+
+      // Check joint type
+      int JointType = _JointPairs[iPair][0];
+      if (JointType == CT_BallAndSocket)
+      {
+        // Read origin and y-axis
+        Component LinkJoint = _Mesh.GetJoint(_JointPairs[iPair][3]);
+        if (LinkJoint == null)
+        {
+          logWarning("SetupDestructibles: cant find link joint " + _JointPairs[iPair][3]);
+          continue;
+        }
+
+        // Get position matrix
+        Matrix positionMtx = getPosition(LinkJoint);
+
+        JointDescriptor = new Array([
+            CT_BallAndSocket,
+            _JointPairs[iPair][1],      // First body name
+            _JointPairs[iPair][2],      // Second body name
+            positionMtx.origin          // Anchor position
+          ]);
+      }
+      else if (JointType == CT_Hinge)
+      {
+        // Read origin and y-axis
+        Component LinkJoint = _Mesh.GetJoint(_JointPairs[iPair][3]);
+        if (LinkJoint == null)
+        {
+          logWarning("SetupDestructibles: cant find link joint " + _JointPairs[iPair][3]);
+          continue;
+        }
+
+        // Get position matrix
+        Matrix positionMtx = getPosition(LinkJoint);
+
+        // Get rotation axis
+        Vector axis = positionMtx.xvec;
+        if (_JointPairs[iPair][4] == 1)
+          axis = positionMtx.yvec;
+        else if (_JointPairs[iPair][4] == 2)
+          axis = positionMtx.zvec;
+
+        JointDescriptor = new Array([
+            CT_Hinge,
+            _JointPairs[iPair][1],      // First body name
+            _JointPairs[iPair][2],      // Second body name
+            positionMtx.origin,         // Anchor position
+            axis,                       // Axis direction
+            _JointPairs[iPair][5],      // Min angle
+            _JointPairs[iPair][6]       // Max angle
+          ]);
+      }
+      else if (JointType == CT_Universal)
+      {
+        // Read origin and y-axis
+        Component LinkJoint = _Mesh.GetJoint(_JointPairs[iPair][3]);
+        if (LinkJoint == null)
+        {
+          logWarning("SetupDestructibles: cant find link joint " + _JointPairs[iPair][3]);
+          continue;
+        }
+
+        // Get position matrix
+        Matrix positionMtx = getPosition(LinkJoint);
+
+        // Get first rotation axis
+        Vector axis1 = positionMtx.xvec;
+        if (_JointPairs[iPair][4] == 1)
+          axis1 = positionMtx.yvec;
+        else if (_JointPairs[iPair][4] == 2)
+          axis1 = positionMtx.zvec;
+
+        // Get second rotation axis
+        Vector axis2 = positionMtx.xvec;
+        if (_JointPairs[iPair][5] == 1)
+          axis2 = positionMtx.yvec;
+        else if (_JointPairs[iPair][5] == 2)
+          axis2 = positionMtx.zvec;
+
+        JointDescriptor = new Array([
+            CT_Universal,
+            _JointPairs[iPair][1],      // First body name
+            _JointPairs[iPair][2],      // Second body name
+            positionMtx.origin,         // Anchor position
+            axis1,                      // First axis direction
+            axis2,                      // Second axis direction
+            _JointPairs[iPair][6],      // Min angle
+            _JointPairs[iPair][7],      // Max angle
+            _JointPairs[iPair][8],      // Min angle
+            _JointPairs[iPair][9]       // Max angle
+        ]);
+      }
+
+      // Create joint
+      PhysicsController.CreateJoint(JointDescriptor);
+    }
+  }
+
+  void EnablePhysics(String _Id)
+  {
+    Component PhysicsController = GetPhysicsController(_Id);
+    if (PhysicsController == null)
+      return;
+
+    for (int i = 0; i < m_ItemsList.size(); i++)
+    {
+      // Unlink item from base model
+      if (_Id == m_ItemsList[i].PhysId)
+      	m_ItemsList[i].Mesh.UnlinkJoint(m_ItemsList[i].Joint);
+    }
+
+    PhysicsController.EnableControl(true);
+    PhysicsController.Activate(true);
+  }
+
+  void DisablePhysics(String _Id)
+  {
+    Component PhysicsController = GetPhysicsController(_Id);
+    if (PhysicsController == null)
+      return;
+
+    for (int i = 0; i < m_ItemsList.size(); i++)
+    {
+      // link item to base model
+      if (_Id == m_ItemsList[i].PhysId)
+      	m_ItemsList[i].Mesh.LinkJoint(m_ItemsList[i].Joint);
+    }
+
+    PhysicsController.EnableControl(false);
+  }
+
+  void OnPhysicsEnabled(
+      boolean _Enable
+    )
+  {
+  }
+
+  void SwitchTexture(
+      Component _Mesh,
+      String    _MaterialID,
+      String    _TrgTexture
+    )
+  {
+    Component MaterialManager = _Mesh.GetMaterials();
+    if (null == MaterialManager)
+      return;
+
+    Array Materials = MaterialManager.Materials;
+
+    for (int i = 0; i < Materials.size(); i++)
+      if (Materials[i].MaterialID == _MaterialID)
+      {
+        //logMessage("switch " + _SrcTexture + " to " + _TrgTexture);
+        MaterialManager.SetMainTexture(Materials[i].MaterialID, MaterialManager.LoadTexture(_TrgTexture));
+        break;
+      }
+  }
+
+  Component PreLoadTexture(
+      Component _Mesh,
+      String    _TrgTexture
+    )
+  {
+    Component MaterialManager = _Mesh.GetMaterials();
+    if (null == MaterialManager)
+      return null;
+
+    return MaterialManager.LoadTexture(_TrgTexture);
+  }
+
+  event void OnCinemaStart(
+      String _CinemaID
+    )
+  {
+    if (!m_ShowInCinema)
+    {
+      setVisibleState(GetMeshComponent(), false);
+    }
+  }
+
+  event void OnCinemaStop()
+  {
+    if (!m_ShowInCinema)
+    {
+      setVisibleState(GetMeshComponent(), m_IsVisible && m_ShowInGame);
+    }
+  }
+
+  void OnMoveOrder()
+  {
+  }
+
+  void OnMoveOrderEnd()
+  {   
+  }
+}
+

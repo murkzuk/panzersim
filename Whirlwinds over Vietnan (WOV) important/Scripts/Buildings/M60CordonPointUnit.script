@@ -1,0 +1,105 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+class CM60CordonPointExplosion
+  extends CBuildingExplosion
+
+{
+  float  Damage   = 10.0;
+  float  Radius   = 5.0;
+  String    SoundId  = "M60CordonPointExplosionSound";
+}
+
+
+class CCordonPointGunBulletExplosion
+  extends CMachineGunBulletExplosion
+{
+  float  Damage   = 5.0;
+}
+
+class CCordonPointGunBulletControl
+  extends CMachineGunBulletControl
+{
+  String    ExplosionId  = "CordonPointGunBulletExplosion";
+  Component BulletRender = new #StaticEffect<CHeavyGunBulletEffect>();
+}
+
+class CCordonPointGun
+  extends CMachineGun
+{
+  String BulletPatternId = "CordonPointGunBullet";
+
+  Component BurstFireSound  = new #Emitter<CM60GunFireSound>();
+
+  // *** Gun parameters for behavior
+  int  FirePeriod        = 110; // ms
+  int  FirePeriodRandAdd = 30;  // ms
+
+  boolean BurstFire      = true;
+  int  BurstTime         = 2000; // ms
+  int  BurstTimeRandAdd  = 0;    // ms
+
+  int  BurstDelay        = 3000; // ms
+  int  BurstDelayRandAdd = 2000; // ms
+  // gun specific fire mask with priorities
+  Array GunSpecificFireMask = [
+                                [["HUMAN"],[]],  // high priority mask
+                                [["AIR"],  []],  // low priority mask
+                                [[],       []]   // low priority mask: RestrictTo, Exclude
+                              ];
+}
+
+class CM60CordonPointTargetingAnimator
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret_a";
+  String VerAnimName    = "gun_a";
+
+  float  LeftEndAngle   = -180.0;
+  float  RightEndAngle  =  180.0;
+  float  TopEndAngle    = -5.0;
+  float  BottomEndAngle =  60.0;
+}
+
+class CM60CordonPointUnit
+  extends CGroundBuilding
+{
+
+  final static float DefaultHitPoints = CHitPoints::M60CordonPointUnitHitPoints;
+
+  static String PrevExplosionID = "M60CordonPointExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CM60CordonPointUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_stat_M60CordonPointModel>(), [300, 150, 5]);
+
+    SetupWeapon("Weapon", new #Weapon<CCordonPointGun>(),
+      ["Fire_A"],
+      new #TargetingAnimator<CM60CordonPointTargetingAnimator>());
+
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CGroundBuilding::Construct(_Mission, _PropMap);
+
+    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 0.00f);
+  }
+}

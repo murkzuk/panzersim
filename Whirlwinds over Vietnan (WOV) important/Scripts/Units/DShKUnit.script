@@ -1,0 +1,115 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CDShKExplosion
+  extends CUnitExplosion
+{
+  float  Damage   = 50.0;
+  float  Radius   = 2.0;
+  String SoundId  = "DShKExplosionSound";
+}
+
+class CDShKGunBulletExplosion
+  extends CLightGunBulletExplosion
+{
+  float  Damage = 10.0;
+}
+
+class CDShKGunBulletControl
+  extends CLightGunBulletControl
+{
+  String    ExplosionId  = "DShKGunBulletExplosion";
+  Component BulletRender = new #StaticEffect<CLightGunBulletEffect>();
+}
+
+class CDShKGun
+  extends CLightGun
+{
+  float  InitBulletSpeed = 840.0;
+  float  FireDeviation   = 1.5;
+  String BulletPatternId = "DShKGunBullet";
+
+  // *** Gun parameters for behavior
+  int  FirePeriod        = 200;  // ms
+  int  FirePeriodRandAdd = 50;   // ms
+
+  float MinDistance      = 2;
+  float MaxDistance      = 350;
+
+  boolean BurstFire      = true;
+  int  BurstTime         = 2000; // ms
+  int  BurstTimeRandAdd  = 0;    // ms
+
+  int  BurstDelay        = 3000; // ms
+  int  BurstDelayRandAdd = 1000; // ms
+
+  final static Array GunSpecificFireMask = [
+                                [["AIR"],[]], // high priority mask: RestrictTo, Exclude
+                                [[],[]]  // low priority mask
+                              ];
+}
+
+// Targeting animator
+class CDshkTargetingAnimator
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret_a";
+  String VerAnimName    = "gun_a";
+
+  float  LeftEndAngle   = -180.0;
+  float  RightEndAngle  =  180.0;
+  float  TopEndAngle    =  0.0;
+  float  BottomEndAngle =  63.0;
+}
+
+// Behavior
+
+class CDshkBehavior extends CBaseBehavior
+{
+  boolean  CanMove   = false;
+  boolean  HasRouter = false;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 1000; // m
+  float  MinRadarDistance = 5;    // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+}
+
+class CDShKUnit
+  extends CGroundBuilding, CTargetableObject
+{
+  final static WString CockpitTargetPointer        = getLocalized("Units", "str_DshkPointer");
+  final static float   DefaultHitPoints            = CHitPoints::DShKUnitHitPoints;
+  final static int     Targeting_MapUIElementIndex = 4;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+  static String        PrevExplosionID             = "DShKExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CDShKUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_stat_DShKModel>(), [200, 150, 100, 80, 4]);
+
+    SetupWeapon("Weapon", new #Weapon<CDShKGun>(),
+      ["Fire_A"],
+      new #TargetingAnimator<CDshkTargetingAnimator>());
+
+    PutonGround();
+    SetupBehavior( new #VehicleBehavior<CDshkBehavior>());
+  }
+}

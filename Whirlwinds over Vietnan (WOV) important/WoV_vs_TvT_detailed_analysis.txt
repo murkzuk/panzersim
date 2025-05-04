@@ -1,0 +1,93 @@
+Whirlwinds Over Vietnam (WoV) vs. T34 vs Tiger (TvT): Engine Feature Comparison & Terrain Rendering Study
+
+1. Introduction
+This document is a technical deep-dive comparing Whirlwinds over Vietnam and its successor T34 vs Tiger. Both share the same custom-built game engine by G5 Software, but substantial differences in rendering systems, terrain quality, water, and forest handling reveal two distinct stages of engine use and optimization. The aim is to extract best practices from WoV to inform TvT modding and highlight where WoV excels visually and technically.
+
+2. Terrain Rendering Differences
+
+Microtexture Resolution and Application
+Whirlwinds over Vietnam uses higher-resolution microtextures applied more frequently:
+
+Setting                    | WoV Value | TvT Value
+---------------------------|-----------|-----------
+CloseMicroTextureScale     | 0.0625    | 0.5
+NearMicroTextureScale      | 1.0       | 2.0
+FarMicroTextureScale       | 16.0      | 32.0
+
+These smaller scale values in WoV result in finer texture detail, particularly at close range, with textures tiled more densely, producing higher visual fidelity.
+
+Microtexture Fade Distances
+WoV's fade distances are larger, producing smoother LOD transitions:
+
+Setting             | WoV Value | TvT Value
+--------------------|-----------|----------
+MicroTexNearMin     | 100.0     | 25.0
+MicroTexNearMax     | 250.0     | 75.0
+MicroTexFarMin      | 300.0     | 100.0
+MicroTexFarMax      | 800.0     | 250.0
+
+Smaller fade ranges in TvT lead to harsher texture transitions, while WoV avoids visible "texture popping."
+
+Noise Texture Settings
+- WoV uses fewer noise points but with a higher amplitude.
+- TvT uses more points with lower amplitude, resulting in subtler terrain noise.
+
+3. Water Rendering System
+
+WoV's water system is superior in appearance due to higher-resolution water textures and more natural animation. In contrast, TvT uses a much larger water texture scale, resulting in lower detail.
+
+Key Parameters Unique to WoV or Differing:
+- WaterMicroTexScale
+- WaterPenaTexScale
+- ClipPlaneShift
+- AnimationSpeed
+
+These impact how reflections, movement, and the blending of the water's edge are handled.
+
+Advanced Water Settings in WoV:
+- WaterMirrorDetail
+- WaterMirrorTexSize
+- WaterMirrorMasks
+- LargeWavePeriod, LargeWaveWidth, LargeWaveHeight
+- WavesBumpScale, ReflectDistortion
+- WaterFresnelPower, WaterColor, WaterBorderColor
+
+This results in more dynamic, layered water with proper reflection masking, dynamic bump mapping, and fresnel edge lighting—all missing or simplified in TvT.
+
+4. Forest System Comparison
+
+WoV’s tree rendering is cleaner, with better distance blending. The forest layering in WoV uses:
+- Multiple LODs for trees and underbrush.
+- Fade distances tuned for smoother transitions (StartFadeDistances, MaxFadeDistances).
+- ForestAlphaScale, ForestShadowAlphaScale, FakeForestBeginFadeDist.
+
+TvT introduced RegisterVerticalForest() and additional vertical element settings (VertForestDistMin/Max, VertForestAngleMin/Max) but lacked WoV's polish and density feel.
+
+5. Atmospheric Rendering
+
+WoV includes superior fog blending and sky atmosphere, affecting the entire tone of the mission scene. This includes:
+- More advanced fog distance/fade blending in Atmosphere.script.
+- Better volumetric lighting.
+- Richer sky dome color transitions.
+
+6. Visual Summary
+
+Feature Area         | WoV                         | TvT
+----------------------|-------------------------------|--------------------------
+Terrain Detail       | Higher-res microtextures       | Lower-res, abrupt transitions
+Water Quality        | Dynamic reflections, waves     | Blurred, low-res water
+Tree Rendering       | Richer fade and layering       | Functional but flat
+Fog & Atmosphere     | Cinematic and moody            | Serviceable, flatter
+Engine Optimizations | Prioritized fidelity           | Prioritized performance
+
+7. Conclusion
+
+Whirlwinds over Vietnam demonstrated a more polished version of the same engine used in T34 vs Tiger, especially regarding terrain textures, forest rendering, and atmospheric design. The downgrade in TvT appears motivated by performance optimizations and the addition of tank-specific logic and wider terrain rendering—but came at the cost of visual fidelity.
+
+Modders can reintroduce WoV-style polish into TvT by:
+- Adjusting terrain and microtexture scales in BaseTerrain.script.
+- Replacing water settings with WoV’s mirror and wave variables.
+- Porting or replicating WoV’s forest LOD logic and fade settings.
+- Using WoV’s Atmosphere.script setup for improved fog, light, and mood.
+
+This knowledge enables a hybridized approach: TvT's mechanics, WoV's visuals.

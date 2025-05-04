@@ -1,0 +1,1756 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CC1M2Mission extends CSPMission
+{
+
+  static Array  m_MissionObjectives = [
+      [MOTID_Primary, CC1M2Mission_Strings::str_Objective01, MOSID_InProgress, true],
+      [MOTID_Primary, CC1M2Mission_Strings::str_Objective02, MOSID_InProgress, false],
+      [MOTID_Secondary, CC1M2Mission_Strings::str_Objective03, MOSID_InProgress, true]
+    ];
+
+  //
+  // Contruction and initialization
+  //
+    String  m_LocalTime       = "14:20:00";
+    String m_TerrainMapTextureName = "Textures/C1M2_Map.tex";
+
+    Array m_NavpointsForPlayerMap = [
+      // Part1
+      [
+        ["NavPoint_Plei_Me_Base", "NavPoint_XRay", "NavPoint_DucCo_Camp", "NavPoint_LZ_Falcon"],
+        CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+        new Color(1.0, 1.0, 0.0)   // NavColor
+      ],
+
+      [
+        ["NavPoint_LZ_Victor", "NavPoint_LZ_Tango", "NavPoint_LZ_Yankee"],
+        CBaseCockpitTerrainMap::NAV_RENDER_NotRenderTexture,  // flags
+        new Color(1.0, 1.0, 0.0)   // NavColor
+      ],
+
+      [
+        ["NavPoint_ChuPong"],
+        CBaseCockpitTerrainMap::NAV_RENDER_NotRenderTexture,  // flags
+        new Color(0.0, 0.0, 0.0)   // NavColor
+      ],
+
+      [
+        ["NavPoint_MainPlayerUnitLandingBase", "NavPoint_WayMainPlayerUnit_1", "NavPoint_WayMainPlayerUnit_2", "NavPoint_WayMainPlayerUnit_3", "NavPoint_Landing_Plei_Me_MainPlayerUnit"],
+        CBaseCockpitTerrainMap::NAV_RENDER_ShowDirectionLine,  // flags
+        new Color(1.0, 1.0, 0.0)  // NavColor
+      ],
+
+      [
+        ["NavPoint_Landing_Plei_Me_MainPlayerUnit", "NavPoint_WayMainPlayerUnit_4", "NavPoint_WayMainPlayerUnit_5", "NavPoint_WayMainPlayerUnit_6", "NavPoint_MainPlayerUnitLandingBase"],
+        CBaseCockpitTerrainMap::NAV_RENDER_ShowDirectionLine | CBaseCockpitTerrainMap::NAV_RENDER_NotRenderFirstPoint | CBaseCockpitTerrainMap::NAV_RENDER_NotRenderLastPoint,  // flags
+        new Color(0.0, 0.0, 1.0)  // NavColor
+      ],
+
+      [
+        ["NavPoint_MainPlayerUnit_Attack_1", "NavPoint_MainPlayerUnit_Attack_2", "NavPoint_MainPlayerUnit_OutputAttack_1", "NavPoint_MainPlayerUnit_OutputAttack_2"],
+        CBaseCockpitTerrainMap::NAV_RENDER_ShowDirectionLine,  // flags
+        new Color(1.0, 0.0, 0.0)  // NavColor
+      ]
+    ];
+
+    float  CockpitMapMinRange  = 3500.0;
+    float  CockpitMapMaxRange  = 30000.0;
+    int    CockpitMapZoomSteps = 10;
+    Vector MarksInitPoint      = new Vector(10000.0, 10000.0, 0.0);
+    float  CockpitMapNavNameMaxRange  = 20000.0;
+
+    Array  CockpitMapAccessBox  = [ new Vector(15000.0, 17500.0, 0.0), new Vector(50000.0, 52500.0, 0.0)];
+
+
+  int     m_EnemyGroundKilled = 0;      // Counter for Enemy Ground kills
+  int     m_EnemyNavalKilled  = 0;      // Counter for Enemy Naval kills
+  int     m_EnemyAirKilled    = 0;      // Counter for Enemy Air kills
+
+  boolean TalkPlayerWarning5000 = false;
+  boolean CoPilotDead = false;
+
+  boolean m_PlayerTakeOff = false;       // Вертолёт Player`а взлетел
+  boolean m_PlayerUnload = false;        // Вертолёт Player`а разгружен
+  boolean m_UnderPlaceFire = false;       // Вертолёт Player`а или Wingman`а над дракой за mortar
+  boolean m_WorkEnginePlayer = false;  // работает ли двигатель игрока
+  boolean m_StartEnginePlayer = false;  // запускался ли двигатель хоть раз
+  boolean isDebug = true;
+
+  boolean m_PlayerOnWay = true;       // MainPlayerUnit в NavPoint  NavPoint_PlayerPosition
+  float m_DistanceMPU_WG = 5000.0;   // дистанция между MainPlayerUnit и WingmanGroup ... для диалога
+  float m_TimeOutPoint = 60.0;       // время котрой игрок может находиться вне точки  NavPoint_PlayerPosition
+
+  boolean SkyRiderDetect = false;
+
+  Component m_Watcher1;
+  Component m_WatcherForward;
+  Component m_WatcherBack;
+  Component m_WingmanGuide;
+
+  boolean m_PlayerFly = false;
+
+  boolean LoadToTransport = false;
+
+
+  boolean StartWingman = false;   // старт wingman 240 секунд по default`у
+
+  final static String m_HelicopterUnload;   // Транспортный вертолёт разгружен
+
+  final static String CLASSIFICATOR_OCCUPIED = "PointOccupied";
+
+  float m_MaxDistance_LZ_Falcon = 1000;  // m. расстояние от вертолёта игрока до LZ Falcon
+  float m_MaxDistance_XRay      = 5000;  // m. расстояние от вертолёта игрока до XRay
+
+  String WingmanGroupLand  = "WINGMAN_GROUP_LAND";  // группа занята посадкой и не учавствует в PositionWatcher
+  boolean WingmanGroupRoost = false;    // отдавался ли приказ на посадку
+
+
+  String WingmanAttackMortar      = "WINGMAN_ATTACK_MORTAR";
+  String WingmanAttackMortarDone  = "WINGMAN_ATTACK_DONE";
+  String WingmanGuide             = "WINGMAN_GUIDE";
+  String WingmanNotGuide          = "WINGMAN_NOT_GUIDE";
+
+  String PlayerForward            = "PLAYER_FORWARD";
+  String PlayerBack               = "PLAYER_BACK";
+  String PlayerAttack             = "PLAYER_ATTACK";
+
+  String PlayerOnBase             = "PLAYER_ON_BASE";
+  String PlayerLanding            = "PLAYER_LANDING";
+  String PlayerWasLand            = "PLAYER_WAS_LAND";
+  String PlayerTakeOff            = "PLAYER_TAKEOFF";
+
+  String PlayerInPointLandXRay        = "PLAYER_IN_POINT_LAND_XRAY";
+  String PlayerInPointLandBase        = "PLAYER_IN_POINT_LAND_BASE";
+  String PlayerRunFight               = "PLAYER_RUN_FIGHT";
+  String PlayerSeeBomben              = "PLAYER_SEE_BOMBEN";
+  String PlayerWasSpin2               = "PLAYER_WAS_POINT_SPIN2";
+
+  String PlayerDamaged                = "PLAYER_DAMAGED";
+
+  String PlayerWasAttackMortar    = "PLAYER_WAS_ATTACK_MORTAR";
+
+  String PlayerSpin                   = "PLAYER_SPIN";
+  String PlayerWasSpin            = "PLAYER_WAS_SPIN";
+
+  Component Player;
+
+  Array  WayPointPlayer1 = new Array();
+  Array  WayPointPlayer2 = new Array();
+  Array  WayPointPlayerAttack = new Array();
+  Array  WayPointPlayerSpin = new Array();
+
+
+  // дистанция между mortar на XRay и MainPlayerUnit wingman пристегивается/отстегивается...
+  // в зависимости от расстояния до MainPlayerUnit`а
+  float MaxDist = 500.0;
+
+
+  // Constant`s for test`s ... or no ?
+  boolean m_fireFalcon      = true;
+  boolean m_fireXRay        = true;
+  boolean m_VietnameseFire  = true;
+
+  final static Array RouterWorkingZones = [
+    [40000.0 , 40000.0, 60000.0, 60000.0]
+    ];
+
+
+  //Array for fake howitzerexplosions
+  Array m_TargetHowitzerNavPoint1_1 = ["NavPoint_XRay_Fire_1_1A", "NavPoint_XRay_Fire_1_2A", "NavPoint_XRay_Fire_1_3A", "NavPoint_XRay_Fire_1_4A", "NavPoint_XRay_Fire_1_5A", "NavPoint_XRay_Fire_1_6A"];
+  Array m_TargetHowitzerNavPoint2_1 = ["NavPoint_XRay_Fire_1_1B", "NavPoint_XRay_Fire_1_2B", "NavPoint_XRay_Fire_1_3B", "NavPoint_XRay_Fire_1_4B", "NavPoint_XRay_Fire_1_5B", "NavPoint_XRay_Fire_1_6B"];
+  Array m_TargetHowitzerNavPoint3_1 = ["NavPoint_XRay_Fire_1_1C", "NavPoint_XRay_Fire_1_2C", "NavPoint_XRay_Fire_1_3C", "NavPoint_XRay_Fire_1_4C", "NavPoint_XRay_Fire_1_5C", "NavPoint_XRay_Fire_1_6C"];
+
+  Array m_TargetHowitzerNavPoint1_2 = ["NavPoint_XRay_Fire_2_1A", "NavPoint_XRay_Fire_2_2A", "NavPoint_XRay_Fire_2_3A", "NavPoint_XRay_Fire_2_4A", "NavPoint_XRay_Fire_2_5A", "NavPoint_XRay_Fire_2_6A"];
+  Array m_TargetHowitzerNavPoint2_2 = ["NavPoint_XRay_Fire_2_1B", "NavPoint_XRay_Fire_2_2B", "NavPoint_XRay_Fire_2_3B", "NavPoint_XRay_Fire_2_4B", "NavPoint_XRay_Fire_2_5B", "NavPoint_XRay_Fire_2_6B"];
+  Array m_TargetHowitzerNavPoint3_2 = ["NavPoint_XRay_Fire_2_1C", "NavPoint_XRay_Fire_2_2C", "NavPoint_XRay_Fire_2_3C", "NavPoint_XRay_Fire_2_4C", "NavPoint_XRay_Fire_2_5C", "NavPoint_XRay_Fire_2_6C"];
+  int m_TargetHowitzerPlace = 1;
+
+    Array KillObjectList = ["XRay_VietnameseRoof_1", "XRay_VietnameseBarrel_1","XRay_VietnameseHouse_1",
+        "XRay_VietnameseBarrel_2", "XRay_VietnameseRoof_2"];
+
+
+  void CC1M2Mission()
+  {
+    // Construct mission
+    CSPMission("CM2Mission", "CM2Content");
+
+    // Set mission properties
+    SetMissionTerrain(new #ChunkedTerrain<CM2Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<CM2Atmosphere>());
+    SetMissionSky(new #SkyObject<CSky01Model>());
+
+    if (CDebugSettings::LoadForest)
+      SetMissionForest(new CSTBaseForestC1(GetMissionAtmosphere()));
+    if (CDebugSettings::LoadRoads)
+      SetMissionRoadsParms(new CBaseRoadC1());
+    if (CDebugSettings::LoadGrass)
+      RegisterObject("Grass", new #Grass<CBaseGrassC1>());
+
+    SetMissionWorldMatrices(new #WorldMatrices<CM2WorldMatrices>(), [
+        [ LAYER_TERRAIN_NAME, "CM2LandscapeLayer"   ],
+        [ LAYER_TERRAIN_ZONE, "CM2TerrainZoneLayer" ],
+        [ LAYER_ROUTER_ZONE,  "CM2RouterZoneLayer" ],
+        [ LAYER_MICROTEXTURE_MAP1, "CM2MicroTextures1" ],
+        //[ "Landing Zone Texture",  "CM2LZTexture" ],
+        [ LAYER_TERRAIN_WATERHEIGHTS, "CM2WaterHeights"]
+      ]);
+
+    SetRouterPrecalculatedGraph(
+      new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CC1RouterMap>(), 64, RouterWorkingZones);
+  }
+
+// TODO
+
+  String GetMainRadioHomePoint()
+  {
+    return "RadioBeacon_Plei_Me";
+  }
+
+  void StartMission()
+  {
+
+    if (0 == GetDifficultyLevel())
+    {
+      // $TODO
+    }
+    if (1 == GetDifficultyLevel())
+    {
+      // $TODO
+    }
+    if (2 == GetDifficultyLevel())
+    {
+      // $TODO
+    }
+    if (3 == GetDifficultyLevel())
+    {
+      // $TODO
+    }
+
+    // call inherited
+    CSPMission::StartMission();
+    addClassificatorObject( "MainPlayerUnit_Wingman_1", WingmanNotGuide );
+
+    // маршруты автопилота
+    WayPointPlayer1 = [
+      GetNavPointPos("NavPoint_WayMainPlayerUnit_1"),
+      GetNavPointPos("NavPoint_WayMainPlayerUnit_2"),
+      GetNavPointPos("NavPoint_WayMainPlayerUnit_3"),
+      GetNavPointPos("NavPoint_Landing_Plei_Me_MainPlayerUnit"),
+      GetNavPointPos("NavPoint_Landing_See_Plei_Me_MainPlayerUnit")
+      ];
+
+   WayPointPlayerAttack = [
+      //GetNavPointPos("NavPoint_MainPlayerUnit_Attack_1"),
+      GetNavPointPos("NavPoint_MainPlayerUnit_Attack_2"),
+      GetNavPointPos("NavPoint_MainPlayerUnit_OutputAttack_1"),
+      GetNavPointPos("NavPoint_MainPlayerUnit_OutputAttack_2")
+      ];
+
+   WayPointPlayer2 = [
+      GetNavPointPos("NavPoint_WayMainPlayerUnit_4"),
+      //GetNavPointPos("NavPoint_WayMainPlayerUnit_5"),
+      //GetNavPointPos("NavPoint_WayMainPlayerUnit_6"),
+      GetNavPointPos("NavPoint_MainPlayerUnitLandingBase")
+                     ];
+
+   WayPointPlayerSpin = [
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_1"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_2"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_3"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_4"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_1"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_2"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_3"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_4"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_1"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_2"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_3"),
+      GetNavPointPos("NavPoint_WaySpin_MainPlayerUnit_4")
+      ];
+   //logError("WayPointPlayer1=" + new String(WayPointPlayer1));
+   //logError("WayPointPlayer2=" + new String(WayPointPlayer2));
+   //logError("WayPointPlayerAttack=" + new String(WayPointPlayerAttack));
+   //logError("WayPointPlayerSpin=" + new String(WayPointPlayerSpin));
+
+  // первый путь для отслеживания автопилотом
+  GetObject("MainPlayerUnit").GetSecondPilot().SetMovementPath("WayPointPlayer1",WayPointPlayer1, 4.0);
+
+     Player = GetObject("MainPlayerUnit");
+
+    m_Watcher1 = new CC1M2PlayerUnit_Transport_Watcher();
+    m_Watcher1.Initialize(this, "C1M2PlayerUnit_Transport_Watcher");
+
+    m_WatcherForward = new CC1M2WingmanGroup_WatcherForward();
+    m_WatcherForward.Initialize(this, "CC1M2WingmanGroup_WatcherForward");
+
+    //m_WatcherBack = new CC1M2WingmanGroup_WatcherBack();
+    //m_WatcherBack.Initialize(this, "CC1M2WingmanGroup_WatcherBack");
+    // маршруты автопилота
+
+    // $TODO
+    // TakeOf transport helicopter
+    // sendEvent( 2.0, "<TransportHelic>", "TakeOff",  [] );
+
+    // $TODO
+    // sendEvent( 10.0, "<JacksonHelic>", "TakeOff",  [] );
+    // Start dialog
+
+    // $TODO SendPersonalMessage("About first objective")
+    // fireEvent(15.0, [], "ShowObjective", [1]);
+
+     // Старт опроса расстояния от Plyer`а до XRay  на расстоянии километр должно быть событие
+     sendEvent( 350.0, SOID_MissionController, "UpdatePosition",  ["MainPlayerUnit", "NavPoint_XRay", m_MaxDistance_XRay]);
+
+     //sendEvent( 100.0, "LZ_Falcon_HowitzerGroup_1", "FirePoint", []);
+     //sendEvent( 100.0, "LZ_Falcon_HowitzerGroup_2", "FirePoint", []);
+     //sendEvent(100.0, SOID_MissionController, "StartFakeHowitzerFire", []);
+
+     sendEvent( 60.0, "GroupUnit_Vietnamese_XRayMotar_1", "FirePoint", []);
+     sendEvent( 60.0, "GroupUnit_American_XRayMotar_1", "Shoot", [true]);
+
+
+     sendEvent( 300.0, SOID_MissionController, "DefaultStartWingman", []);
+     sendEvent( 150.0, SOID_MissionController, "PlayerNotStartEngine", []);
+
+     fireEvent(0.0, [], "TeleportSoldier", []);
+     GetObject("Wingman_Transport_Group_1_HeliPad_1").SetCurrentRechargeTransport("MainPlayerUnit");
+
+
+     for( int i = 0; i < KillObjectList.size(); i++)
+     {
+       sendEvent( 0.0, KillObjectList[i], "DestroyObject", []);
+     }
+
+     sendEvent( 480.0, SOID_MissionController, "FailedMission", []);
+
+
+
+     //logError( "Desant1_1 - Plei_Me_Uh1d_5   " + new String(distance("Desant1_1", "Plei_Me_Uh1d_5")));
+    //StartWingman = true;
+    //Component console = new #GameController().GetObject(SOID_Console);
+    //console.disablebeh();
+    //console.showbehinf(true);
+
+     //logError( "NavPoint_WayMainPlayerUnit_1  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_WayMainPlayerUnit_1")));
+     //logError( "NavPoint_WayMainPlayerUnit_2  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_WayMainPlayerUnit_2")));
+     //logError( "NavPoint_WayMainPlayerUnit_3  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_WayMainPlayerUnit_3")));
+     //logError( "NavPoint_WayMainPlayerUnit_4  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_WayMainPlayerUnit_4")));
+     //logError( "NavPoint_WayMainPlayerUnit_5  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_WayMainPlayerUnit_5")));
+     //logError( "NavPoint_WayMainPlayerUnit_6  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_WayMainPlayerUnit_6")));
+
+     //logError( "  NavPoint_Way_1  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_Way_1")));
+     //logError( "  NavPoint_Way_2  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_Way_2")));
+     //logError( "  NavPoint_Way_3  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_Way_3")));
+     //logError( "  NavPoint_Way_4  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_Way_4")));
+     //logError( "  NavPoint_Way_5  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_Way_5")));
+     //logError( "  NavPoint_Way_6  " + new String(distance("NavPoint_Plei_Me_Base", "NavPoint_Way_6")));
+
+  }
+
+  event void DefaultStartWingman()
+  {
+    //logWarning("DefaultStartWingman!!!!");
+    // старт транспортов по default`у
+    if (!LoadToTransport)
+      {
+        fireEvent(0.0, [], "MoveToHelicopterAndLoad", []);
+
+        Component _Game = new #GameController();
+        if ( null != _Game)
+            _Game.RunCinema("Upload1");
+
+        LoadToTransport = true;
+      }
+  }
+
+  event void PlayerNotStartEngine()
+  {
+    if (!m_StartEnginePlayer)
+    {
+      //logWarning("[PlayerNotStartEngine]");
+      sendEvent(0.0, SOID_MissionController, "StartDialog", ["PlayerNotStartEngine"]);
+    }
+  }
+
+  // Зафеливание миссии без старта игрока
+  event void FailedMission()
+  {
+    if (!m_PlayerFly)
+    {
+      logWarning("Mission Fail!!!");
+      sendEvent(0.0, "MainPlayerUnit_Wingman_1", "WingmanLastFly", []);
+      //CSPMission::FailMission(40.0);
+      //sendEvent( 0.0, SOID_MissionController, "SendPersonalCockpitMessage", ["MainPlayerUnit", L"Mission Fail! Fingman start 'LastFly'", CCockpitColorMap::m_BadNewsColor, "TEST"]);
+      // должен быть конец миссии
+    }
+  }
+
+  // оценка расстояния между двуми юнитами
+  event void UpdatePosition(String _BetweenID_1, String _BetweenID_2, float _MaxDistance)
+  {
+     float m_CurrentDistance;
+     Component Between_1 = new #GameController().GetObject(_BetweenID_1);
+     Component Between_2 = new #GameController().GetObject(_BetweenID_2);
+     if ( null == Between_1 && null == Between_2)
+     {
+      logError(" Component -- null");
+      return;
+     }
+       Vector m_Pos_1 = getPosition(Between_1).origin;
+       Vector m_Pos_2 = getPosition(Between_2).origin;
+
+     m_CurrentDistance = (m_Pos_1 - m_Pos_2).Magnitude();
+
+    //logWarning("Distance between " + _BetweenID_1 + " and " + _BetweenID_2+ " forms " + new String (m_CurrentDistance));
+
+    if ( m_CurrentDistance > _MaxDistance)
+    {
+      sendEvent( 20.0, SOID_MissionController, "UpdatePosition", [_BetweenID_1, _BetweenID_2,_MaxDistance] );
+    }
+    else
+    {
+      //logWarning("[UpdatePosition] Unit`s " + _BetweenID_1 + " and " + _BetweenID_2 + " closer critical distance less !!!");
+      sendEvent( 0.0, SOID_MissionController, "CriticalDistanceLess", [_BetweenID_1, _BetweenID_2,_MaxDistance] );
+    }
+  }
+
+  // события о достижении критического расстояни
+  // sendEvent(0.0, SOID_MissionController, "AmericanAttack", []);
+  event void CriticalDistanceLess(String ID_1, String ID_2, float _distance )
+  {
+    if (ID_2 == "NavPoint_XRay")
+        if (ID_1 == "MainPlayerUnit")
+        {
+          //logWarning(" CriticalDistance beetwen MainPlayerUnit and NavPoint_XRay ... Start AmericanAttack");
+          //sendEvent(0.0, "GroupUnit_AmericanAttack_XRay", "AmericanAttack", []);
+          sendEvent(0.0, "LZ_Falcon_HowitzerGroup_1", "FireToMotarPosition", []);
+        }
+    if (ID_2 == "NavPoint_XRay")
+        if (ID_1 == "MainPlayerUnit")
+        {
+          //logWarning(" CriticalDistance beetwen MainPlayerUnit and NavPoint_XRay ... Start fire LZ_Falcon_HowitzerGroup_2");
+          sendEvent(0.0, "LZ_Falcon_HowitzerGroup_2", "FirePoint", []);
+        }
+    if (ID_2 == "MainPlayerUnit_Wingman_1")
+        if (ID_1 == "MainPlayerUnit")
+        {
+          //logWarning(" CriticalDistance beetwen MainPlayerUnit and MainPlayerUnit_Wingman_1 ... And connect wingman");
+          sendEvent(0.0, "LZ_Falcon_HowitzerGroup_2", "FirePoint", []);
+        }
+  }
+
+  //  Damage GameObject
+  event void OnHitByEnemyGameObject( String _ObjectID, String _EnemyID)
+  {
+    if (_EnemyID.IsStartsWith("MainPlayerUnit"))
+      CEndMissionMenu::HitsCount = CEndMissionMenu::HitsCount + 1;
+    if(isDebug)
+        logError(" OnHit  ID="+ _ObjectID + "   who  ID="+ _EnemyID);
+  }
+
+  event void CinemaEnd(String _CinemaID)
+  {
+    if (_CinemaID == "Script_5")
+    {
+      // расстановка пртивников по местам
+      // дымовые заряды
+      // fireEvent(0.0, [], "ShowObjective", [1]);
+    }
+  }
+
+  // event при прерывании ролика для перестановки предметов, юнитов и т.п.
+  event void CinemaSkip (String _CinemaID)
+  {
+    if ( "Script_5" == _CinemaID)
+    {
+    }
+  }
+
+  // Посадка транспорта
+  event void TransportLanded( String _TransportID , String _NavID , boolean _Landing)
+  {
+    logWarning("TransportLanded   TransportID=" + _TransportID + "  NavPointID=" + _NavID + " Landing=" + new String(_Landing));
+  }
+
+
+   event void OnGroupUnloaded ( String _GroupID)
+  {
+    //logWarning("[Mission] OnGroupUnloaded GROUPID=" + _GroupID + " HelicID=" + _GroupID.GetPartPreceding("_DesantGroup"));
+    sendEvent( 10.0, _GroupID.GetPartPreceding("_DesantGroup"), "WingmanMidair",  [] );
+    sendEvent( 5.0, "WingmanGroup", "CountUnloadHelicopter",  [_GroupID.GetPartPreceding("_DesantGroup")]);
+  }
+
+  event void OnGroupLoaded( String _GroupID)
+  {
+  }
+
+
+  // Player Fly or Land
+  event void HelicSetFlyState(String _HelicopterID)
+  {
+    if(isDebug)
+    {
+      logError(" HelicSetFlyState  ID=" + _HelicopterID);
+      logError("          m_PlayerFly=" + new String(m_PlayerFly));
+    }
+
+    if (_HelicopterID == "MainPlayerUnit")
+    {
+      if (!m_PlayerFly)
+      {
+        SendPersonalCockpitMessage("MainPlayerUnit", CC1M2Mission_Strings::str_C1M2_Kingsley_TakeOff_02, CCockpitColorMap::m_NeutralNewsColor, "str_C1M2_Kingsley_TakeOff_02");
+        m_PlayerFly = true;
+
+       if (GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot())
+           CorrectionAutoPilot();
+      }
+    }
+
+    //logWarning("MainPlayerUnit - SetFlyState");
+
+    //TMP
+    Component console = new #GameController().GetObject(SOID_Console);
+    console.logClassificatorsList("MainPlayerUnit");
+    //TMP
+
+    if (checkMask(Player, [PlayerWasLand, PlayerInPointLandXRay], []))
+    {
+      //logWarning("[For AutoPilot] Player Fly!!!");
+      addClassificatorObject( "MainPlayerUnit", PlayerTakeOff );
+      removeClassificatorObject( "MainPlayerUnit", PlayerWasLand );
+    }
+  }
+  event void HelicSetLandState(String _HelicopterID)
+  {
+    if (_HelicopterID == "MainPlayerUnit_Wingman_1")
+    {
+      SendPersonalCockpitMessage("MainPlayerUnit", CC1M2Mission_Strings::str_C1M2_Jackson_TakeOff_01, CCockpitColorMap::m_NeutralNewsColor, "str_C1M2_Jackson_TakeOff_01");
+      if(m_PlayerTakeOff)
+          SendPersonalCockpitMessage("MainPlayerUnit", CC1M2Mission_Strings::str_C1M2_Breadshow_Reproof_01, CCockpitColorMap::m_NeutralNewsColor, "str_C1M2_Breadshow_Reproof_01");
+    } else if (_HelicopterID == "MainPlyerUnit")
+    {
+      //logWarning("MainPlayerUnit - PlayerSetLandState");
+
+      //TMP
+      Component console = new #GameController().GetObject(SOID_Console);
+      console.logClassificatorsList("MainPlayerUnit");
+      //TMP
+
+      if (checkMask(Player, [PlayerLanding, PlayerInPointLandXRay], []))
+      {
+        logWarning("[For AutoPilot]  Player Land!!!");
+        addClassificatorObject( "MainPlayerUnit", PlayerWasLand );
+        removeClassificatorObject( "MainPlayerUnit", PlayerLanding );
+      }
+    }
+  }
+  void OnEngineStateChanged(boolean _switch)        // старт двигател MainPlayerUnit
+  {
+    logWarning("[OnEngineStateChanged] PlayerMainUnit - EngineStateChanged " + new String(_switch));
+    m_WorkEnginePlayer = _switch;
+    if (_switch)
+    {
+      if (!m_StartEnginePlayer)
+      {
+        m_StartEnginePlayer = _switch;
+        SendPersonalCockpitMessage("MainPlayerUnit", CC1M2Mission_Strings::str_C1M2_Kingsley_TakeOff_01, CCockpitColorMap::m_NeutralNewsColor, "str_C1M2_Kingsley_TakeOff_01");
+      }
+
+      if (!LoadToTransport)
+      {
+        fireEvent(0.0, [], "MoveToHelicopterAndLoad", []);
+        Component _Game = new #GameController();
+        if ( null != _Game)
+            _Game.RunCinema("Upload1");
+
+        LoadToTransport = true;
+      }
+    }
+    else
+      if (checkMask(Player, [PlayerOnBase, PlayerWasAttackMortar, PlayerBack], []))
+      {
+        SetObjectiveStatus(2, MOSID_Completed);
+        autopilotEnable = false;
+      }
+  }
+
+  // Input NavPoint
+  void OnObjectEnterNavPoint( String _NavPointID, String _ObjectID)
+  {
+    logWarning("Object " + _ObjectID + "  enter NavPoint " +  _NavPointID);
+
+    if (_NavPointID.IsStartsWith("NavPoint_Landing_Plei_Me_Uh1d_") && _ObjectID == _NavPointID.GetPartFollowing("NavPoint_Landing_"))
+    {
+      Component UnitTask = GetUnitTask(_ObjectID);
+      if (null == UnitTask)
+        return;
+
+      UnitTask.SetFlyingHeight(9.0);
+    }
+
+    if (_NavPointID == "NavPoint_WaySpin_MainPlayerUnit_2" && _ObjectID == "MainPlayerUnit")
+    {
+      addClassificatorObject("MainPlayerUnit", PlayerWasSpin2);
+      if (checkMask(Player, [PlayerRunFight], []))
+      {
+        sendEvent( 0.0, SOID_MissionController, "StartAutoPilot", []);
+      }
+    }
+
+    if (_NavPointID == "NavPoint_TMP"  && _ObjectID == "MainPlayerUnit")
+      if (checkMask(Player, [PlayerWasAttackMortar], []))
+        sendEvent(0.0, SOID_MissionController, "StartDialog", ["NearBase"]);
+
+    if (_NavPointID == "NavPoint_PlayerPosition" && _ObjectID == "MainPlayerUnit")
+    {
+      m_PlayerOnWay = true;
+       //sendEvent( 0.0, SOID_MissionController, "SendPersonalCockpitMessage", ["MainPlayerUnit", L"IN NavPoint", CCockpitColorMap::m_BadNewsColor, "TEST"]);
+    }
+
+    if (_NavPointID == "NavPoint_MainPlayerUnit_OutputAttack_1" && _ObjectID == "MainPlayerUnit")
+    {
+      if (GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot())
+        GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(40);
+    }
+
+    // убийство убегающих вьетнамских юнитов
+    if (_NavPointID.IsStartsWith("NavPoint_Retreat_GroupUnit_VietnameseSoldierGun_XRay_"))
+    {
+      Component Dead = new #GameController().GetObject(_ObjectID);
+      Component TaskDead = GetUnitTask(_ObjectID);
+      if (Dead != null)
+      {
+        String NavPointID = "NavPoint_Retreat_" + getIdentificator(TaskDead.m_Group);
+
+        if ( NavPointID == _NavPointID)
+        {
+          Component DeadStateControl = Dead.GetStateControl();
+          if (null != DeadStateControl)
+          {
+            //logWarning(" Unit with ID=" + _ObjectID + " destroy in NavPoint ID=" + _NavPointID + " DOBRJAL TAKI!!!!");
+            DeadStateControl.SetHitPoints(0.0);
+          }
+        }
+      }
+    }
+
+    // прилёт бомберов в первую точку боевого маршрута
+    if(_NavPointID == "SkyRidersAttackNP_02" && _ObjectID == "SkyRider_01")
+    {
+      SendPersonalCockpitMessage("MainPlayerUnit", CC1M2Mission_Strings::str_Skyrider_Bombardment_03, CCockpitColorMap::m_NeutralNewsColor, "str_Skyrider_Bombardment_03");
+      sendEvent(40.0, SOID_MissionController, "StartDialog", ["BombersOnCourse"]);
+      SkyRiderDetect = true;
+    }
+    // Прилёт игрока в landing zone
+    if (_NavPointID == "NavPoint_LandingZone" && IsPlayerObjectID(_ObjectID))
+    {
+      // отбор управлени
+      // старт скрипт-ролика #5
+    }
+    // можно проверять первый вертолет так как вся группа бессмертна
+    if (_NavPointID == "NavPoint_Way_1" && _ObjectID == "Plei_Me_Uh1d_1")
+    {
+      // TMP
+      //sendEvent( 0.0, SOID_MissionController, "SendPersonalCockpitMessage", ["MainPlayerUnit", L"1-2", CCockpitColorMap::m_BadNewsColor, "TEST"]);
+
+      // старт переговоров в эфире
+      //PositionWatcher   sendEvent(0.0, SOID_MissionController, "StartDialog", ["ExchangeRemarks1_2"]);
+    }
+    if (_NavPointID == "NavPoint_Way_2" && _ObjectID == "Plei_Me_Uh1d_1")
+    {
+
+      // start tv fly bombers
+      //PositionWatcher  sendEvent( 0.0, "GroupUnit_AmericanSkyRiders_1_tv", "StartFly", []);  // time correction
+
+      // TMP
+      //sendEvent( 0.0, SOID_MissionController, "SendPersonalCockpitMessage", ["MainPlayerUnit", L"2-3", CCockpitColorMap::m_BadNewsColor, "TEST"]);
+
+      // старт переговоров в эфире
+      //PositionWatcher sendEvent(0.0, SOID_MissionController, "StartDialog", ["ExchangeRemarks2_3"]);
+    }
+    // посадка вертолётов
+    if (_NavPointID == "NavPoint_Way_3" && _ObjectID == "Plei_Me_Uh1d_1")
+    {
+      // посадка
+      //Roost();
+    }
+    if (_NavPointID == "NavPoint_Way_4" && _ObjectID == "Plei_Me_Uh1d_1")
+    {
+      // старт переговоров в эфире
+    }
+    if (_NavPointID == "NavPoint_Way_5" && _ObjectID == "Plei_Me_Uh1d_1")
+    {
+      // старт переговоров в эфире
+    }
+    if (_NavPointID == "NavPoint_Way_6" && _ObjectID == "Plei_Me_Uh1d_1")
+    {
+      // старт переговоров в эфире
+    }
+
+    //Autopilot
+    if (_NavPointID.IsStartsWith("NavPoint_WayMainPlayerUnit_") && _ObjectID == "MainPlayerUnit")
+    {
+      logWarning("Object " + _ObjectID + "  enter NavPoint " +  _NavPointID);
+      if ( _NavPointID == "NavPoint_WayMainPlayerUnit_3" && GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot())
+        GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(30);
+    }
+
+    if ( _NavPointID == "NavPoint_MainPlayerUnit_Attack_1" && _ObjectID == "MainPlayerUnit")
+      if ( _NavPointID == "NavPoint_WayMainPlayerUnit_3" && GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot())
+        GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(8);
+
+    if ( _NavPointID == "NavPoint_MainPlayerUnit_Attack_1" && _ObjectID == "MainPlayerUnit_Wingman_1")
+      if (checkMask(Player, [], [PlayerWasAttackMortar]))
+        sendEvent(0.0, SOID_MissionController, "StartDialog", ["HelicopterUnderFight"]);
+
+    if (_NavPointID == "NavPoint_MainPlayerUnitLandingBase" && _ObjectID == "MainPlayerUnit")
+    {
+      if (CurrentPathID == "WayPointPlayer2")
+      {
+        //CorrectionAutoPilot(20.0, 40.0); //need to check
+        addClassificatorObject("MainPlayerUnit", PlayerOnBase);
+      }
+
+      addClassificatorObject("MainPlayerUnit", PlayerInPointLandBase);
+
+      if (checkMask(Player, [PlayerWasAttackMortar, PlayerDamaged], []))
+        GetUnitTask("MainPlayerUnit_Wingman_1").Wingman_Recharge("NavPoint_Plei_Me_Base");
+
+      if (GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot() && CurrentPathID == "WayPointPlayer2")
+      {
+        logWarning("[AutoPilot] Player landing on Base.");
+        StartAutoPilot();
+      }
+    }
+
+    if (_NavPointID == "NavPoint_Landing_Plei_Me_MainPlayerUnit")
+    {
+      Component ObjectComponent = GetObject(_ObjectID);
+
+      if (_ObjectID != "MainPlayerUnit")
+        if ( null != ObjectComponent)
+          if (checkMask(ObjectComponent, ["HELI"], []) && WingmanGroupRoost)
+            sendEvent( 0.0, _ObjectID, "MoveToPointLand", [20.0, 10.0]);
+    }
+    //Autopilot
+    if (_NavPointID == "NavPoint_Landing_Plei_Me_MainPlayerUnit" && _ObjectID == "MainPlayerUnit")
+    {
+      addClassificatorObject("MainPlayerUnit", PlayerInPointLandXRay);   // для проверки в точке ли посадки игрок
+      logWarning("Player  was enter point of land");
+      addClassificatorObject( "MainPlayerUnit", PlayerSeeBomben );
+
+      // должен запуститься просмотр взрыва
+      if (GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot() && CurrentPathID == "WayPointPlayer1")
+      {
+        GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(10.0);
+        GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetAltitude(40.0);
+
+        float tmp = GetObject("MainPlayerUnit").GetSecondPilot().GetEchoAltitude();
+        //logError("Altitude=" + new String(tmp));
+
+        //StartAutoPilot();
+      }
+      //addClassificatorObject("MainPlayerUnit", PlayerLanding);
+      //TMP
+      Component console = new #GameController().GetObject(SOID_Console);
+      console.logClassificatorsList("MainPlayerUnit");
+      //TMP
+    }
+
+    //LZFalcon true fire on
+    if (_NavPointID == "NavPoint_LZFalcon_HowitzerTrueFire" && _ObjectID == "MainPlayerUnit")
+    {
+      sendEvent(0.0, "LZ_Falcon_HowitzerGroup_1", "EnableTrueFire", [true]);
+      sendEvent(0.0, "LZ_Falcon_HowitzerGroup_2", "EnableTrueFire", [true]);
+    }
+  }
+
+  void OnObjectLeaveNavPoint( String _NavPointID, String _ObjectID)
+  {
+    if (_NavPointID == "NavPoint_MainPlayerUnitLandingBase" && _ObjectID == "MainPlayerUnit")
+    {
+      removeClassificatorObject( "MainPlayerUnit", PlayerInPointLandBase );
+    }
+    if ( _NavPointID == "NavPoint_MainPlayerUnit_Attack_1" && _ObjectID == "MainPlayerUnit")
+      if ( _NavPointID == "NavPoint_WayMainPlayerUnit_3" && GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot())
+        GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(40);
+
+    if (_NavPointID == "NavPoint_PlayerPosition" && _ObjectID == "MainPlayerUnit")
+    {
+      // покинул зону полёта
+      m_PlayerOnWay = false;
+      sendEvent( m_TimeOutPoint, SOID_MissionController, "ChekingWarningOutPoint", []);
+      StartDialogWarning("PlayerWarningOutPoint");
+    }
+
+    if (_NavPointID == "NavPoint_Landing_Plei_Me_MainPlayerUnit" && _ObjectID == "MainPlayerUnit")
+    {
+      logWarning("Player  was leave point of land");
+      removeClassificatorObject("MainPlayerUnit", PlayerInPointLandXRay);   // для проверки в точке ли посадки игрок
+    }
+
+    //LZFalcon true fire on
+    if (_NavPointID == "NavPoint_LZFalcon_HowitzerTrueFire" && _ObjectID == "MainPlayerUnit")
+    {
+      sendEvent(0.0, "LZ_Falcon_HowitzerGroup_1", "EnableTrueFire", [false]);
+      sendEvent(0.0, "LZ_Falcon_HowitzerGroup_2", "EnableTrueFire", [false]);
+    }
+  }
+
+  // при старте
+  float CurrentSpeedPlayer = 1.0;
+  float MaxSpeedPlayer = 45.0;
+  float CurrentHeightPlayer = 50.0;
+  float MaxHeightPlayer = 200.0;
+  float CurrentAltitude;
+  // при старте
+
+  String CurrentPathID  = "";   // текущий путь который получется при включении автопилота ...
+  int CurrentIndex = 0;         // индекс который получется при включении автопилота ...
+  Array CurrentPath = new Array();
+  boolean FirstStartAutoPilot = true;  // первый запуск автопилота на каждом отрезке пути
+
+  void OnPilotState(boolean _IsEnabled)
+  {
+    logWarning("[AutoPilot] Autopilot = " + new String(_IsEnabled));
+
+    if (_IsEnabled)
+    {
+      StartAutoPilot();
+    }
+    else
+    {
+      logWarning("[AutoPilot PlayerMove] CurrentPath"+ new String(CurrentPath));
+      logWarning("[AutoPilot PlayerMove] CurrentIndex="+ new String(CurrentIndex));
+      logWarning("[AutoPilot PlayerMove] CurrentAltitude="+ new String(CurrentAltitude));
+      logWarning("[AutoPilot PlayerMove] CurrentPathName="+ new String(GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()) + " CurrentPathID=" +CurrentPathID );
+      logWarning("[AutoPilot PlayerMove] Player move to point " + new String(CurrentPath[CurrentIndex]));
+    }
+
+  }
+  void PlayerMove(Array _WayPoint)
+  {
+    if (CurrentPathID == "WayPointPlayer1")
+      GetObject("MainPlayerUnit").GetSecondPilot().MoveTo(CurrentPathID, _WayPoint, CurrentSpeedPlayer, 200.0, 5.0, false);
+    else  if (CurrentPathID == "WayPointPlayer2")
+      GetObject("MainPlayerUnit").GetSecondPilot().MoveTo(CurrentPathID, _WayPoint, CurrentSpeedPlayer, 150.0, 2.0, true);
+    else if (CurrentPathID == "WayPointPlayerAttack")
+    {
+      GetObject("MainPlayerUnit").GetSecondPilot().MoveTo(CurrentPathID, _WayPoint, CurrentSpeedPlayer, 70.0, 2.0, false);
+      GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(20);
+    }
+    else if (CurrentPathID == "WayPointPlayerSpin")
+    {
+      GetObject("MainPlayerUnit").GetSecondPilot().MoveTo(CurrentPathID, _WayPoint, CurrentSpeedPlayer, 25.0, 2.0, false);
+      GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(7.0);
+    }
+    else if (CurrentPathID == "WayPointPlayer1" && checkMask(Player, [PlayerSeeBomben], []))
+    {
+      GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(10.0);
+      GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetAltitude(25.0);
+
+         //float tmp = GetObject("MainPlayerUnit").GetSecondPilot().GetEchoAltitude();
+         //logError("Altitude=" + new String(tmp));
+    }
+
+    if (checkMask(Player, [PlayerWasAttackMortar, PlayerInPointLandBase], []))
+    {
+        GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetAltitude(CurrentAltitude);
+
+         //float tmp = GetObject("MainPlayerUnit").GetSecondPilot().GetEchoAltitude();
+         //logError("Altitude=" + new String(tmp));
+    }
+
+//    посадки в Xray нет и востановление высоты только в точке посадки на базе
+//    if (checkMask(Player, [PlayerLanding, PlayerInPointLandXRay], []) || checkMask(Player, [PlayerWasAttackMortar, PlayerInPointLandBase], []))
+//        GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetAltitude(CurrentAltitude);
+
+    //logWarning("[AutoPilot] move to point index="+ new String(GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentTargetIndex()));
+    CurrentIndex = GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentTargetIndex();
+    //logWarning("[AutoPilot PlayerMove] _WayPoint="+ new String(_WayPoint));
+    //logWarning("[AutoPilot PlayerMove] CurrentIndex="+ new String(CurrentIndex));
+    //logWarning("[AutoPilot PlayerMove] CurrentAltitude="+ new String(CurrentAltitude));
+    //logWarning("[AutoPilot PlayerMove] CurrentPathName="+ new String(GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()));
+    //logWarning("[AutoPilot PlayerMove] Player move to point " + new String(_WayPoint[CurrentIndex]));
+  }
+  Array CorrectPath(Array _LastPath)
+  {
+    Array _CurrentPath;
+    if ( CurrentIndex == 0)
+        return _LastPath;
+
+    if ( CurrentIndex == -1)
+    {
+      logError("[CorrectPath] ERROR   CurrentIndex=-1 !!!");
+      return _LastPath;
+    }
+
+    logWarning("[AutoPilot  CorrectPath] Before");
+    logWarning("[AutoPilot  CorrectPath] CurrentIndex" + new String(CurrentIndex));
+    logWarning("[AutoPilot  CorrectPath] _LastPath" + new String(_LastPath));
+    for( int i = CurrentIndex; i < _LastPath.size(); i++)
+    {
+      logWarning("[AutoPilot  CorrectPath] _CurrentPath" + new String(_CurrentPath));
+      _CurrentPath.add(_LastPath[i]);
+    }
+
+    logWarning("[AutoPilot  CorrectPath] After");
+    logWarning("[AutoPilot  CorrectPath] _LastPath" + new String(_LastPath));
+    logWarning("[AutoPilot  CorrectPath] _CurrentPath" + new String(_CurrentPath));
+
+    if ( CurrentIndex >= _LastPath.size())
+    {
+      logError("[CorrectPath] CurrentIndex>=_LastPath.size()   -- " + new String(CurrentIndex >= _LastPath.size()));
+      return _LastPath;
+    }
+
+    return _CurrentPath;
+  }
+
+  void OnMoveFinished()
+  {
+
+    String _PathName;
+    _PathName = GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName();
+    logWarning("[AutoPilot  OnMoveFinished] PathID=" + _PathName);
+
+    //TMP
+    Component console = new #GameController().GetObject(SOID_Console);
+    console.logClassificatorsList("MainPlayerUnit");
+    //TMP
+
+    if (Player != null)
+    {
+     //  if (checkMask(Player, [PlayerInPointLandXRay, PlayerLanding], []))
+     //  {
+     //   addClassificatorObject( "MainPlayerUnit", PlayerSeeBomben );
+     //   StartAutoPilot();
+        // LandPlayer();
+     //  }
+       if (checkMask(Player, [PlayerWasAttackMortar, PlayerInPointLandBase], []))
+       {
+         m_WingmanGuide = null;
+         GetObject("CC1M2WingmanGuide").SetEventHandler(null);
+         LandPlayer();
+         SetObjectiveStatus(2, MOSID_Completed);
+       }
+    }
+
+    CurrentPath = [];
+  }
+
+  event void StartAutoPilot()
+  {
+
+    logWarning("[StartAutoPilot]");
+    CurrentAltitude = GetObject("MainPlayerUnit").GetSecondPilot().GetEchoAltitude();
+
+    //TMP
+    Component console = new #GameController().GetObject(SOID_Console);
+    console.logClassificatorsList("MainPlayerUnit");
+    //TMP
+
+    //Component Player = GetObject("MainPlayerUnit");
+    if (Player != null)
+    {
+       if (checkMask(Player, [PlayerRunFight, PlayerWasSpin2], [PlayerWasAttackMortar]))
+       {
+         logWarning("[AutoPilot] checkMask(Player, [PlayerRunFight], [PlayerWasAttackMortar])=" + new String(checkMask(Player, [PlayerRunFight], [PlayerWasAttackMortar])));
+         //TakeOfPlayer();                                                          // пришёл приказ атаковать мортары бросаем всё и вперёд
+         //return;
+         CurrentPathID = "WayPointPlayerAttack";
+         CurrentPath = new Array (WayPointPlayerAttack);
+       }
+       else if (checkMask(Player, [], [PlayerInPointLandXRay, PlayerTakeOff, PlayerForward, PlayerWasAttackMortar, PlayerBack]))          // игрок не в точке посадки и не взлетал с неё... нужно лететь к ней
+       {
+         logWarning("[AutoPilot] checkMask(Player, [], [PlayerInPointLandXRay, PlayerTakeOff, PlayerForward, PlayerWasAttackMortar, PlayerBack])=" + new String(checkMask(Player, [], [PlayerInPointLandXRay, PlayerTakeOff, PlayerForward, PlayerWasAttackMortar, PlayerBack])));
+         addClassificatorObject( "MainPlayerUnit", PlayerForward );
+         CurrentPathID = "WayPointPlayer1";
+         CurrentPath = new Array (WayPointPlayer1);
+       }
+       else if (checkMask(Player, [PlayerSpin, PlayerSeeBomben], [PlayerWasAttackMortar, PlayerDamaged]))          // игрок не в точке посадки и не взлетал с неё... нужно лететь к ней
+       {
+         logWarning("[AutoPilot] checkMask(Player, [PlayerSpin, PlayerSeeBomben], [PlayerWasAttackMortar, PlayerDamaged])=" + new String(checkMask(Player, [PlayerSpin, PlayerSeeBomben], [PlayerWasAttackMortar, PlayerDamaged])));
+         CurrentPathID = "WayPointPlayerSpin";
+         CurrentPath = new Array (WayPointPlayerSpin);
+       }
+/*       посадки в Xray не будет
+       else if (checkMask(Player, [PlayerInPointLandXRay], [PlayerWasLand,PlayerTakeOff]))      // игрок в точке посадки и не взлетал ... нужно садиться.
+       {
+         logWarning("[AutoPilot]  checkMask(Player, [PlayerInPointLandXRay], [PlayerWasLand,PlayerTakeOff])=" + new String(checkMask(Player, [PlayerInPointLandXRay], [PlayerWasLand,PlayerTakeOff])));
+         //LandPlayer();
+         //return;
+       }
+       else if (checkMask(Player, [PlayerWasLand, PlayerInPointLandXRay], [PlayerWasAttackMortar, PlayerDamaged]))  // игрок в точке посадки и уже садиться ... нужно взлетать
+       {
+         logWarning("[AutoPilot] checkMask(Player, [PlayerWasLand, PlayerInPointLandXRay], [PlayerWasAttackMortar, PlayerDamaged])=" + new String(checkMask(Player, [PlayerWasLand, PlayerInPointLandXRay], [PlayerWasAttackMortar, PlayerDamaged])));
+         CurrentPathID = "WayPointPlayerAttack";
+         CurrentPath = new Array (WayPointPlayerAttack);
+         //TakeOfPlayer();
+         //return;
+       }
+ */
+       else if (checkMask(Player, [PlayerBack, PlayerRunFight], [PlayerWasAttackMortar])) // игрок уже взлетел но ещё не атакавал ... нужно атакавать
+       {
+         removeClassificatorObject( "MainPlayerUnit", PlayerSpin);
+         removeClassificatorObject( "MainPlayerUnit", PlayerSeeBomben );
+
+         logWarning("[AutoPilot] checkMask(Player, [PlayerBack], [PlayerWasAttackMortar])=" + new String(checkMask(Player, [PlayerBack], [PlayerWasAttackMortar])));
+         CurrentPathID = "WayPointPlayerAttack";
+         CurrentPath = new Array (WayPointPlayerAttack);
+       }
+/*       else if (checkMask(Player, [PlayerDamaged], [PlayerBack]))  // если вертолёт уже повреждён при атаке на мортары
+       {
+         removeClassificatorObject( "MainPlayerUnit", PlayerForward );
+         addClassificatorObject( "MainPlayerUnit", PlayerBack );
+         logWarning("[AutoPilot] checkMask(Player, [PlayerDamaged], [PlayerBack])=" + new String(checkMask(Player, [PlayerDamaged], [PlayerBack])));
+         CurrentPathID = "WayPointPlayer2";
+         CurrentPath = new Array (WayPointPlayer2);
+       }
+       else if (checkMask(Player, [PlayerDamaged, PlayerBack], []))  // если вертолёт уже повреждён при атаке на мортары и уже назначен путь назад
+       {
+         removeClassificatorObject( "MainPlayerUnit", PlayerForward );
+         addClassificatorObject( "MainPlayerUnit", PlayerBack );
+         logWarning("[AutoPilot] checkMask(Player, [PlayerDamaged, PlayerBack], [])=" + new String(checkMask(Player, [PlayerDamaged, PlayerBack], [])));
+         CurrentPathID = "WayPointPlayer2";
+       }
+       else if (checkMask(Player, [PlayerWasAttackMortar, PlayerDamaged], []))  // игрок уже атакавал
+       {
+         logWarning("[AutoPilot] checkMask(Player, [PlayerWasAttackMortar, PlayerDamaged], [])=" + new String(checkMask(Player, [PlayerWasAttackMortar, PlayerDamaged], [])));
+         CurrentPathID = "WayPointPlayer2";
+         CurrentPath = new Array (WayPointPlayer2);
+       }                                                               */
+       else if (checkMask(Player, [PlayerWasAttackMortar, PlayerBack], []))  // игрок отстрелялся нужно лететь на базу
+       {
+         logWarning("[AutoPilot] checkMask(Player, [PlayerWasAttackMortar, PlayerBack], [])=" + new String(checkMask(Player, [PlayerWasAttackMortar, PlayerBack], [])));
+         removeClassificatorObject( "MainPlayerUnit", PlayerForward );
+         CurrentPathID = "WayPointPlayer2";
+         CurrentPath = new Array ([GetNavPointPos("NavPoint_MainPlayerUnitLandingBase")]);
+       }
+    }
+
+    logWarning("[StartAutoPilot] CurrentPathID=" + CurrentPathID);
+    logWarning("[StartAutoPilot] CurrentPath=" + new String(CurrentPath));
+
+    if (CurrentPath.size() == 0)
+        logError("[StartAutoPilot] ERROR CurrentPath.size() == 0");
+
+    CurrentIndex = GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentTargetIndex();
+    logWarning("[StartAutoPilot] CurrentIndex="+ new String(CurrentIndex));
+
+    CurrentPath = CorrectPath(CurrentPath);
+    PlayerMove(CurrentPath);
+  }
+
+  void LandPlayer()
+  {
+    if (checkMask(Player, [PlayerInPointLandBase], []))
+        logWarning("[AutoPilot] Player On Base");
+
+    logError("[LandPlayer]");
+    GetObject("MainPlayerUnit").GetSecondPilot().Land();
+  }
+
+  void TakeOfPlayer()
+  {
+    //TMP пока пусть так
+     CurrentPathID = "WayPointPlayerAttack";
+     CurrentPath = new Array (WayPointPlayerAttack);
+     PlayerMove(CurrentPath);
+  }
+
+  event void CorrectionAutoPilot()
+  {
+    logError("[CorrectionAutoPilot] StartWingman="+ new String(StartWingman));
+    if (StartWingman)
+    {
+      CurrentSpeedPlayer  = MaxSpeedPlayer;
+      CurrentHeightPlayer = MaxHeightPlayer;
+    }
+
+    GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetSpeed(CurrentSpeedPlayer);
+    GetObject("MainPlayerUnit").GetSecondPilot().MoveTo_SetAltitude(CurrentHeightPlayer);
+
+         //float tmp = GetObject("MainPlayerUnit").GetSecondPilot().GetEchoAltitude();
+         //logError("Altitude=" + new String(tmp));
+
+    //logError("[CorrectionAutoPilot] CurrentSpeedPlayer="+ new String(CurrentSpeedPlayer));
+    //logError("[CorrectionAutoPilot] CurrentHeightPlayer="+ new String(CurrentHeightPlayer));
+  }
+//Autopilot
+
+  // Destroyed Object
+  event void OnObjectDestroyed( String _ObjectID)
+  {
+    CMission::OnObjectDestroyed(_ObjectID);
+
+    if(_ObjectID == "MainPlayerUnit")
+    {
+      sendEvent( 0.0, SOID_MissionController, "SendPersonalCockpitMessage", ["MainPlayerUnit", CC1M2Mission_Strings::str_c1m2_Jackson_PlayerDeath_01,
+          CCockpitColorMap::m_BadNewsColor, "str_c1m2_Jackson_PlayerDeath_01"]);
+    }
+
+    // Count Enemy ground units killed
+    if (_ObjectID.IsStartsWith("C1M2_GE"))
+    {
+      // $TODO
+      m_EnemyGroundKilled = m_EnemyGroundKilled + 1;
+      CEndMissionMenu::GroundKilled = CEndMissionMenu::GroundKilled + 1;
+    }
+    // Count Enemy naval units killed
+    if (_ObjectID.IsStartsWith("C1M2_NE"))
+    {
+      // $TODO
+      m_EnemyNavalKilled = m_EnemyNavalKilled + 1;
+      CEndMissionMenu::NavalKilled = CEndMissionMenu::NavalKilled + 1;
+    }
+    // Count Enemy air units killed
+    if (_ObjectID.IsStartsWith("C1M2_AE"))
+    {
+      // $TODO
+      m_EnemyAirKilled = m_EnemyAirKilled + 1;
+    }
+
+    if (_ObjectID == "Vietnamese_XRayMortar_1" || _ObjectID == "Vietnamese_XRayMortar_2")
+    {
+       Component GroupMotar = GetObject("GroupUnit_Vietnamese_XRayMotar_1");
+       GroupMotar.RefreshUnitsList();
+//       if (checkMask(GroupMotar, [CLASSIFICATOR_DEAD_OBJECT], []))
+       if(GroupMotar.RefreshUnitsList() == 0)
+       {
+
+         GetObject("MainPlayerUnit").GetSecondPilot().SetMovementPath("WayPointPlayer2", WayPointPlayer2, 4.0);
+         CurrentPathID = "WayPointPlayer2";
+         CurrentPath = new Array (WayPointPlayer2);
+
+         SetObjectiveStatus(1, MOSID_Completed);
+         logWarning(" Group witn ID 'GroupUnit_Vietnamese_XRayMotar_1' was destroyed");
+       }
+    }
+
+
+// Mission Unit destroyed
+
+  // TMP
+    Component DeadThing = GetObject(_ObjectID);
+    if (null == DeadThing)
+    {
+      logError("Component 'DeadThing' == null");
+      return;
+    }
+
+    //logWarning("Object destroyed: " + _ObjectID + " last damaged unit " + new String (DeadThing.GetLastDamager()));
+
+    if (_ObjectID == "MainPlayerUnit_Wingman_1")
+    {
+       Component GroupMotar = GetObject("GroupUnit_Vietnamese_XRayMotar_1");
+       if (DeadThing.GetLastDamager() == "MainPlayerUnit")
+       {
+         //sendEvent( 0.0, SOID_MissionController, "SendPersonalCockpitMessage", ["MainPlayerUnit", L"Mission Fail! ", CCockpitColorMap::m_BadNewsColor, "TEST"]);
+       }
+    }
+  }
+
+// определение расстояния  между объектами
+  float distance(String _BetweenID_1, String _BetweenID_2)
+  {
+     Component Between_1 = new #GameController().GetObject(_BetweenID_1);
+     Component Between_2 = new #GameController().GetObject(_BetweenID_2);
+     if ( null == Between_1 && null == Between_2)
+     {
+      logError(" Component -- null");
+      return;
+     }
+       Vector m_Pos_1 = getPosition(Between_1).origin;
+       Vector m_Pos_2 = getPosition(Between_2).origin;
+
+    // logWarning("Distance between " + _BetweenID_1 + " and " + _BetweenID_2+ " forms " + new String ( (m_Pos_1 - m_Pos_2).Magnitude() ));
+
+    return (m_Pos_1 - m_Pos_2).Magnitude();
+  }
+
+  // sendEvent(0.0, SOID_MissionController, "GroupPopDelayedOrder", []);
+  // sendEvent(0.0, SOID_MissionController, "AllGroupPopDelayedOrder", []);
+  // sendEvent(0.0, SOID_MissionController, "distance", ["Desant1_1", "Plei_Me_Uh1d_5"]);
+  event void AllGroupPopDelayedOrder()
+  {
+    // TMP может стоит fireEvent
+    sendEvent(30.0, "GroupUnit_VietnameseSoldierGun_XRay_1", "GroupPopDelayedOrder", []);
+    sendEvent(30.0, "GroupUnit_VietnameseSoldierGun_XRay_2", "GroupPopDelayedOrder", []);
+    sendEvent(20.0, "GroupUnit_VietnameseSoldierGun_XRay_3", "GroupPopDelayedOrder", []);
+    sendEvent(15.0, "GroupUnit_VietnameseSoldierGun_XRay_4", "GroupPopDelayedOrder", []);
+    sendEvent(10.0, "GroupUnit_VietnameseSoldierGun_XRay_5", "GroupPopDelayedOrder", []);
+    sendEvent(10.0, "GroupUnit_VietnameseSoldierGun_XRay_6", "GroupPopDelayedOrder", []);
+    sendEvent(10.0, "GroupUnit_VietnameseSoldierGun_XRay_7", "GroupPopDelayedOrder", []);
+    sendEvent(10.0, "GroupUnit_VietnameseSoldierGun_XRay_7", "GroupPopDelayedOrder", []);
+    sendEvent(10.0, "GroupUnit_VietnameseSoldierGun_XRay_8", "GroupPopDelayedOrder", []);
+    sendEvent(0.0, "GroupUnit_VietnameseSoldierGun_XRay_9", "GroupPopDelayedOrder", []);
+    sendEvent(0.0, "GroupUnit_VietnameseSoldierGun_XRay_10", "GroupPopDelayedOrder", []);
+  }
+
+  event void TestLanding()
+  {
+      Component _Mission = new #GameController().GetLoadedMission();
+
+      Component Editor = new #GameController().GetObject("MissionEditor");
+      if (null != Editor)
+      {
+       Component SelectedObject = Editor.GetSelectedObject();
+       if (null != SelectedObject)
+       {
+           _Mission.CreateObject(
+           getIdentificator(SelectedObject) + "_TempForTestNP",
+           "NavPoint",
+           "CZAxisCylNavPoint",
+           getPosition(SelectedObject),
+           [
+             ["Detect", false],
+             ["Range",  0.0],
+             ["Name",   ""],
+             ["PositionType", "Ground"],
+             ["Mask",   [[],[]]]
+           ]
+         );
+
+         sendEvent(5.0, getIdentificator(SelectedObject), "Landing", [getIdentificator(SelectedObject) + "_TempForTestNP"]);
+
+         Matrix UnitMatr = getPosition(SelectedObject);
+         Vector UnitXVec = UnitMatr.xvec;
+         UnitMatr.origin = UnitMatr.origin - 50.0 * UnitXVec;
+
+         _Mission.CreateObject(
+           getIdentificator(SelectedObject) + "_TempForTestUnloadNP",
+           "NavPoint",
+           "CZAxisCylNavPoint",
+           UnitMatr,
+           [
+             ["Detect", false],
+             ["Range",  0.0],
+             ["Name",   ""],
+             ["PositionType", "Ground"],
+             ["Mask",   [[],[]]]
+           ]
+         );
+
+         sendEvent(10.0, SOID_MissionController, "ContinueGroupOrder", [getIdentificator(SelectedObject) + "_DesantGroup","SetOrder_Unload",[getIdentificator(SelectedObject), ( getIdentificator(SelectedObject) + "_TempForTestUnloadNP"),10,80]]);
+
+         sendEvent(65.0,  getIdentificator(SelectedObject), "Wingman_TakeOff",  [] );
+       }
+      }
+  }
+
+  String m_HelicID = "Plei_Me_Uh1d_2";
+
+  event void KillHelicopter()
+  {
+      Component Helicopter = new #GameController().GetObject(m_HelicID);
+      if (Helicopter != null)
+      {
+        Matrix Pos = getPosition(Helicopter);
+        sendEvent( 1.0, SOID_MissionController, "Explosion",  [Pos]);
+        sendEvent( 3.0, SOID_MissionController, "Explosion",  [Pos]);
+        sendEvent( 5.0, SOID_MissionController, "Explosion",  [Pos]);
+        sendEvent( 3.0, SOID_MissionController, "DeadHelic",  [m_HelicID]);
+      }
+  }
+
+  event void Explosion(Matrix _Pos)
+  {
+    int radius = 10;
+    _Pos.origin = _Pos.origin + new Vector( rand(radius), rand(radius), 0.0);
+    (new #ExplosionsArray()).CreateExplosion("MortarGunBulletExplosion", _Pos, null, "GOD");
+    (new #EffectsArray()).CreateEffect("GroundMortarBulletHitEffect" , _Pos, null);
+  }
+
+  event void DeadHelic(String _HelicID)
+  {
+      Component Helicopter = new #GameController().GetObject(_HelicID);
+      if (Helicopter != null)
+      {
+        Helicopter.SetImmortalMode(false);
+        Component HelicopterStateControl = Helicopter.GetStateControl();
+        if (null != HelicopterStateControl)
+        {
+          logWarning(" Unit with ID=" + _HelicID + " destroy!!!!");
+          HelicopterStateControl.SetHitPoints(0.0);
+          sendEvent(2.0, SOID_MissionController, "StartDialog", ["DeathHelicopter"]);
+        }
+      }
+  }
+
+
+  //sendEvent( 0.0, SOID_MissionController, "FineExplosionXRay",  []);
+  event void FineExplosionXRay()
+  {
+    Matrix PosNavPoint1 = getPosition(new #GameController().GetObject("NavPoint_Detonation_XRay_01"));
+    Matrix PosNavPoint2 = getPosition(new #GameController().GetObject("NavPoint_Detonation_XRay_02"));
+    Matrix PosNavPoint3 = getPosition(new #GameController().GetObject("NavPoint_Detonation_XRay_03"));
+    Matrix PosNavPoint4 = getPosition(new #GameController().GetObject("NavPoint_Detonation_XRay_04"));
+    Matrix PosNavPoint5 = getPosition(new #GameController().GetObject("NavPoint_Detonation_XRay_05"));
+
+    sendEvent( rand(10.0), SOID_MissionController, "ExplosionEffectXRay",  [PosNavPoint1]);
+    sendEvent( rand(10.0), SOID_MissionController, "ExplosionEffectXRay",  [PosNavPoint2]);
+    sendEvent( rand(10.0), SOID_MissionController, "ExplosionEffectXRay",  [PosNavPoint3]);
+    sendEvent( rand(10.0), SOID_MissionController, "ExplosionEffectXRay",  [PosNavPoint4]);
+    sendEvent( rand(10.0), SOID_MissionController, "ExplosionEffectXRay",  [PosNavPoint5]);
+  }
+  event void ExplosionEffectXRay(Matrix _Pos)
+  {
+    //(new #ExplosionsArray()).CreateExplosion("MortarGunBulletExplosion", _Pos, null, "GOD");
+    (new #EffectsArray()).CreateEffect("GroundMortarBulletHitEffect", _Pos, null);
+    (new #EffectsArray()).CreateEffect("Uh1DSignEffect", _Pos, null);
+    (new #EffectsArray()).CreateEffect("HeliSmokeEffect" , _Pos, null);
+  }
+
+
+  // sendEvent(0.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_1", "GreenSmokeEffect"]);
+  // sendEvent(0.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_1_1", "GreenSmokeEffect"]);
+  // sendEvent(0.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_2", "RedSmokeEffect"]);
+  // sendEvent(0.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_2_1", "RedSmokeEffect"]);
+  event void CreateSignalSmoke(String _PointID, String _EffectID)
+  {
+     Component Point = GetObject(_PointID);
+     if ( null != Point)
+     {
+      Matrix PosSmoke = getPosition(Point);
+      (new #EffectsArray()).CreateEffect(_EffectID, PosSmoke, null);
+     }
+     else
+        logError("[CreateSignalSmoke] Object _PointID=" + _PointID + " does not exist!! Component == null!!!");
+  }
+  //------------------------------------------------------------------------------
+  event  void StartDialogWarning(String _DialogID)   //Warning_player out of Mission Zone
+  {
+    Component DialogsManager = CDialogsManager::GetDialogsManager();
+    if (null != DialogsManager)
+    {
+      if(isDebug)
+          logWarning("Begining dialog with ID=" + _DialogID);
+
+        if (null == DialogsManager.BeginDialog(_DialogID, [""]))
+         logError( _DialogID + " Dialog is null");
+     }
+  }
+
+
+  // --------------------------------------------------------------------------
+  event void StartDialog(String _DialogID)
+  {
+    Component DialogsManager = CDialogsManager::GetDialogsManager();
+    if (null != DialogsManager)
+    {
+     logWarning("Begining dialog with ID=" + _DialogID);
+     if (DialogsManager.GetDialogRunCount(_DialogID) < 1)
+     {
+        if (null == DialogsManager.BeginDialog(_DialogID, [""]))
+         logError( _DialogID + " Dialog is null");
+     }
+     else
+        logError("Dialog with ID=" + _DialogID + " already use Count=" + new String(DialogsManager.GetDialogRunCount(_DialogID)));
+    }
+  }
+
+  event void OnMissionDialogEnd(String _DialogID)
+  {
+    if(_DialogID == "BombersOnCourse")
+    {
+      sendEvent(20.0, SOID_MissionController, "KillHelicopter", []);  // подрыв вертолёта ...
+    } else if (_DialogID== "DeathHelicopter")
+    {
+      sendEvent(10.0, SOID_MissionController, "StartDialog", ["GunshipsRecieveAttack"]);
+      //sendEvent( 5.0, _GroupID.GetPartPreceding("_DesantGroup"), "Wingman_TakeOff",  [] );
+      //InvokeGroupTaskFunction("WingmanGroup", "ForEachUnitTask", ["StartTransport"]);
+      sendEvent(10.0, "WingmanGroup", "WingmanContinuePatrol",  []);
+
+     addClassificatorObject( "MainPlayerUnit", PlayerRunFight );
+     removeClassificatorObject( "MainPlayerUnit", PlayerLanding );
+
+     logWarning("MainPlayerUnit_Wingman_1 - DisconnectWingman!!");
+     sendEvent(0.0, "MainPlayerUnit_Wingman_1", "DisconnectWingman", []);
+
+     if (GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot())
+        sendEvent( 0.0, SOID_MissionController, "StartAutoPilot", []);
+     else
+        addClassificatorObject( "MainPlayerUnit", PlayerWasSpin2);
+
+    }
+    else if (_DialogID == "DamagedMortar")
+    {
+      Component MainPlayerUnit = new #GameController().GetObject("MainPlayerUnit");
+      if (null != MainPlayerUnit)
+      {
+        MainPlayerUnit.SetPartLifePercent("Engine", 0.5f);
+        addClassificatorObject( "MainPlayerUnit", PlayerDamaged);
+      }
+      else
+         logError("MainPlayerUnit is null!");
+
+       //if (GetObject("MainPlayerUnit").GetSecondPilot().IsEnabledAutopilot())
+           //StartAutoPilot();
+
+      //GetMission().SendPersonalCockpitMessage("MainPlayerUnit", L"KILL CO_PILOT !!!!!!  KILL BILLLLLL \\\\ Blyam ... brain on glass ////", CCockpitColorMap::m_BadNewsColor, "TEST");
+      (new #SoundsArray()).CreateSound("BulletHit_KillPilot", getPosition((new #GameController()).GetObject("MainPlayerUnitCoPilotObject")));
+
+      CoPilotDead = true;
+      sendEvent( 2.0, "MainPlayerUnit", "KillCoPilot", []);
+
+      sendEvent(5.0, SOID_MissionController, "StartDialog", ["KillSecondPilot"]);
+    }
+    else if (_DialogID == "NearBase")
+        sendEvent(0.0, "WingmanGroup1", "TransportLastFly", []);
+//    else if (_DialogID == "HelicopterUnderFight")
+//        fireEvent(30.0, [], "CheatOnHitByEnemy", []);
+  }
+  // --------------------------------------------------------------------------
+
+  event void SetNavPointIdentifiersArray(String _NavPointID, Array _ID)
+  {
+    Component NavPoint = GetMission().GetObject(_NavPointID);
+
+    if (null != NavPoint)
+    {
+      NavPoint.SetIdentifiers(_ID);
+    }
+    else
+      logError("Component NavPoint with ID="+_NavPointID + " -- null !!!" );
+  }
+
+  //fireEvent(0.0, [], "Roost", []);
+  event void Roost()
+  {
+
+    if (distance("Plei_Me_Uh1d_1", "MainPlayerUnit") > 3000)
+    {
+      //FailMission(10.0);
+      SetObjectiveStatus(0, MOSID_Failed);
+    }
+    else
+      SetObjectiveStatus(0, MOSID_Completed);
+
+    //sendEvent( 10.0, SOID_MissionController, "AllGroupPopDelayedOrder", []);
+    sendEvent( 0.0, SOID_MissionController, "FineExplosionXRay",  []);
+
+    logWarning("Mission::Roost() ");
+    m_WatcherBack = new CC1M2WingmanGroup_WatcherBack();
+    m_WatcherBack.Initialize(this, "CC1M2WingmanGroup_WatcherBack");
+
+      // Start attack bomber`s
+      sendEvent(20.0, "GroupUnit_AmericanSkyRiders_1", "BombAttack", []);  // time correction
+      // TMP
+      //sendEvent( 0.0, SOID_MissionController, "SendPersonalCockpitMessage", ["MainPlayerUnit", L"3-Land", CCockpitColorMap::m_BadNewsColor, "TEST"]);
+
+      // старт переговоров в эфире
+
+      sendEvent(0.0, SOID_MissionController, "StartDialog", ["ExchangeRemarks3_Land"]);
+      SetObjectiveVisible(1, true);
+
+      Component WingmanGroup = new #GameController().GetObject("WingmanGroup");
+//      if (WingmanGroup.HelicCurrentOrder.m_Order != "Patrol")
+//      {
+        WingmanGroup.HelicCurrentOrder.m_Order = "Patrol";
+        WingmanGroup.HelicCurrentOrder.m_PatrolPath        = ["NavPoint_Way_1", "NavPoint_Way_2", "NavPoint_Way_3", "NavPoint_Way_4", "NavPoint_Way_5", "NavPoint_Way_6"];
+        WingmanGroup.HelicCurrentOrder.m_CyclePath         = false;
+        WingmanGroup.HelicCurrentOrder.m_NonSynchedPatrol  = false;
+
+        WingmanGroup.HelicCurrentOrder.m_NextPatrolPoint   = 3;
+        WingmanGroup.HelicCurrentOrder.m_PatrolPause       = 0;
+
+        //WingmanGroup.SaveCurrentOrder();
+        WingmanGroup.CancelAllOrders();
+//      }
+
+      Component WingmanGroup = new #GameController().GetObject("WingmanGroup");
+      addClassificatorObject("WingmanGroup", GetMission().WingmanGroupLand);   // для PositionWatcher
+      fireEvent( 1.0, [], "MoveToPointLand", [50.0, 30.0]);
+      // больше не нужен Watcher
+      m_Watcher1 = null;
+      GetObject("C1M2PlayerUnit_Transport_Watcher").SetEventHandler(null);
+  }
+
+  event void ChekingWarningOutPoint()
+  {
+    logWarning("[ChekingWarningOutPoint] Player in point NavPoint_PlayerPosition - " + new String(m_PlayerOnWay));
+    if (!m_PlayerOnWay)
+    {
+      if (CoPilotDead)
+        GetMission().SendPersonalCockpitMessage("MainPlayerUnit", CC1M2Mission_Strings::str_C1M2_Breadshow_Reproof_016, CCockpitColorMap::m_NeutralNewsColor, "str_C1M2_Breadshow_Reproof_016");
+      else
+        GetMission().SendPersonalCockpitMessage("MainPlayerUnit", CC1M2Mission_Strings::str_C1M2_Breadshow_Reproof_013, CCockpitColorMap::m_NeutralNewsColor, "str_C1M2_Breadshow_Reproof_013");
+
+      //CSPMission::FailMission(40.0);
+    }
+  }
+
+  void Shutdown()
+  {
+    m_Watcher1 = null;
+    m_WatcherForward = null;
+    m_WatcherBack = null;
+    m_WingmanGuide = null;
+    Player = null;
+
+    CSPMission::Shutdown();
+  }
+
+  // TMP  sendEvent( 0.0, SOID_MissionController, "tmp", []);
+  event void tmp()
+  {
+    addClassificatorObject("MainPlayerUnit", PlayerInPointLandXRay);
+
+    Component console = new #GameController().GetObject(SOID_Console);
+    console.logClassificatorsList("MainPlayerUnit");
+
+    StartAutoPilot();
+  }
+  // TMP
+  event void StartFakeHowitzerFire()
+  {
+    Array ArrayID_1;
+    Array ArrayID_2;
+
+    if (m_TargetHowitzerPlace == 4)
+      m_TargetHowitzerPlace = 1;
+
+    if (m_TargetHowitzerPlace == 1)
+    {
+      ArrayID_1 = m_TargetHowitzerNavPoint1_1;
+      ArrayID_2 = m_TargetHowitzerNavPoint1_2;
+    }
+    else if (m_TargetHowitzerPlace == 2)
+    {
+      ArrayID_1 = m_TargetHowitzerNavPoint2_1;
+      ArrayID_2 = m_TargetHowitzerNavPoint2_2;
+    }
+    else if (m_TargetHowitzerPlace == 3)
+    {
+      ArrayID_1 = m_TargetHowitzerNavPoint3_1;
+      ArrayID_2 = m_TargetHowitzerNavPoint3_2;
+    }
+
+    logWarning("[FirePoint_1] ArrayID=" + new String(ArrayID_1));
+    logWarning("[FirePoint_2] ArrayID=" + new String(ArrayID_2));
+    logWarning("[FirePoint] m_CounterFirePlace=" + new String(m_TargetHowitzerPlace));
+    for ( int i = 0; i < ArrayID_1.size(); i++)
+    {
+      sendEvent(float(randnum(10)), SOID_MissionController, "XRayFakeHowitzerDetonate", [ArrayID_1[i]]);
+    }
+
+    for ( int i = 0; i < ArrayID_2.size(); i++)
+    {
+       sendEvent(float(randnum(10)), SOID_MissionController, "XRayFakeHowitzerDetonate", [ArrayID_2[i]]);
+    }
+
+    sendEvent( 40.0, SOID_MissionController, "StartFakeHowitzerFire", []);
+    m_TargetHowitzerPlace = m_TargetHowitzerPlace + 1;
+  }
+  event void XRayFakeHowitzerDetonate(String _ObjectID)
+  {
+    int radius = 3;
+
+    Component Object = GetObject(_ObjectID);
+       if (null != Object)
+       {
+         Array Isection = GetIsectionWithAxis(
+            DF_POINT|DF_SURFTYPE,
+            [CLASSIFICATOR_TERRAIN],
+            [],
+            getPosition(Object).origin,
+            AXIS_Z
+          );
+        String SurfaceType = CLASSIFICATOR_GROUND;
+        Matrix Position = getPosition(Object);
+        Position.origin = Position.origin + new Vector(rand(-radius, radius), rand(-radius, radius), 0.0);
+
+        if (Isection [ISECTION_DATAFLAGS_INDEX] & DF_SURFTYPE == DF_SURFTYPE)
+        {
+          // valid
+          Position.origin = Isection[ISECTION_POINT_INDEX];
+          SurfaceType = Isection[ISECTION_SURFTYPE_INDEX]; // CLASSIFICATOR_GROUND, CLASSIFICATOR_WATER, CLASSIFICATOR_FOREST
+        }
+
+        (new #ExplosionsArray()).CreateExplosion("M2A1HowitzerGunBulletExplosion", Position, null, "GOD");
+
+        if (SurfaceType == CLASSIFICATOR_GROUND)
+          (new #EffectsArray()).CreateEffect("GroundHowitzerBulletHitEffect",    Position, null);
+        else if (SurfaceType == CLASSIFICATOR_TERRAINFOREST)
+          (new #EffectsArray()).CreateEffect("ForestHowitzerBulletHitEffect",    Position, null);
+       }
+  }
+
+  // get list of sounds used in this mission
+  Array GetVoiceSoundTable()
+  {
+    return
+      [
+        [ "str_c1m2_Jackson_PlayerDeath_01",     "Resources/Vw_c1m2_Jackson_PlayerDeath_01.wav" ],
+
+        // Dialog ExchangeRemarks1_2
+        [ "str_C1M2_Breadshow_StartMove_03", "Resources/Vw_C1M2_Breadshow_StartMove_03.wav" ],
+        [ "str_C1M2_DispatcherHome_01", "Resources/Vb_C1M2_DispatcherHome_01.wav" ],
+        [ "str_C1M2_Breadshow_StartMove_04", "Resources/Vw_C1M2_Breadshow_StartMove_04.wav" ],
+        [ "str_C1M2_DispatcherHome_011", "Resources/Vb_C1M2_DispatcherHome_011.wav" ],
+        [ "str_C1M2_Breadshow_StartMove_041", "Resources/Vw_C1M2_Breadshow_StartMove_041.wav" ],
+
+
+        // Dialog ExchangeRemarks2_3
+        [ "str_C1M2_DispatcherHome_02", "Resources/Vb_C1M2_DispatcherHome_02.wav" ],
+        [ "str_C1M2_Moore_01", "Resources/Vg_C1M2_Moore_01.wav" ],
+        [ "str_C1M2_Falcon_01", "Resources/Vg_C1M2_Falcon_01.wav" ],
+        [ "str_C1M2_Moore_02", "Resources/Vg_C1M2_Moore_02.wav" ],
+        [ "str_C1M2_Falcon_02", "Resources/Vg_C1M2_Falcon_02.wav" ],
+        [ "str_C1M2_Moore_03", "Resources/Vg_C1M2_Moore_03.wav" ],
+        [ "str_C1M2_Breadshow_Move_01", "Resources/Vw_C1M2_Breadshow_Move_01.wav" ],
+        [ "str_C1M2_Moore_04", "Resources/Vg_C1M2_Moore_04.wav" ],
+        [ "str_C1M2_DispatcherHome_03", "Resources/Vb_C1M2_DispatcherHome_03.wav" ],
+        [ "str_C1M2_Moore_05", "Resources/Vg_C1M2_Moore_05.wav" ],
+        [ "str_C1M2_Breadshow_Move_02", "Resources/Vw_C1M2_Breadshow_Move_02.wav" ],
+        [ "str_C1M2_Moore_06", "Resources/Vg_C1M2_Moore_06.wav" ],
+        [ "str_C1M2_DispatcherHome_04", "Resources/Vb_C1M2_DispatcherHome_04.wav" ],
+
+        // Dialog ExchangeRemarks3_Land
+        [ "str_C1M2_Breadshow_Move_03", "Resources/Vw_C1M2_Breadshow_Move_03.wav" ],
+        [ "str_C1M2_Breadshow_Descent_01", "Resources/Vw_C1M2_Breadshow_Descent_01.wav" ],
+        [ "str_C1M2_Moore_Descent_01", "Resources/Vg_C1M2_Moore_Descent_01.wav" ],
+        [ "str_C1M2_Breadshow_Descent_02", "Resources/Vw_C1M2_Breadshow_Descent_02.wav" ],
+        [ "str_C1M2_Moore_Bombardment_01", "Resources/Vg_C1M2_Moore_Bombardment_01.wav" ],
+        [ "str_Skyrider_Bombardment_01", "Resources/Vp_Skyrider_Bombardment_01.wav" ],
+        [ "str_C1M2_Moore_Bombardment_02", "Resources/Vg_C1M2_Moore_Bombardment_02.wav" ],
+        [ "str_Skyrider_Bombardment_02", "Resources/Vp_Skyrider_Bombardment_02.wav" ],
+
+        // Dialog Point Land
+        [ "str_C1M2_Breadshow_Descent_03", "Resources/Vw_C1M2_Breadshow_Descent_03.wav" ],
+        [ "str_Moore_Descent_02", "Resources/Vg_C1M2_Moore_Descent_02.wav" ],
+
+        // Reel 2
+        [ "str_C1M2_reel2_Moore_01", "Resources/Vm_C1M2_reel2_Moore _01.wav" ],
+        [ "str_C1M2_reel2_Breadshow_01", "Resources/Vb_C1M2_reel2_Breadshow_01.wav" ],
+        [ "str_C1M2_reel2_Pilot1_01", "Resources/Vp_C1M2_reel2_Pilot1_01.wav" ],
+        [ "str_C1M2_reel2_Moore_02", "Resources/Vm_C1M2_reel2_Moore_02.wav" ],
+        [ "str_C1M2_reel2_Breadshow_02", "Resources/Vb_C1M2_reel2_Breadshow_02.wav" ],
+        [ "str_C1M2_reel2_Pilot1_02", "Resources/Vp_C1M2_reel2_Pilot1_02.wav" ],
+        [ "str_C1M2_reel2_Pilot2_01", "Resources/Vp_C1M2_reel2_Pilot2_01.wav" ],
+        [ "str_C1M2_reel2_Breadshow_03", "Resources/Vb_C1M2_reel2_Breadshow_03.wav" ],
+
+        // Non Dialog wav-file
+        [ "str_C1M2_Jackson_TakeOff_01", "Resources/Vw_C1M2_Jackson_TakeOff_01.wav" ],
+        [ "str_C1M2_Jackson_TakeOff_02", "Resources/Vw_C1M2_Jackson_TakeOff_02.wav" ],
+        [ "str_C1M2_Kingsley_TakeOff_01", "Resources/Vi_C1M2_Kingsley_TakeOff_01.wav" ],
+        [ "str_C1M2_Kingsley_TakeOff_02", "Resources/Vi_C1M2_Kingsley_TakeOff_02.wav" ],
+        [ "str_C1M2_Kingsley_TakeOff_03", "Resources/Vi_C1M2_Kingsley_TakeOff_03.wav" ],
+        [ "str_C1M2_Breadshow_Reproof_01", "Resources/Vw_C1M2_Breadshow_Reproof_01.wav" ],
+        [ "str_C1M2_Breadshow_StartMove_01", "Resources/Vw_C1M2_Breadshow_StartMove_01.wav" ],
+        [ "str_C1M2_Breadshow_StartMove_02", "Resources/Vw_C1M2_Breadshow_StartMove_02.wav" ],
+
+        [ "str_Jackson_Return_02", "Resources/Vw_Jackson_Return_02.wav" ],
+        [ "str_Breadshow_Return_03", "Resources/Vw_Breadshow_Return_03.wav" ],
+        [ "str_Jackson_Return_03", "Resources/Vw_Jackson_Return_03.wav" ],
+        [ "str_Breadshow_Return_04", "Resources/Vw_Breadshow_Return_04.wav" ],
+        [ "str_Jackson_Return_04", "Resources/Vw_Jackson_Return_04.wav" ],
+        [ "str_Jackson_Warning_01", "Resources/Vw_Jackson_Warning_01.wav" ],
+        [ "str_Jackson_Warning_02", "Resources/Vw_Jackson_Warning_02.wav" ],
+        [ "str_Moore_Return_01", "Resources/Vg_Moore_Return_01.wav" ],
+        [ "str_Dispatcher_Return_01", "Resources/Vb_Dispatcher_Return_01.wav" ],
+        [ "str_Moore_Return_02", "Resources/Vg_Moore_Return_02.wav" ],
+        [ "str_Breadshow_Return_05", "Resources/Vw_Breadshow_Return_05.wav" ],
+        [ "str_Moore_Return_03", "Resources/Vg_Moore_Return_03.wav" ],
+        [ "str_Breadshow_Return_06", "Resources/Vw_Breadshow_Return_06.wav" ],
+        [ "str_Dispatcher_Return_02", "Resources/Vb_Dispatcher_Return_02.wav" ],
+        [ "str_Breadshow_Return_07", "Resources/Vw_Breadshow_Return_07.wav" ],
+        [ "str_Jackson_Return_05", "Resources/Vw_Jackson_Return_05.wav" ],
+        [ "str_Breadshow_Return_08", "Resources/Vw_Breadshow_Return_08.wav" ],
+        [ "str_Dispatcher_Return_03", "Resources/Vb_Dispatcher_Return_03.wav" ],
+        [ "str_Breadshow_Return_09", "Resources/Vw_Breadshow_Return_09.wav" ],
+        [ "str_Dispatcher_Return_04", "Resources/Vb_Dispatcher_Return_04.wav" ],
+        [ "str_Jackson_Return_06", "Resources/Vw_Jackson_Return_06.wav" ],
+        [ "str_Jackson_Return_07", "Resources/Vw_Jackson_Return_07.wav" ],
+
+
+        [ "str_Skyrider_Bombardment_03", "Resources/Vp_Skyrider_Bombardment_03.wav" ],
+        [ "str_Skyrider_Bombardment_04", "Resources/Vp_Skyrider_Bombardment_04.wav" ],
+        [ "str_C1M2_Moore_Bombardment_03", "Resources/Vg_C1M2_Moore_Bombardment_03.wav" ],
+        [ "str_Skyrider_Bombardment_05", "Resources/Vp_Skyrider_Bombardment_05.wav" ],
+        [ "str_C1M2_Moore_Bombardment_04", "Resources/Vg_C1M2_Moore_Bombardment_04.wav" ],
+        [ "str_C1M2_Breadshow_Descent_04", "Resources/Vw_C1M2_Breadshow_Descent_04.wav" ],
+        [ "str_Moore_Descent_03", "Resources/Vg_C1M2_Moore_Descent_03.wav" ],
+        [ "str_C1M2_Breadshow_Descent_05", "Resources/Vw_C1M2_Breadshow_Descent_05.wav" ],
+        [ "str_Jackson_Descent_01", "Resources/Vw_Jackson_Descent_01.wav" ],
+        [ "str_Jackson_Descent_02", "Resources/Vw_Jackson_Descent_02.wav" ],
+        [ "str_C1M2_Breadshow_Descent_06", "Resources/Vw_C1M2_Breadshow_Descent_06.wav" ],
+        [ "str_Jackson_MortarAttack_01", "Resources/Vw_Jackson_MortarAttack_01.wav" ],
+        [ "str_Moore_MortarAttack_01", "Resources/Vg_Moore_MortarAttack_01.wav" ],
+        [ "str_Jackson_MortarAttack_02", "Resources/Vw_Jackson_MortarAttack_02.wav" ],
+        [ "str_Moore_MortarAttack_02", "Resources/Vg_Moore_MortarAttack_02.wav" ],
+        [ "str_Kingsley_MortarAttack_01", "Resources/Vi_Kingsley_MortarAttack_01.wav" ],
+        [ "str_Breadshow_Return_01", "Resources/Vw_Breadshow_Return_01.wav" ],
+        [ "str_Jackson_Return_01", "Resources/Vw_Jackson_Return_01.wav" ],
+        [ "str_Kingsley_Return_01", "Resources/Vi_Kingsley_Return_01.wav" ],
+        [ "str_Breadshow_Return_02", "Resources/Vw_Breadshow_Return_02.wav" ],
+
+        [ "str_C1M2_Breadshow_StartMove_042", "Resources/Vw_C1M2_Breadshow_StartMove_042.wav" ],
+        [ "str_C1M2_Breadshow_StartMove_043", "Resources/Vw_C1M2_Breadshow_StartMove_043.wav" ],
+        [ "str_C1M2_Breadshow_StartMove_044", "Resources/Vw_C1M2_Breadshow_StartMove_044.wav" ],
+        [ "str_C1M2_DispatcherHome_012", "Resources/Vb_C1M2_DispatcherHome_012.wav" ],
+        [ "str_C1M2_DispatcherHome_013", "Resources/Vb_C1M2_DispatcherHome_013.wav" ],
+        [ "str_C1M2_DispatcherHome_014", "Resources/Vb_C1M2_DispatcherHome_014.wav" ],
+
+
+         [ "str_C1M2_Breadshow_Reproof_011", "Resources/Vw_C1M2_Breadshow_Reproof_011.wav" ],
+         [ "str_C1M2_Kingsley_Reproof_011", "Resources/Vi_C1M2_Kingsley_Reproof_011.wav" ],
+         [ "str_C1M2_Breadshow_Reproof_012", "Resources/Vw_C1M2_Breadshow_Reproof_012.wav" ],
+         [ "str_C1M2_Breadshow_Reproof_013", "Resources/Vw_C1M2_Breadshow_Reproof_013.wav" ],
+         [ "str_C1M2_DispatcherHome_Reproof_011", "Resources/Vg_C1M2_DispatcherHome_Reproof_011.wav" ],
+         [ "str_C1M2_Breadshow_Reproof_014", "Resources/Vw_C1M2_Breadshow_Reproof_014.wav" ],
+         [ "str_C1M2_Breadshow_Reproof_015", "Resources/Vw_C1M2_Breadshow_Reproof_015.wav" ],
+         [ "str_C1M2_Breadshow_Reproof_016", "Resources/Vw_C1M2_Breadshow_Reproof_016.wav" ],
+
+
+        [ "str_Skyrider_MortarAttack_01",  "Resources/Vp_Skyrider_MortarAttack_01.wav" ],
+        [ "str_Moore_MortarAttack_03",  "Resources/Vg_Moore_MortarAttack_03.wav" ]
+      ];
+  }
+
+  Map m_SoundAnimMap = new Map([
+                                 [ "str_Kingsley_MortarAttack_01",           ["Kingsley_MortarAttack_01", 3.47]],
+                                 [ "str_C1M2_Kingsley_Reproof_011",          ["Kingsley_Reproof_011", 3.80]],
+                                 [ "str_Kingsley_Return_01",                 ["Kingsley_Return_01", 4.33]],
+                                 [ "str_C1M2_Kingsley_TakeOff_01",           ["Kingsley_TakeOff_01", 2.8]],
+                                 [ "str_C1M2_Kingsley_TakeOff_02",           ["Kingsley_TakeOff_02", 3.47]],
+                                 [ "str_C1M2_Kingsley_TakeOff_03",           ["Kingsley_TakeOff_03", 2.13]]
+                               ]);
+  Map GetSoundAnimMap()
+  {
+    return m_SoundAnimMap;
+  }
+
+
+  final static Array Ethalon =
+   [
+     new Vector(0.1f, 0.9f, 0.0f),         //   1
+     new Vector(0.3f, 0.7f, 0.0f),         //   2
+     new Vector(0.5f, 0.5f, 0.0f),         //   3
+     new Vector(0.7f, 0.3f, 0.0f),         //   4
+     new Vector(0.9f, 0.1f, 0.0f),         //   5
+     new Vector(0.2f, 0.2f, 0.0f),         //   6
+     new Vector(0.4f, 0.4f, 0.0f),         //   7
+     new Vector(0.6f, 0.7f, 0.0f),         //   8
+     new Vector(0.8f, 0.8f, 0.0f),         //   9
+     new Vector(0.9f, 0.6f, 0.0f),         //   10
+     new Vector(0.0f, 0.1f, 0.0f),         //   11
+     new Vector(0.1f, 0.7f, 0.0f),         //   12
+     new Vector(0.5f, 0.9f, 0.0f),         //   13
+     new Vector(0.2f, 0.5f, 0.0f),         //   14
+     new Vector(1.0f, 0.3f, 0.0f),         //   15
+     new Vector(1.0f, 0.9f, 0.0f)          //   16
+  ];
+
+}

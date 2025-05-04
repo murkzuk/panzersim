@@ -1,0 +1,213 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CCampaignMenu
+  extends CBaseMenu, CCampaignControls
+{
+  static String m_MenuClassName = "CCampaignMenu";
+
+  final static Array Missions = [
+                ["CC1M1Mission",  CMissionName::C1M1MissionName], 
+                ["CC1M2Mission",  CMissionName::C1M2MissionName],
+                  //
+                ["CC1M3Mission",  CMissionName::C1M3MissionName], 
+                ["CC1M4Mission",  CMissionName::C1M4MissionName],
+                ["CC1M5Mission",  CMissionName::C1M5MissionName], 
+                ["CC1M6Mission",  CMissionName::C1M6MissionName],                                      
+                ["CC1M7Mission",  CMissionName::C1M7MissionName], 
+                ["CC1M8Mission",  CMissionName::C1M8MissionName],
+                ["CC1M9Mission",  CMissionName::C1M9MissionName], 
+                ["CC1M10Mission", CMissionName::C1M10MissionName]
+      ];
+
+  final WString m_CustomText = getLocalized("Menu","str_OG_CUSTOM");
+
+  final Array m_DifficultyText = [
+                                   getLocalized("Menu","str_OG_EASY"),
+                                   getLocalized("Menu","str_OG_NORMAL"),
+                                   getLocalized("Menu","str_OG_HARD")
+                                 ];
+
+  WString m_CompletedText = getLocalized("Menu","str_CM_COMPLETED");
+  WString m_MissionText = getLocalized("Menu","str_CM_MISSION");
+  WString m_OFText       = getLocalized("Menu","str_CM_OF");
+
+  void OnInitMenu()
+  {
+    Component Game = new #GameController();
+    Component MenuController = Game.GetMenuController();
+    MenuController.SetDefaultCommands("StartNewGameButton", "QuitButton");
+    GetObject("CampaignList").SetSlaveScroller(GetObject("CampaignScroll"));
+    GetObject("CampaignList").SetListScrollStep(25.0/ 768.0);
+
+    LoadList();
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    if ("Load" == _ID)
+    {
+      int Camp = GetObject("CampaignList").GetCurrentItem();
+      Component GameSettings = new #GameSettings();
+      Array Campaigns = GameSettings.GetPlayersList();
+
+      final int iMission = GameSettings.LoadPlayerValue(Campaigns[Camp], L"Status", 1) - 1;
+      if (-1 != iMission)
+        new #GameController().m_StartMission = Missions[iMission][0];
+      GameSettings.SetUserValue(L"CurrentPlayer", Campaigns[Camp]);
+
+      SaveToSettings(Campaigns[Camp]);
+
+      logMessage(new #GameController().m_StartMission);
+      Invoke("GameEnvironmentMenu");
+    }
+    else
+    if ("BackButton" == _ID)
+      Invoke("MainMenu");
+//      GoBack();
+    else
+    if ("NewButton" == _ID)
+      OpenWindow("NewCampaignMenu");
+    if ("Delete" == _ID)
+    {
+      CDelCampaignMenu::CampaignNum = GetObject("CampaignList").GetCurrentItem();
+      OpenWindow("DelCampaignMenu");
+    }
+    else
+    if ("ShowDifficulty" == _ID)
+    {
+      int Camp = GetObject("CampaignList").GetCurrentItem();
+      Component GameSettings = new #GameSettings();
+      Array Campaigns = GameSettings.GetPlayersList();
+      GameSettings.SetUserValue(L"CurrentPlayer", Campaigns[Camp]);
+      SaveToSettings(Campaigns[Camp]);
+      Invoke("GameOptionsMenu");
+    }
+    else
+    if (_ID.IsStartsWith("Campaign_"))
+    {
+      GetObject("CampaignList").SelectItem(_ID);
+      int Camp = GetObject("CampaignList").GetCurrentItem();
+      Component GameSettings = new #GameSettings();
+      Array Campaigns = GameSettings.GetPlayersList();
+      int Status = GameSettings.LoadPlayerValue(Campaigns[Camp], L"Status", 1);
+      GetObject("Load").SetDisabled(Status == -1);
+    }
+    else
+    if ("CampaignScroll_Arrow1" == _ID)
+      GetObject("CampaignList").ScrollUp(25.0/768.0);
+    else
+    if ("CampaignScroll_Arrow2" == _ID)
+      GetObject("CampaignList").ScrollDown(25.0/768.0);
+
+  }
+
+  LoadList()
+  {
+    Component GameSettings = new #GameSettings();
+    Array Campaigns = GameSettings.GetPlayersList();
+
+    Array Props = [
+                    ["SelectedColor",   new Color(186.0/255.0, 186.0/255.0 ,176.0/255.0),   false],
+                    ["NormalColor",     new Color(122.0/255.0, 122.0/255.0 ,103.0/255.0),     false]
+                  ];
+
+    Component CampaignList = GetObject("CampaignList");
+    Component Position = new CUIPosition(0.0, 0.0, CampaignList.GetUIPosition().Width, 25.0 / 768.0);
+
+    GetObject("Delete").SetDisabled(Campaigns.isEmpty());
+    GetObject("Load").SetDisabled(Campaigns.isEmpty());
+    GetObject("ShowDifficulty").SetDisabled(Campaigns.isEmpty());
+
+    for (int i = 0; i < Campaigns.size(); i++)
+    {
+      WString CampaignName = GameSettings.LoadPlayerValue(Campaigns[i], L"Name", L"");
+      WString PlayerName   = GameSettings.LoadPlayerValue(Campaigns[i], L"IDName", L"");
+      int Status           = GameSettings.LoadPlayerValue(Campaigns[i], L"Status", 1);
+      int MaxStatus        = GameSettings.LoadPlayerValue(Campaigns[i], L"MaxStatus", 1);
+      int Difficulty       = GameSettings.LoadPlayerValue(Campaigns[i], L"Difficulty", 0);
+//      logWarning(new String(CampaignName) + " " + new String(PlayerName));
+
+      String NewID = "Campaign_" + new String(i);
+      Component Element = CreateUIControl(NewID,
+                            "BitmapButton",
+                            "CUICampaignField",
+                            Position,
+                            Props);
+      WString DiffText = m_CustomText;
+      if (Difficulty != -1)
+        DiffText = m_DifficultyText[Difficulty];
+
+        WString MissText = m_MissionText + L" " + new WString(Status) + L" " + m_OFText + L" " + new WString(MaxStatus);
+      if (Status == -1)
+        MissText = m_CompletedText;
+
+      Element.SetText(
+                       CampaignName,
+                       PlayerName,
+                       MissText,
+                       DiffText
+                     );
+      CampaignList.AddControl(NewID);
+      if (i == 0)
+        GetObject("Load").SetDisabled(Status == -1);
+
+    }
+  }
+
+  void LoadFromSettings(
+      WString _Player
+    )
+  {
+    Component GameSettings = new #GameSettings();
+
+    GameSettings.SavePlayerValue(_Player, L"Difficulty", GameSettings.GetDifficultyLevel());
+    GameSettings.SavePlayerValue(_Player, L"TargetingMode", GameSettings.GetTargetingMode());
+    GameSettings.SavePlayerValue(_Player, L"OrientationMode", GameSettings.GetOrientationMode());
+    GameSettings.SavePlayerValue(_Player, L"TargetsOnMap", GameSettings.GetTargetsOnMap());
+    GameSettings.SavePlayerValue(_Player, L"RetreatingBladeStallMode", GameSettings.GetRetreatingBladeStallMode());
+    GameSettings.SavePlayerValue(_Player, L"AircushionMode", GameSettings.GetAircushionMode());
+    GameSettings.SavePlayerValue(_Player, L"VortexRingMode", GameSettings.GetVortexRingMode());
+    GameSettings.SavePlayerValue(_Player, L"WindEffectMode", GameSettings.GetWindEffectMode());
+    GameSettings.SavePlayerValue(_Player, L"PayloadMode", GameSettings.GetPayloadMode());
+    GameSettings.SavePlayerValue(_Player, L"ShockwaveMode", GameSettings.GetShockwaveMode());
+    GameSettings.SavePlayerValue(_Player, L"UnlimAmmo", GameSettings.GetUnlimAmmo());
+    GameSettings.SavePlayerValue(_Player, L"GodMode", GameSettings.GetGodMode());
+    GameSettings.SavePlayerValue(_Player, L"UnlimFuel", GameSettings.GetUnlimitedFuel());
+    GameSettings.SavePlayerValue(_Player, L"DynamicLift", GameSettings.GetDynamicLift());
+    GameSettings.SavePlayerValue(_Player, L"Compass", GameSettings.GetIntelligentCompass());
+
+  }
+
+  void SaveToSettings(
+      WString _Player
+    )
+  {
+    Component GameSettings = new #GameSettings();
+
+      GameSettings.SetDifficultyLevel(GameSettings.LoadPlayerValue(_Player, L"Difficulty", 0));
+
+      GameSettings.SetTargetingMode(GameSettings.LoadPlayerValue(_Player, L"TargetingMode", 0));
+      GameSettings.SetOrientationMode(GameSettings.LoadPlayerValue(_Player, L"OrientationMode", 0));
+      GameSettings.SetTargetsOnMap(GameSettings.LoadPlayerValue(_Player, L"TargetsOnMap", 0));
+      GameSettings.SetRetreatingBladeStallMode(GameSettings.LoadPlayerValue(_Player, L"RetreatingBladeStallMode", 0));
+      GameSettings.SetAircushionMode(GameSettings.LoadPlayerValue(_Player, L"AircushionMode", 0));
+      GameSettings.SetVortexRingMode(GameSettings.LoadPlayerValue(_Player, L"VortexRingMode", 0));
+      GameSettings.SetWindEffectMode(GameSettings.LoadPlayerValue(_Player, L"WindEffectMode", 0));
+      GameSettings.SetPayloadMode(GameSettings.LoadPlayerValue(_Player, L"PayloadMode", 0));
+      GameSettings.SetShockwaveMode(GameSettings.LoadPlayerValue(_Player, L"ShockwaveMode", 0));
+      GameSettings.SetUnlimAmmo(GameSettings.LoadPlayerValue(_Player, L"UnlimAmmo", 0));
+      GameSettings.SetGodMode(GameSettings.LoadPlayerValue(_Player, L"GodMode", 0));
+      GameSettings.SetUnlimitedFuel(GameSettings.LoadPlayerValue(_Player, L"UnlimFuel", 0));
+      GameSettings.SetDynamicLift(GameSettings.LoadPlayerValue(_Player, L"DynamicLift", 0));
+      GameSettings.SetIntelligentCompass(GameSettings.LoadPlayerValue(_Player, L"Compass", 0));
+  }
+}

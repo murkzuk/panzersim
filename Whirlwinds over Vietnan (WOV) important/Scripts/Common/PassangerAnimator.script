@@ -1,0 +1,525 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//
+// CPilotAttackStates
+//
+
+class CPilotAttackStates
+{
+  final static int STATE_Default              = 0;
+  final static int STATE_Sit                  = 0;
+}
+
+//
+// CPilotAnimatorConfig
+//
+
+class CPilotAnimatorConfig
+  extends CPilotAttackStates
+{
+  final static float StateChangeTime = 0.25;
+
+  final static int   PHASE_METHOD_LinePhase = 4; // value sensitive constant
+
+  final static int   PARAM_Sit      = 0;  
+  final static int   PARAM_Throttle = 1;  
+  final static int   PARAM_Rudder   = 2;  
+  final static int   PARAM_Tangage  = 3;  
+  final static int   PARAM_Bank     = 4;  
+  final static int   PARAM_HeadLR   = 5;
+  final static int   PARAM_HeadUD   = 6;
+  
+  final static int   PHASE_HeliControl = 0;
+
+  final static int   GENERATOR_Throttle = 0;
+  final static int   GENERATOR_Rudder   = 1;
+  final static int   GENERATOR_Bank     = 2;
+  final static int   GENERATOR_Tangage  = 3;
+  final static int   GENERATOR_HeadLR   = 4;
+  final static int   GENERATOR_HeadUD   = 5;
+
+  final static String ANIM_Throttle = "trottle";
+  final static String ANIM_Rudder   = "rudder";
+  final static String ANIM_Bank     = "cyclic_bank";
+  final static String ANIM_Tangage  = "cyclic_tangage";
+  final static String ANIM_HeadLR   = "head_left_to_right";
+  final static String ANIM_HeadUD   = "head_up_to_down";
+  final static String ANIM_BodyLR   = "body_left_to_right";
+  final static String ANIM_BodyUD   = "body_up_to_down";
+}
+
+
+//
+// CPilotAnimatorGraph
+//
+
+class CPilotAnimatorGraph
+  extends CPilotAnimatorConfig, CBaseStateAnimatorGraph
+{
+
+  // ==================================
+  // Costruction
+  // ==================================
+
+  CPilotAnimatorGraph()
+  {
+    SetupBlendTree();
+  }
+
+  // ==================================
+  // Service
+  // ==================================
+
+  void SetupBlendTree()
+  {
+    String StateID = new String(STATE_Sit);
+    
+    CreateBlendNode("", StateID, [
+            [],
+            [
+              [ ANIM_Throttle, GENERATOR_Throttle, 0],
+              [ ANIM_Rudder,   GENERATOR_Rudder, 1],
+              [ ANIM_Bank,     GENERATOR_Bank, 2 ],
+              [ ANIM_Tangage,  GENERATOR_Tangage, 2 ]
+            ]
+          ]);
+
+  }
+}
+
+//
+// CPilotHeadAnimatorGraph
+//
+
+class CPilotHeadAnimatorGraph
+  extends CPilotAnimatorConfig, CBaseStateAnimatorGraph
+{
+  // ==================================
+  // Costruction
+  // ==================================
+
+  CPilotHeadAnimatorGraph()
+  {
+    SetupBlendTree();
+  }
+
+  // ==================================
+  // Service
+  // ==================================
+
+  void SetupBlendTree()
+  {
+    String StateID = new String(STATE_Sit);
+    
+    CreateBlendNode("", StateID, [
+            [],
+            [
+              [ ANIM_HeadLR,   GENERATOR_HeadLR, 0],
+              [ ANIM_HeadUD,   GENERATOR_HeadUD, 0],
+              [ ANIM_BodyLR,   GENERATOR_HeadLR, 1],
+              [ ANIM_BodyUD,   GENERATOR_HeadUD, 1]
+            ]
+          ]);
+
+
+  }
+}
+
+class CPilotHeadAnimator
+  extends CPilotAnimatorConfig, CBaseStateAnimator
+{
+
+  static Component Graph = null;
+  
+  // ==================================
+  // Costruction
+  // ==================================
+
+  CPilotHeadAnimator()
+  {
+    // Setup graph component
+    if (null == Graph)
+      Graph = new #StateAnimatorGraph<CPilotHeadAnimatorGraph>();
+
+    DefinePhaseGenerator(PHASE_HeliControl, GENERATOR_HeadLR,   PHASE_METHOD_LinePhase, [ 1.0f, PARAM_HeadLR]);
+    DefinePhaseGenerator(PHASE_HeliControl, GENERATOR_HeadUD,   PHASE_METHOD_LinePhase, [ 1.0f, PARAM_HeadUD]);
+
+    SetHeadPhase(0.5, 0.5);
+  }
+
+  void SetHeadPhase(
+      float _HeadLR,
+      float _HeadUD
+    )
+  {
+    SetParameter(PARAM_HeadLR, _HeadLR);
+    SetParameter(PARAM_HeadUD, _HeadUD);
+  }
+
+}
+//
+// CPilotAnimator
+//
+
+class CPilotAnimator
+  extends CPilotAnimatorConfig, CBaseStateAnimator
+{
+
+  static Component Graph = null;
+  
+  // ==================================
+  // Costruction
+  // ==================================
+
+  CPilotAnimator()
+  {
+    // Setup graph component
+    if (null == Graph)
+      Graph = new #StateAnimatorGraph<CPilotAnimatorGraph>();
+
+    DefinePhaseGenerator(PHASE_HeliControl, GENERATOR_Tangage,  PHASE_METHOD_LinePhase, [ 1.0f, PARAM_Tangage]);
+    DefinePhaseGenerator(PHASE_HeliControl, GENERATOR_Bank,     PHASE_METHOD_LinePhase, [ 1.0f, PARAM_Bank]);
+    DefinePhaseGenerator(PHASE_HeliControl, GENERATOR_Rudder,   PHASE_METHOD_LinePhase, [ 1.0f, PARAM_Rudder]);
+    DefinePhaseGenerator(PHASE_HeliControl, GENERATOR_Throttle, PHASE_METHOD_LinePhase, [ 1.0f, PARAM_Throttle]);
+
+    SetThrottlePhase(0.0);
+    SetRudderPhase(0.0);
+    SetBankTangagePhase(0.0, 0.0);
+  }
+
+  // ==================================
+  // Interface
+  // ==================================
+
+  void Initialize(
+      Component _Mesh
+    )
+  {
+    _Mesh.SetAnimationPhase("rhand_pilot", 1.0f);
+    _Mesh.SetAnimationPhase("lhand_pilot", 1.0f);
+    _Mesh.SetAnimationPhase("pilot_neutral", 1.0f);
+  }
+
+  void SetThrottlePhase(
+      float _Phase
+    )
+  {
+    SetParameter(PARAM_Throttle, _Phase);
+  }
+
+  void SetRudderPhase(
+      float _Phase
+    )
+  {
+    SetParameter(PARAM_Rudder, _Phase);
+  }
+
+  void SetBankTangagePhase(
+      float _Bank,
+      float _Tangage
+    )
+  {
+    SetParameter(PARAM_Bank, _Bank);
+    SetParameter(PARAM_Tangage, _Tangage);
+  }
+
+  // ==================================
+  // Events
+  // ==================================
+
+
+  // ==================================
+  // Service
+  // ==================================
+
+}
+
+
+//
+// Gunner animator configs
+//
+
+class CGunnerAnimatorConfig
+{
+  final static float StateChangeTime     = 0.3;
+  final static float FreeStateChangeTime = 0.5;
+
+  // params 
+  final static int PARAM_AIM_LINK = 0;
+  final static int PARAM_State    = 1;
+  final static int PARAM_HeadLR   = 2;
+  final static int PARAM_HeadUD   = 3;
+  final static int PARAM_FreeState= 4;
+
+  final static int STATE_Default     = 0;
+  final static int STATE_FreeSit     = 1;
+
+  final static int STATE_FreeLookOut = 1;
+
+  final static int PHASE_METHOD_AnimationTime = 1;
+  final static int PHASE_METHOD_AnglePhase    = 3; // value sensitive constant
+  final static int PHASE_METHOD_LinePhase     = 4; // value sensitive constant
+  final static int PHASE_METHOD_FixedPhase    = 5; // value sensitive constant
+  final static int PHASE_METHOD_JointAnglePhase = 6;
+
+  final static int PHASE_GunnerHAim   = 0;
+  final static int PHASE_Sit          = 1;
+  final static int PHASE_Fixed        = 2;
+  final static int PHASE_LookOut      = 3;
+
+  final static int GENERATOR_HAim      = 0;
+  final static int GENERATOR_HHead     = 1;
+  final static int GENERATOR_VHead     = 2;
+  final static int GENERATOR_Fixed     = 3;
+  final static int GENERATOR_LookOut   = 4;
+
+  final static float MinVAngle = - 20; 
+  final static float MaxVAngle = 50; 
+
+  final static int ANIM_RightGunner     = 0;
+  final static int ANIM_LeftGunner      = 1;
+
+
+  final static int iANIM_HMove    = 0;
+  final static int iANIM_VAimDown = 1;
+  final static int iANIM_VAimUp   = 2;
+  final static int iANIM_HHead    = 3;
+  final static int iANIM_VHead    = 4;
+  final static int iANIM_Sit      = 5;
+  final static int iANIM_LookOut  = 6;
+
+  final static Array Animations = [
+                                    //ANIM_RightGunner
+                                    [
+                                      "shooter_right",
+                                      "shooter_right_dn",
+                                      "shooter_right_up",
+                                      "shooter_right_headhor",
+                                      "shooter_right_headvert",
+                                      "shooter_right_sit",
+                                      "shooter_right_lookdn"
+                                    ],
+                                    //ANIM_LeftGunner
+                                    [
+                                      "shooter_left",
+                                      "shooter_left_dn",
+                                      "shooter_left_up",
+                                      "shooter_left_headhor",
+                                      "shooter_left_headvert",
+                                      "shooter_left_sit",
+                                      "shooter_left_lookdn"
+                                    ]
+                                  ];
+
+  final static int   iJOINT_HBeg = 0;
+  final static int   iJOINT_HEnd = 1;
+
+  final static Array JointParams = [
+                                    //ANIM_RightGunner
+                                    [
+                                       new Vector(cos(-140.0 * Math_PI / 180.0f), sin(-140.0 * Math_PI / 180.0f), 0.0f),
+                                       new Vector(cos(-10.0  * Math_PI / 180.0f), sin(-10.0  * Math_PI / 180.0f), 0.0f)
+                                    ],
+                                    //ANIM_LeftGunner
+                                    [
+                                       new Vector(cos(140.0 * Math_PI / 180.0f), sin(140.0 * Math_PI / 180.0f), 0.0f),
+                                       new Vector(cos(10.0  * Math_PI / 180.0f), sin(10.0  * Math_PI / 180.0f), 0.0f)
+                                    ]
+                                  ];
+}
+
+//
+// Gunner animator graphs
+//
+
+class CGunnerAnimatorGraph
+  extends CGunnerAnimatorConfig, CBaseStateAnimatorGraph
+{
+
+  Array C_State(
+      int _StateID
+    )
+  {
+    return C_Parameter(PARAM_State, _StateID, StateChangeTime);
+  }
+
+  Array C_FreeState(
+      int _StateID
+    )
+  {
+    return C_Parameter(PARAM_FreeState, _StateID, FreeStateChangeTime);
+  }
+
+  // ==================================
+  // Costruction
+  // ==================================
+
+  CGunnerAnimatorGraph(int _Type)
+  {
+    if (_Type == ANIM_RightGunner ||
+        _Type == ANIM_LeftGunner)
+    {
+      SetupBlendTree(_Type);
+    }
+    else
+      logError("invalid parameters for gunner animator");
+  }
+
+  // ==================================
+  // Service
+  // ==================================
+
+  void SetupBlendTree(int _Type)
+  {
+    String ANIM_HMove    = Animations[_Type][iANIM_HMove];
+    String ANIM_VAimDown = Animations[_Type][iANIM_VAimDown];
+    String ANIM_VAimUp   = Animations[_Type][iANIM_VAimUp];
+    String ANIM_HHead    = Animations[_Type][iANIM_HHead];
+    String ANIM_VHead    = Animations[_Type][iANIM_VHead];
+    String ANIM_Sit      = Animations[_Type][iANIM_Sit];
+    String ANIM_LookOut  = Animations[_Type][iANIM_LookOut];
+
+    String StateID = new String(STATE_Default);
+
+    CreateBlendNode("", StateID, [[C_State(STATE_Default)],[]]);    
+
+    CreateBlendNode(StateID, StateID + "HAim",
+          [
+            [C_JointDir(0.0f, (MaxVAngle - MinVAngle) * 0.5, 0.0f, (MaxVAngle + MinVAngle) * 0.5 , PARAM_AIM_LINK)],
+            [
+              [ ANIM_HMove, GENERATOR_HAim, 0]
+            ]
+          ]);
+
+    CreateBlendNode(StateID, StateID + "VAimUp",
+          [
+            [C_JointDir(0.0f, (MaxVAngle - MinVAngle) * 0.5, 0.0f, MinVAngle, PARAM_AIM_LINK)],
+            [
+              [ ANIM_VAimUp, GENERATOR_HAim, 0]
+            ]
+          ]);
+    CreateBlendNode(StateID, StateID + "VAimDown",
+          [
+            [C_JointDir(0.0f, (MaxVAngle - MinVAngle) * 0.5, 0.0f, MaxVAngle, PARAM_AIM_LINK)],
+            [
+              [ ANIM_VAimDown, GENERATOR_HAim, 0]
+            ]
+          ]);
+
+    StateID = new String(STATE_FreeSit);
+
+   CreateBlendNode("", StateID, [[C_State(STATE_FreeSit)], []]);
+
+   CreateBlendNode(StateID, StateID + "FreeSit",
+          [
+            [C_FreeState(STATE_Default)],
+            [                      
+              [ ANIM_HHead, GENERATOR_HHead, 0],
+              [ ANIM_VHead, GENERATOR_VHead, 0],     
+              [ ANIM_Sit,   GENERATOR_Fixed, 0]
+            ]
+          ]);
+
+  CreateBlendNode(StateID, StateID + "FreeLookOut",
+          [
+            [C_FreeState(STATE_FreeLookOut)],
+            [                      
+              [ ANIM_LookOut, GENERATOR_LookOut, 0]
+            ]
+          ]);
+  }
+
+}
+
+//
+// Gunner animators
+//
+
+class CGunnerAnimator
+  extends CGunnerAnimatorConfig, CBaseStateAnimator
+{   
+  Component Graph = null; 
+
+  static Array Graphs = [null, null];
+
+  // ==================================
+  // Costruction
+  // ==================================
+
+  CGunnerAnimator(int _Type)
+  {    
+    // Setup graph component
+    if (Graphs[_Type] == null)    
+    {
+      Graphs[_Type] = new #StateAnimatorGraph();
+      loadFromScript(Graphs[_Type], "CGunnerAnimatorGraph",[_Type]);
+    }
+
+    Graph = Graphs[_Type];
+
+    DefinePhaseGenerator(PHASE_GunnerHAim, GENERATOR_HAim,   PHASE_METHOD_JointAnglePhase, [PARAM_AIM_LINK, JointParams[_Type][iJOINT_HBeg], JointParams[_Type][iJOINT_HEnd]]);
+    DefinePhaseGenerator(PHASE_Fixed,      GENERATOR_Fixed,  PHASE_METHOD_FixedPhase, [ 1.0f]);
+    DefinePhaseGenerator(PHASE_Sit,        GENERATOR_HHead,  PHASE_METHOD_LinePhase, [ 1.0f, PARAM_HeadLR]);
+    DefinePhaseGenerator(PHASE_Sit,        GENERATOR_VHead,  PHASE_METHOD_LinePhase, [ 1.0f, PARAM_HeadUD]);
+    DefinePhaseGenerator(PHASE_LookOut,    GENERATOR_LookOut,PHASE_METHOD_AnimationTime, [ 1.0f,  false, true]);
+
+    SetHeadPhase(0.5, 0.5);
+
+    SetState(STATE_Default);
+    SetFreeState(STATE_Default);
+  }
+
+  // ==================================
+  // Interface
+  // ==================================
+
+  void Initialize(
+      Component _Mesh
+    )
+  {
+    _Mesh.SetAnimationPhase("lhand_shooter", 1.0f);
+    _Mesh.SetAnimationPhase("rhand_shooter", 1.0f);
+  }
+
+  void InitializeWeaponJoint(
+      Component _AimJoint
+    )
+  {
+    SetParameter(PARAM_AIM_LINK, _AimJoint);
+  }
+
+  void SetState(
+      int _State
+    )
+  {
+    SetParameter(PARAM_State, _State);
+    if (_State == STATE_Default)
+    {
+      SetAnimationPhase("rhand_shooter", 1.0f);
+      SetAnimationPhase("lhand_shooter", 1.0f);
+    }
+  }
+
+  void SetFreeState(
+      int _State
+    )
+  {
+    SetParameter(PARAM_FreeState, _State);
+  }
+
+  void SetHeadPhase(
+      float _HeadLR,
+      float _HeadUD
+    )
+  {
+    SetParameter(PARAM_HeadLR, _HeadLR);
+    SetParameter(PARAM_HeadUD, _HeadUD);
+  }
+}

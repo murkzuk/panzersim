@@ -1,0 +1,59 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Behavior
+class CVietnamesePeasantBehavior extends CHumanBehavior
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 400; // m
+  float  MinRadarDistance = 5;    // m
+  boolean ZAxisRadar = true;
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+}
+
+class CVietnamesePeasantUnit
+  extends CHumanUnit
+{
+
+  final static float DefaultHitPoints = CHitPoints::VietnamesePeasantUnitHitPoints;
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND", "HUMAN"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CVietnamesePeasantUnit()
+  {
+    SetupMesh(new #AnimatedObject<Chum_VietnamesePeasantModel>(), [200, 100, 50, 10, 3]);
+
+    SetupBehavior(new #HumanBehavior<CVietnamesePeasantBehavior>());
+
+    // Load additionals animations
+    LoadAnimations("ChumansAnimation");
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CHumanUnit::Construct(_Mission, _PropMap);
+  }
+
+}

@@ -1,0 +1,62 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+class CDshk_PeasantGroup
+  extends CObjectsGroup 
+{
+  static Array DefaultContents = [ 
+    [
+      "GroupDshk_Peasant",
+      "UnitGroup",
+      "CBaseDshkPeasantGroup",           
+      new Matrix(
+          -0.991755, 0.128147, 0.000000, 28782.996094,
+          -0.128147, -0.991755, 0.000000, 36778.824219,
+          0.000000, 0.000000, 1.000000, 415.074219,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Units", ["Dshk", "VietnameseStay"]]
+      ]
+    ],
+  
+    [
+      "Dshk",
+      "GameObject",
+      "CDShKUnit",
+      new Matrix(
+          0.984242, 0.176826, 0.000000, 10915.698242,
+          -0.176826, 0.984242, 0.000000, 40614.890625,
+          0.000000, 0.000000, 1.000000, 287.594574,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "ENEMY"],
+        ["Task", "CBaseAITask"],
+        ["SurfaceControl", "PutonGroundUpright"]
+      ]
+    ],
+      
+    [
+      "VietnameseStay",
+      "GameObject",
+      "CVietnamesePeasantUnit",
+      new Matrix(
+          0.989568, -0.144064, 0.000000, 10914.707031,
+          0.144064, 0.989568, 0.000000, 40614.632813,
+          0.000000, 0.000000, 1.000000, 291.444061,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "ENEMY"],
+        ["Task", "CBasePeasantTaskStay"]
+      ]
+    ]      
+  ];
+}

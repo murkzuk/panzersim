@@ -1,0 +1,1853 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//
+// Dialog classes
+//
+
+class CBaseDialog
+{
+  // Constants
+  final static int TMN_None = -1; // None phrase target member number
+
+  // Properties
+  final static String ID               = "";
+  final static float  DefaultTalkPause = 1.0f;
+  final static float  Radius           = 2.0f;
+
+  final static Array  Content = [
+      // Record format: <Member number>, <PhraseID>, [<Wait timeout>], [<Phrase target member number>]
+    ];
+}
+
+//Dialogs
+/*
+class TEST extends CBaseDialog
+{
+  final static String ID = "TEST";
+
+  final static Array  Content = [
+      [0, "str_Temp1", "temp1", DefaultTalkPause, TMN_None],
+      [1, "str_Temp2", "temp2", DefaultTalkPause, TMN_None],
+      [0, "str_Temp1", "temp1", DefaultTalkPause, TMN_None],
+      [1, "str_Temp1", "temp2", DefaultTalkPause, TMN_None]
+    ];
+}
+ */
+
+// Compain 1 Mission 1
+class CC1M1PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M1PlayerWarningOutPoint";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_C1M1_Breadshow_Reproof_014,      "str_C1M1_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_C1M1_Breadshow_Reproof_015,      "str_C1M1_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1BeginMission extends CBaseDialog
+{
+  final static String ID = "BeginMission";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Begin_01,       "str_c1m1_Breadshow_Begin_01",     DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Begin_01,      "str_c1m1_Dispatcher_Begin_01",    DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Begin_02,       "str_c1m1_Breadshow_Begin_02",     DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1BeginLoading extends CBaseDialog
+{
+  final static String ID = "BeginLoading";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Loading_01,       "str_c1m1_Moore_Loading_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Loading_01,   "str_c1m1_Breadshow_Loading_01",    DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Loading_02,       "str_c1m1_Moore_Loading_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Loading_02,   "str_c1m1_Breadshow_Loading_02",    DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Loading_03,       "str_c1m1_Moore_Loading_03",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1FinishedLoading extends CBaseDialog
+{
+  final static String ID = "FinishedLoading";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Start_01,   "str_c1m1_Breadshow_Start_01",    DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Start_02,   "str_c1m1_Breadshow_Start_02",    DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Start_01,       "str_c1m1_Moore_Start_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Start_03,   "str_c1m1_Breadshow_Start_03",    DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Start_02,       "str_c1m1_Moore_Start_02",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1FirstPointRoute extends CBaseDialog
+{
+  final static String ID = "FirstPointRoute";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Moving_01,      "str_c1m1_Moore_Moving_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Moving_02,      "str_c1m1_Moore_Moving_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Moving_01, "str_c1m1_Dispatcher_Moving_01",   10.0f, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Moving_03,      "str_c1m1_Moore_Moving_03",        5.0f, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Falcon_Moving_01,     "str_c1m1_Falcon_Moving_01",       10.0f, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Moving_04,      "str_c1m1_Moore_Moving_04",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Falcon_Moving_02,     "str_c1m1_Falcon_Moving_02",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1MeetingChinuk1 extends CBaseDialog
+{
+  final static String ID = "MeetingChinuk1";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_01,   "str_c1m1_Breadshow_Moving2_01",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Chenook_Moving2_01,     "str_c1m1_Chenook_Moving2_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_02,   "str_c1m1_Breadshow_Moving2_02",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Chenook_Moving2_02,     "str_c1m1_Chenook_Moving2_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_03,   "str_c1m1_Breadshow_Moving2_03",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Chenook_Moving2_03,     "str_c1m1_Chenook_Moving2_03",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1ContinueRoute extends CBaseDialog
+{
+  final static String ID = "ContinueRoute";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Moving2_01,     "str_c1m1_Moore_Moving2_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Moving2_02,     "str_c1m1_Moore_Moving2_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_04, "str_c1m1_Breadshow_Moving2_04",    DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Moving2_03,     "str_c1m1_Moore_Moving2_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_05,   "str_c1m1_Breadshow_Moving2_05",      10.0, TMN_None]
+    ];
+}
+
+class CC1M1MeetingChinuk2 extends CBaseDialog
+{
+  final static String ID = "MeetingChinuk2";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_06,   "str_c1m1_Breadshow_Moving2_06",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Chenook_Moving2_04,     "str_c1m1_Chenook_Moving2_04",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_07,   "str_c1m1_Breadshow_Moving2_07",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Chenook_Moving2_05,     "str_c1m1_Chenook_Moving2_05",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Moving2_08,   "str_c1m1_Breadshow_Moving2_08",      DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1HelicopterReducedHeight extends CBaseDialog
+{
+  final static String ID = "HelicopterReducedHeight";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_NearXRay_01,    "str_c1m1_Breadshow_NearXRay_01",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Kingsley_NearXRay_01,     "str_c1m1_Kingsley_NearXRay_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Jackson_NearXRay_01,      "str_c1m1_Jackson_NearXRay_01",        DefaultTalkPause, TMN_None],
+
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_NearXRay_01,        "str_c1m1_Moore_NearXRay_01",          20.0f, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_NearXRay_02,        "str_c1m1_Moore_NearXRay_02",          DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_NearXRay_02,    "str_c1m1_Breadshow_NearXRay_02",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_NearXRay_03,    "str_c1m1_Breadshow_NearXRay_03",      20.0f, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Jackson_NearXRay_02,      "str_c1m1_Jackson_NearXRay_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_NearXRay_04,    "str_c1m1_Breadshow_NearXRay_04",      20.0f, TMN_None]
+    ];
+}
+
+class CC1M1BeginDebarkationDesant extends CBaseDialog
+{
+  final static String ID = "BeginDebarkationDesant";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Descent_01,         "str_c1m1_Moore_Descent_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Descent_01,     "str_c1m1_Breadshow_Descent_01",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Moore_Descent_02,         "str_c1m1_Moore_Descent_02",          DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Descent_02,     "str_c1m1_Breadshow_Descent_02",      DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1HelicoptersLandPlus10 extends CBaseDialog
+{
+  final static String ID = "HelicoptersLandPlus10";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Descent_03,    "str_c1m1_Breadshow_Descent_03",     DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Jackson_Attack_01,       "str_c1m1_Jackson_Attack_01",        10.0f, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Attack_01,     "str_c1m1_Breadshow_Attack_01",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Jackson_Attack_02,       "str_c1m1_Jackson_Attack_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Kingsley_Attack_01,      "str_c1m1_Kingsley_Attack_01",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1DestroyedOneBarrel extends CBaseDialog
+{
+  final static String ID = "DestroyedOneBarrel";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Jackson_Attack_03,       "str_c1m1_Jackson_Attack_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Attack_02,     "str_c1m1_Breadshow_Attack_02",      DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1HelicoptersTakeOff extends CBaseDialog
+{
+  final static String ID = "HelicoptersTakeOff";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Return_01,     "str_c1m1_Breadshow_Return_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Return_02,     "str_c1m1_Breadshow_Return_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Return_01,    "str_c1m1_Dispatcher_Return_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Return_03,     "str_c1m1_Breadshow_Return_03",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1BeforeXRays extends CBaseDialog
+{
+  final static String ID = "BeforeXRays";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Return_05,     "str_c1m1_Breadshow_Return_05",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Return_04,     "str_c1m1_Breadshow_Return_04",        15.0, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Return_02,    "str_c1m1_Dispatcher_Return_02",       60.0, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Return_06,     "str_c1m1_Breadshow_Return_06",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Return_03,    "str_c1m1_Dispatcher_Return_03",       DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Return_07,     "str_c1m1_Breadshow_Return_07",        DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Return_04,    "str_c1m1_Dispatcher_Return_04",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M1NearPleyMe extends CBaseDialog
+{
+  final static String ID = "NearPleyMe";
+
+  final static Array  Content = [
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Home_01,      "str_c1m1_Breadshow_Home_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Home_01,     "str_c1m1_Dispatcher_Home_01",      10.0, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Home_02,      "str_c1m1_Breadshow_Home_02",       DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Home_02,     "str_c1m1_Dispatcher_Home_02",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Home_03,      "str_c1m1_Breadshow_Home_03",       DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Dispatcher_Home_03,     "str_c1m1_Dispatcher_Home_03",      DefaultTalkPause, TMN_None],
+      [0,   CC1M1Mission_Strings::str_c1m1_Breadshow_Home_04,      "str_c1m1_Breadshow_Home_04",       20.0, TMN_None]
+    ];
+}
+
+// Compain 1 Mission 2
+class CC1M2ExchangeRemarks1_2 extends CBaseDialog
+{
+  final static String ID = "ExchangeRemarks1_2";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_StartMove_03,   "str_C1M2_Breadshow_StartMove_03",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_01,        "str_C1M2_DispatcherHome_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_StartMove_04,   "str_C1M2_Breadshow_StartMove_04",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_011,       "str_C1M2_DispatcherHome_011",         DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_StartMove_041,  "str_C1M2_Breadshow_StartMove_041",    DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_012,       "str_C1M2_DispatcherHome_012",          10.0f , TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_StartMove_042,  "str_C1M2_Breadshow_StartMove_042",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_013,       "str_C1M2_DispatcherHome_013",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_StartMove_043,  "str_C1M2_Breadshow_StartMove_043",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_014,       "str_C1M2_DispatcherHome_014",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_StartMove_044,  "str_C1M2_Breadshow_StartMove_044",     DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2PlayerDoNotFly extends CBaseDialog
+{
+  final static String ID = "PlayerDoNotFly";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_StartMove_01,     "str_C1M2_Breadshow_StartMove_01",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Jackson_TakeOff_02,         "str_C1M2_Jackson_TakeOff_02",         DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Kingsley_TakeOff_03,        "str_C1M2_Kingsley_TakeOff_03",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M2ExchangeRemarks2_3 extends CBaseDialog
+{
+  final static String ID = "ExchangeRemarks2_3";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_02,       "str_C1M2_DispatcherHome_02",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_01,                "str_C1M2_Moore_01",              3.0f , TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Falcon_01,               "str_C1M2_Falcon_01",             DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_02,                "str_C1M2_Moore_02",              DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Falcon_02,               "str_C1M2_Falcon_02",             DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_03,                "str_C1M2_Moore_03",              5.0f , TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Move_01,       "str_C1M2_Breadshow_Move_01",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_04,                "str_C1M2_Moore_04",              3.0f , TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_03,       "str_C1M2_DispatcherHome_03",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_05,                "str_C1M2_Moore_05",              5.0f , TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Move_02,       "str_C1M2_Breadshow_Move_02",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_06,                "str_C1M2_Moore_06",              DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_04,       "str_C1M2_DispatcherHome_04",     DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2ExchangeRemarks3_Land extends CBaseDialog
+{
+  final static String ID = "ExchangeRemarks3_Land";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Move_03,        "str_C1M2_Breadshow_Move_03",        5.0f, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Descent_01,     "str_C1M2_Breadshow_Descent_01",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_Descent_01,         "str_C1M2_Moore_Descent_01",         DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Descent_02,     "str_C1M2_Breadshow_Descent_02",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_Bombardment_01,     "str_C1M2_Moore_Bombardment_01",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Skyrider_Bombardment_01,       "str_Skyrider_Bombardment_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_Bombardment_02,     "str_C1M2_Moore_Bombardment_02",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Skyrider_Bombardment_02,       "str_Skyrider_Bombardment_02",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2ExchangePointLand extends CBaseDialog
+{
+  final static String ID = "ExchangePointLand";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Descent_03,     "str_C1M2_Breadshow_Descent_03",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Moore_Descent_02,              "str_Moore_Descent_02",              DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2BombersOnCourse extends CBaseDialog
+{
+  final static String ID = "BombersOnCourse";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_Skyrider_Bombardment_04,     "str_Skyrider_Bombardment_04",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_Bombardment_03,   "str_C1M2_Moore_Bombardment_03",   DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Skyrider_Bombardment_05,     "str_Skyrider_Bombardment_05",     DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Moore_Bombardment_04,   "str_C1M2_Moore_Bombardment_04",   DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2DeathHelicopter extends CBaseDialog
+{
+  final static String ID = "DeathHelicopter";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Descent_04,     "str_C1M2_Breadshow_Descent_04",   DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2GunshipsRecieveAttack extends CBaseDialog
+{
+  final static String ID = "GunshipsRecieveAttack";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_Moore_Descent_03,              "str_Moore_Descent_03",            DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Descent_05,     "str_C1M2_Breadshow_Descent_05",   DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_Descent_01,            "str_Jackson_Descent_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_Descent_02,            "str_Jackson_Descent_02",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Descent_06,     "str_C1M2_Breadshow_Descent_06",   DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2HelicopterUnderFight extends CBaseDialog
+{
+  final static String ID = "HelicopterUnderFight";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_Jackson_MortarAttack_01,     "str_Jackson_MortarAttack_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Moore_MortarAttack_01,       "str_Moore_MortarAttack_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_MortarAttack_02,     "str_Jackson_MortarAttack_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Moore_MortarAttack_02,       "str_Moore_MortarAttack_02",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Kingsley_MortarAttack_01,    "str_Kingsley_MortarAttack_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Skyrider_MortarAttack_01,    "str_Skyrider_MortarAttack_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Moore_MortarAttack_03,       "str_Moore_MortarAttack_03",          DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2DamagedMortar extends CBaseDialog
+{
+  final static String ID = "DamagedMortar";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_01,     "str_Breadshow_Return_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_Return_01,       "str_Jackson_Return_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Kingsley_Return_01,      "str_Kingsley_Return_01",         DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_02,     "str_Breadshow_Return_02",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1KillSecondPilot extends CBaseDialog
+{
+  final static String ID = "KillSecondPilot";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_Jackson_Return_02,       "str_Jackson_Return_02",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_03,     "str_Breadshow_Return_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_Return_03,       "str_Jackson_Return_03",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_04,     "str_Breadshow_Return_04",        DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_Return_04,       "str_Jackson_Return_04",          DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2ExchangeRemarks5_6 extends CBaseDialog
+{
+  final static String ID = "ExchangeRemarks5_6";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_Moore_Return_01,           "str_Moore_Return_01",           DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Dispatcher_Return_01,      "str_Dispatcher_Return_01",      DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Moore_Return_02,           "str_Moore_Return_02",           DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_05,       "str_Breadshow_Return_05",       DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Moore_Return_03,           "str_Moore_Return_03",           DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2NotFarBase extends CBaseDialog
+{
+  final static String ID = "NotFarBase";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_06,         "str_Breadshow_Return_06",        DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Dispatcher_Return_02,        "str_Dispatcher_Return_02",       DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_07,         "str_Breadshow_Return_07",        DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_Return_05,           "str_Jackson_Return_05",          DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_08,         "str_Breadshow_Return_08",        DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Dispatcher_Return_03,        "str_Dispatcher_Return_03",       DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Breadshow_Return_09,         "str_Breadshow_Return_09",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2NearBase extends CBaseDialog
+{
+  final static String ID = "NearBase";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_Dispatcher_Return_04,         "str_Dispatcher_Return_04",      DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_Return_06,            "str_Jackson_Return_06",         DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_Jackson_Return_07,            "str_Jackson_Return_07",         DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2PlayerNotStartEngine extends CBaseDialog
+{
+  final static String ID = "PlayerNotStartEngine";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Reproof_011,     "str_C1M2_Breadshow_Reproof_011",      DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Kingsley_Reproof_011,      "str_C1M2_Kingsley_Reproof_011",       DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Reproof_012,     "str_C1M2_Breadshow_Reproof_012",      DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2PlayerWarning5000 extends CBaseDialog
+{
+  final static String ID = "PlayerWarning5000";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Reproof_013,           "str_C1M2_Breadshow_Reproof_013",            DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_DispatcherHome_Reproof_011,      "str_C1M2_DispatcherHome_Reproof_011",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M2PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "PlayerWarningOutPoint";
+
+  final static Array  Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Reproof_014,      "str_C1M2_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_Breadshow_Reproof_015,      "str_C1M2_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+// reel 2
+class CC1M2Reel2Dialog_1
+  extends CBaseDialog
+{
+  final static String ID = "C1M2Reel2Dialog_1";
+
+  final static Array Content = [
+      [0,   CC1M2Mission_Strings::str_C1M2_reel2_Moore_01,     "str_C1M2_reel2_Moore_01",        0.5f, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_reel2_Breadshow_01, "str_C1M2_reel2_Breadshow_01",    0.5f, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_reel2_Pilot1_01,    "str_C1M2_reel2_Pilot1_01",       0.5f, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_reel2_Moore_02,     "str_C1M2_reel2_Moore_02",        0.5f, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_reel2_Breadshow_02, "str_C1M2_reel2_Breadshow_02",    0.5f, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_reel2_Pilot1_02,    "str_C1M2_reel2_Pilot1_02",       0.5f, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_reel2_Pilot2_01,    "str_C1M2_reel2_Pilot2_01",       0.5f, TMN_None],
+      [0,   CC1M2Mission_Strings::str_C1M2_reel2_Breadshow_03, "str_C1M2_reel2_Breadshow_03",    0.5f, TMN_None]
+    ];
+}
+
+// Compain 1 Mission 3
+class CC1M3FalconFlightOut extends CBaseDialog
+{
+  final static String ID = "C1M3FalconFlightOut";
+  final static Array Content = [
+      [0,   CC1M3Mission_Strings::str_c1m3_Breadshow_Reproof_01,  "str_c1m3_Breadshow_Reproof_01",      0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_Reproof_01,    "str_c1m3_Jackson_Reproof_01",        0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Breadshow_Reproof_02,  "str_c1m3_Breadshow_Reproof_02",      0.5f, TMN_None]
+    ];
+}
+
+class CC1M3PlayerEngineStart extends CBaseDialog
+{
+  final static String ID = "C1M3PlayerEngineStart";
+  final static Array Content = [
+      [0,   CC1M3Mission_Strings::str_c1m3_Breadshow_TakeOff_01,  "str_c1m3_Breadshow_TakeOff_01",    0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_TakeOff_01,    "str_c1m3_Jackson_TakeOff_01",      0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Breadshow_TakeOff_02,  "str_c1m3_Breadshow_TakeOff_02",    0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_TakeOff_02,    "str_c1m3_Jackson_TakeOff_02",      0.5f, TMN_None]
+    ];
+}
+
+class CC1M3AttackBeginning extends CBaseDialog
+{
+  final static String ID = "C1M3AttackBeginning";
+  final static Array Content = [
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_PreAttack_01,  "str_c1m3_DispatcherFalcon_PreAttack_01",      0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_PreAttack_01,           "str_c1m3_Jackson_PreAttack_01",               0.5f, TMN_None]
+    ];
+}
+
+class CC1M3TargetUnderFire extends CBaseDialog
+{
+  final static String ID = "C1M3TargetUnderFire";
+  final static Array Content = [
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_Attack_01,    "str_c1m3_Jackson_Attack_01",      0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Breadshow_Attack_01,  "str_c1m3_Breadshow_Attack_01",    0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_Attack_02,    "str_c1m3_Jackson_Attack_02",      0.5f, TMN_None]
+    ];
+}
+
+class CC1M3ReturnPath extends CBaseDialog
+{
+  final static String ID = "C1M3ReturnPath";
+  final static Array Content = [
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_Return_01,           "str_c1m3_Jackson_Return_01",             0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_Return_01,  "str_c1m3_DispatcherFalcon_Return_01",    0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Breadshow_Return_01,         "str_c1m3_Breadshow_Return_01",           0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_Return_02,           "str_c1m3_Jackson_Return_02",             0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Breadshow_Return_02,         "str_c1m3_Breadshow_Return_02",           0.5f, TMN_None]
+    ];
+}
+
+class CC1M3LandingPath extends CBaseDialog
+{
+  final static String ID = "C1M3LandingPath";
+  final static Array Content = [
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_Land_01,  "str_c1m3_DispatcherFalcon_Land_01",    0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_Land_01,           "str_c1m3_Jackson_Land_01",             0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_Land_02,  "str_c1m3_DispatcherFalcon_Land_02",    0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_Land_02,           "str_c1m3_Jackson_Land_02",             0.5f, TMN_None]
+    ];
+}
+
+class CC1M3MoveToForward extends CBaseDialog
+{
+  final static String ID = "C1M3MoveToForward";
+  final static Array Content = [
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_MoveTo_01,  "str_c1m3_DispatcherFalcon_MoveTo_01",    0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_MoveTo_02,  "str_c1m3_DispatcherFalcon_MoveTo_02",    0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_MoveTo_01,           "str_c1m3_Jackson_MoveTo_01",             0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_MoveTo_03,  "str_c1m3_DispatcherFalcon_MoveTo_03",    0.5f, TMN_None]
+    ];
+}
+
+class CC1M3MoveToBackward extends CBaseDialog
+{
+  final static String ID = "C1M3MoveToBackward";
+  final static Array Content = [
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_MoveBack_01,           "str_c1m3_Jackson_MoveBack_01",           0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_MoveBack_01,  "str_c1m3_DispatcherFalcon_MoveBack_01",  0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_Jackson_MoveBack_02,           "str_c1m3_Jackson_MoveBack_02",           0.5f, TMN_None],
+      [0,   CC1M3Mission_Strings::str_c1m3_DispatcherFalcon_MoveBack_02,  "str_c1m3_DispatcherFalcon_MoveBack_02",  0.5f, TMN_None]
+    ];
+}
+
+class CC1M3PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M3PlayerWarningOutPoint";
+
+  final static Array  Content = [
+      [0,   CC1M3Mission_Strings::str_C1M3_Breadshow_Reproof_014,      "str_C1M3_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M3Mission_Strings::str_C1M3_Breadshow_Reproof_015,      "str_C1M3_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+// Compain 1 Mission 4
+class CC1M4FalconFlightOut extends CBaseDialog
+{
+  final static String ID = "C1M4FalconFlightOut";
+  final static Array Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_Reproof_01,   "str_c1m4_DispatcherFalcon_Reproof_01", 0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_Reproof_01,            "str_c1m4_Jackson_Reproof_01",          0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_Reproof_02,   "str_c1m4_DispatcherFalcon_Reproof_02", 0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_Reproof_02,            "str_c1m4_Jackson_Reproof_02",          0.5f, TMN_None]
+    ];
+}
+
+class CC1M4PlayerEngineStart extends CBaseDialog
+{
+  final static String ID = "C1M4PlayerEngineStart";
+  final static Array Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_TakeOff_01,  "str_c1m4_DispatcherFalcon_TakeOff_01",   0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_TakeOff_01,           "str_c1m4_Jackson_TakeOff_01",            0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_TakeOff_02,  "str_c1m4_DispatcherFalcon_TakeOff_02",   0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_TakeOff_02,           "str_c1m4_Jackson_TakeOff_02",            0.5f, TMN_None]
+    ];
+}
+
+class CC1M4MoveToForward extends CBaseDialog
+{
+  final static String ID = "C1M4MoveToForward";
+  final static Array Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_Breadshow_MoveTo_01,        "str_c1m4_Breadshow_MoveTo_01",         0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_MoveTo_01,           "str_c1m4_Jackson_MoveTo_01",          0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Breadshow_MoveTo_02,         "str_c1m4_Breadshow_MoveTo_02",        0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_MoveTo_01,  "str_c1m4_DispatcherFalcon_MoveTo_01", 0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_MoveTo_02,           "str_c1m4_Jackson_MoveTo_02",          0.5f, TMN_None]
+    ];
+}
+
+class CC1M4AttackBeginning extends CBaseDialog
+{
+  final static String ID = "C1M4AttackBeginning";
+  final static Array Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_PreAttack_01,  "str_c1m4_DispatcherFalcon_PreAttack_01",   0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Hawk_PreAttack_01,              "str_c1m4_Hawk_PreAttack_01",               0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_PreAttack_02,  "str_c1m4_DispatcherFalcon_PreAttack_02",   0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_PreAttack_01,           "str_c1m4_Jackson_PreAttack_01",            0.5f, TMN_None]
+    ];
+}
+
+class CC1M4BombersOnCourse extends CBaseDialog
+{
+  final static String ID = "C1M4BombersOnCourse";
+  final static Array Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_Hawk_Bombing_01,       "str_c1m4_Hawk_Bombing_01",           0.5f, TMN_None]
+    ];
+}
+
+class CC1M4TargetUnderFire extends CBaseDialog
+{
+  final static String ID = "C1M4TargetUnderFire";
+  final static Array Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_Attack_01,            "str_c1m4_Jackson_Attack_01",              0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_Attack_02,             "str_c1m4_Jackson_Attack_02",             0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_Attack_01,    "str_c1m4_DispatcherFalcon_Attack_01",    0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_Attack_03,             "str_c1m4_Jackson_Attack_03",             0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_Attack_02,    "str_c1m4_DispatcherFalcon_Attack_02",    0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_Attack_04,             "str_c1m4_Jackson_Attack_04",             0.5f, TMN_None]
+    ];
+}
+
+class CC1M4MoveToBackward extends CBaseDialog
+{
+  final static String ID = "C1M4MoveToBackward";
+  final static Array Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_MoveBack_01,      "str_c1m4_DispatcherFalcon_MoveBack_01",    0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_MoveBack_01,               "str_c1m4_Jackson_MoveBack_01",             0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_MoveBack_02,      "str_c1m4_DispatcherFalcon_MoveBack_02",    0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Moore_MoveBack_01,                 "str_c1m4_Moore_MoveBack_01",               0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_MoveBack_03,      "str_c1m4_DispatcherFalcon_MoveBack_03",    0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_MoveBack_04,      "str_c1m4_DispatcherFalcon_MoveBack_04",    0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_MoveBack_02,               "str_c1m4_Jackson_MoveBack_02",             0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_MoveBack_03,               "str_c1m4_Jackson_MoveBack_03",             0.5f, TMN_None]
+    ];
+}
+
+class CC1M4LandingPath extends CBaseDialog
+{
+  final static String ID = "C1M4LandingPath";
+  final static Array Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_Land_01,  "str_c1m4_DispatcherFalcon_Land_01",   0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_Land_01,            "str_c1m4_Jackson_Land_01",             0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_Land_02,  "str_c1m4_DispatcherFalcon_Land_02",   0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Jackson_Land_02,            "str_c1m4_Jackson_Land_02",             0.5f, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_DispatcherFalcon_Land_03,   "str_c1m4_DispatcherFalcon_Land_03",    0.5f, TMN_None]
+    ];
+}
+
+class CC1M4PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M4PlayerWarningOutPoint";
+  final static Array  Content = [
+      [0,   CC1M4Mission_Strings::str_c1m4_Breadshow_Reproof_014,      "str_c1m4_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M4Mission_Strings::str_c1m4_Breadshow_Reproof_015,      "str_c1m4_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+// Compain 1 Mission 5
+class CC1M5DucCoFlightOut extends CBaseDialog
+{
+  final static String ID = "C1M5DucCoFlightOut";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_Begin_01,   "str_c1m5_DucCoDispatcher_Begin_01",    DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_Begin_01,           "str_c1m5_Jackson_Begin_01",            DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_Begin_02,   "str_c1m5_DucCoDispatcher_Begin_02",    DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M5PlayerEngineStart extends CBaseDialog
+{
+  final static String ID = "C1M5PlayerEngineStart";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_TakeOff_01,   "str_c1m5_DucCoDispatcher_TakeOff_01",    DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M5PlayerMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M5PlayerMovingTo";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_MoveTo_01,         "str_c1m5_Breadshow_MoveTo_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_MoveTo_01,           "str_c1m5_Jackson_MoveTo_01",            2.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_MoveTo_02,         "str_c1m5_Breadshow_MoveTo_02",          2.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_MoveTo_02,           "str_c1m5_Jackson_MoveTo_02",            DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveTo_01,  "str_c1m5_AlbanyDispatcher_MoveTo_01",   5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveTo_01,   "str_c1m5_DucCoDispatcher_MoveTo_01",    2.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveTo_02,  "str_c1m5_AlbanyDispatcher_MoveTo_02",   5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_MoveTo_01,         "str_c1m5_SkyRaider_MoveTo_01",          3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveTo_03,  "str_c1m5_AlbanyDispatcher_MoveTo_03",   3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_MoveTo_02,         "str_c1m5_SkyRaider_MoveTo_02",          5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveTo_02,   "str_c1m5_DucCoDispatcher_MoveTo_02",    5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_MoveTo_021,        "str_c1m5_SkyRaider_MoveTo_021",         5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveTo_031, "str_c1m5_AlbanyDispatcher_MoveTo_031",  5.0, TMN_None]
+    ];
+}
+
+class CC1M5PlayerHalfMoviTo extends CBaseDialog
+{
+  final static String ID = "C1M5PlayerHalfMoviTo";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveTo_04,  "str_c1m5_AlbanyDispatcher_MoveTo_04",   DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_FalconDispatcher_MoveTo_01,  "str_c1m5_FalconDispatcher_MoveTo_01",   3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveTo_05,  "str_c1m5_AlbanyDispatcher_MoveTo_05",   3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_FalconDispatcher_MoveTo_02,  "str_c1m5_FalconDispatcher_MoveTo_02",   3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_MoveTo_03,         "str_c1m5_Breadshow_MoveTo_03",          5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveTo_06,  "str_c1m5_AlbanyDispatcher_MoveTo_06",   5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_MoveTo_04,         "str_c1m5_Breadshow_MoveTo_04",          3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_MoveTo_03,         "str_c1m5_SkyRaider_MoveTo_03",          5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveTo_07,  "str_c1m5_AlbanyDispatcher_MoveTo_07",   5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_MoveTo_04,         "str_c1m5_SkyRaider_MoveTo_04",          5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveTo_03,   "str_c1m5_DucCoDispatcher_MoveTo_03",    5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_MoveTo_05,         "str_c1m5_SkyRaider_MoveTo_05",          5.0, TMN_None]
+     ];
+}
+
+class CC1M5AttackBeginning extends CBaseDialog
+{
+  final static String ID = "C1M5AttackBeginning";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_PreAttack_01,         "str_c1m5_Breadshow_PreAttack_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_PreAttack_01,           "str_c1m5_Jackson_PreAttack_01",          2.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_PreAttack_01,  "str_c1m5_AlbanyDispatcher_PreAttack_01", 2.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_PreAttack_02,         "str_c1m5_Breadshow_PreAttack_02",        2.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_PreAttack_02,  "str_c1m5_AlbanyDispatcher_PreAttack_02", DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_PreAttack_03,         "str_c1m5_Breadshow_PreAttack_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_PreAttack_02,           "str_c1m5_Jackson_PreAttack_02",          2.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_PreAttack_03,  "str_c1m5_AlbanyDispatcher_PreAttack_03", DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_PreAttack_01,         "str_c1m5_SkyRaider_PreAttack_01",        DefaultTalkPause, TMN_None]
+     ];
+}
+
+class CC1M5TransportPointLand extends CBaseDialog
+{
+  final static String ID = "C1M5TransportPointLand";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_Attack_01,        "str_c1m5_Breadshow_Attack_01",        DefaultTalkPause, TMN_None]/*,
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_Attack_01,  "str_c1m5_DucCoDispatcher_Attack_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_Attack_01,        "str_c1m5_SkyRaider_Attack_01",        DefaultTalkPause, TMN_None]  */
+     ];
+}
+
+class CC1M5MortarKilled extends CBaseDialog
+{
+  final static String ID = "C1M5MortarKilled";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_Attack_01,           "str_c1m5_Jackson_Attack_01",           DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_Attack_01,  "str_c1m5_AlbanyDispatcher_Attack_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_Attack_02,           "str_c1m5_Jackson_Attack_02",           DefaultTalkPause, TMN_None]
+     ];
+}
+
+class CC1M5TransportTakeHome extends CBaseDialog
+{
+  final static String ID = "C1M5TransportTakeHome";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_PostAttack_01, "str_c1m5_Breadshow_PostAttack_01",    DefaultTalkPause, TMN_None]
+     ];
+}
+
+class CC1M5AllMortarKilled extends CBaseDialog
+{
+  final static String ID = "C1M5AllMortarKilled";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_PostAttack_01,           "str_c1m5_Jackson_PostAttack_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_PostAttack_01,  "str_c1m5_AlbanyDispatcher_PostAttack_01", DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_FalconDispatcher_PostAttack_01,  "str_c1m5_FalconDispatcher_PostAttack_01", DefaultTalkPause, TMN_None]
+     ];
+}
+
+class CC1M5PlayerMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M5PlayerMovingBack";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_MoveBack_01,          "str_c1m5_Jackson_MoveBack_01",           DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveBack_01,  "str_c1m5_DucCoDispatcher_MoveBack_01",   3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveBack_01, "str_c1m5_AlbanyDispatcher_MoveBack_01",  5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_FalconDispatcher_MoveBack_01, "str_c1m5_FalconDispatcher_MoveBack_01",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveBack_02, "str_c1m5_AlbanyDispatcher_MoveBack_02",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_FalconDispatcher_MoveBack_02, "str_c1m5_FalconDispatcher_MoveBack_02",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveBack_02,  "str_c1m5_DucCoDispatcher_MoveBack_02",   5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveBack_03, "str_c1m5_AlbanyDispatcher_MoveBack_03",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveBack_03,  "str_c1m5_DucCoDispatcher_MoveBack_03",   5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveBack_04, "str_c1m5_AlbanyDispatcher_MoveBack_04",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_MoveBack_01,        "str_c1m5_SkyRaider_MoveBack_01",         5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveBack_05, "str_c1m5_AlbanyDispatcher_MoveBack_05",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_SkyRaider_MoveBack_02,        "str_c1m5_SkyRaider_MoveBack_02",         3.0, TMN_None]
+     ];
+}
+
+class CC1M5PlayerHalfMovingBack  extends CBaseDialog
+{
+  final static String ID = "C1M5PlayerHalfMovingBack";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_MoveBack_01,         "str_c1m5_Breadshow_MoveBack_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveBack_05,   "str_c1m5_DucCoDispatcher_MoveBack_05",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_MoveBack_02,         "str_c1m5_Breadshow_MoveBack_02",        3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveBack_06,   "str_c1m5_DucCoDispatcher_MoveBack_06",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveBack_06,  "str_c1m5_AlbanyDispatcher_MoveBack_06", 5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveBack_07,   "str_c1m5_DucCoDispatcher_MoveBack_07",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveBack_07,  "str_c1m5_AlbanyDispatcher_MoveBack_07", 3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveBack_08,   "str_c1m5_DucCoDispatcher_MoveBack_08",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_AlbanyDispatcher_MoveBack_08,  "str_c1m5_AlbanyDispatcher_MoveBack_08", 5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_MoveBack_09,   "str_c1m5_DucCoDispatcher_MoveBack_09",  3.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_MoveBack_03,         "str_c1m5_Breadshow_MoveBack_03",        5.0, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_MoveBack_02,           "str_c1m5_Jackson_MoveBack_02",          5.0, TMN_None]
+     ];
+}
+
+class CC1M5LandingPath extends CBaseDialog
+{
+  final static String ID = "C1M5LandingPath";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_Land_01,  "str_c1m5_DucCoDispatcher_Land_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_Land_01,          "str_c1m5_Jackson_Land_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_DucCoDispatcher_Land_02,  "str_c1m5_DucCoDispatcher_Land_02",  DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Jackson_Land_02,          "str_c1m5_Jackson_Land_02",          DefaultTalkPause, TMN_None]
+     ];
+}
+
+class CC1M5PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M5PlayerWarningOutPoint";
+  final static Array  Content = [
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_Reproof_014,      "str_c1m5_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M5Mission_Strings::str_c1m5_Breadshow_Reproof_015,      "str_c1m5_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+// Compain 1 Mission 6
+
+// Загрузка миссии
+class CC1M6DucCoFlightOut extends CBaseDialog
+{
+  final static String ID = "C1M6DucCoFlightOut";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Begin_01,    "str_c1m6_Breadshow_Begin_01",         DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Jackson_Begin_01,      "str_c1m6_Jackson_Begin_01",           2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Begin_02,    "str_c1m6_Breadshow_Begin_02",         2.0, TMN_None]
+     ];
+}
+// Игрок запустил двигатель
+class CC1M6PlayerEngineStart extends CBaseDialog
+{
+  final static String ID = "C1M6PlayerEngineStart";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_TakeOff_01,     "str_c1m6_DucCoDispatcher_TakeOff_01",     DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_TakeOff_01,           "str_c1m6_Breadshow_TakeOff_01",           3.0, TMN_None]
+     ];
+}
+// Игрок пролетел первую точку маршрута туда
+class CC1M6PlayerMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M6PlayerMovingTo";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_01,     "str_c1m6_DucCoDispatcher_MoveTo_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveTo_01,    "str_c1m6_AlbanyDispatcher_MoveTo_01", 3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_02,     "str_c1m6_DucCoDispatcher_MoveTo_02",  2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveTo_02,    "str_c1m6_AlbanyDispatcher_MoveTo_02", 3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_03,     "str_c1m6_DucCoDispatcher_MoveTo_03",  2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveTo_03,    "str_c1m6_AlbanyDispatcher_MoveTo_03", 3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_04,     "str_c1m6_DucCoDispatcher_MoveTo_04",  3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_01,           "str_c1m6_Breadshow_MoveTo_01",        3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_02,           "str_c1m6_Breadshow_MoveTo_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveTo_04,    "str_c1m6_AlbanyDispatcher_MoveTo_04", 3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_05,     "str_c1m6_DucCoDispatcher_MoveTo_05",  3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_06,     "str_c1m6_DucCoDispatcher_MoveTo_06",  3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_03,           "str_c1m6_Breadshow_MoveTo_03",        2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_07,     "str_c1m6_DucCoDispatcher_MoveTo_07",  2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_04,           "str_c1m6_Breadshow_MoveTo_04",        2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_08,     "str_c1m6_DucCoDispatcher_MoveTo_08",  3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_05,           "str_c1m6_Breadshow_MoveTo_05",        2.0, TMN_None]
+     ];
+}
+// Игрок пролетел середину маршрута туда
+class CC1M6PlayerHalfMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M6PlayerHalfMovingTo";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Jackson_MoveTo_01,            "str_c1m6_Jackson_MoveTo_01",             DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_06,          "str_c1m6_Breadshow_MoveTo_06",           2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Jackson_MoveTo_02,            "str_c1m6_Jackson_MoveTo_02",             2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveTo_05,   "str_c1m6_AlbanyDispatcher_MoveTo_05",    3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_09,    "str_c1m6_DucCoDispatcher_MoveTo_09",     2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveTo_06,   "str_c1m6_AlbanyDispatcher_MoveTo_06",    3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_10,    "str_c1m6_DucCoDispatcher_MoveTo_10",     2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_11,    "str_c1m6_DucCoDispatcher_MoveTo_11",     3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_07,          "str_c1m6_Breadshow_MoveTo_07",           2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_12,    "str_c1m6_DucCoDispatcher_MoveTo_12",     2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_08,          "str_c1m6_Breadshow_MoveTo_08",           3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveTo_13,    "str_c1m6_DucCoDispatcher_MoveTo_13",     3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveTo_09,          "str_c1m6_Breadshow_MoveTo_09",           2.0, TMN_None]
+     ];
+}
+// Игрок пролетел путь до атаки
+class CC1M6AttackBeginning extends CBaseDialog
+{
+  final static String ID = "C1M6AttackBeginning";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_PreAttack_01,    "str_c1m6_Breadshow_PreAttack_01",         DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Jackson_PreAttack_01,      "str_c1m6_Jackson_PreAttack_01",           2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_PreAttack_02,    "str_c1m6_Breadshow_PreAttack_02",         2.0, TMN_None]
+     ];
+}
+// Уничтожена первая лодка
+class CC1M6BoatKilled extends CBaseDialog
+{
+  final static String ID = "C1M6BoatKilled";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Jackson_Attack_01,      "str_c1m6_Jackson_Attack_01",           DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Jackson_Attack_02,      "str_c1m6_Jackson_Attack_02",           DefaultTalkPause, TMN_None]
+     ];
+}
+// Уничтожены все лодки
+class CC1M6BoatAllKilled extends CBaseDialog
+{
+  final static String ID = "C1M6BoatAllKilled";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Jackson_Attack_03,      "str_c1m6_Jackson_Attack_03",           DefaultTalkPause, TMN_None]
+     ];
+}
+         // Уничтожен первый грузовик
+class CC1M6TruckKilled extends CBaseDialog
+{
+  final static String ID = "C1M6TruckKilled";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Attack_01,      "str_c1m6_Breadshow_Attack_01",           DefaultTalkPause, TMN_None]
+     ];
+}
+// Уничтожены все лодки и грузовики
+class CC1M6TargetsKilled extends CBaseDialog
+{
+  final static String ID = "C1M6TargetsKilled";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Attack_02,           "str_c1m6_Breadshow_Attack_02",           DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_Attack_01,    "str_c1m6_AlbanyDispatcher_Attack_01",    3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Attack_03,           "str_c1m6_Breadshow_Attack_03",           2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_Attack_02,    "str_c1m6_AlbanyDispatcher_Attack_02",    3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Attack_04,           "str_c1m6_Breadshow_Attack_04",           2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_Attack_03,    "str_c1m6_AlbanyDispatcher_Attack_03",    3.0, TMN_None]
+     ];
+}
+// Игрок пролетел первую точку маршрута обратно
+class CC1M6PlayerMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M6PlayerMovingBack";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_01,            "str_c1m6_Breadshow_MoveBack_01",         DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_02,            "str_c1m6_Breadshow_MoveBack_02",         2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_01,      "str_c1m6_DucCoDispatcher_MoveBack_01",   3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_03,            "str_c1m6_Breadshow_MoveBack_03",         3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_02,      "str_c1m6_DucCoDispatcher_MoveBack_02",   3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_04,            "str_c1m6_Breadshow_MoveBack_04",         3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_03,      "str_c1m6_DucCoDispatcher_MoveBack_03",   2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_05,            "str_c1m6_Breadshow_MoveBack_05",         2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_04,      "str_c1m6_DucCoDispatcher_MoveBack_04",   2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_05,      "str_c1m6_DucCoDispatcher_MoveBack_05",   5.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveBack_01,     "str_c1m6_AlbanyDispatcher_MoveBack_01",  3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_06,      "str_c1m6_DucCoDispatcher_MoveBack_06",   2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveBack_02,     "str_c1m6_AlbanyDispatcher_MoveBack_02",  3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_07,      "str_c1m6_DucCoDispatcher_MoveBack_07",   3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_AlbanyDispatcher_MoveBack_03,     "str_c1m6_AlbanyDispatcher_MoveBack_03",  3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_08,      "str_c1m6_DucCoDispatcher_MoveBack_08",   2.0, TMN_None]
+     ];
+}
+// Игрок пролетел середину маршрута обратно
+class CC1M6PlayerHalfMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M6PlayerHalfMovingBack";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_06,         "str_c1m6_Breadshow_MoveBack_06",         DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_09,   "str_c1m6_DucCoDispatcher_MoveBack_09",   4.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_07,         "str_c1m6_Breadshow_MoveBack_07",         3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_10,   "str_c1m6_DucCoDispatcher_MoveBack_10",   10.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_08,         "str_c1m6_Breadshow_MoveBack_08",         3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_11,   "str_c1m6_DucCoDispatcher_MoveBack_11",   3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_09,         "str_c1m6_Breadshow_MoveBack_09",         3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_10,         "str_c1m6_Breadshow_MoveBack_10",         2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Jackson_MoveBack_01,           "str_c1m6_Jackson_MoveBack_01",           5.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_MoveBack_11,         "str_c1m6_Breadshow_MoveBack_11",         2.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_MoveBack_12,   "str_c1m6_DucCoDispatcher_MoveBack_12",   5.0, TMN_None]
+     ];
+}
+// Вертолеты возле базы Дук Ко
+class CC1M6LandingPath extends CBaseDialog
+{
+  final static String ID = "C1M6LandingPath";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_Land_01,     "str_c1m6_DucCoDispatcher_Land_01",    DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Land_01,           "str_c1m6_Breadshow_Land_01",          3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_DucCoDispatcher_Land_02,     "str_c1m6_DucCoDispatcher_Land_02",    3.0, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Land_02,           "str_c1m6_Breadshow_Land_02",          2.0, TMN_None]
+     ];
+}
+
+class CC1M6PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M6PlayerWarningOutPoint";
+  final static Array  Content = [
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Reproof_014,      "str_c1m6_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M6Mission_Strings::str_c1m6_Breadshow_Reproof_015,      "str_c1m6_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+      // Compain 1 Mission 7
+class CC1M7DucCoFlightOut extends CBaseDialog
+{
+  final static String ID = "C1M7DucCoFlightOut";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_Begin_01,    "str_c1m7_Breadshow_Begin_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_Begin_02,    "str_c1m7_Breadshow_Begin_02",       3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_Begin_01,      "str_c1m7_Jackson_Begin_01",         2.0, TMN_None]
+    ];
+}
+
+class CC1M7PlayerEngineStart extends CBaseDialog
+{
+  final static String ID = "C1M7PlayerEngineStart";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_TakeOff_01, "str_c1m7_DucCoDispatcher_TakeOff_01",   3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_TakeOff_01,       "str_c1m7_Breadshow_TakeOff_01",         3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_TakeOff_02, "str_c1m7_DucCoDispatcher_TakeOff_02",   2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_TakeOff_02,       "str_c1m7_Breadshow_TakeOff_02",         3.0, TMN_None]
+    ];
+}
+
+class CC1M7PlayerMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M7PlayerMovingTo";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveTo_01, "str_c1m7_DucCoDispatcher_MoveTo_01", DefaultTalkPause, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_01,       "str_c1m7_Breadshow_MoveTo_01",       3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveTo_02, "str_c1m7_DucCoDispatcher_MoveTo_02", 3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_02,       "str_c1m7_Breadshow_MoveTo_02",       2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_03,       "str_c1m7_Breadshow_MoveTo_03",       10.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveTo_03,         "str_c1m7_Jackson_MoveTo_03",         3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_04,       "str_c1m7_Breadshow_MoveTo_04",       2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveTo_04,         "str_c1m7_Jackson_MoveTo_04",         3.0, TMN_None]
+    ];
+}
+
+class CC1M7PlayerHalfMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M7PlayerHalfMovingTo";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_05,        "str_c1m7_Breadshow_MoveTo_05",       10.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveTo_04,  "str_c1m7_DucCoDispatcher_MoveTo_04", 3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_06,        "str_c1m7_Breadshow_MoveTo_06",       2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_07,        "str_c1m7_Breadshow_MoveTo_07",       10.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveTo_05,          "str_c1m7_Jackson_MoveTo_05",         2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_08,        "str_c1m7_Breadshow_MoveTo_08",       3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveTo_06,          "str_c1m7_Jackson_MoveTo_06",         2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveTo_09,        "str_c1m7_Breadshow_MoveTo_09",       5.0, TMN_None]
+    ];
+}
+
+class CC1M7AttackBeginning extends CBaseDialog
+{
+  final static String ID = "C1M7AttackBeginning";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_PreAttack_01,      "str_c1m7_Jackson_PreAttack_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_PreAttack_01,    "str_c1m7_Breadshow_PreAttack_01",     2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_PreAttack_02,      "str_c1m7_Jackson_PreAttack_02",       2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_PreAttack_02,    "str_c1m7_Breadshow_PreAttack_02",     3.0, TMN_None]
+    ];
+}
+
+class CC1M7TruckKilled extends CBaseDialog
+{
+  final static String ID = "C1M7TruckKilled";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_Attack_01,      "str_c1m7_Jackson_Attack_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_Attack_01,    "str_c1m7_Breadshow_Attack_01",     3.0, TMN_None]
+    ];
+}
+
+class CC1M7TargetsKilled extends CBaseDialog
+{
+  final static String ID = "C1M7TargetsKilled";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_PostAttack_01,      "str_c1m7_Breadshow_PostAttack_01",     5.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_PostAttack_02,      "str_c1m7_Breadshow_PostAttack_02",     3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_PostAttack_01,        "str_c1m7_Jackson_PostAttack_01",       2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_PostAttack_03,      "str_c1m7_Breadshow_PostAttack_03",     2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_PostAttack_02,        "str_c1m7_Jackson_PostAttack_02",       3.0, TMN_None]
+    ];
+}
+
+class CC1M7PlayerMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M7PlayerMovingBack";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveBack_01,         "str_c1m7_Jackson_MoveBack_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_01,       "str_c1m7_Breadshow_MoveBack_01",        3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveBack_02,         "str_c1m7_Jackson_MoveBack_02",          2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_02,       "str_c1m7_Breadshow_MoveBack_02",        5.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveBack_01, "str_c1m7_DucCoDispatcher_MoveBack_01",  3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_03,       "str_c1m7_Breadshow_MoveBack_03",        2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveBack_02, "str_c1m7_DucCoDispatcher_MoveBack_02",  3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_04,       "str_c1m7_Breadshow_MoveBack_04",        3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveBack_03, "str_c1m7_DucCoDispatcher_MoveBack_03",  5.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_05,       "str_c1m7_Breadshow_MoveBack_05",        3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveBack_04, "str_c1m7_DucCoDispatcher_MoveBack_04",  5.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_06,       "str_c1m7_Breadshow_MoveBack_06",        2.0, TMN_None]
+    ];
+}
+
+class CC1M7PlayerHalfMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M7PlayerHalfMovingBack";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_07,       "str_c1m7_Breadshow_MoveBack_07",       DefaultTalkPause, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveBack_03,         "str_c1m7_Jackson_MoveBack_03",         2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_08,       "str_c1m7_Breadshow_MoveBack_08",       2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveBack_04,         "str_c1m7_Jackson_MoveBack_04",         2.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_09,       "str_c1m7_Breadshow_MoveBack_09",       3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Jackson_MoveBack_05,         "str_c1m7_Jackson_MoveBack_05",         3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_10,       "str_c1m7_Breadshow_MoveBack_10",       10.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveBack_05, "str_c1m7_DucCoDispatcher_MoveBack_05", 3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_11,       "str_c1m7_Breadshow_MoveBack_11",       5.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveBack_06, "str_c1m7_DucCoDispatcher_MoveBack_06", 3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_12,       "str_c1m7_Breadshow_MoveBack_12",       3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_MoveBack_07, "str_c1m7_DucCoDispatcher_MoveBack_07", 5.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_MoveBack_13,       "str_c1m7_Breadshow_MoveBack_13",       3.0, TMN_None]
+    ];
+}
+
+class CC1M7LandingNearBase extends CBaseDialog
+{
+  final static String ID = "C1M7LandingNearBase";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_Landing_01,       "str_c1m7_Breadshow_Landing_01",       DefaultTalkPause, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_Landing_01, "str_c1m7_DucCoDispatcher_Landing_01", 3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_Landing_02,       "str_c1m7_Breadshow_Landing_02",       3.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_DucCoDispatcher_Landing_02, "str_c1m7_DucCoDispatcher_Landing_02", 5.0, TMN_None],
+      [0,   CC1M7Mission_Strings::str_c1m7_Breadshow_Landing_03,       "str_c1m7_Breadshow_Landing_03",       3.0, TMN_None]
+    ];
+}
+class CC1M7PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M7PlayerWarningOutPoint";
+  final static Array  Content = [
+      [0,   CC1M7Mission_Strings::str_C1M7_Breadshow_Reproof_014,      "str_C1M7_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M7Mission_Strings::str_C1M7_Breadshow_Reproof_015,      "str_C1M7_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+//Mission 8 Campaign 1
+
+
+class CC1M8DucCoFlightOut extends CBaseDialog
+{
+  final static String ID = "C1M8DucCoFlightOut";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_Begin_01,       "str_c1m8_Breadshow_Begin_01",       DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_Begin_01, "str_c1m8_DucCoDispatcher_Begin_01", 1.5, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_Begin_02,       "str_c1m8_Breadshow_Begin_02",       1.5, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_Begin_03,       "str_c1m8_Breadshow_Begin_03",       2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_Begin_01,         "str_c1m8_Jackson_Begin_01",         2.0, TMN_None]
+    ];
+}
+
+class CC1M8PlayerEngineStart extends CBaseDialog
+{
+  final static String ID = "C1M8PlayerEngineStart";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_TakeOff_01, "str_c1m8_Breadshow_TakeOff_01", DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_TakeOff_02, "str_c1m8_Breadshow_TakeOff_02", 1.5, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_TakeOff_01,   "str_c1m8_Jackson_TakeOff_01",   2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_TakeOff_03, "str_c1m8_Breadshow_TakeOff_03", 3.0, TMN_None]
+    ];
+}
+
+class CC1M8PlayerMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M8PlayerMovingTo";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveTo_01, "str_c1m8_DucCoDispatcher_MoveTo_01", DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveTo_01,         "str_c1m8_Jackson_MoveTo_01",         2.5, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveTo_02, "str_c1m8_DucCoDispatcher_MoveTo_02", 3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveTo_02,         "str_c1m8_Jackson_MoveTo_02",         3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveTo_01,       "str_c1m8_Breadshow_MoveTo_01",       5.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveTo_03,         "str_c1m8_Jackson_MoveTo_03",         2.5, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveTo_02,       "str_c1m8_Breadshow_MoveTo_02",       2.5, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveTo_04,         "str_c1m8_Jackson_MoveTo_04",         2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveTo_03,       "str_c1m8_Breadshow_MoveTo_03",       5.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveTo_03, "str_c1m8_DucCoDispatcher_MoveTo_03", 3.0, TMN_None]
+    ];
+}
+
+class CC1M8PlayerHalfMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M8PlayerHalfMovingTo";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveTo_04,       "str_c1m8_Breadshow_MoveTo_04",       DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveTo_04, "str_c1m8_DucCoDispatcher_MoveTo_04", 2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveTo_05,       "str_c1m8_Breadshow_MoveTo_05",       2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveTo_06,       "str_c1m8_Breadshow_MoveTo_06",       5.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveTo_05,         "str_c1m8_Jackson_MoveTo_05",         3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveTo_07,       "str_c1m8_Breadshow_MoveTo_07",       5.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveTo_06,         "str_c1m8_Jackson_MoveTo_06",         5.0, TMN_None]
+    ];
+}
+
+class CC1M8PreAttack extends CBaseDialog
+{
+  final static String ID = "C1M8PreAttack";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_PreAttack_01,   "str_c1m8_Jackson_PreAttack_01",   DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_PreAttack_01, "str_c1m8_Breadshow_PreAttack_01", 3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_PreAttack_02,   "str_c1m8_Jackson_PreAttack_02",   2.0, TMN_None]
+    ];
+}
+
+class CC1M8AttackBeginning extends CBaseDialog
+{
+  final static String ID = "C1M8AttackBeginning";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_Attack_01,   "str_c1m8_Jackson_Attack_01",   DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_Attack_01, "str_c1m8_Breadshow_Attack_01", 2.0, TMN_None]
+    ];
+}
+
+class CC1M8TargetKilled extends CBaseDialog
+{
+  final static String ID = "C1M8TargetKilled";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_Attack_02,   "str_c1m8_Jackson_Attack_02",   DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_Attack_02, "str_c1m8_Breadshow_Attack_02", 2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_Attack_03,   "str_c1m8_Jackson_Attack_03",   2.0, TMN_None]
+    ];
+}
+
+class CC1M8TargetsKilled extends CBaseDialog
+{
+  final static String ID = "C1M8TargetsKilled";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_PostAttack_01,   "str_c1m8_Jackson_PostAttack_01",   DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_PostAttack_01, "str_c1m8_Breadshow_PostAttack_01", 3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_PostAttack_02,   "str_c1m8_Jackson_PostAttack_02",   3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_PostAttack_02, "str_c1m8_Breadshow_PostAttack_02", 4.0, TMN_None]
+    ];
+}
+
+class CC1M8PlayerMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M8PlayerMovingBack";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveBack_01,         "str_c1m8_Jackson_MoveBack_01",         DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveBack_01, "str_c1m8_DucCoDispatcher_MoveBack_01", 4.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveBack_02,         "str_c1m8_Jackson_MoveBack_02",         3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveBack_02, "str_c1m8_DucCoDispatcher_MoveBack_02", 3.0, TMN_None]
+    ];
+}
+
+class CC1M8GunspipAttack extends CBaseDialog
+{
+  final static String ID = "C1M8GunspipAttack";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_GunshipAttack_01,       "str_c1m8_Breadshow_GunshipAttack_01",       DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_GunshipAttack_02,       "str_c1m8_Breadshow_GunshipAttack_02",       2.0,  TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_GunshipAttack_01, "str_c1m8_DucCoDispatcher_GunshipAttack_01", 3.0,  TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_GunshipAttack_03,       "str_c1m8_Breadshow_GunshipAttack_03",       5.0,  TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_GunshipAttack_02,         "str_c1m8_Jackson_GunshipAttack_02",         4.0,  TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_GunshipAttack_04,       "str_c1m8_Breadshow_GunshipAttack_04",       4.0,  TMN_None]/*,
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_GunshipAttack_05,       "str_c1m8_Breadshow_GunshipAttack_05",       10.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_GunshipAttack_02, "str_c1m8_DucCoDispatcher_GunshipAttack_02", 5.0,  TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_GunshipAttack_06,       "str_c1m8_Breadshow_GunshipAttack_06",       4.0,  TMN_None]*/
+    ];
+}
+
+class CC1M8PlayerHalfMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M8PlayerHalfMovingBack";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveBack_03, "str_c1m8_DucCoDispatcher_MoveBack_03", DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveBack_03,         "str_c1m8_Jackson_MoveBack_03",         3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveBack_04, "str_c1m8_DucCoDispatcher_MoveBack_04", 3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveBack_04,         "str_c1m8_Jackson_MoveBack_04",         3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveBack_05, "str_c1m8_DucCoDispatcher_MoveBack_05", 3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_MoveBack_05,         "str_c1m8_Jackson_MoveBack_05",         2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveBack_05,       "str_c1m8_Breadshow_MoveBack_05",       5.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveBack_06, "str_c1m8_DucCoDispatcher_MoveBack_06", 3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveBack_06,       "str_c1m8_Breadshow_MoveBack_06",       4.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveBack_07, "str_c1m8_DucCoDispatcher_MoveBack_07", 4.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveBack_07,       "str_c1m8_Breadshow_MoveBack_07",       3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_MoveBack_08, "str_c1m8_DucCoDispatcher_MoveBack_08", 3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Breadshow_MoveBack_08,       "str_c1m8_Breadshow_MoveBack_08",       3.0, TMN_None]
+    ];
+}
+
+class CC1M8LandingNearBase extends CBaseDialog
+{
+  final static String ID = "C1M8LandingNearBase";
+
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_Landing_01,         "str_c1m8_Jackson_Landing_01",         DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_Landing_01, "str_c1m8_DucCoDispatcher_Landing_01", 2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_Landing_02,         "str_c1m8_Jackson_Landing_02",         2.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_DucCoDispatcher_Landing_02, "str_c1m8_DucCoDispatcher_Landing_02", 3.0, TMN_None],
+      [0, CC1M8Mission_Strings::str_c1m8_Jackson_Landing_03,         "str_c1m8_Jackson_Landing_03",         2.0, TMN_None]
+    ];
+}
+
+class CC1M8PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M8PlayerWarningOutPoint";
+  final static Array  Content = [
+      [0, CC1M8Mission_Strings::str_C1M8_Breadshow_Reproof_014, "str_C1M8_Breadshow_Reproof_014", DefaultTalkPause, TMN_None],
+      [0, CC1M8Mission_Strings::str_C1M8_Breadshow_Reproof_015, "str_C1M8_Breadshow_Reproof_015", DefaultTalkPause, TMN_None]
+  ];
+}
+
+//Mission 9 Campaign 1
+
+class CC1M9PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M9PlayerWarningOutPoint";
+  final static Array  Content = [
+      [0,   CC1M9Mission_Strings::str_C1M9_Breadshow_Reproof_014,      "str_C1M9_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M9Mission_Strings::str_C1M9_Breadshow_Reproof_015,      "str_C1M9_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+
+class CC1M9DucCoFlightOut extends CBaseDialog
+{
+  final static String ID = "C1M9DucCoFlightOut";
+   final static Array  Content = [
+      [0, CC1M9Mission_Strings::str_c1m9_Jackson_Begin_01,  "str_c1m9_Jackson_Begin_01",  DefaultTalkPause, TMN_None],
+      [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_Begin_01,  "str_c1m9_DucCoDispatcher_Begin_01",  2.0, TMN_None],
+      [0, CC1M9Mission_Strings::str_c1m9_Jackson_Begin_02,  "str_c1m9_Jackson_Begin_02",  2.0, TMN_None]
+         ];
+}
+
+class CC1M9PlayerEngineStart  extends CBaseDialog
+{
+  final static String ID = "C1M9PlayerEngineStart";
+   final static Array  Content = [
+     [0, CC1M9Mission_Strings::str_c1m9_Jackson_TakeOff_01,  "str_c1m9_Jackson_TakeOff_01",  DefaultTalkPause, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_TakeOff_01,  "str_c1m9_DucCoDispatcher_TakeOff_01",  2.0, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_Jackson_TakeOff_02,  "str_c1m9_Jackson_TakeOff_02",  2.0, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_TakeOff_02,  "str_c1m9_DucCoDispatcher_TakeOff_02",  2.0, TMN_None]
+        ];
+}
+class CC1M9PlayerMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M9PlayerMovingTo";
+   final static Array  Content = [
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_01, "str_c1m9_DucCoDispatcher_MoveTo_01",  DefaultTalkPause, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_01, "str_c1m9_Jackson_MoveTo_01",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_02, "str_c1m9_DucCoDispatcher_MoveTo_02",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_02, "str_c1m9_Jackson_MoveTo_02",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_03, "str_c1m9_DucCoDispatcher_MoveTo_03",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_03, "str_c1m9_Jackson_MoveTo_03",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_04, "str_c1m9_DucCoDispatcher_MoveTo_04",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_04, "str_c1m9_Jackson_MoveTo_04",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_05, "str_c1m9_DucCoDispatcher_MoveTo_05",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_06, "str_c1m9_DucCoDispatcher_MoveTo_06",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_05, "str_c1m9_Jackson_MoveTo_05",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_07, "str_c1m9_DucCoDispatcher_MoveTo_07",  2.0, TMN_None]
+       ];
+}
+class CC1M9PlayerHalfMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M9PlayerHalfMovingTo";
+   final static Array  Content = [
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_08, "str_c1m9_DucCoDispatcher_MoveTo_08",  DefaultTalkPause, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveTo_01,  "str_c1m9_PRBDispatcher_MoveTo_01",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_09, "str_c1m9_DucCoDispatcher_MoveTo_09",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveTo_02, "str_c1m9_PRBDispatcher_MoveTo_02",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveTo_10, "str_c1m9_DucCoDispatcher_MoveTo_10",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveTo_03, "str_c1m9_PRBDispatcher_MoveTo_03",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveTo_04, "str_c1m9_PRBDispatcher_MoveTo_04",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_06, "str_c1m9_Jackson_MoveTo_06",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveTo_05, "str_c1m9_PRBDispatcher_MoveTo_05",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_07, "str_c1m9_Jackson_MoveTo_07",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveTo_06, "str_c1m9_PRBDispatcher_MoveTo_06",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_08, "str_c1m9_Jackson_MoveTo_08",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveTo_07, "str_c1m9_PRBDispatcher_MoveTo_07",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveTo_09, "str_c1m9_Jackson_MoveTo_09",  2.0, TMN_None]
+       ];
+}
+class CC1M9AttackBeginning extends CBaseDialog
+{
+  final static String ID =  "C1M9AttackBeginning";
+   final static Array  Content = [
+   [0, CC1M9Mission_Strings::str_c1m9_Jackson_Attack_01, "str_c1m9_Jackson_Attack_01",  DefaultTalkPause, TMN_None],
+   [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_Attack_01, "str_c1m9_PRBDispatcher_Attack_01",  2.0, TMN_None],
+   [0, CC1M9Mission_Strings::str_c1m9_Jackson_Attack_02, "str_c1m9_Jackson_Attack_02",  2.0, TMN_None],
+   [0, CC1M9Mission_Strings::str_c1m9_Jackson_Attack_03, "str_c1m9_Jackson_Attack_03",  2.0, TMN_None],
+   [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_Attack_02, "str_c1m9_PRBDispatcher_Attack_02",  2.0, TMN_None],
+   [0, CC1M9Mission_Strings::str_c1m9_Jackson_Attack_04, "str_c1m9_Jackson_Attack_04",  2.0, TMN_None],
+   [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_Attack_03, "str_c1m9_PRBDispatcher_Attack_03",  2.0, TMN_None]
+      ];
+}
+class CC1M9BoatKilled extends CBaseDialog
+{
+  final static String ID = "C1M9BoatKilled";
+   final static Array  Content = [
+   [0, CC1M9Mission_Strings::str_c1m9_Jackson_Attack_05, "str_c1m9_Jackson_Attack_05",  DefaultTalkPause, TMN_None],
+   [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_Attack_04, "str_c1m9_PRBDispatcher_Attack_04",  2.0, TMN_None]
+      ];
+}
+class CC1M9GunsKilled extends CBaseDialog
+{
+  final static String ID = "C1M9GunsKilled";
+   final static Array  Content = [
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_Attack_06, "str_c1m9_Jackson_Attack_06",  DefaultTalkPause, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_Attack_05, "str_c1m9_PRBDispatcher_Attack_05",  2.0, TMN_None]
+       ];
+}
+class CC1M9TargetsKilled  extends CBaseDialog
+{
+  final static String ID = "C1M9TargetsKilled";
+   final static Array  Content = [
+     [0, CC1M9Mission_Strings::str_c1m9_Jackson_PostAttack_01, "str_c1m9_Jackson_PostAttack_01",  DefaultTalkPause, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_PostAttack_01, "str_c1m9_PRBDispatcher_PostAttack_01",  2.0, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_Jackson_PostAttack_02, "str_c1m9_Jackson_PostAttack_02",  2.0, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_PostAttack_02, "str_c1m9_PRBDispatcher_PostAttack_02",  2.0, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_Jackson_PostAttack_03, "str_c1m9_Jackson_PostAttack_03",  2.0, TMN_None]
+        ];
+}
+class CC1M9PlayerMovingBack  extends CBaseDialog
+{
+  final static String ID = "C1M9PlayerMovingBack";
+   final static Array  Content = [
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveToBack_01, "str_c1m9_Jackson_MoveToBack_01",  DefaultTalkPause, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_01, "str_c1m9_DucCoDispatcher_MoveToBack_01",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveToBack_02, "str_c1m9_Jackson_MoveToBack_02",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveToBack_01, "str_c1m9_PRBDispatcher_MoveToBack_01",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_02, "str_c1m9_DucCoDispatcher_MoveToBack_02",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_03, "str_c1m9_DucCoDispatcher_MoveToBack_03",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveToBack_03, "str_c1m9_Jackson_MoveToBack_03",  2.0, TMN_None]
+       ];
+}
+class CC1M9PlayerHalfMovingBack  extends CBaseDialog
+{
+  final static String ID = "C1M9PlayerHalfMovingBack";
+   final static Array  Content = [
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_04, "str_c1m9_DucCoDispatcher_MoveToBack_04",  DefaultTalkPause, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveToBack_02, "str_c1m9_PRBDispatcher_MoveToBack_02",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_05, "str_c1m9_DucCoDispatcher_MoveToBack_05",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveToBack_03, "str_c1m9_PRBDispatcher_MoveToBack_03",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_06, "str_c1m9_DucCoDispatcher_MoveToBack_06",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_PRBDispatcher_MoveToBack_04, "str_c1m9_PRBDispatcher_MoveToBack_04",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_07, "str_c1m9_DucCoDispatcher_MoveToBack_07",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_08, "str_c1m9_DucCoDispatcher_MoveToBack_08",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveToBack_04, "str_c1m9_Jackson_MoveToBack_04",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_09, "str_c1m9_DucCoDispatcher_MoveToBack_09",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_Jackson_MoveToBack_05, "str_c1m9_Jackson_MoveToBack_05",  2.0, TMN_None],
+    [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_MoveToBack_10, "str_c1m9_DucCoDispatcher_MoveToBack_10",  2.0, TMN_None]
+       ];
+}
+class CC1M9LandingNearBase extends CBaseDialog
+{
+  final static String ID = "C1M9LandingNearBase";
+   final static Array  Content = [
+     [0, CC1M9Mission_Strings::str_c1m9_Jackson_Landing_01,  "str_c1m9_Jackson_Landing_01",  DefaultTalkPause, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_Landing_01,  "str_c1m9_DucCoDispatcher_Landing_01",  2.0, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_Jackson_Landing_02,  "str_c1m9_Jackson_Landing_02",  2.0, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_DucCoDispatcher_Landing_02,  "str_c1m9_DucCoDispatcher_Landing_02",  2.0, TMN_None],
+     [0, CC1M9Mission_Strings::str_c1m9_Jackson_Landing_03,  "str_c1m9_Jackson_Landing_03",  2.0, TMN_None]
+        ];
+}
+
+
+//Mission 10 Campaign 1
+
+class CC1M10PlayerWarningOutPoint extends CBaseDialog
+{
+  final static String ID = "C1M10PlayerWarningOutPoint";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_Reproof_014,      "str_c1m10_Breadshow_Reproof_014",       DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_Reproof_015,      "str_c1m10_Breadshow_Reproof_015",       DefaultTalkPause, TMN_None]
+    ];
+}
+
+class CC1M10DucCoFlightOut extends CBaseDialog
+{
+  final static String ID = "C1M10DucCoFlightOut";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Begin_01,           "str_c1m10_Jackson_Begin_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_Begin_01,   "str_c1m10_DucCoDispatcher_Begin_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Begin_02,           "str_c1m10_Jackson_Begin_02",          DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10PlayerEngineStart extends CBaseDialog
+{
+  final static String ID = "C1M10PlayerEngineStart";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_TakeOff_01,           "str_c1m10_Jackson_TakeOff_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_TakeOff_01,   "str_c1m10_DucCoDispatcher_TakeOff_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_TakeOff_02,           "str_c1m10_Jackson_TakeOff_02",          DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_TakeOff_02,   "str_c1m10_DucCoDispatcher_TakeOff_02",  DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10PlayerMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M10PlayerMovingTo";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveTo_01,  "str_c1m10_DucCoDispatcher_MoveTo_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveTo_01,        "str_c1m10_Breadshow_MoveTo_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveTo_02,  "str_c1m10_DucCoDispatcher_MoveTo_02",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveTo_02,        "str_c1m10_Breadshow_MoveTo_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveTo_01,    "str_c1m10_PRBDispatcher_MoveTo_01",    DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveTo_03,  "str_c1m10_DucCoDispatcher_MoveTo_03",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveTo_02,    "str_c1m10_PRBDispatcher_MoveTo_02",    DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveTo_04,  "str_c1m10_DucCoDispatcher_MoveTo_04",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveTo_05,  "str_c1m10_DucCoDispatcher_MoveTo_05",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveTo_03,        "str_c1m10_Breadshow_MoveTo_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_MoveTo_01,          "str_c1m10_Jackson_MoveTo_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveTo_03,    "str_c1m10_PRBDispatcher_MoveTo_03",    DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10PlayerHalfMovingTo extends CBaseDialog
+{
+  final static String ID = "C1M10PlayerHalfMovingTo";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_MoveTo_02,       "str_c1m10_Jackson_MoveTo_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveTo_04,     "str_c1m10_Breadshow_MoveTo_04",      DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_MoveTo_03,       "str_c1m10_Jackson_MoveTo_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveTo_05,     "str_c1m10_Breadshow_MoveTo_05",      DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveTo_04, "str_c1m10_PRBDispatcher_MoveTo_04",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveTo_06,     "str_c1m10_Breadshow_MoveTo_06",      DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveTo_05, "str_c1m10_PRBDispatcher_MoveTo_05",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveTo_07,     "str_c1m10_Breadshow_MoveTo_07",      DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_MoveTo_04,       "str_c1m10_Jackson_MoveTo_04",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10TransportWaiting extends CBaseDialog
+{
+  final static String ID = "C1M10TransportWaiting";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_Waiting_01,    "str_c1m10_Breadshow_Waiting_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Waiting_01,      "str_c1m10_Jackson_Waiting_01",    DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10AttackBeginning extends CBaseDialog
+{
+  final static String ID = "C1M10AttackBeginning";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Attack_01,        "str_c1m10_Jackson_Attack_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_Attack_01,      "str_c1m10_Breadshow_Attack_01",      DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Attack_02,        "str_c1m10_Jackson_Attack_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_Attack_01,  "str_c1m10_PRBDispatcher_Attack_01",  DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10BoatKilled extends CBaseDialog
+{
+  final static String ID = "C1M10BoatKilled";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Attack_03,        "str_c1m10_Jackson_Attack_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_Attack_02,  "str_c1m10_PRBDispatcher_Attack_02",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Attack_04,        "str_c1m10_Jackson_Attack_04",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10TransportLanded extends CBaseDialog
+{
+  final static String ID = "C1M10TransportLanded";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_Attack_02,      "str_c1m10_Breadshow_Attack_02",      DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_Attack_03,  "str_c1m10_PRBDispatcher_Attack_03",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_Attack_03,      "str_c1m10_Breadshow_Attack_03",      DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10TransportGone extends CBaseDialog
+{
+  final static String ID = "C1M10TransportGone";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_PostAttack_01,      "str_c1m10_Breadshow_PostAttack_01",      DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_PostAttack_01,  "str_c1m10_PRBDispatcher_PostAttack_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_PostAttack_02,      "str_c1m10_Breadshow_PostAttack_02",      DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10TargetsKilled extends CBaseDialog
+{
+  final static String ID = "C1M10TargetsKilled";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_PostAttack_01,        "str_c1m10_Jackson_PostAttack_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_PostAttack_02,  "str_c1m10_PRBDispatcher_PostAttack_02",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_PostAttack_02,        "str_c1m10_Jackson_PostAttack_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_PostAttack_03,  "str_c1m10_PRBDispatcher_PostAttack_03",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_PostAttack_03,        "str_c1m10_Jackson_PostAttack_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_PostAttack_04,  "str_c1m10_PRBDispatcher_PostAttack_04",  DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10PlayerMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M10PlayerMovingBack";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_MoveBack_01,           "str_c1m10_Jackson_MoveBack_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_01,   "str_c1m10_DucCoDispatcher_MoveBack_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveBack_01,         "str_c1m10_Breadshow_MoveBack_01",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_02,   "str_c1m10_DucCoDispatcher_MoveBack_02",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveBack_02,         "str_c1m10_Breadshow_MoveBack_02",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_03,   "str_c1m10_DucCoDispatcher_MoveBack_03",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveBack_03,         "str_c1m10_Breadshow_MoveBack_03",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveBack_01,     "str_c1m10_PRBDispatcher_MoveBack_01",    DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_04,   "str_c1m10_DucCoDispatcher_MoveBack_04",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveBack_02,     "str_c1m10_PRBDispatcher_MoveBack_02",    DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_05,   "str_c1m10_DucCoDispatcher_MoveBack_05",  DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10PlayerHalfMovingBack extends CBaseDialog
+{
+  final static String ID = "C1M10PlayerHalfMovingBack";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveBack_03,      "str_c1m10_PRBDispatcher_MoveBack_03",    DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_06,    "str_c1m10_DucCoDispatcher_MoveBack_06",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveBack_04,      "str_c1m10_PRBDispatcher_MoveBack_04",    DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_07,    "str_c1m10_DucCoDispatcher_MoveBack_07",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_MoveBack_05,      "str_c1m10_PRBDispatcher_MoveBack_05",    DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_08,    "str_c1m10_DucCoDispatcher_MoveBack_08",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveBack_04,          "str_c1m10_Breadshow_MoveBack_04",        DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_MoveBack_09,    "str_c1m10_DucCoDispatcher_MoveBack_09",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Breadshow_MoveBack_05,          "str_c1m10_Breadshow_MoveBack_05",        DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+class CC1M10LandingNearBase extends CBaseDialog
+{
+  final static String ID = "C1M10LandingNearBase";
+  final static Array  Content = [
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Landing_01,          "str_c1m10_Jackson_Landing_01",          DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_Landing_01,  "str_c1m10_DucCoDispatcher_Landing_01",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_Jackson_Landing_02,          "str_c1m10_Jackson_Landing_02",          DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_Landing_02,  "str_c1m10_DucCoDispatcher_Landing_02",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_Landing_01,    "str_c1m10_PRBDispatcher_Landing_01",    DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_DucCoDispatcher_Landing_03,  "str_c1m10_DucCoDispatcher_Landing_03",  DefaultTalkPause, TMN_None],
+      [0,   CC1M10Mission_Strings::str_c1m10_PRBDispatcher_Landing_02,    "str_c1m10_PRBDispatcher_Landing_02",    DefaultTalkPause, TMN_None]
+    ];
+}
+
+
+
+class CDialogsArray
+{
+  final static Array Dialogs = [
+      // Compain 1 Mission 1
+      new CC1M1BeginMission(),
+      new CC1M1BeginLoading(),
+      new CC1M1FinishedLoading(),
+      new CC1M1FirstPointRoute(),
+      new CC1M1MeetingChinuk1(),
+      new CC1M1ContinueRoute(),
+      new CC1M1MeetingChinuk2(),
+      new CC1M1HelicopterReducedHeight(),
+      new CC1M1BeginDebarkationDesant(),
+      new CC1M1HelicoptersLandPlus10(),
+      new CC1M1DestroyedOneBarrel(),
+      new CC1M1HelicoptersTakeOff(),
+      new CC1M1BeforeXRays(),
+      new CC1M1NearPleyMe(),
+      new CC1M1PlayerWarningOutPoint(),
+
+      // Compain 1 Mission 2
+      new CC1M2ExchangeRemarks1_2(),
+      new CC1M2ExchangeRemarks2_3(),
+      new CC1M2ExchangeRemarks3_Land(),
+      new CC1M2ExchangePointLand(),
+      new CC1M2BombersOnCourse(),
+      new CC1M2DeathHelicopter(),
+      new CC1M2GunshipsRecieveAttack(),
+      new CC1M2HelicopterUnderFight(),
+      new CC1M2DamagedMortar(),
+      new CC1M2PlayerDoNotFly(),
+      new CC1KillSecondPilot(),
+      new CC1M2ExchangeRemarks5_6(),
+      new CC1M2NotFarBase(),
+      new CC1M2NearBase(),
+      new CC1M2PlayerNotStartEngine(),
+      new CC1M2PlayerWarning5000(),
+      new CC1M2PlayerWarningOutPoint(),
+
+      // reel 2
+      new CC1M2Reel2Dialog_1(),
+
+      // Compain 1 Mission 3
+      new CC1M3FalconFlightOut(),
+      new CC1M3PlayerEngineStart(),
+      new CC1M3AttackBeginning(),
+      new CC1M3TargetUnderFire(),
+      new CC1M3ReturnPath(),
+      new CC1M3LandingPath(),
+      new CC1M3MoveToForward(),
+      new CC1M3MoveToBackward(),
+      new CC1M3PlayerWarningOutPoint(),
+
+      // Compain 1 Mission 4
+      new CC1M4PlayerWarningOutPoint(),
+      new CC1M4FalconFlightOut(),
+      new CC1M4PlayerEngineStart(),
+      new CC1M4MoveToForward(),
+      new CC1M4AttackBeginning(),
+      new CC1M4BombersOnCourse(),
+      new CC1M4TargetUnderFire(),
+      new CC1M4MoveToBackward(),
+      new CC1M4LandingPath(),
+      new CC1M4PlayerWarningOutPoint(),
+
+      // Compain 1 Mission 5
+      new CC1M5DucCoFlightOut(),
+      new CC1M5PlayerEngineStart(),
+      new CC1M5PlayerMovingTo(),
+      new CC1M5PlayerHalfMoviTo(),
+      new CC1M5AttackBeginning(),
+      new CC1M5TransportPointLand(),
+      new CC1M5MortarKilled(),
+      new CC1M5TransportTakeHome(),
+      new CC1M5AllMortarKilled(),
+      new CC1M5PlayerMovingBack(),
+      new CC1M5PlayerHalfMovingBack(),
+      new CC1M5LandingPath(),
+      new CC1M5PlayerWarningOutPoint(),
+
+      // Compain 1 Mission 6
+      new CC1M6DucCoFlightOut(),
+      new CC1M6PlayerEngineStart(),
+      new CC1M6PlayerMovingTo(),
+      new CC1M6PlayerHalfMovingTo(),
+      new CC1M6AttackBeginning(),
+      new CC1M6BoatKilled(),
+      new CC1M6BoatAllKilled(),
+      new CC1M6TruckKilled(),
+      new CC1M6TargetsKilled(),
+      new CC1M6PlayerMovingBack(),
+      new CC1M6PlayerHalfMovingBack(),
+      new CC1M6LandingPath(),
+      new CC1M6PlayerWarningOutPoint(),
+
+      // Compain 1 Mission 7
+      new CC1M7DucCoFlightOut(),
+      new CC1M7PlayerEngineStart(),
+      new CC1M7PlayerMovingTo(),
+      new CC1M7PlayerHalfMovingTo(),
+      new CC1M7AttackBeginning(),
+      new CC1M7TruckKilled(),
+      new CC1M7TargetsKilled(),
+      new CC1M7PlayerMovingBack(),
+      new CC1M7PlayerHalfMovingBack(),
+      new CC1M7PlayerWarningOutPoint(),
+      new CC1M7LandingNearBase(),
+
+
+      //Mission 8 Campaign 1
+      new CC1M8DucCoFlightOut(),
+      new CC1M8PlayerEngineStart(),
+      new CC1M8PlayerMovingTo(),
+      new CC1M8PlayerHalfMovingTo(),
+      new CC1M8PreAttack(),
+      new CC1M8AttackBeginning(),
+      new CC1M8TargetKilled(),
+      new CC1M8TargetsKilled(),
+      new CC1M8PlayerMovingBack(),
+      new CC1M8GunspipAttack(),
+      new CC1M8PlayerHalfMovingBack(),
+      new CC1M8LandingNearBase(),
+      new CC1M8PlayerWarningOutPoint(),
+      //Mission 9 Campaign 1
+      new CC1M9DucCoFlightOut(),
+      new CC1M9PlayerEngineStart(),
+      new CC1M9PlayerMovingTo(),
+      new CC1M9PlayerHalfMovingTo(),
+      new CC1M9AttackBeginning(),
+      new CC1M9BoatKilled(),
+      new CC1M9GunsKilled(),
+      new CC1M9TargetsKilled(),
+      new CC1M9PlayerMovingBack(),
+      new CC1M9PlayerHalfMovingBack(),
+      new CC1M9LandingNearBase(),
+      new CC1M9PlayerWarningOutPoint(),
+
+
+
+      //Mission 10 Campaign 1
+      new CC1M10PlayerWarningOutPoint(),
+      new CC1M10DucCoFlightOut(),
+      new CC1M10PlayerEngineStart(),
+      new CC1M10PlayerMovingTo(),
+      new CC1M10PlayerHalfMovingTo(),
+      new CC1M10TransportWaiting(),
+      new CC1M10AttackBeginning(),
+      new CC1M10BoatKilled(),
+      new CC1M10TransportLanded(),
+      new CC1M10TransportGone(),
+      new CC1M10TargetsKilled(),
+      new CC1M10PlayerMovingBack(),
+      new CC1M10PlayerHalfMovingBack(),
+      new CC1M10LandingNearBase()
+
+
+
+    ];
+}
+

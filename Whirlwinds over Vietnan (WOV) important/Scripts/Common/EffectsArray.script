@@ -1,0 +1,387 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+//
+// Effects array component script
+//
+
+class CEffectsArray
+{
+  static Array m_EffectsMap          = [];
+  static Array m_EffectsAliases      = [];
+  static Array m_EffectsGroups       = [];
+  static Array m_EffectsExplosionMap = [];
+
+  static Component LightFireCloudEffectSkin     = null;
+  static Component DarkFireCloudEffectSkin      = null;
+  static Component BaseEffectsSkin              = null;
+  static Component GunFireEffectsSkin           = null;
+  static Component EditorEffectSkin             = null;
+  static Component EngineFireEffectSkin         = null;
+  static Component GroundDustEffectSkin         = null;
+  static Component GroundCloudEffectSkin        = null;
+  static Component GroundLightedCloudEffectSkin = null;
+  static Component WaterSprayEffectSkin         = null;
+  static Component GroundSprayEffectSkin        = null;
+  static Component SmokeCloudEffectSkin         = null;
+  static Component SmokeCloudAnimatedEffectSkin = null;
+  static Component MetalDebrisEffectSkin        = null;
+  static Component WoodDebrisEffectSkin         = null;
+  static Component StoneDebrisEffectSkin        = null;
+
+  static Component SignEffectsSkin              = null;
+  //napalm
+  static Component NapalmEffectSkin             = null;
+  static Component NapalmFireEffectSkin         = null;
+  /*static Component NapalmSmoke1EffectSkin       = null;
+  static Component NapalmSmoke2EffectSkin       = null;
+  static Component NapalmSmoke3EffectSkin       = null;
+  static Component NapalmSmoke4EffectSkin       = null;*/
+  static Component NapalmSmoke5EffectSkin       = null;
+  static Component ExplosionSmokeEffectSkin     = null;
+  static Component HeliTwistRingEffectSkin      = null;
+
+  //clouds
+  static Component CloudEffectSkin              = null;
+
+  static Component SpiralSmokeEffectSkin        = null;
+
+
+  static void StaticInitialization()
+  {
+    // Create materials
+    BaseEffectsSkin              = new #MaterialManager<CBaseEffectsSkin>();
+    GunFireEffectsSkin           = new #MaterialManager<CGunFireEffectsSkin>();
+    EditorEffectSkin             = new #MaterialManager<CEditorEffectSkin>();
+    LightFireCloudEffectSkin     = new #MaterialManager<CLightFireCloudEffectSkin>();
+    DarkFireCloudEffectSkin      = new #MaterialManager<CDarkFireCloudEffectSkin>();
+    EngineFireEffectSkin         = new #MaterialManager<CEngineFireEffectSkin>();
+    GroundDustEffectSkin         = new #MaterialManager<CGroundDustEffectSkin>();
+    GroundCloudEffectSkin        = new #MaterialManager<CGroundCloudEffectSkin>();
+    GroundLightedCloudEffectSkin = new #MaterialManager<CGroundLightedCloudEffectSkin>();
+    WaterSprayEffectSkin         = new #MaterialManager<CWaterSprayEffectSkin>();
+    GroundSprayEffectSkin        = new #MaterialManager<CGroundSprayEffectSkin>();
+    SmokeCloudEffectSkin         = new #MaterialManager<CSmokeCloudEffectSkin>();
+    SmokeCloudAnimatedEffectSkin = new #MaterialManager<CSmokeCloudAnimatedEffectSkin>();
+    MetalDebrisEffectSkin        = new #MaterialManager<CMetalDebrisEffectSkin>();
+    WoodDebrisEffectSkin         = new #MaterialManager<CWoodDebrisEffectSkin>();
+    StoneDebrisEffectSkin        = new #MaterialManager<CStoneDebrisEffectSkin>();
+    SignEffectsSkin              = new #MaterialManager<CSignEffectsSkin>();
+
+    // dust
+    GroundDustEffectSkin         = new #MaterialManager<CGroundDustEffectSkin>();
+    //napalm
+    NapalmEffectSkin             = new #MaterialManager<CNapalmEffectSkin>();
+    NapalmFireEffectSkin         = new #MaterialManager<CNapalmFireEffectSkin>();
+    NapalmSmoke5EffectSkin       = new #MaterialManager<CNapalmSmoke5EffectSkin>();
+    ExplosionSmokeEffectSkin     = new #MaterialManager<CExplosionSmokeEffectSkin>();
+
+    HeliTwistRingEffectSkin      = new #MaterialManager<CHeliTwistRingEffectSkin>();
+
+    //clouds
+    CloudEffectSkin              = new #MaterialManager<CCloudMaterials>();
+
+    SpiralSmokeEffectSkin        = new #MaterialManager<CSpiralSmokeEffectSkin>();
+
+
+    // Create effects
+    m_EffectsMap = [
+        // ============================
+        // Service effects
+        // ============================
+
+        // Editor visualization
+          ["ObjectCursorSystem",                new #StaticEffect<CObjectCursorSystemEffect>()],
+          ["ObjectCursorBounds",                new #StaticEffect<CObjectCursorBoundsEffect>()],
+
+        // Weapon explosions
+          ["HeavyGunBulletExplosionPlanes",   new #DynamicEffect<CHeavyGunBulletExplosionPlanes>()],
+          ["LightMissileExplosionPlanes",     new #DynamicEffect<CLightMissileExplosionPlanes>()],
+        //["HeavyMissileExplosionPlanes",     new #DynamicEffect<CHeavyMissileExplosionPlanes>()],
+          ["GunFireLightSplash",              new #LightEffect<CGunFireLightSplash>()],
+          ["WeaponExplosionLightSplash",      new #LightEffect<CWeaponExplosionLightSplash>()],
+
+          ["HeavyGunBulletExplosionEffect",   new #ComplexEffect<CHeavyGunBulletExplosionEffect>()],
+          ["LightMissileExplosionEffect",     new #ComplexEffect<CLightMissileExplosionEffect>()],
+        //["HeavyMissileExplosionEffect",     new #ComplexEffect<CHeavyMissileExplosionEffect>()],
+          ["MortarGunBulletExplosionEffect",  new #ComplexEffect<CMortarGunBulletExplosionEffect>()],
+
+          ["DebrisSprayEffect",               new #SprayEffect<CDebrisSprayEffect>()],
+          ["ExplosionFireRingEffect",         new #SprayEffect<CExplosionFireRingEffect>()],
+
+          //AD4Skyrider bomb explosion
+          ["AD4BombExplosionEffect",            new #DiffusiveComplexEffect<CAD4BombExplosionEffect>()],
+          ["AD4BombExplosionEffect1",           new #ComplexEffect<CAD4BombExplosionEffect1>()],
+          ["AD4BombExplosionSplashEffect",      new #SmokeEffect<CAD4BombExplosionSplashEffect>()],
+          ["AD4BombExplosionFireEffect",        new #SmokeEffect<CAD4BombExplosionFireEffect>()],
+          ["AD4BombExplosionSmokeEffect",       new #SmokeEffect<CAD4BombExplosionSmokeEffect>()],
+
+          //Mortar bullet hit ground
+          ["MortarBulletHitGroundDebris",      new #BulletsScatterEffect<CMortarBulletHitGroundDebris>()],
+          ["MortarDebrisTraceEffect",          new #TraceEffect<CMortarDebrisTraceEffect>()],
+
+          //Howitzer bullet explosion
+          ["HowitzerGunBulletExplosionEffect",  new #ComplexEffect<CHowitzerGunBulletExplosionEffect>()],
+          ["HowitzerGunBulletExplosionPlanes",  new #DynamicEffect<CHowitzerGunBulletExplosionPlanes>()],
+
+          //Howitzer bullet hit ground
+          //["HowitzerBulletHitGroundBig",         new #SprayEffect<CHowitzerBulletHitGroundBig>()],
+          ["HowitzerBulletHitGroundBigLowPart",  new #DynamicEffect<CHowitzerBulletHitGroundBigLowPart>()],
+          ["HowitzerBulletHitGroundBigUpPart",   new #DynamicEffect<CHowitzerBulletHitGroundBigUpPart>()],
+          ["HowitzerBulletHitGroundSmall",       new #SprayEffect<CHowitzerBulletHitGroundSmall>()],
+          ["HowitzerBulletHitGroundSmoke",       new #DynamicEffect<CHowitzerBulletHitGroundSmoke>()],
+          ["HowitzerBulletHitGroundDebris",      new #BulletsScatterEffect<CHowitzerBulletHitGroundDebris>()],
+          ["HowitzerDebrisTraceEffect",          new #TraceEffect<CHowitzerDebrisTraceEffect>()],
+
+          //Howitzer bullet hit forest
+          ["HowitzerBulletHitForestBig",         new #SprayEffect<CHowitzerBulletHitForestBig>()],
+          ["HowitzerBulletHitForestSmall",       new #SprayEffect<CHowitzerBulletHitForestSmall>()],
+
+          //Mortar bullet hit forest
+          ["MortarBulletHitForestBig",         new #SprayEffect<CMortarBulletHitForestBig>()],
+
+        // Firing & Clouds
+          ["MachineGunFirePlanes",            new #DynamicEffect<CMachineGunFirePlanes>()],
+          ["MachineGunFireEffect",            new #ComplexEffect<CMachineGunFireEffect>()],
+          ["LightGunFireEffect",              new #ComplexEffect<CLightGunFireEffect>()],
+          ["HeavyGunFireEffect",              new #ComplexEffect<CHeavyGunFireEffect>()],
+          ["HeavyGunCloudEffect",             new #DynamicEffect<CHeavyGunCloudEffect>()],
+          ["HowitzerGunCloudEffect",          new #DynamicEffect<CHowitzerGunCloudEffect>()],
+          ["HeavyGunFirePlanes",              new #DynamicEffect<CHeavyGunFirePlanes>()],
+          ["M134GunFireEffect",               new #ComplexEffect<CM134GunFireEffect>()],
+          ["M134GunNearFireEffect",           new #ComplexEffect<CM134GunNearFireEffect>()],
+          ["M60GunNearFireEffect",            new #ComplexEffect<CM60GunNearFireEffect>()],
+          ["M60GunNearFireRandomEffect",      new #ComplexEffect<CM60GunNearFireRandomEffect>()],
+
+          ["M134GunFirePlanes",               new #DynamicEffect<CM134GunFirePlanes>()],
+          ["M134GunFireNearPlanes",           new #DynamicEffect<CM134GunFireNearPlanes>()],
+          ["M60GunFireNearPlanes1",            new #DynamicEffect<CM60GunFireNearPlanes1>()],
+          ["M60GunFireNearPlanes2",            new #DynamicEffect<CM60GunFireNearPlanes2>()],
+          ["M60GunFireNearPlanes3",            new #DynamicEffect<CM60GunFireNearPlanes3>()],
+          ["M60GunFireNearPlanes4",            new #DynamicEffect<CM60GunFireNearPlanes4>()],
+          ["MortarGunFirePlanes",             new #DynamicEffect<CMortarGunFirePlanes>()],
+          ["MortarGunFireEffect",             new #ComplexEffect<CMortarGunFireEffect>()],
+          ["MortarGunCloudEffect",            new #DynamicEffect<CMortarGunCloudEffect>()],
+          ["HowitzerGunFirePlanes",           new #DynamicEffect<CHowitzerGunFirePlanes>()],
+          ["HowitzerGunFireEffect",           new #ComplexEffect<CHowitzerGunFireEffect>()],
+
+          ["HowitzerGunFireDustEffect",       new #DynamicEffect<CHowitzerGunFireDustEffect>()],
+
+          ["LightMissileFirePlanes",          new #DynamicEffect<CLightMissileFirePlanes>()],
+          ["MortarGunBulletExplosionPlanes",  new #DynamicEffect<CMortarGunBulletExplosionPlanes>()],
+          ["MissileFireLight",                new #LightEffect<CMissileFireLight>()],
+          ["LightMissileFireEffect",          new #ComplexEffect<CLightMissileFireEffect>()],
+          ["LightLauncherCloudEffect",        new #DynamicEffect<CLightLauncherCloudEffect>()],
+        //["HeavyLauncherCloudEffect",        new #DynamicEffect<CHeavyLauncherCloudEffect>()],
+
+        // Missile trace effects
+          ["LightMissileTraceEffect",         new #TraceEffect<CLightMissileTraceEffect>()],
+        //["HeavyMissileTraceEffect",         new #TraceEffect<CHeavyMissileTraceEffect>()],
+
+        // Hit effects
+        //  ["WoodBulletHitEffect",             new #SprayEffect<CWoodBulletHitEffect>()],
+
+        // Terrain effects
+          ["GroundUnitTraceEffect",           new #TraceEffect<CGroundUnitTraceEffect>()],
+          ["WaterUnitTraceEffect",            new #WaterWakeEffect<CWaterUnitTraceEffect>()],
+
+          ["TerrainHitSplashEffect",          new #DynamicEffect<CTerrainHitSplashEffect>()],
+
+          ["GroundBulletHitDustEffect",       new #SprayEffect<CGroundBulletHitDustEffect>()],
+          ["GroundMortarBulletHitDustEffect", new #SprayEffect<CGroundMortarBulletHitDustEffect>()],
+
+          ["MortarBulletHitGroundBigLowPart", new #DynamicEffect<CMortarBulletHitGroundBigLowPart>()],
+          ["MortarBulletHitGroundBigUpPart",  new #DynamicEffect<CMortarBulletHitGroundBigUpPart>()],
+
+          ["GroundExplosionDustEffect",       new #SprayEffect<CGroundExplosionDustEffect>()],
+          ["GroundMortarExplosionDustEffect", new #SprayEffect<CGroundMortarExplosionDustEffect>()],
+          ["GroundBulletHitEffect",           new #ComplexEffect<CGroundBulletHitEffect>()],
+          ["GroundMortarBulletHitEffect",     new #ComplexEffect<CGroundMortarBulletHitEffect>()],
+          ["ForestMortarBulletHitEffect",     new #ComplexEffect<CGroundMortarBulletHitEffect>()],
+          ["GroundHowitzerBulletHitEffect",   new #ComplexEffect<CGroundHowitzerBulletHitEffect>()],
+          ["ForestHowitzerBulletHitEffect",   new #ComplexEffect<CForestHowitzerBulletHitEffect>()],
+          ["GroundExplosionHitEffect",        new #ComplexEffect<CGroundExplosionHitEffect>()],
+
+          ["WaterBulletHitDustEffect",        new #SprayEffect<CWaterBulletHitDustEffect>()],
+          ["WaterBulletHitRingEffect",        new #DynamicEffect<CWaterBulletHitRingEffect>()],
+          ["WaterBulletHitEffect",            new #ComplexEffect<CWaterBulletHitEffect>()],
+          ["WaterExplosionDustEffect",        new #SprayEffect<CWaterExplosionDustEffect>()],
+          ["WaterExplosionRingEffect",        new #DynamicEffect<CWaterExplosionRingEffect>()],
+          ["WaterExplosionHitEffect",         new #ComplexEffect<CWaterExplosionHitEffect>()],
+
+          ["HeliDustEffect",                  new #WindDustEffect<CHeliDustEffect>()],
+          ["HeliDustSprayEffect",             new #WindDustEffect<CHeliDustSprayEffect>()],
+          ["HeliRingDynamicEffect",           new #WindWashEffect<CHeliRingDynamicEffect>()],
+
+        // Explosion items effects
+          ["BuildingExplosionEffect",                        new #ComplexEffect<CBuildingExplosionEffect>()],
+          ["BuildingSmokeEffect",                            new #SmokeEffect<CBuildingSmokeEffect>()],
+          ["ExplosionDustRingEffect",                        new #SprayEffect<CExplosionDustRingEffect>()],
+          ["HowitzerGunBulletExplosionDustRingEffect",       new #SprayEffect<CHowitzerGunBulletExplosionDustRingEffect>()],
+          ["MortarGunBulletExplosionDustRingEffect",         new #SprayEffect<CMortarGunBulletExplosionDustRingEffect>()],
+          ["ExplosionSplashEffect",                          new #DynamicEffect<CExplosionSplashEffect>()],
+          ["AmmoBoxExplosionEffect",                         new #ComplexEffect<CAmmoBoxExplosionEffect>()],
+          ["TruckExplosionEffect",                           new #ComplexEffect<CTruckExplosionEffect>()],
+        // Smoke effects
+          ["MortarGunBulletSmokeEffect",       new #SmokeEffect<CMortarGunBulletSmokeEffect>()],
+          ["RedSmokeEffect",                   new #SmokeEffect<CRedSmokeEffect>()],
+          ["GreenSmokeEffect",                 new #SmokeEffect<CGreenSmokeEffect>()],
+
+          ["NapalmSign",                         new #SignEffect<CNapalmSignEffect>()],
+          ["HowitzerSignEffect",                 new #SignEffect<CHowitzerSignEffect>()],
+          ["MortarSignEffect",                   new #SignEffect<CMortarSignEffect>()],
+          ["FFARSignEffect",                     new #SignEffect<CFFARSignEffect>()],
+          ["BulletGroundSignEffect",             new #SignEffect<CBulletGroundSignEffect>()],
+          ["ExplosionLightSplash",               new #LightEffect<CExplosionLightSplash>()],
+
+          // Damage Effects
+          ["EngineLightDamageTraceEffect",           new #TraceEffect<CEngineLightDamageTraceEffect>()],
+          ["EngineMediumDamageTraceEffect",          new #TraceEffect<CEngineMediumDamageTraceEffect>()],
+          ["EngineHeavyDamageTraceEffect",       new #TraceEffect<CEngineHeavyDamageTraceEffect>()],
+
+
+          ["BarrelFireEffect",                    new #SmokeEffect<CBarrelFireEffect>()],
+
+          ["TentFireEffect",                      new #SmokeEffect<CTentFireEffect>()],
+          ["TentExplosionSmokeEffect",            new #SmokeEffect<CTentExplosionSmokeEffect>()],
+          ["TentExplosionEffect",                 new #ComplexEffect<CTentExplosionEffect>()],
+          ["TentSmokeEffect",                     new #SmokeEffect<CTentSmokeEffect>()],
+          ["TentExplosionDustRingEffect",         new #SprayEffect<CTentExplosionDustRingEffect>()],
+          ["TentSignEffect",                      new #SignEffect<CTentSignEffect>()],
+          ["TentLongSignEffect",                  new #SignEffect<CTentLongSignEffect>()],
+          ["TentLongExplosionEffect",             new #ComplexEffect<CTentLongExplosionEffect>()],
+
+          ["BigFireEffect",                       new #SmokeEffect<CBigFireEffect>()],
+
+          ["BarrelExplosionFirePlanes",           new #DynamicEffect<CBarrelExplosionFirePlanes>()],
+          ["BarrelSignEffect",                    new #SignEffect<CBarrelSignEffect>()],
+          ["BarrelPackSignEffect",                new #SignEffect<CBarrelPackSignEffect>()],
+
+          ["BarrelPackFireEffect",              new #SmokeEffect<CBarrelPackFireEffect>()],
+          ["BarrelPackExplosionFirePlanes",     new #DynamicEffect<CBarrelPackExplosionFirePlanes>()],
+          ["BarrelExplosionSmokeEffect",        new #SmokeEffect<CBarrelExplosionSmokeEffect>()],
+          ["BarrelExplosionPostSmokeEffect",    new #SmokeEffect<CBarrelExplosionPostSmokeEffect>()],
+
+          ["BarrelExplosionEffect",             new #ComplexEffect<CBarrelExplosionEffect>()],
+          ["BarrelPackAExplosionEffect",             new #ComplexEffect<CBarrelPackAExplosionEffect>()],
+          ["BarrelPackBExplosionEffect",             new #ComplexEffect<CBarrelPackBExplosionEffect>()],
+
+          ["Uh1DSignEffect",                    new #SignEffect<CUh1DSignEffect>()],
+          ["HeliSmokeEffect",                   new #SmokeEffect<CHeliSmokeEffect>()],
+          ["Uh1DExplosionEffect",               new #ComplexEffect<CUh1DExplosionEffect>()],
+
+
+
+        // Forest effects
+        ["ForestBulletHitEffect",           new #SprayEffect<CForestBulletHitEffect>()],
+        ["ForestSmokeEffect",               new #SmokeEffect<CForestSmokeEffect>()],
+        ["ForestSignEffect",                new #SignEffect<CForestSignEffect>()],
+        ["ForestExplosionEffect",           new #ComplexEffect<CForestExplosionEffect>()],
+
+        // Spray effects
+            // metal
+        ["MetalSmallSprayEffect",             new #SprayEffect<CMetalSmallSprayEffect>()],
+        ["MetalMediumSprayEffect",            new #SprayEffect<CMetalMediumSprayEffect>()],
+            // wood
+        ["WoodSmallSprayEffect",              new #SprayEffect<CWoodSmallSprayEffect>()],
+        ["WoodMediumSprayEffect",             new #SprayEffect<CWoodMediumSprayEffect>()],
+            // stone
+        ["StoneSmallSprayEffect",             new #SprayEffect<CStoneSmallSprayEffect>()],
+        ["StoneMediumSprayEffect",            new #SprayEffect<CStoneMediumSprayEffect>()],
+            // body
+
+        // Sign effects
+            // small
+        ["MetalSmallSignEffect",              new #SignEffect<CMetalSmallSignEffect>()],
+        ["WoodSmallSignEffect",               new #SignEffect<CWoodSmallSignEffect>()],
+        ["StoneSmallSignEffect",              new #SignEffect<CStoneSmallSignEffect>()],
+            // medium
+        ["MediumSignEffect",                  new #SignEffect<CMediumSignEffect>()],
+
+
+
+        ["XRayGroundSmokeEffect",             new #SmokeEffect<CXRayGroundSmokeEffect>()],
+        ["XRayGroundTightSmokeEffect",        new #SmokeEffect<CXRayGroundTightSmokeEffect>()],
+        ["XRaySpiralSmokeEffect",             new #DynamicEffect<CXRaySpiralSmokeEffect>()],
+
+
+
+        // hit effects
+        ["MetalBulletHitEffect",              new #ComplexEffect<CMetalBulletHitEffect>()],
+        //["MetalExplosionHitEffect",           new #ComplexEffect<CMetalExplosionHitEffect>()],
+        ["WoodBulletHitEffect",               new #ComplexEffect<CWoodBulletHitEffect>()],
+        //["WoodExplosionHitEffect",            new #ComplexEffect<CWoodExplosionHitEffect>()],
+        ["StoneBulletHitEffect",              new #ComplexEffect<CStoneBulletHitEffect>()]
+        //["StoneExplosionHitEffect",           new #ComplexEffect<CStoneExplosionHitEffect>()],
+      ];
+
+    m_EffectsGroups = [
+        [
+          [
+            "HowitzerSignEffect",
+            "MortarSignEffect",
+            "FFARSignEffect",
+            "BulletGroundSignEffect",
+            "MetalSmallSignEffect",
+            "WoodSmallSignEffect",
+            "StoneSmallSignEffect",
+            "MediumSignEffect"
+          ],
+          1000
+        ]
+      ];
+
+    // m_EffectsExplosionMap = [ Тип Материала , Тип повреждения -> Идентификатор Эфекта ]
+    m_EffectsExplosionMap = [
+        //[ CMaterialStructure::MSID_Metal,         CBaseExplosion::CLASSIFICATOR_DAMAGE_FLASH,         "MetalExplosionHitEffect"]
+        //Bullets
+//        [ CMaterialStructure::MSID_Metal,        CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET,        "MetalBulletHitEffect"     ],
+//        [ CMaterialStructure::MSID_Wood,         CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET,        "WoodBulletHitEffect"      ],
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET,          "GroundBulletHitEffect"  ],
+        //[ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_MORTARBULLET,    "GroundExplosionHitEffect"   ],
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_MORTARBULLET,    "GroundMortarBulletHitEffect"   ],
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_HOWITZERBULLET,  "GroundHowitzerBulletHitEffect" ],
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_ROCKETEXPLOSION, "GroundExplosionHitEffect" ],
+
+        [ CMaterialStructure::MSID_Forest,       CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET,          "ForestBulletHitEffect"  ],
+        [ CMaterialStructure::MSID_Forest,       CBaseExplosion::CLASSIFICATOR_DAMAGE_ROCKETEXPLOSION, "ForestHowitzerBulletHitEffect"],
+        [ CMaterialStructure::MSID_Forest,       CBaseExplosion::CLASSIFICATOR_DAMAGE_MORTARBULLET,    "ForestMortarBulletHitEffect"   ],
+        [ CMaterialStructure::MSID_Forest,       CBaseExplosion::CLASSIFICATOR_DAMAGE_HOWITZERBULLET,  "ForestHowitzerBulletHitEffect"],
+
+        [ CMaterialStructure::MSID_Water,        CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET,          "WaterBulletHitEffect"   ],
+        [ CMaterialStructure::MSID_Water,        CBaseExplosion::CLASSIFICATOR_DAMAGE_ROCKETEXPLOSION, "WaterExplosionHitEffect"   ],
+        //Explosion
+//        [ CMaterialStructure::MSID_Metal,        CBaseExplosion::CLASSIFICATOR_DAMAGE_EXPLOSION,       "MetalExplosionHitEffect"  ],
+//        [ CMaterialStructure::MSID_Wood,         CBaseExplosion::CLASSIFICATOR_DAMAGE_EXPLOSION,       "WoodExplosionHitEffect"   ],
+        [ CMaterialStructure::MSID_Water,        CBaseExplosion::CLASSIFICATOR_DAMAGE_EXPLOSION,      "WaterExplosionHitEffect"   ],
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_EXPLOSION,      "GroundExplosionHitEffect"  ]
+      ];
+  }
+
+  void CEffectsArray()
+  {
+    for (int Index = 0; Index < m_EffectsMap.size(); Index++)
+      RegisterPattern(m_EffectsMap[Index][0], m_EffectsMap[Index][1]);
+
+
+    for (int Index = 0; Index < m_EffectsAliases.size(); Index++)
+      RegisterAlias(m_EffectsAliases[Index][0], m_EffectsAliases[Index][1]);
+
+    for (int Index = 0; Index < m_EffectsGroups.size(); Index++)
+      RegisterGroup(m_EffectsGroups[Index][0], m_EffectsGroups[Index][1]);
+
+    for (int Index = 0; Index < m_EffectsExplosionMap.size(); Index++)
+      RegisterSubstanceAlias(
+          m_EffectsExplosionMap[Index][0],
+          m_EffectsExplosionMap[Index][1] ,
+          m_EffectsExplosionMap[Index][2]
+        );
+  }
+}

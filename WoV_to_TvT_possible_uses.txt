@@ -1,0 +1,93 @@
+Adapting Whirlwinds Over Vietnam (WoV) Assets & Features for T-34 vs Tiger (TvT)
+
+Overview
+---------
+Although WoV and TvT were built on the same underlying engine, WoV benefits from more polish, richer rendering, and expanded mission audio. This document outlines specific ways WoV features and assets can be used to enhance TvT modding, gameplay, or graphical fidelity.
+
+1. Terrain & Map System
+
+Use Case:
+- WoV uses a single shared map (c1) across all missions. This large, unified terrain can be imported into TvT, potentially supporting multi-stage tank missions or dynamic campaign-like flow.
+
+Implementation Notes:
+✓ Extract hmap_c1.raw and supporting terrain files (textures, water maps, microtexture maps)
+✓ Convert or adjust for TvT's per-mission terrain folder structure
+✓ Ensure matching microtexture/forest masks exist
+✓ Remap navpoints and mission triggers per-mission in TvT editor
+
+Status: High Potential
+
+2. Water Rendering
+
+Use Case:
+- WoV’s advanced water rendering includes animation, fresnel effects, and masked reflections.
+
+Implementation Notes:
+✓ Copy WoV water parameters from Atmosphere.script or BaseTerrain.script
+✓ Adjust wave periods, border color, and mirror textures
+✓ Consider shader-level differences that may impact reflections in TvT
+
+Status: Fully portable via script transfer
+
+3. Forest System
+
+Use Case:
+- WoV uses more elegant forest transitions and density logic via fade and distance variables.
+
+Implementation Notes:
+✓ Copy forest rendering and fade settings from WoV to TvT BaseTerrain.script
+✓ Consider replicating tree placement or procedural logic using WoV masks
+✓ Evaluate compatibility of vertical forests and LOD fades
+
+Status: Strong candidate for visual upgrade
+
+4. Audio & Dispatcher System
+
+Use Case:
+- Use WoV's radio chatter system to enhance TvT missions with pre-recorded briefings and updates.
+
+Implementation Notes:
+✓ Adapt WAV triggers to TvT using script events (e.g. navpoint entry)
+✓ Use dispatcher.wav files from WoV as ambient guidance voices
+✓ Emulate WoV's narrative timing structure
+
+Status: Needs custom script support, feasible
+
+5. Lighting, Atmosphere, and Weather
+
+Use Case:
+- WoV's dynamic fog, sky color gradients, and light blending create more cinematic scenes.
+
+Implementation Notes:
+✓ Port Atmosphere.script from WoV
+✓ Match fog distances and light scatter
+✓ Ensure sky dome textures (if used) are present
+
+Status: High impact, low difficulty
+
+6. Shared Units or Logic
+
+Use Case:
+- Investigate if any AI logic or dispatcher routines are present in WoV and can be migrated
+
+Implementation Notes:
+✓ Compare AI tasks or path-follow logic in WoV vs TvT
+✓ Explore C++ class references or unit scripts
+
+Status: Unknown, exploratory
+
+7. UI & HUD Polish
+
+Use Case:
+- WoV’s cockpit visuals, menus, and mission flow show refined UI elements
+
+Implementation Notes:
+✓ Extract and inspect WoV HUD assets
+✓ Attempt texture-based import into TvT
+✓ Adapt briefing sequences for atmosphere
+
+Status: Mixed results depending on HUD structure
+
+Conclusion
+-----------
+While not all features are plug-and-play, WoV offers a rich set of data and rendering logic that can be harnessed by TvT modders. Terrain fidelity, water rendering, forest visuals, and immersive audio sequences represent high-value targets for immediate improvement. With scripting support and patience, WoV could serve as a graphical and structural upgrade path for TvT's mission experience.

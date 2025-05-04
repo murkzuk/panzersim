@@ -1,0 +1,19 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CShadows
+{
+  static void InitializeShadows()
+  {
+    Cu_air_Uh1bModel::ShadowCheckMode        = SVCM_LightRange;
+    Cu_air_Uh1dModel::ShadowCheckMode        = SVCM_LightRange;
+    Cu_air_AD4SkyriderModel::ShadowCheckMode = SVCM_LightRange;
+
+  }
+}

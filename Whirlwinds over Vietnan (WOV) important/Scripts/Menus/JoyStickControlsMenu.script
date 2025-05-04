@@ -1,0 +1,462 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+class CJoystickControlsMenu
+  extends CBaseMenu, CJoystickControlsControls
+{
+  static String m_MenuClassName = "CJoystickControlsMenu";
+
+  Component m_GameSettings;
+
+  Array m_DeviceIDs;
+  Array m_CtrlFields = [];
+  Array m_YesNo = [ getLocalized("Menu", "str_SwitchOff"), getLocalized("Menu", "str_SwitchOn") ];
+
+  boolean m_Disabled = true;
+
+  final static Array m_DefaultInterpolation = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+
+  Array m_CurrentInterpolation = [
+                                   [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                                   [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                                   [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+                                   [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+                                 ];
+
+  
+  final static Array m_Actions = [
+                               CTLCMD_SPEED,
+                               CTLCMD_MOVE_FB_AXIS_ABS,
+                               CTLCMD_ROTATE_LR_AXIS_ABS,
+                               CTLCMD_MOVE_LR_AXIS_ABS
+                             ];
+  final static Array m_ActionNames = [
+                        getLocalized("Action", "str_SPEED"),
+                        getLocalized("Action", "str_MOVE_FB_AXIS_ABS"),
+                        getLocalized("Action", "str_ROTATE_LR_AXIS_ABS"),
+                        getLocalized("Action", "str_MOVE_LR_AXIS_ABS")
+                      ];
+
+  int     m_CurrentDevice = 0;
+  int     m_CurrentAction = 0;
+
+//  boolean m_CurrentForceFeedback;
+//  float   m_CurrentFeedbackStrength;
+
+  Array   m_CurrentDeadZone = [0.0, 0.0, 0.0, 0.0];
+  Array   m_CurrentSmooth = [0.0, 0.0, 0.0, 0.0];
+  Array   m_CurrentInvert = [0, 0, 0, 0];
+
+  Array   m_CurrentFeedbackStatus;
+  Array   m_CurrentFeedbackStrength;
+  Array   m_CurrentSensitivity;
+
+  void OnInitMenu()
+  {
+    m_GameSettings = new #GameSettings();
+    Component Game = new #GameController();
+    Component InputController = new #InputController();
+
+    Component MenuController = Game.GetMenuController();
+    MenuController.SetDefaultCommands("Default", "Back");
+    InputController.EnableInputConfigurationMode(true);
+    m_DeviceIDs = InputController.GetDeviceIDs();
+    for (int i = 0; i < m_DeviceIDs.size(); i++)
+    {
+      m_CurrentFeedbackStatus.add(false);
+      m_CurrentFeedbackStrength.add(0.0);
+      m_CurrentSensitivity.add(0.5);
+    }
+
+    GetSettings();
+    SetSettings();
+
+    CheckChanges();
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+
+    if (!_ID.IsStartsWith("DeviceName"))
+      GetObject("DeviceName").CloseList();
+    if (!_ID.IsStartsWith("ActionNames"))
+      GetObject("ActionNames").CloseList();
+    if (!_ID.IsStartsWith("ForceFeedback"))
+      GetObject("ForceFeedback").CloseList();
+
+    for (int i = 0; i < 11 ; i++)
+    {
+      if ("Axis" + new String(i) + "0P_Arrow1" == _ID)
+        GetObject("Axis" + new String(i) + "0P").ScrollDown();
+      if ("Axis" + new String(i) + "0P_Arrow2" == _ID)
+        GetObject("Axis" + new String(i) + "0P").ScrollUp();
+    }
+
+    if ("DeviceName_Button" == _ID)
+      GetObject("DeviceName").OpenList();
+    else
+    if ("ActionNames_Button" == _ID)
+      GetObject("ActionNames").OpenList();
+    else
+    if ("ForceFeedback_Button" == _ID)
+    {
+      if ((new #InputController()).IsDeviceSupportsFeedback(m_DeviceIDs[m_CurrentDevice]))
+        GetObject("ForceFeedback").OpenList();
+    }
+    else
+    if ("FeedbackStrength_Arrow1" == _ID)
+      GetObject("FeedbackStrength").ScrollDown();
+    else
+    if ("FeedbackStrength_Arrow2" == _ID)
+      GetObject("FeedbackStrength").ScrollUp();
+    else
+    if ("Sensitivity_Arrow1" == _ID)
+      GetObject("Sensitivity").ScrollDown();
+    else
+    if ("Sensitivity_Arrow2" == _ID)
+      GetObject("Sensitivity").ScrollUp();
+    else
+    if ("AxisDeadZone_Arrow1" == _ID)
+      GetObject("AxisDeadZone").ScrollDown();
+    else
+    if ("AxisDeadZone_Arrow2" == _ID)
+      GetObject("AxisDeadZone").ScrollUp();
+    else
+    if ("AxisSmooth_Arrow1" == _ID)
+      GetObject("AxisSmooth").ScrollDown();
+    else
+    if ("AxisSmooth_Arrow2" == _ID)
+      GetObject("AxisSmooth").ScrollUp();
+    else
+    if ("AxisInverse_Button" == _ID)
+    {
+      GetObject("AxisInverse").ToggleCheck();
+      m_CurrentInvert[m_CurrentAction] = GetObject("AxisInverse").GetChecked();
+    }
+    else
+    if (_ID.IsStartsWith("ActionNames_Item_"))
+    {
+      SetInterpolation();
+      GetObject("ActionNames").SelectIDItem(_ID);
+      m_CurrentAction = GetObject("ActionNames").GetCurrentItem();
+      FillInterpolation();
+    }
+    else
+    if (_ID.IsStartsWith("DeviceName_Item_"))
+    {
+      GetObject("DeviceName").SelectIDItem(_ID);
+      m_CurrentDevice = GetObject("DeviceName").GetCurrentItem();
+
+      Component Feedback = GetObject("ForceFeedback");
+      if ((new #InputController()).IsDeviceSupportsFeedback(m_DeviceIDs[m_CurrentDevice]))
+      {
+        GetObject("FeedbackStrength").SetEnabled(true);
+        Feedback.SelectItem(m_CurrentFeedbackStatus[m_CurrentDevice]);
+        GetObject("FeedbackStrength").SetScrollPhase(m_CurrentFeedbackStrength[m_CurrentDevice]);
+      }
+      else
+      {
+        Feedback.SelectItem(0);
+        GetObject("FeedbackStrength").SetScrollPhase(0.0);
+        GetObject("FeedbackStrength").SetEnabled(false);
+      }
+      GetObject("Sensitivity").SetScrollPhase(m_CurrentSensitivity[m_CurrentDevice]);
+
+    }
+    else
+    if (_ID.IsStartsWith("ForceFeedback_Item_"))
+    {
+      GetObject("ForceFeedback").SelectIDItem(_ID);
+      m_CurrentFeedbackStatus[m_CurrentDevice] = GetObject("ForceFeedback").GetCurrentItem();
+    }
+    else
+    if ("Controls" == _ID)
+      Invoke("ControlsMenu");
+    else
+    if ("Back" == _ID)
+    {
+      (new #InputController()).EnableInputConfigurationMode(false);
+      for (int i = 0 ; i < m_CtrlFields.size(); i++)
+      {
+        m_CtrlFields[i].UndoChanges();
+      }    
+
+      GoBack();
+    }
+
+    if ("Apply" == _ID)
+    {
+      ApplySettings();
+      GetSettings();
+      SetSettings();
+
+      int ActionMapID = AMID_HeliSim;
+      (new #InputController()).UpdateActionMap(ActionMapID);
+  
+
+      for (int i = 0 ; i < m_CtrlFields.size(); i++)
+      {
+        m_CtrlFields[i].FixChanges();
+      }    
+      m_Disabled = true;
+
+//      (new #InputController()).EnableInputConfigurationMode(false);
+      /*
+      int ActionMapID = AMID_HeliArcade;
+      if (GameSettings.GetManualControlMode() == MCM_Simulator)
+      {
+        logMessage("Updating simulator mode action map");
+        ActionMapID = AMID_HeliSim;
+      }
+      else
+      {
+        logMessage("Updating arcade mode action map");
+      }
+      */
+/*      int ActionMapID = AMID_HeliSim;
+      (new #InputController()).UpdateActionMap(ActionMapID);
+
+      for (int i = 0 ; i < m_CtrlFields.size(); i++)
+      {
+        m_CtrlFields[i].FixChanges();
+      }    
+
+      GoBack();*/
+    }
+
+    // Set default control settings.
+    if (_ID == "Default")
+      LoadDefault();
+
+    if (_ID.IsStartsWith("CTRLFLD"))
+    {
+      GetObject(_ID).ActivateEditMode();
+      m_Disabled = false;
+    }
+
+    SetInterpolation();
+    FillText();
+    CheckChanges();
+  }
+
+  //  Event handler
+  void OnActionMappingChanged()
+  {
+    for (int i = 0 ; i < m_CtrlFields.size(); i++)
+    {
+      m_CtrlFields[i].Update();
+    }    
+  }
+
+  void RegisterCtrlField(
+      Component _CtrlField
+    )
+  {    
+    if (m_CtrlFields.find(_CtrlField) == -1)
+    {
+      m_CtrlFields.add(_CtrlField);
+    }
+  }
+
+  void GetSettings()
+  {
+    Component InputController = new #InputController();
+
+    for (int i = 0; i < m_DeviceIDs.size(); i++)
+    {
+      m_CurrentFeedbackStatus[i]    = m_GameSettings.GetUserValue(L"FeedBack_" + new WString(m_DeviceIDs[i]), false);
+      m_CurrentFeedbackStrength[i] = float(m_GameSettings.GetUserValue(L"FeedBackStrength_" + new WString(m_DeviceIDs[i]), 50))/100;
+      m_CurrentSensitivity[i]      = float(m_GameSettings.GetUserValue(L"FeedBackSensitivity_" + new WString(m_DeviceIDs[i]), 50))/100;
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+      m_CurrentDeadZone[i] = m_GameSettings.GetAxisDeadZone(m_Actions[i]);
+      m_CurrentSmooth[i]   = m_GameSettings.GetAxisSmooth(m_Actions[i]);
+      m_CurrentInvert[i]   = m_GameSettings.GetAxisInversion(m_Actions[i]);
+
+      Array IntrAxis = m_GameSettings.GetInterpolatedAxis(m_Actions[i]);
+      for (int j = 0; j < IntrAxis.size(); j++)
+        m_CurrentInterpolation[i][j] = IntrAxis[j];
+
+    }
+
+  }
+
+  void SetSettings()
+  {
+    Component InputController = new #InputController();
+    Array Devices = InputController.GetDeviceNames();
+    Component DeviceName = GetObject("DeviceName");
+    DeviceName.SetItems(Devices);
+    DeviceName.SelectItem(m_CurrentDevice);
+    DeviceName.CloseList();
+
+    Component ActionNames = GetObject("ActionNames");
+    ActionNames.SetItems(m_ActionNames);
+    ActionNames.SelectItem(m_CurrentAction);
+    ActionNames.CloseList();
+
+    Component Feedback = GetObject("ForceFeedback");
+    Feedback.SetItems(m_YesNo);
+
+    Feedback.SelectItem(m_CurrentFeedbackStatus[m_CurrentDevice]);
+    Feedback.CloseList();
+
+    Component FeedbackStrength = GetObject("FeedbackStrength");
+    FeedbackStrength.SetScrollPhase(m_CurrentFeedbackStrength[m_CurrentDevice]);
+
+    Component Sensitivity = GetObject("Sensitivity");
+    Sensitivity.SetScrollPhase(m_CurrentSensitivity[m_CurrentDevice]);
+
+    Component DeadZone = GetObject("AxisDeadZone");
+    DeadZone.SetScrollPhase(m_CurrentDeadZone[m_CurrentAction]);
+
+    GetObject("AxisSmooth").SetScrollPhase(m_CurrentSmooth[m_CurrentAction]);
+
+    FillInterpolation();
+  }
+
+  void ApplySettings()
+  {
+    SetInterpolation();
+    Component InputController = new #InputController();
+
+    m_CurrentFeedbackStrength[m_CurrentDevice] = GetObject("FeedbackStrength").GetScrollPhase();
+    m_CurrentSensitivity[m_CurrentDevice] = GetObject("Sensitivity").GetScrollPhase();
+
+    m_GameSettings.SetForceFeedbackMode(m_CurrentFeedbackStatus[m_CurrentDevice]);
+    m_GameSettings.SetForceFeedbackStrength(m_CurrentFeedbackStrength[m_CurrentDevice]);
+    m_GameSettings.SetJoySensitivity(m_CurrentSensitivity[m_CurrentDevice]);
+
+    for (int i = 0; i < m_DeviceIDs.size(); i++)
+    {
+      m_GameSettings.SetUserValue(L"FeedBack_" + new WString(m_DeviceIDs[i]), m_CurrentFeedbackStatus[i]);
+      m_GameSettings.SetUserValue(L"FeedBackStrength_" + new WString(m_DeviceIDs[i]), iround(m_CurrentFeedbackStrength[i]*100));
+      m_GameSettings.SetUserValue(L"FeedBackSensitivity_" + new WString(m_DeviceIDs[i]),iround(m_CurrentSensitivity[i]*100));
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+      m_GameSettings.SetAxisDeadZone(m_Actions[i],m_CurrentDeadZone[i]);
+      m_GameSettings.SetAxisSmooth(m_Actions[i],m_CurrentSmooth[i]);
+      m_GameSettings.SetAxisInversion(m_Actions[i],m_CurrentInvert[i]);
+
+      m_GameSettings.SetInterpolatedAxis(m_Actions[i], m_CurrentInterpolation[i]);
+    }
+  }
+
+  void FillInterpolation()
+  {
+    for (int i = 0; i < 11; i++)
+      GetObject("Axis" + new String(i) + "0P").SetScrollPhase(1.0 - m_CurrentInterpolation[m_CurrentAction][i]);
+    FillText();
+
+    GetObject("AxisDeadZone").SetScrollPhase(m_CurrentDeadZone[m_CurrentAction]);
+    GetObject("AxisSmooth").SetScrollPhase(m_CurrentSmooth[m_CurrentAction]);
+    GetObject("AxisInverse").SetCheck(m_CurrentInvert[m_CurrentAction]);
+
+  }
+
+  void FillText()
+  {
+    for (int i = 0; i < 11; i++)
+      GetObject("Text" + new String(i) + "0P").SetText(new WString( iround((1.0 - GetObject("Axis" + new String(i) + "0P").GetScrollPhase()) * 100) ));
+  }
+
+  void SetInterpolation()
+  {
+    for (int i = 0; i < 11; i++)
+      m_CurrentInterpolation[m_CurrentAction][i] = 1.0 - GetObject("Axis" + new String(i) + "0P").GetScrollPhase();
+
+    m_CurrentDeadZone[m_CurrentAction] = GetObject("AxisDeadZone").GetScrollPhase();
+    m_CurrentSmooth[m_CurrentAction] = GetObject("AxisSmooth").GetScrollPhase();
+
+    m_CurrentFeedbackStrength[m_CurrentDevice] = GetObject("FeedbackStrength").GetScrollPhase();
+    m_CurrentSensitivity[m_CurrentDevice] = GetObject("Sensitivity").GetScrollPhase();
+  }
+
+  void CheckChanges()
+  {
+    Component InputController = new #InputController();
+
+    boolean IsChanged = !m_Disabled;
+
+    for (int i = 0; i < m_DeviceIDs.size(); i++)
+    {
+      if (m_CurrentFeedbackStatus[i] != m_GameSettings.GetUserValue(L"FeedBack_" + new WString(m_DeviceIDs[i]), false))
+      {
+        IsChanged = true;
+        break;
+      }
+      if (iround(m_CurrentFeedbackStrength[i]*100) != m_GameSettings.GetUserValue(L"FeedBackStrength_" + new WString(m_DeviceIDs[i]), 50))
+      {
+        IsChanged = true;
+        break;
+      }
+      if (iround(m_CurrentSensitivity[i]*100) != m_GameSettings.GetUserValue(L"FeedBackSensitivity_" + new WString(m_DeviceIDs[i]), 50))
+      {
+        IsChanged = true;
+        break;
+      }
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+      if (iround(m_CurrentDeadZone[i]*100) != iround(m_GameSettings.GetAxisDeadZone(m_Actions[i])*100))
+      {
+        IsChanged = true;
+        break;
+      }
+      if (iround(m_CurrentSmooth[i]*100) != iround(m_GameSettings.GetAxisSmooth(m_Actions[i])*100))
+      {
+        IsChanged = true;
+        break;
+      }
+      if (m_CurrentInvert[i] != m_GameSettings.GetAxisInversion(m_Actions[i]))
+      {
+        IsChanged = true;
+        break;
+      }
+
+      Array IntrAxis = m_GameSettings.GetInterpolatedAxis(m_Actions[i]);
+      for (int j = 0; j < IntrAxis.size(); j++)
+        if (iround(m_CurrentInterpolation[i][j]*100) != iround(IntrAxis[j]*100))
+        {
+          IsChanged = true;
+          break;
+        }
+    }
+
+    GetObject("Apply").SetDisabled(!IsChanged);
+  }
+
+  void LoadDefault()
+  {
+    Component InputController = new #InputController();
+    m_CurrentDeadZone         = [0.0, 0.0, 0.0, 0.0];
+    m_CurrentSmooth           = [0.0, 0.0, 0.0, 0.0];
+    m_CurrentInvert           = [0, 0, 0, 0];
+
+    for (int i = 0; i < 4; i++)
+      for (int j = 0; j < 11; j++)
+        m_CurrentInterpolation[i][j] = m_DefaultInterpolation[j];
+
+    (new #InputController()).FillActionMap(CDefaultControls::HeliSimDefaultJoy, 
+                                               AMID_HeliSim);
+    OnActionMappingChanged();
+
+    SetSettings();
+    m_Disabled = false;
+    CheckChanges();
+  }
+}

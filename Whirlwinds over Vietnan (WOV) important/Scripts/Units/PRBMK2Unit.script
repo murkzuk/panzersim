@@ -1,0 +1,193 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CPRBMK2Explosion
+  extends CLightNavalExplosion
+{
+  float  Damage   = 200.0;
+  float  Radius   = 20.0;
+  String SoundId  = "PRBMK2ExplosionSound";
+}
+
+// Weapon section
+class C50CalGunBulletExplosion
+  extends CLightGunBulletExplosion
+{
+  float  Damage = 10.0;
+}
+
+class C50CalGunBulletControl
+  extends CLightGunBulletControl
+{
+  String    ExplosionId  = "50CalGunBulletExplosion";
+  Component BulletRender = new #StaticEffect<CLightGunBulletEffect>();
+}
+
+class CForedeck50CalGun
+  extends CLightGun
+{
+  float  InitBulletSpeed = 840.0;
+  float  FireDeviation   = 1.5;
+  String BulletPatternId = "50CalGunBullet";
+
+  final static float    LockAngleHMin     = -120.0;
+  final static float    LockAngleHMax     =  120.0;
+  final static float    LockAngleVMin     = -6.0;
+  final static float    LockAngleVMax     =  6.0;
+  final static float    BlockedLockAngle  =  1.0;
+
+  // *** Gun parameters for behavior
+  int  FirePeriod        = 200;  // ms
+  int  FirePeriodRandAdd = 50;   // ms
+
+  float MinDistance      = 2;
+  float MaxDistance      = 350;
+
+  boolean BurstFire      = true;
+  int  BurstTime         = 2000; // ms
+  int  BurstTimeRandAdd  = 0;    // ms
+
+  int  BurstDelay        = 3000; // ms
+  int  BurstDelayRandAdd = 1000; // ms
+
+  final static Array GunSpecificFireMask = [
+                                [["GROUND"],[]], // high priority mask: RestrictTo, Exclude
+                                [[],[]]  // low priority mask
+                              ];
+}
+class CQuarterdeck50CalGun
+  extends CLightGun
+{
+  float  InitBulletSpeed = 840.0;
+  float  FireDeviation   = 1.5;
+  String BulletPatternId = "50CalGunBullet";
+
+  final static float    LockAngleHMin     = -120.0;
+  final static float    LockAngleHMax     =  120.0;
+  final static float    LockAngleVMin     = -4.0;
+  final static float    LockAngleVMax     =  20.0;
+  final static float    BlockedLockAngle  =  1.0;
+
+  // *** Gun parameters for behavior
+  int  FirePeriod        = 200;  // ms
+  int  FirePeriodRandAdd = 50;   // ms
+
+  float MinDistance      = 2;
+  float MaxDistance      = 350;
+
+  boolean BurstFire      = true;
+  int  BurstTime         = 2000; // ms
+  int  BurstTimeRandAdd  = 0;    // ms
+
+  int  BurstDelay        = 3000; // ms
+  int  BurstDelayRandAdd = 1000; // ms
+
+  final static Array GunSpecificFireMask = [
+                                [["GROUND"],[]], // high priority mask: RestrictTo, Exclude
+                                [[],[]]  // low priority mask
+                              ];
+}
+
+// Targeting animator
+class CForedeck50CalTargetingAnimator
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret_a";
+  String VerAnimName    = "gun_a";
+
+  float  LeftEndAngle   = -120.0;
+  float  RightEndAngle  =  120.0;
+  float  TopEndAngle    =  6.0;
+  float  BottomEndAngle = -6.0;
+}
+class CQuarterdeck50CalTargetingAnimator
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret_b";
+  String VerAnimName    = "gun_b";
+
+  float  LeftEndAngle   = -120.0;
+  float  RightEndAngle  =  120.0;
+  float  TopEndAngle    =  20.0;
+  float  BottomEndAngle = -4.0;
+}
+
+// Behavior section
+class CPRBMK2Behavior extends CBaseLightNavalBehavior
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 500; // m
+  float  MinRadarDistance = 5;   // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( 10, 0, 0);
+
+  float  MinRotateRadius = 5; // unit can turn when staying
+}
+
+class CPRBMK2Unit
+  extends CUnit
+{
+  final static WString CockpitTargetPointer        = getLocalized("Units", "str_PRBPointer");
+  final static float   DefaultHitPoints            = CHitPoints::PRBMK2UnitHitPoints;
+  final static int     Targeting_MapUIElementIndex = 3;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+  static String        PrevExplosionID             = "PRBMK2Explosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["NAVAL"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CPRBMK2Unit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_nvl_PRBMk2Model>(), [200, 150, 100, 15, 3]);
+
+    SetupWeapon("Weapon_A", new #Weapon<CForedeck50CalGun>(),
+      ["Fire_A1", "Fire_A2"],
+      new #TargetingAnimator<CForedeck50CalTargetingAnimator>());
+    SetupWeapon("Weapon_B", new #Weapon<CQuarterdeck50CalGun>(),
+      ["Fire_B"],
+      new #TargetingAnimator<CQuarterdeck50CalTargetingAnimator>());
+
+    // Creates and register unit state component
+    // HitPoints, ExplosionID
+//    SetupStateControl(50.0, "PRBMK2Explosion");
+
+    // BulletHitEffect, BulletHitSound, ExplosionEffect, ExplosionSound
+//    SetDamageEffects(
+//        "MetalBulletHitEffect", "MetalBulletHitSound",
+//        "MetalExplosionEffect", "MetalExplosionSound"
+//      );
+
+    SetMovementEffects(
+      null,
+      [
+        ["WaterLine", "WaterUnitTraceEffect"]
+      ]
+                      );
+
+    PutonWater(0.0f);
+
+    SetupBehavior( new #VehicleBehavior<CPRBMK2Behavior>());
+  }
+}

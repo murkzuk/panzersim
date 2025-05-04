@@ -1,0 +1,107 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CSingleMenu
+  extends CBaseMenu, CSingleControls
+{
+  final static Array Missions = [
+                ["CC1M1Mission",  CMissionName::C1M1MissionName], 
+                ["CC1M2Mission",  CMissionName::C1M2MissionName],
+                  //
+                ["CC1M3Mission",  CMissionName::C1M3MissionName], 
+                ["CC1M4Mission",  CMissionName::C1M4MissionName],
+                ["CC1M5Mission",  CMissionName::C1M5MissionName], 
+                ["CC1M6Mission",  CMissionName::C1M6MissionName],                                      
+                ["CC1M7Mission",  CMissionName::C1M7MissionName], 
+                ["CC1M8Mission",  CMissionName::C1M8MissionName],
+                ["CC1M9Mission",  CMissionName::C1M9MissionName], 
+                ["CC1M10Mission", CMissionName::C1M10MissionName]
+      ];
+
+  static String m_MenuClassName = "CSingleMenu";
+
+  final static Array DefaultElementProps = [
+      ["FontName",        "Arial",                              false],
+      ["FontSize",        CUISettings::TextListFontSize,        false],
+      ["SelectedColor",   CUISettings::TextListSelectedColor,   false],
+      ["NormalColor",     CUISettings::TextListNormalColor,     false],
+      ["HiSelectedColor", CUISettings::TextListHiSelectedColor, false],
+      ["HiNormalColor",   CUISettings::TextListHiNormalColor,   false]
+    ];
+
+  void OnInitMenu()
+  {
+    Component Game = new #GameController();
+    Component MenuController = Game.GetMenuController();
+    MenuController.SetDefaultCommands("Load", "Back");
+
+    GetObject("MissionList").SetSlaveScroller(GetObject("MissionScroll"));
+    UpdateMissionList();
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    if ("Load" == _ID)
+    {
+      final int iMission = GetObject("MissionList").GetCurrentItem();
+      if (-1 != iMission)
+        new #GameController().m_StartMission = Missions[iMission][0];
+      logMessage(new #GameController().m_StartMission);
+      Invoke("GameEnvironmentMenu");
+       
+    }
+    if ("MissionScroll_Arrow1" == _ID)
+      GetObject("MissionList").ScrollUp(32.7 / 768.0);
+    else                                 
+    if ("MissionScroll_Arrow2" == _ID)
+      GetObject("MissionList").ScrollDown(32.7 / 768.0);     
+     
+    if ("Back" == _ID)
+      GoBack();
+  }
+
+  void OnControlActivatedDouble(
+      String _ID
+    )
+  {
+    if (_ID.IsStartsWith("MissionList_"))
+    {
+      GetObject("MissionList").SelectItem(_ID);
+    }
+  }
+
+  void UpdateMissionList()
+  {
+    Component PlayList = GetObject("MissionList");
+
+    PlayList.ClearWithUnregister();
+    PlayList.SetListScrollStep(32.7 / 768.0);
+    PlayList.SelectItemByIndex(-1);
+
+    Component Position = new CUIPosition(0.0, 0.0, PlayList.GetUIPosition().Width, 25.0 / 768.0);
+    
+    for (int i = 0; i < Missions.size(); i++)
+    {
+      final String NewID = "MissionList_" + new String(i);
+      Component Element = CreateUIControl(
+          NewID, 
+          "BitmapButton", 
+          "CUITextElement", 
+          Position, 
+          clone(DefaultElementProps)
+        );
+
+      Element.SetText(Missions[i][1]);
+      Element.SetMaterials("GridBackground", "GridBackground");
+      PlayList.AddControl(NewID);
+    }
+  }
+}

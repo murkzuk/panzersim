@@ -1,0 +1,116 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+class CDesantGroup_1
+  extends CObjectsGroup 
+{
+  static Array DefaultContents = [ 
+      [
+        "AmericanSoldierRifle_1",
+        "GameObject",
+        "CAmericanSoldierRifleUnit",
+        new Matrix(
+            0.963170, -0.268894, 0.000000, 45532.453125,
+            0.268894, 0.963170, 0.000000, 37793.144531,
+            0.000000, 0.000000, 1.000000, 549.129456,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+          ["Affiliation", "FRIEND"],
+          ["BehRadarMask", [[], ["FRIEND", "NEUTRAL"]]],
+          ["Task", "DesantTask"]
+        ]
+      ],
+
+      [
+        "AmericanSoldierRifle_2",
+        "GameObject",
+        "CAmericanSoldierRifleUnit",
+        new Matrix(
+            0.970481, -0.241176, 0.000000, 45532.824219,
+            0.241176, 0.970481, 0.000000, 37791.300781,
+            0.000000, 0.000000, 1.000000, 549.129456,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+          ["Affiliation", "FRIEND"],
+          ["BehRadarMask", [[], ["FRIEND", "NEUTRAL"]]],
+          ["Task", "DesantTask"]
+        ]
+      ],
+
+      [
+        "AmericanSoldierRifle_3",
+        "GameObject",
+        "CAmericanSoldierRifleUnit",
+        new Matrix(
+            0.972448, -0.233121, 0.000000, 45532.035156,
+            0.233121, 0.972448, 0.000000, 37794.746094,
+            0.000000, 0.000000, 1.000000, 549.129456,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+          ["Affiliation", "FRIEND"],
+          ["BehRadarMask", [[], ["FRIEND", "NEUTRAL"]]],
+          ["Task", "DesantTask"]
+        ]
+      ],
+
+      [
+        "AmericanSoldierRifle_4",
+        "GameObject",
+        "CAmericanSoldierRifleUnit",
+        new Matrix(
+            0.970622, -0.240608, 0.000000, 45531.250000,
+            0.240608, 0.970622, 0.000000, 37795.605469,
+            0.000000, 0.000000, 1.000000, 549.129456,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+          ["Affiliation", "FRIEND"],
+          ["BehRadarMask", [[], ["FRIEND", "NEUTRAL"]]],
+          ["Task", "DesantTask"]
+        ]
+      ],
+
+      [
+        "AmericanSoldierRifle_5",
+        "GameObject",
+        "CAmericanSoldierRifleUnit",
+        new Matrix(
+            0.988761, -0.149506, 0.000000, 45533.234375,
+            0.149506, 0.988761, 0.000000, 37790.058594,
+            0.000000, 0.000000, 1.000000, 549.129456,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+          ["Affiliation", "FRIEND"],
+          ["BehRadarMask", [[], ["FRIEND", "NEUTRAL"]]],
+          ["Task", "DesantTask"]
+        ]
+      ],
+
+      [
+        "AmericanSoldierRifle_6",
+        "GameObject",
+        "CAmericanSoldierRifleUnit",
+        new Matrix(
+            0.977009, -0.213197, 0.000000, 45532.796875,
+            0.213197, 0.977009, 0.000000, 37789.042969,
+            0.000000, 0.000000, 1.000000, 549.129517,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+          ["Affiliation", "FRIEND"],
+          ["BehRadarMask", [[], ["FRIEND", "NEUTRAL"]]],
+          ["Task", "DesantTask"]
+        ]
+      ]
+    ];
+}

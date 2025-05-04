@@ -1,0 +1,179 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CM2A1HowitzerFireAnimation
+{
+  final static String  AnimationName     = "fire";
+  final static float   AnimationTime     = 1.0;
+}
+
+class CM2A1HowitzerExplosion
+  extends CUnitExplosion
+{
+  float  Damage   = 150.0;
+  float  Radius   = 15.0;
+  String SoundId  = "M2A1HowitzerExplosionSound";
+}
+
+class CM2A1HowitzerGunBulletExplosion
+  extends CHowitzerBulletExplosion
+{
+  float  Damage   = 150.0;
+  float  Radius   = 15.0;
+}
+
+class CM2A1HowitzerGunBulletControl
+  extends CHeavyGunBulletControl
+{
+  Array     Classificator = [];
+  float     MaxDistance   = 100000.0;
+  Vector    GravityAccel  = CWorldPhysics::GravityVector;
+
+  String    ExplosionId  = "M2A1HowitzerGunBulletExplosion";
+  Component BulletRender = null;
+  //Component BulletRender = new #StaticEffect<CHeavyGunBulletEffect>();
+}
+
+class CM2A1HowitzerGun
+  extends CHeavyGun
+{
+  final static float  InitBulletSpeed = 500.0;
+  final static float  FireDeviation   = 0.5;
+  final static String BulletPatternId = "M2A1HowitzerGunBullet";
+  final static String FireEffectId    = "HowitzerGunFireEffect";
+  final static String CloudEffectId   = "HowitzerGunCloudEffect";
+
+  final static String    FireSoundId     = "M2A1HowitzerFireSound";
+
+  final static Vector GravityVector   = CWorldPhysics::GravityVector;
+
+  // *** Gun parameters for behavior
+  final static boolean SpecialWeapon  = true;
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod        = 10000;  // ms
+  final static int  FirePeriodRandAdd = 5000;   // ms
+
+  final static boolean BurstFire      = false;
+  final static int  BurstTime         = 2000; // ms
+  final static int  BurstTimeRandAdd  = 0; // ms
+
+  final static Array GunSpecificFireMask = [
+//                                [["GROUND"],[]], // high priority mask: RestrictTo, Exclude
+//                                [["AIR"],[]]   // low priority mask
+                              ];
+
+  Component FireAnimator = new #LineAnimator<CM2A1HowitzerFireAnimation>();;
+
+  event void OnWeaponFire()
+  {
+/*
+    if (FireAnimator != null)
+      FireAnimator.AnimateForward();
+*/
+    //sendEvent(0.0, getIdentificator(this), );
+    Component Object = (new #GameController()).GetMission().GetObject(getIdentificator(this));
+    if (null != Object)
+      (new #EffectsArray()).CreateEffect("HowitzerGunFireDustEffect", getPosition(Object), null);
+  }
+}
+
+// Behavior
+
+class CM2A1HowitzerUnitBehavior
+  extends CBaseGroundBehavior
+{
+  boolean  CanMove   = false;
+  boolean  HasRouter = false;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 800; // m
+  float  MinRadarDistance = 5;    // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( 25, 0, 0);
+  float  MinRotateRadius = 0; // unit can turn when staying
+}
+
+class CM2A1HowitzerTargetingAnimatorA
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret";
+  String VerAnimName    = "gun";
+
+  float  LeftEndAngle   = -23.0;
+  float  RightEndAngle  =  23.0;
+  float  TopEndAngle    =  -5.0;
+  float  BottomEndAngle =  66.0;
+}
+
+class CM2A1HowitzerUnit
+  extends CGroundBuilding, CTargetableObject
+{
+  final static WString CockpitTargetPointer        = getLocalized("Units", "str_M2A1HowitzerPointer");
+  final static float   DefaultHitPoints            = CHitPoints::M2A1HowitzerUnitHitPoints;
+  final static int     Targeting_MapUIElementIndex = 4;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+  static String        PrevExplosionID             = "M2A1HowitzerExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND"];
+
+/*  final static Array HeatJoints = [
+      [ "Fire_A",    40.0, 20.0 ],
+      [ "Fire_B",    40.0, 20.0 ],
+      [ "Engine_B", 70.0, 25.0 ]
+    ];
+*/
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CM2A1HowitzerUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_stat_M2A1HowitzerModel>(), [250, 200, 150, 100, 4]);
+
+    // Setup Weapon
+    SetupWeapon("Weapon_A", new #Weapon<CM2A1HowitzerGun>(),
+      ["Fire_A"],
+      new #TargetingAnimator<CM2A1HowitzerTargetingAnimatorA>());
+
+
+    // Creates and register unit state component
+    // HitPoints, ExplosionID
+//    SetupStateControl(50.0, "M2A1HowitzerExplosion");
+
+    // BulletHitEffect, BulletHitSound, ExplosionEffect, ExplosionSound
+//    SetDamageEffects(
+//        "MetalBulletHitEffect", "MetalBulletHitSound",
+//        "MetalExplosionEffect", "MetalExplosionSound"
+//      );
+
+    PutonGround();
+    SetupBehavior( new #VehicleBehavior<CM2A1HowitzerUnitBehavior>());
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CGroundBuilding::Construct(_Mission, _PropMap);
+
+    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 0.00f);
+  }
+}

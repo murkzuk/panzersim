@@ -1,0 +1,92 @@
+//-------------------------------------------------------------------
+//
+//    [ "This code is copyright 2001 by G5 Software.
+//    [ "Any unauthorized usage, either in part or in whole of this code
+//    [ "is strictly prohibited. Violators WILL be prosecuted to the
+//    [ "maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CSoundTables
+{
+  final static Array CommonSoundTable = [
+      // Numbers
+    [ "str_Jackson_number0",  "Resources/Vw_Jackson_number0.wav" ],
+    [ "str_Jackson_number1",  "Resources/Vw_Jackson_number1.wav" ],
+    [ "str_Jackson_number2",  "Resources/Vw_Jackson_number2.wav" ],
+    [ "str_Jackson_number3",  "Resources/Vw_Jackson_number3.wav" ],
+    [ "str_Jackson_number4",  "Resources/Vw_Jackson_number4.wav" ],
+    [ "str_Jackson_number5",  "Resources/Vw_Jackson_number5.wav" ],
+    [ "str_Jackson_number6",  "Resources/Vw_Jackson_number6.wav" ],
+    [ "str_Jackson_number7",  "Resources/Vw_Jackson_number7.wav" ],
+    [ "str_Jackson_number8",  "Resources/Vw_Jackson_number8.wav" ],
+    [ "str_Jackson_number9",  "Resources/Vw_Jackson_number9.wav" ],
+
+    [ "str_Breadshow_number0",  "Resources/Vw_Breadshow_number0.wav" ],
+    [ "str_Breadshow_number1",  "Resources/Vw_Breadshow_number1.wav" ],
+    [ "str_Breadshow_number2",  "Resources/Vw_Breadshow_number2.wav" ],
+    [ "str_Breadshow_number3",  "Resources/Vw_Breadshow_number3.wav" ],
+    [ "str_Breadshow_number4",  "Resources/Vw_Breadshow_number4.wav" ],
+    [ "str_Breadshow_number5",  "Resources/Vw_Breadshow_number5.wav" ],
+    [ "str_Breadshow_number6",  "Resources/Vw_Breadshow_number6.wav" ],
+    [ "str_Breadshow_number7",  "Resources/Vw_Breadshow_number7.wav" ],
+    [ "str_Breadshow_number8",  "Resources/Vw_Breadshow_number8.wav" ],
+    [ "str_Breadshow_number9",  "Resources/Vw_Breadshow_number9.wav" ],
+
+    [ "str_Dispatcher_number0",  "Resources/Vb_Dispatcher_number0.wav" ],
+    [ "str_Dispatcher_number1",  "Resources/Vb_Dispatcher_number1.wav" ],
+    [ "str_Dispatcher_number2",  "Resources/Vb_Dispatcher_number2.wav" ],
+    [ "str_Dispatcher_number3",  "Resources/Vb_Dispatcher_number3.wav" ],
+    [ "str_Dispatcher_number4",  "Resources/Vb_Dispatcher_number4.wav" ],
+    [ "str_Dispatcher_number5",  "Resources/Vb_Dispatcher_number5.wav" ],
+    [ "str_Dispatcher_number6",  "Resources/Vb_Dispatcher_number6.wav" ],
+    [ "str_Dispatcher_number7",  "Resources/Vb_Dispatcher_number7.wav" ],
+    [ "str_Dispatcher_number8",  "Resources/Vb_Dispatcher_number8.wav" ],
+    [ "str_Dispatcher_number9",  "Resources/Vb_Dispatcher_number9.wav" ],
+
+    [ "str_Falcon_number0",  "Resources/Vb_Falcon_number0.wav" ],
+    [ "str_Falcon_number1",  "Resources/Vb_Falcon_number1.wav" ],
+    [ "str_Falcon_number2",  "Resources/Vb_Falcon_number2.wav" ],
+    [ "str_Falcon_number3",  "Resources/Vb_Falcon_number3.wav" ],
+    [ "str_Falcon_number4",  "Resources/Vb_Falcon_number4.wav" ],
+    [ "str_Falcon_number5",  "Resources/Vb_Falcon_number5.wav" ],
+    [ "str_Falcon_number6",  "Resources/Vb_Falcon_number6.wav" ],
+    [ "str_Falcon_number7",  "Resources/Vb_Falcon_number7.wav" ],
+    [ "str_Falcon_number8",  "Resources/Vb_Falcon_number8.wav" ],
+    [ "str_Falcon_number9",  "Resources/Vb_Falcon_number9.wav" ],
+
+    [ "str_Moore_number0",  "Resources/Vg_Moore_number0.wav" ],
+    [ "str_Moore_number1",  "Resources/Vg_Moore_number1.wav" ],
+    [ "str_Moore_number2",  "Resources/Vg_Moore_number2.wav" ],
+    [ "str_Moore_number3",  "Resources/Vg_Moore_number3.wav" ],
+    [ "str_Moore_number4",  "Resources/Vg_Moore_number4.wav" ],
+    [ "str_Moore_number5",  "Resources/Vg_Moore_number5.wav" ],
+    [ "str_Moore_number6",  "Resources/Vg_Moore_number6.wav" ],
+    [ "str_Moore_number7",  "Resources/Vg_Moore_number7.wav" ],
+    [ "str_Moore_number8",  "Resources/Vg_Moore_number8.wav" ],
+    [ "str_Moore_number9",  "Resources/Vg_Moore_number9.wav" ],
+
+    [ "str_Kingsley_number0",  "Resources/Vi_Kingsley_number0.wav" ],
+    [ "str_Kingsley_number1",  "Resources/Vi_Kingsley_number1.wav" ],
+    [ "str_Kingsley_number2",  "Resources/Vi_Kingsley_number2.wav" ],
+    [ "str_Kingsley_number3",  "Resources/Vi_Kingsley_number3.wav" ],
+    [ "str_Kingsley_number4",  "Resources/Vi_Kingsley_number4.wav" ],
+    [ "str_Kingsley_number5",  "Resources/Vi_Kingsley_number5.wav" ],
+    [ "str_Kingsley_number6",  "Resources/Vi_Kingsley_number6.wav" ],
+    [ "str_Kingsley_number7",  "Resources/Vi_Kingsley_number7.wav" ],
+    [ "str_Kingsley_number8",  "Resources/Vi_Kingsley_number8.wav" ],
+    [ "str_Kingsley_number9",  "Resources/Vi_Kingsley_number9.wav" ],
+
+    [ "str_Skyrider_number0",  "Resources/Vp_Skyrider_number0.wav" ],
+    [ "str_Skyrider_number1",  "Resources/Vp_Skyrider_number1.wav" ],
+    [ "str_Skyrider_number2",  "Resources/Vp_Skyrider_number2.wav" ],
+    [ "str_Skyrider_number3",  "Resources/Vp_Skyrider_number3.wav" ],
+    [ "str_Skyrider_number4",  "Resources/Vp_Skyrider_number4.wav" ],
+    [ "str_Skyrider_number5",  "Resources/Vp_Skyrider_number5.wav" ],
+    [ "str_Skyrider_number6",  "Resources/Vp_Skyrider_number6.wav" ],
+    [ "str_Skyrider_number7",  "Resources/Vp_Skyrider_number7.wav" ],
+    [ "str_Skyrider_number8",  "Resources/Vp_Skyrider_number8.wav" ],
+    [ "str_Skyrider_number9",  "Resources/Vp_Skyrider_number9.wav" ]
+        ];
+}
+

@@ -1,0 +1,76 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CAmericanFinisherLoadTransportAnim
+{
+  final static String  AnimationName     = "load";
+  final static float   AnimationTime     = 1.0;
+}
+
+class CAmericanFinisherUnloadTransportAnim
+{
+  final static String  AnimationName     = "unload";
+  final static float   AnimationTime     = 1.0;
+}
+
+// Behavior
+class CAmericanFinisherBehavior extends CHumanBehavior
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 700; // m
+  float  MinRadarDistance = 5;    // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( 5.0, 0, 0);
+}
+
+class CAmericanFinisherUnit
+  extends CHumanUnit
+{
+  final static float DefaultHitPoints = CHitPoints::AmericanFinisherUnitHitPoints;
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND", "HUMAN"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CAmericanFinisherUnit()
+  {
+    SetupMesh(new #AnimatedObject<Chum_AmericanFinisherModel>(), [200, 100, 50, 10, 3]);
+
+    SetupBehavior(new #HumanBehavior<CAmericanFinisherBehavior>());
+
+    LoadAnimations("ChumansAnimation");
+
+    SetupLoadTransportAnimation(new #LineAnimator<CAmericanFinisherLoadTransportAnim>(),
+                                new #LineAnimator<CAmericanFinisherUnloadTransportAnim>()
+                                );
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CHumanUnit::Construct(_Mission, _PropMap);
+  }
+}

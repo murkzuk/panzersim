@@ -1,0 +1,81 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CTargetableObject {
+  final static Color   Targeting_FriendColor  = new Color( 0.0, 1.0, 0.0 );   // dlya druzestvennyh unitov
+  final static Color   Targeting_EnemyColor   = new Color( 1.0, 0.0, 0.0 );   // dlya vragov
+  final static Color   Targeting_NeutralColor = new Color( 0.5, 0.5, 1.0 );   // dlya neutralov
+  
+  final static float   Targeting_MaxDistance          = 2000.0;           
+  final static float   Targeting_ColorDecayDistance   = 100.0;   // za stolko metrov ot TargetingMaxDistance ramka nachnet rasstvoryatsa
+  final static float   Targeting_MaxFrameSize         = 0.15;    // maximalnyi razmer ramki, 1.0 - eto ves' ekran po shirine
+  final static float   Targeting_MinFrameSize         = 0.02;    // minimalnyi razmer ramki, 1.0 - eto ves' ekran po shirine
+  final static float   Targeting_MaxFrameSizeDistance = 20.0;    // object nahodyashijsya ot kamery blizhe chem eto rasstoyanie budet v ramochke razmerom TargetingMaxFrameSize
+  final static boolean Targeting_IsCanBeMarked        = true;
+  
+  final static Array   Targeting_Exceptions       = [ CLASSIFICATOR_DEAD_OBJECT ];
+  final static String  Targeting_PlayerUnitObject = "MainPlayerUnit";
+  final static int     Targeting_MapUIElementIndex = 1;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+}
+
+// Base class for all units
+class CUnit
+  extends CObject, CUnitStateControl, CTargetableObject
+{
+  // ==========================================
+  // Initialization
+  // ==========================================
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    // Call inherited construct
+    CObject::Construct(_Mission, _PropMap);
+  }
+   
+  void Initialize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CObject::Initialize(_Mission, _PropMap);
+  }
+   
+  void Shutdown(
+      Component _Mission
+    )
+  {
+    CObject::Shutdown(_Mission);
+  }
+
+  void Finalize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CObject::Finalize(_Mission, _PropMap);
+  }
+
+  Array GetDefaultProperties()
+  {
+    Array Default = CObject::GetDefaultProperties();
+
+    return Default;
+  }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+    CObject::SetProperties(_PropMap);
+  }
+
+}

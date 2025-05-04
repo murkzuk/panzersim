@@ -1,0 +1,24 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CFenceWirePleiMe_2Unit
+  extends CGroundBuilding
+{
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE", CLASSIFICATOR_DO_NOT_COLLISION_CHECK];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CFenceWirePleiMe_2Unit()
+  {
+    SetupMesh(new #AnimatedObject<Cfence_Wire_PleiMe2Model>(), [250, 100, 5]);
+  }
+}

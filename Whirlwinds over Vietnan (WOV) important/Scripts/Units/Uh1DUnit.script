@@ -1,0 +1,579 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+// =========================================
+// weapon properties
+// =========================================
+
+// DoorM60
+class CUh1dDoorM60BulletExplosion
+  extends CM60BulletExplosion
+{
+  float Damage = 30.0;
+}
+
+class CUh1dDoorM60GunBulletControl
+  extends CLightGunBulletControl
+{
+  String    ExplosionId  = "Uh1dDoorM60GunBulletExplosion";
+  Component BulletRender = new #StaticEffect<CM60GunBulletEffect>();
+}
+
+class CUh1dDoorM60Gun
+  extends CLightGun, CPlayerWeapon
+{
+  final static float  InitBulletSpeed = 800.0;
+  final static float  FireDeviation   = 0.30;
+
+  final static String  BulletPatternId  = "Uh1dDoorM60Bullet";
+  final static int     Ammunition       = 1000;
+  final static int     TargetCameraFilter = ETC_FILTER_TV;
+
+  final static float   AmmoMass   = 0.035;
+  final static float   WeaponMass = 22.7;
+
+  final static float   LockAngleHMin    = -70.0;
+  final static float   LockAngleHMax    =  70.0;
+  final static float   LockAngleVMin    = -20.0;
+  final static float   LockAngleVMax    =  85.0;
+  final static float   BlockedLockAngle =  1.0;
+
+  Component BurstFireSound  = new #Emitter<CM60GunFireSound>();
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod          = 200; // ms
+  final static int  FirePeriodRandAdd   = 50; // ms
+
+  final static boolean BurstFire        = true;
+  final static int  BurstTime           = 2000; // ms
+  final static int  BurstTimeRandAdd    = 0; // ms
+
+  final static int  BurstDelay          = 2000; // ms
+  final static int  BurstDelayRandAdd   = 500; // ms
+
+  final static Array GunSpecificFireMask = [
+                                [[], []]
+                              ];
+
+  final static boolean ApplySpeedToBullets = true;
+  final static float   ShellSpeedDeviation = 0.5;
+
+  // feedback effect
+  final static String  FeedbackEffect   = "GunFeedback";
+
+  // Cockpit UI parms
+  final static WString Name             = CWeaponNames::str_M60_FullName;
+  final static WString ShortName        = CWeaponNames::str_M60_ShortName;
+  final static String  IconMaterial     = "m60 icon";
+  final static int     PointerType      = TPT_GUN;
+  final static boolean Primary          = true;  // GUN should be marked as Primary
+  final static Array   TimeToLock       = [ // TimeToLock = 0 means this weapon needs no locking process
+                                            [ WFM_Free,   0.5 ],
+                                            [ WFM_Single, 0.5 ]
+                                          ];
+  final static boolean ResetLockOnFire  = false;    // Statr locking process after fire
+  final float          TargetingRange   = 1650;  // CAh64aUnit::RadarRange; // range from which the gun can shoot/aim
+  final static int     AutoRepeatDelay  = 200;
+  final static Array   FireModesArc     = [ WFM_Free, WFM_Single, WFM_Blocked ];
+  final static Array   FireModesSim     = [ WFM_Free, WFM_Single, WFM_Blocked ];
+}
+
+class CUh1dLeftDoorM60Gun
+  extends CUh1dDoorM60Gun
+{
+  final static int     Slot             = 2;
+}
+
+class CUh1dRightDoorM60Gun
+  extends CUh1dDoorM60Gun
+{
+  final static int     Slot             = 3;
+}
+
+class CUh1dLeftDoorTargetingAnimator
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret";
+  String VerAnimName    = "gun";
+
+  float  LeftEndAngle   = -70.0;
+  float  RightEndAngle  =  70.0;
+  float  TopEndAngle    = -20.0;
+  float  BottomEndAngle =  85.0;
+}
+
+class CUh1dRightDoorTargetingAnimator
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret";
+  String VerAnimName    = "gun";
+
+  float  LeftEndAngle   = -70.0;
+  float  RightEndAngle  =  70.0;
+  float  TopEndAngle    = -20.0;
+  float  BottomEndAngle =  85.0;
+}
+
+class CUh1dLDoorAnimator
+{
+  String AnimationName = "l_cargo_door";
+  float  AnimationTime = 1.0;
+}
+
+class CUh1dRDoorAnimator
+{
+  String AnimationName = "r_cargo_door";
+  float  AnimationTime = 1.5;
+}
+
+// =========================================
+// systems properties
+// =========================================
+
+
+class CUh1dMainPitchSystem
+{
+  Vector BaseDirection      = new Vector(0.0, 0.0, 1.0);  // base direction of pitch system
+  float  MaxCollectivePitch = 0.1096;                     // maximum collective pitch, rad
+  float  MaxCyclicPitch     = 0.0548;                     // maximum cyclic pitch, rad
+}
+
+class CUh1dTailPitchSystem
+{
+  Vector BaseDirection      = new Vector(0.0, 1.0, 0.0);  // base direction of pitch system
+  float  MaxCollectivePitch = 0.1745;                     // maximum collective pitch, rad
+}
+
+class CUh1dMainRotorSystem
+{
+  Vector    RotorPoint     = new Vector(0.0, 0.0, 0.5);  // 'Rчка при<Rж_-ия си<ы
+
+  float     Radius         = 7.0;                        // _адиус ви-та, м
+
+  float     LiftCoeff      = 3.3;                        // _Rэффици_-т пRдъём-Rc си<ы, в<ияющиc -а максима<ь-ую тя_у
+                                                         // при статич_скRм пRдъём_
+
+  float     DragCoeff      = 5.5;                        // _Rэфици_-т сRпрRтив<_-ия ви-та, в<ияющиc -а максима<ь-ую
+                                                         // пRдъём-ую си<у при статич_скRм пRдъём_
+
+  float     FrictCoeff     = 0.0001;                     // _Rэффици_-т си<ы сRпрRтив<_-ия вращ_-ию п_р_дава_мRc -а
+                                                         // дви_ат_<ь
+
+  float     TorqueCoeff    = 4.0;                        // _Rэффици_-т вращат_<ь-R_R мRм_-та
+
+  float     AeroLiftCoeff  = 0.0005;                     // _Rэффици_-т аэрRди-амич_скR_R пRдъёма
+
+  float     SpeedScale     = 0.05;                       // _т-Rш_-и_ скRрRсти вращ_-ия ви-та к скRрRсти вращ_-ия дви_ат_<я
+
+  float     RotationCoeff  = 60000.0;                    // _Rэффици_-т дRпR<-ит_<ь-R_R вращат_<ь-R_R мRм_-та вRкру_
+                                                         // Rси-Z сRздава_мR_R за счёт вращ_-ия ви-та
+
+  Component RotorSound     = new #Emitter<CUh1DRotorFlightSound>(); // sound effect for working state
+  Array     FreqRange      = [
+                                [0.003,  0.15],
+                                [0.02 ,  0.7],
+                                [0.04 ,  1.4],
+                                [0.1  ,  1.8]
+                             ];
+
+}
+
+class CUh1dTailRotorSystem
+{
+  Vector RotorPoint     = new Vector(-4.0, 0.0, 0.0);     // point of main rotor
+  float  Radius         = 3.0;                            // Radius of rotor, m
+  float  LiftCoeff      = 0.09;                           // Lift coefficient of rotor
+  float  DragCoeff      = 2.0;                            // Drag coefficient of rotor
+  float  FrictCoeff     = 0.00017;                        // Friction coefficient of rotor for applying to engine
+  float  TorqueCoeff    = 80.0;                           // Torque scale coefficient
+  float  SpeedScale     = 0.15;                           // Rotation speed scale from engine
+
+  Component RotorSound  = new #Emitter<CUh1DTailRotorSound>(); // sound effect for working state
+  Array FreqRange       = [
+                           [0.003,  0.15],
+                           [0.02 ,  0.7],
+                           [0.04 ,  1.4],
+                           [0.1  ,  1.8]
+             ];
+
+}
+
+class CUh1dStabilizerSystem
+{
+  Array Data = [
+
+      // Tail 1
+      [
+        new Vector(-4.0, 0.0, 0.0),  // act point
+        new Vector( 0.0, 1.0, 0.0),  // normal
+        300.0f,                         // force coeff
+        1300.0f                      // torque coeff
+      ],
+
+      // Tail 2
+      [
+        new Vector(-4.0,  1.0, 0.0), // act point
+        new Vector( 0.0, -1.0, 0.0), // normal
+        300.0f,                          // force coeff
+        1300.0f                       // torque coeff
+      ],
+
+      // Wing 1
+      [
+        new Vector(-4.0,   0.0, 0.0), // act point
+        new Vector(-0.087, 0.0, 0.996), // normal
+        50.0f,                          // force coeff
+        200.0f                       // torque coeff
+      ],
+
+      // Wing 2
+      [
+        new Vector(-4.0,   0.0,  0.0), // act point
+        new Vector( 0.087, 0.0, -0.996), // normal
+        50.0f,                          // force coeff
+        200.0f                       // torque coeff
+      ]
+    ];
+}
+
+class CUh1dEngineSystem
+{
+  float MaxPower = 2000.0;  // maximum horse power
+  float MinSpeed = 7000.0;  // minimum RPM
+  float MaxSpeed = 8160.0;  // maximum RPM
+
+  Component BaseSound   = new #Emitter<CUh1DTurbineFlightSound>(); // sound effect for working state
+}
+
+// Manual control
+class CUh1dManualControl
+  extends CBaseManualControl
+{
+  // =========================================
+  // helicopter coefficients
+  // =========================================
+
+  float  HelicopterMass       = 2040.0;           // kg
+  Vector Sizes                = new Vector(26.8, 26.16, 4.72);
+  float  Elastity             = 0.0;
+  float  Friction             = 0.5;
+
+  // local point on helicopter for act of ground force
+  Vector GroundTorquePoint    = new Vector(0.0, 0.0, 0.0);
+
+  // =========================================
+  // helicopter body drop coefficients
+  // =========================================
+
+  // angular damping coefficients by axises X, Y and Z
+  Vector AngularDampingCoeff  = new Vector(5.2, 5.2, 3.5);
+  // linear damping coefficients by axises X, Y and Z
+  Vector LinearDampingCoeff   = new Vector(2.5, 2.7, 7.6);
+
+
+  // ===========================================
+  // scale density for compute maximum altitude
+  // ===========================================
+
+  float  DensityFactor        = 2.0f;
+
+  // =========================================
+  // air cushion effect
+  // =========================================
+  float  AirCushionThickness  = 60.0;            // m
+
+  // =========================================
+  // wind effect
+  // =========================================
+
+  float  WindCoeff            = 2.0;
+
+  // =========================================
+  // retreating blade stall effect
+  // =========================================
+
+  float  MaximumStreamSpeedInPlane = 60.0;       // m/s
+  float  MaximumStreamSpeedInAxis  = 30.0;       // m/s
+  // coefficient for drop force and torque for blades
+  float  DropForceCoeff       = 0.6;
+  float  DropTorqueCoeff      = 0.1;
+
+  // =========================================
+  // flater effect
+  // =========================================
+
+  // range rotor dispersion for all rotations axis
+  Vector DispersionCoeff      = new Vector(1.462, 1.385, 0.1925) * 25.0;
+
+  // =========================================
+  // vortex ring effect
+  // =========================================
+
+  float  LandingMaxSpeed      = 9.0;              // m/s
+  float  VortexRingAngle      = 0.2618;           // rad
+
+  // =========================================
+  // Tail vibration effect
+  // =========================================
+
+  Vector TailTorqueBeats      = new Vector(0.01, 0.01, 0.3);
+
+  // =========================================
+  // helicopter systems
+  // =========================================
+
+  Component MainPitchSystem   = new CUh1dMainPitchSystem();
+  Component MainRotorSystem   = new CUh1dMainRotorSystem();
+
+  Component TailPitchSystem   = new CUh1dTailPitchSystem();
+  Component TailRotorSystem   = new CUh1dTailRotorSystem();
+
+  Component StabilizerSystem  = new CUh1dStabilizerSystem();
+
+  Component EngineSystem      = new CUh1dEngineSystem();
+}
+
+// ====================================
+// Rotor animators
+// ====================================
+
+class CUh1DMRotorAnimator
+  extends CBaseRotorAnimator
+{
+  float  LowSpeedTresh     = 2.2;
+
+  // Flip animation play only in hi speed
+  float  FlipTime          = 0.04;
+  String AnimFlip          = "dyn_mrotor_flip";
+
+  // Low speed animations
+  Array  LowSpeedJoints    = [ "Static_mRotor_Pitch" ];
+  Array  LowSpeedAnims     = [
+                                ["static_mrotor_bend",   0.0,  2.1, AT_Linear],
+                                ["static_mrotor_rotate", 0.0, -1.0, AT_Looping]
+                             ];
+
+  Array  CrashedJoints     = [ "Static_mRotor_Pitch_crashed" ];
+  Array  CrashedAnims      = [
+                                ["static_mrotor_bend",   0.0,  2.1, AT_Linear],
+                                ["static_mrotor_rotate", 0.0, -1.0, AT_Looping]
+                             ];
+
+
+  // Hi speed animations
+  Array  HiSpeedJoints     = [ "Dyn_mRotor_Pitch" ];
+  Array  HiSpeedAnims      = [
+                                ["dyn_mrotor_stretch", 2.6,  4.5, AT_Linear],
+                                ["dyn_mrotor_rotate",  2.6, -1.0, AT_Looping]
+                             ];
+}
+
+class CUh1DTRotorAnimator
+  extends CBaseRotorAnimator
+{
+  float  LowSpeedTresh     = 3.0;
+
+  // Low speed animations
+  Array  LowSpeedJoints    = [ "Static_tRotor" ];
+  Array  LowSpeedAnims     = [
+                                [ "static_trotor_rotate", 0.0, -1.0, AT_Looping ]
+                             ];
+
+/*  Array  CrashedJoints     = [ "Static_tRotor_crashed" ];
+  Array  CrashedAnims      = [
+                                ["static_trotor_rotate", 0.0, -1.0, AT_Looping]
+                             ];
+*/
+  // Hi speed animations
+  Array  HiSpeedJoints     = [ "Dyn_tRotor" ];
+  Array  HiSpeedAnims      = [
+                                ["dyn_trotor_rotate", 2.6, -1.0, AT_Looping]
+                             ];
+}
+
+class CUh1dUnit
+  extends CPlayerUnit, CWeaponConfig
+{
+  final static WString CockpitTargetPointer        = getLocalized("Units", "str_UH1DPointer");
+  final static float   DefaultHitPoints            = CHitPoints::Uh1dUnitHitPoints;
+  final static int     Targeting_MapUIElementIndex = 0;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+
+  static String PostDeathEffect                = "Uh1DExplosionEffect";
+  static String m_DamageEffect                 = "EngineLightDamageTraceEffect";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["AIR", "HELI"];
+
+  final static Array m_WpSlotsQty    =
+    [
+      [ 1 ],
+      [ 1 ]
+    ];
+  final static Array m_WpNameSuffix  = [ "A", "F" ];
+  final static Array  m_WpScriptName =
+    [
+      [ "CUh1dLeftDoorM60Gun"  ],
+      [ "CUh1dRightDoorM60Gun" ]
+    ];
+
+  final static Array  m_WpTargetingAnimatorName =
+    [
+      [ "CUh1dLeftDoorTargetingAnimator"  ],
+      [ "CUh1dRightDoorTargetingAnimator" ]
+    ];
+
+  final static Array  m_WpEjectionsName =
+    [
+      [
+        [ "Eject1", "M60Shell", 2.15 ],
+        [ "Eject2", "M60Chain", 2.00 ]
+      ],
+      [
+        [ "Eject1", "M60Shell", 2.15 ],
+        [ "Eject2", "M60Chain", 2.00 ]
+      ]
+    ];
+
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CUh1dUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_air_Uh1dModel>(), [300, 200, 50, 10, 1]);
+
+    SetupCrashMesh(new #AnimatedObject<Cu_air_Uh1d_crashedModel>(),
+                   ["Door1Animator",
+                    "Door2Animator"]
+                  );
+
+    // Door animator
+    SetDoorEffects(
+        new #LineAnimator<CUh1dLDoorAnimator>(),
+        new #LineAnimator<CUh1dRDoorAnimator>()
+      );
+
+    // Engine effects setup
+    SetEngineEffects(
+        new #RotorAnimator2<CUh1DMRotorAnimator>(),
+        new #RotorAnimator2<CUh1DTRotorAnimator>()
+      );
+
+    // This object can be landed to another object
+    SetupLandingControl(["Gear1", "Gear2", "Gear3", "Gear4"]);
+    // SetupRechargePlaceDetector(0.1);
+    SetupObjectToObjectLink();
+    // Setup helidust effect
+    SetEngineComponents(
+        [
+          [ "", "HeliDustEffect"        , "WindEffects2"],
+          [ "", "HeliDustSprayEffect" ,   "WindEffects"],
+          [ "", "HeliRingDynamicEffect" , "WindEffects"]
+        ]
+      );
+  }
+
+  final static Array DefaultWeaponConfig = [0, 0];
+
+  void Construct(
+      Component   _Mission,
+      Component   _PropMap
+    )
+  {
+    // Setup custom weapon
+    Array WeaponConfig = _PropMap.Get("Weapon", DefaultWeaponConfig);
+    SetupWeapon(WeaponConfig);
+
+    CPlayerUnit::Construct(_Mission, _PropMap);
+
+    // $TMP
+/*    SetupBehavior(
+        new #VehicleBehavior3<CBaseHelicopterBehavior>(),
+        new #BehPilotController<CUh1bSecondPilot>()
+      );*/
+    if (!_PropMap.Get("IsManual", false))
+    {
+      Component Mesh = GetMeshComponent();
+
+      Matrix EnginePosition = getPosition(GetMeshComponent());
+      Component RotorSound  = new #Emitter<CUh1DRotorFlightSound>();
+      setPosition(RotorSound, EnginePosition);
+      setPositionable(RotorSound, Mesh);
+      RegisterObject("RotorSound", RotorSound);
+      RotorSound.SetFrequencyMultiplier(1.38 + rand(0.05));
+
+      // Create rotor wind
+      Component RotorWind = new #RotorWind();
+      RotorWind.Initialize(
+          null,
+          _Mission.GetMissionAtmosphere(),
+          120.0,
+          new Vector(0.0, 0.0, 0.5),
+          7.0
+      );
+      RotorWind.SetTractionScale(0.8);
+      setPositionable(RotorWind, Mesh);
+      RegisterObject("RotorWind", RotorWind);
+    }
+    SetupBehavior(new #VehicleBehavior<CBaseHelicopterBehavior>());
+  }
+
+  void Initialize(
+      Component      _Mission,
+      Component      _PropertiesMap
+    )
+  {
+    CPlayerUnit::Initialize( _Mission, _PropertiesMap );
+
+    SetupPersonalNavPoint( _Mission, "CPersonalNavPoint" );
+    GetStateControl().EnableHPEvent(true);
+
+    // Open cargo doors by default
+    sendEvent(0.0, getIdentificator(this), "OpenDoor", []);
+  }
+
+  // ======================================
+  // Vehicle controller
+  // ======================================
+
+  Component CreateVehicleController()
+  {
+    return (new #HelicopterVehicle<CUh1dManualControl>());
+  }
+
+  void OnHideMesh()
+  {
+    GetObject("EngineAnimator1").EnableControl(false);
+    GetObject("EngineAnimator2").EnableControl(false);
+
+    Component RotorSound = GetObject("RotorSound");
+    if (RotorSound != null)
+      RotorSound.StopSoundPlaying(true);
+
+    //$TMP $TODO instead we should delete effect itself course SetWindDustEffectScale can be called elsewhere
+    SetWindDustEffectScale(0.0f);
+  }
+
+  event void MissionStarted()
+  {
+    Component RotorSound = GetObject("RotorSound");
+    if (RotorSound != null)
+      RotorSound.PlaySoundBuffer(true);
+  }
+
+  // ======================================
+  // Manual control
+  // ======================================
+
+  Component CreateManualControl()
+  {
+    return new #ManualHelicopterControl();
+  }
+}
+

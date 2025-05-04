@@ -1,0 +1,102 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CIntersections
+{
+  static void InitializeIntersections()
+  {
+    Cbld_BarrackModel::UseBoxForIsection                          = false;
+    Cbld_BaseHangarModel::UseBoxForIsection                       = false;
+    Cbld_BridgeFootModel::UseBoxForIsection                       = false;
+    Cbld_BridgeWoodModel::UseBoxForIsection                       = false;
+    Cbld_BunkerAmmoModel::UseBoxForIsection                       = true;
+    Cbld_BunkerBaseModel::UseBoxForIsection                       = true;
+    Cbld_CheckPointModel::UseBoxForIsection                       = false;
+    Cbld_HeliPadModel::UseBoxForIsection                          = false;
+    Cbld_MarqueeModel::UseBoxForIsection                          = true;
+    Cbld_MedicalTentModel::UseBoxForIsection                      = true;
+    Cbld_RoofModel::UseBoxForIsection                             = true;
+    Cbld_TentModel::UseBoxForIsection                             = true;
+    Cbld_TentLongModel::UseBoxForIsection                         = true;
+    Cbld_TOCModel::UseBoxForIsection                              = true;
+    Cbld_VietnameseGranaryModel::UseBoxForIsection                = true;
+    Cbld_VietnameseGranaryPileModel::UseBoxForIsection            = true;
+    Cbld_VietnameseHouseBigModel::UseBoxForIsection               = true;
+    Cbld_VietnameseHouseBigPileModel::UseBoxForIsection           = true;
+    Cbld_VietnameseHouseSmallModel::UseBoxForIsection             = true;
+    Cbld_VietnameseHouseSmallPileModel::UseBoxForIsection         = true;
+    Cbld_VietnameseRoofModel::UseBoxForIsection                   = true;
+    Cbld_WellModel::UseBoxForIsection                             = true;
+
+    Cenv_AmmoBoxModel::UseBoxForIsection                          = true;
+    Cenv_AmmoBoxPackAModel::UseBoxForIsection                     = true;
+    Cenv_AmmoBoxPackBModel::UseBoxForIsection                     = true;
+    Cenv_BarrelModel::UseBoxForIsection                           = true;
+    Cenv_BarrelPackAModel::UseBoxForIsection                      = true;
+    Cenv_BarrelPackBModel::UseBoxForIsection                      = true;
+    Cenv_WeaponBoxBigModel::UseBoxForIsection                     = true;
+    Cenv_WeaponBoxBigPackAModel::UseBoxForIsection                = true;
+    Cenv_WeaponBoxBigPackBModel::UseBoxForIsection                = true;
+    Cenv_WeaponBoxSmallModel::UseBoxForIsection                   = true;
+    Cenv_WeaponBoxSmallPackAModel::UseBoxForIsection              = true;
+    Cenv_WeaponBoxSmallPackBModel::UseBoxForIsection              = true;
+
+    Cfence_WickerModel::UseBoxForIsection                         = false;
+    Cfence_WireModel::UseBoxForIsection                           = false;
+    Cfence_WireSpiralModel::UseBoxForIsection                     = false;
+
+    Chum_AmericanFinisherModel::UseBoxForIsection                 = true;
+    Chum_AmericanMedicModel::UseBoxForIsection                    = true;
+    Chum_AmericanPilotModel::UseBoxForIsection                    = false;
+    Chum_AmericanRadioModel::UseBoxForIsection                    = true;
+    Chum_AmericanSoldierGrenadeModel::UseBoxForIsection           = true;
+    Chum_AmericanSoldierGunModel::UseBoxForIsection               = true;
+    Chum_AmericanSoldierRifleModel::UseBoxForIsection             = true;
+    Chum_VietnamesePeasantModel::UseBoxForIsection                = true;
+    Chum_VietnameseSoldierGunModel::UseBoxForIsection             = true;
+    Chum_VietnameseSoldierRifleModel::UseBoxForIsection           = true;
+    Chum_VietnameseVolunteerGunModel::UseBoxForIsection           = true;
+    Chum_VietnameseVolunteerRifleModel::UseBoxForIsection         = true;
+
+    Cnpc_JacksonModel::UseBoxForIsection                          = false;
+    Cnpc_KingsleyModel::UseBoxForIsection                         = false;
+    Cnpc_MooreModel::UseBoxForIsection                            = false;
+    Cnpc_QuadeModel::UseBoxForIsection                            = false;
+
+    Cu_air_AD4SkyriderModel::UseBoxForIsection                    = true;
+    Cu_air_Uh1bModel::UseBoxForIsection                           = false;
+    Cu_air_Uh1b_InsideModel::UseBoxForIsection                    = false;
+    Cu_air_Uh1dModel::UseBoxForIsection                           = true;
+
+    Cu_nvl_JunkModel::UseBoxForIsection                           = true;
+    Cu_nvl_SampanModel::UseBoxForIsection                         = true;
+
+    Cu_stat_DShKModel::UseBoxForIsection                          = true;
+    Cu_stat_M29MortarModel::UseBoxForIsection                     = true;
+    Cu_stat_M29MortarPointModel::UseBoxForIsection                = true;
+    Cu_stat_M2A1HowitzerModel::UseBoxForIsection                  = true;
+    Cu_stat_M60CordonPointModel::UseBoxForIsection                = true;
+    Cu_stat_WatchTowerModel::UseBoxForIsection                    = true;
+
+    Cu_veh_M151JeepModel::UseBoxForIsection                       = true;
+    Cu_veh_M939TruckModel::UseBoxForIsection                      = true;
+    Cu_veh_Gaz51TruckModel::UseBoxForIsection                     = true;
+
+    Cwpn_Ak47Model::UseBoxForIsection                             = true;
+    Cwpn_FFARModel::UseBoxForIsection                             = true;
+    Cwpn_M60_InfModel::UseBoxForIsection                          = true;
+    Cwpn_M79Model::UseBoxForIsection                              = true;
+    Cwpn_NapalmModel::UseBoxForIsection                           = true;
+    Cwpn_SKS45Model::UseBoxForIsection                            = true;
+    Cwpn_ChainModel::UseBoxForIsection                            = true;
+    Cwpn_ChainNearModel::UseBoxForIsection                        = true;
+    Cwpn_ShellModel::UseBoxForIsection                            = true;
+    Cwpn_ShellNearModel::UseBoxForIsection                        = true;
+  }
+}

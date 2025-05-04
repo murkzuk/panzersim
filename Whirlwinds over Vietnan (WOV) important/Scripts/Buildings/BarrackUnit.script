@@ -1,0 +1,79 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+class CBarrackExplosion
+  extends CBuildingExplosion
+
+{
+  float  Damage   = 10.0;
+  float  Radius   = 5.0;
+  String EffectID = "";
+  String SoundId  = "BarrackExplosionSound";
+}
+
+class CBarrackUnit
+  extends CGroundBuilding
+{
+
+  final static float DefaultHitPoints = CHitPoints::BarrackUnitHitPoints;
+
+  static String PrevDeathSound        = "BarrackFireSound";
+  final static int  DeathEffectDelay  = 6.0;
+  static int CrashedStateChangeDelay  = 0.3;
+
+  static String PostExplosionID = "BarrackExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CBarrackUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cbld_BarrackModel>(), [250, 150, 13]);
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CGroundBuilding::Construct(_Mission, _PropMap);
+
+    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 0.00f);
+  }
+
+  event void DestroyObject()
+  {
+    Matrix Position1 = getPosition(this);
+    Position1.origin += Position1.multVec(new Vector(3.2, -4.8, -3.0));
+    (new #EffectsArray()).CreateEffect("BigFireEffect", Position1, this);
+
+    Matrix Position2 = getPosition(this);
+    Position2.origin += Position2.multVec(new Vector(3.2, 0.5, -3.0));
+    (new #EffectsArray()).CreateEffect("BigFireEffect", Position2, this);
+
+    Matrix Position3 = getPosition(this);
+    Position3.origin += Position3.multVec(new Vector(-3.2, 4.0, -3.0));
+    (new #EffectsArray()).CreateEffect("BigFireEffect", Position3, this);
+
+    Matrix Position4 = getPosition(this);
+    Position4.origin += Position4.multVec(new Vector(1.2, -2.8, -0.1));
+    (new #EffectsArray()).CreateEffect("BigFireEffect", Position4, this);
+
+    Matrix Position5 = getPosition(this);
+    Position5.origin += Position5.multVec(new Vector(0.0, 4.5, 0.4));
+    (new #EffectsArray()).CreateEffect("BigFireEffect", Position5, this);
+
+    CGroundBuilding::DestroyObject();
+  }
+}

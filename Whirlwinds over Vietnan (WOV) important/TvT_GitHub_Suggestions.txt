@@ -1,0 +1,16 @@
+Suggested Additional GitHub Content for TvT Modding Based on WoV Insights:
+
+Already Covered:
+- Detailed technical comparison of terrain, water, forest, and lighting (WoV vs TvT)
+- WoV radio chatter integration and how to adapt it to TvT
+- Concrete list of WoV features that can be used in TvT missions or visuals
+
+Possible Additions:
+- 📦 File structure comparison (root-based vs per-mission folder usage)
+- 🎮 Gameplay difference: fixed map vs per-mission terrain
+- 🔊 Breakdown of WAV filenames and their implied mission logic
+- 🧠 Modder’s hypothesis: What Whirlwinds features are hardcoded vs scriptable
+- 🗺️ Possibility of creating a multi-mission TvT campaign using WoV's large shared terrain
+- 🔧 Developer notes on restoring TvT’s missing editor features (group logic, task control)
+- 📚 A lessons learned or changelog file outlining our progress and roadblocks
+- 🧵 Threaded roadmap: What to try next, with confidence ratings

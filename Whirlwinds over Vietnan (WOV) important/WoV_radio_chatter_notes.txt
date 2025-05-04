@@ -1,0 +1,54 @@
+Whirlwinds over Vietnam: Radio Chatter Integration and Modding Potential
+
+Overview
+---------
+Whirlwinds over Vietnam (WoV), G5 Software’s title prior to T-34 vs Tiger (TvT), featured a robust radio briefing and mid-mission communication system. These voice lines—stored as .wav files—were contextually triggered and served multiple purposes:
+
+- Pre-mission briefings (mission setup, weather, orders)
+- In-mission dispatch updates (route confirmations, events)
+- End-of-mission summaries or extractions
+
+All communication was voice-acted and localized in discrete files named with mission references (e.g., Vb_c1m1_Dispatcher_Begin_01.wav).
+
+Key File Structure
+-------------------
+Audio files were stored in:
+  WoV Root Folder/
+    Missions/
+      Vb_c1m1_Dispatcher_Begin_01.wav
+      Vb_c1m1_Dispatcher_Return_03.wav
+      etc.
+
+Script Linkage (Hypothetical)
+-------------------------------
+While no explicit script handlers like `radio.script` or `helpers.script` were found, several plausible scenarios arise:
+
+1. **Event-Driven Triggering**: Dialogue may be linked via dispatcher/event objects in the mission scripts (.script).
+2. **Wave–Action Binding**: Script classes may call specific .wav filenames during tasks or conditions.
+3. **Dispatcher Role**: Central dispatcher “voice” is consistently named, suggesting a hardcoded logic layer, possibly in the mission manager logic.
+4. **Mission_1.rsr**: May contain script bindings or map dialogue references to mission events.
+
+Adaptation to TvT
+------------------
+TvT does not expose or utilize a similar radio system in missions, but the underlying engine remains compatible with:
+- WAV file loading
+- Script-triggered audio
+- Task-based action responses
+
+Therefore, these are the recommended directions:
+
+✓ Identify available `PlaySound(...)` or `SoundEvent(...)` logic in TvT script core
+✓ Emulate event scripting in a new mission (e.g., trigger dialogue when entering zone or upon reaching nav point)
+✓ Optionally create a reusable dispatcher system (e.g., class CDispatcherSoundSet { Array dialogTriggers; })
+
+Modding Potential
+-------------------
+- Integrate WoV-style briefings before mission starts (triggered via static delay or nav zone)
+- Build mission-specific command chains with dispatcher feedback
+- Enhance immersion without changing core engine binaries
+
+Conclusion
+-----------
+WoV’s voice-driven mission guidance provides a missing immersive layer in TvT. While not directly present in TvT’s original structure, the core audio and scripting features are adaptable. Modders can bring this feature back using WAV binding, event tracking, and custom dispatcher logic embedded in mission scripts.
+
+Recommended: Begin with a static audio trigger test inside a TvT mission using `PlaySound("custom_wav")`.

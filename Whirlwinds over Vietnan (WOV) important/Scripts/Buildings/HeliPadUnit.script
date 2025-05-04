@@ -1,0 +1,63 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+class CHeliPadExplosion
+  extends CBuildingExplosion
+
+{
+  float  Damage   = 10.0;
+  float  Radius   = 5.0;
+  String    SoundId  = "HeliPadExplosionSound";
+}
+
+class CHeliPadUnit
+  extends CGroundBuilding
+{
+
+  final static float DefaultHitPoints = CHitPoints::HeliPadUnitHitPoints;
+
+  static String PrevExplosionID = "HeliPadExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE", "HELI_RECHARGE"];
+
+  String m_CurTransport = "";
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CHeliPadUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cbld_HeliPadModel>(), [500, 350, 200, 11]);
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CGroundBuilding::Construct(_Mission, _PropMap);
+
+    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 0.00f);
+  }
+
+  String GetCurrentRechargeTransport()
+  {
+    return m_CurTransport;
+  }
+
+  SetCurrentRechargeTransport(
+      String _Transport
+    )
+  {
+    m_CurTransport = _Transport;
+  }
+
+}
