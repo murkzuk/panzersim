@@ -1,0 +1,43 @@
+TvT Visual Polish: Horizon Draw & Forest Detail from Whirlwind Over Vietnam
+
+1. Introduction
+TvT’s tank handling is unrivaled—but its terrain felt flat and sparse compared to Whirlwind Over Vietnam (WOV). This guide shows how to:
+- Pull distant hills into view (no more billboard pop‑in)
+- Leverage WOV’s 1024×1024 treeline & forest textures for richer foliage
+- Do it all with zero FPS cost
+
+2. Prerequisites
+- A working T34 vs Tiger install
+- Notepad++ (or any text editor)
+- BaseTerrain.script (in …\T34vsTiger\Scripts\Common\)
+- WOV forest textures: Forest_1.tex, Forest_2.tex, foreststripe.tex
+- Backup plan: copy BaseTerrain.script to BaseTerrain.script.bak
+
+3. Horizon Draw Fix
+1. Backup BaseTerrain.script:  
+   copy BaseTerrain.script BaseTerrain.script.bak
+2. Open BaseTerrain.script in Notepad++.
+3. Find the line:
+   Array   HorizontPos    = [100.0f, 1000.0f];
+4. Replace it with:
+   Array   HorizontPos    = [50.0f, 500.0f];
+5. Save and launch TvT.
+6. Verify distant hills blend naturally—no mid‑range gaps.
+
+4. Forest Texture Scale & WOV Tex Install
+1. Copy WOV textures into TvT Textures folder:  
+   Forest_1.tex, Forest_2.tex, foreststripe.tex
+2. In BaseTerrain.script locate:
+   float ForestTextureScale       = 1.0;
+   float ForestBorderScale        = 0.5;
+   float ForestShadowBorderScale  = 0.6;
+3. Replace with:
+   float ForestTextureScale       = 0.5;
+   float ForestBorderScale        = 1.0;
+   float ForestShadowBorderScale  = 1.2;
+4. Save and relaunch TvT.
+5. Verify richer foliage, no FPS drop.
+
+5. Notes for Users
+- Ensure you back up BaseTerrain.script as BaseTerrain.script.bak before editing.
+- Include original .tex files in backup folder in case you wish to revert.
