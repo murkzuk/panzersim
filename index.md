@@ -8,11 +8,13 @@
 | [before baseterrain edit.png](before baseterrain edit.png) | 1416 KB | 2025-05-05 |
 | [build_index.py](build_index.py) | 1 KB | 2025-05-02 |
 | [dummy_missing_wavs.zip](dummy_missing_wavs.zip) | 1 KB | 2025-05-02 |
+| [Enhancing Shadows in T-34 vs. Tiger A Simple Modding Guide .odt](Enhancing Shadows in T-34 vs. Tiger A Simple Modding Guide .odt) | 141 KB | 2025-05-05 |
+| [Enhancing Shadows.odt](Enhancing Shadows.odt) | 35 KB | 2025-05-05 |
 | [export_threads.py](export_threads.py) | 1 KB | 2025-05-04 |
 | [forum_topics.csv](forum_topics.csv) | 6 KB | 2025-05-04 |
 | [GPT Handoff_Notes.txt](GPT Handoff_Notes.txt) | 10 KB | 2025-05-04 |
 | [Horizon & Forest Polish Tutorial.zip](Horizon & Forest Polish Tutorial.zip) | 5309 KB | 2025-05-05 |
-| [index.md](index.md) | 92 KB | 2025-05-04 |
+| [index.md](index.md) | 93 KB | 2025-05-05 |
 | [index_forum.py](index_forum.py) | 0 KB | 2025-05-04 |
 | [MainMenuBackground_1.dds](MainMenuBackground_1.dds) | 384 KB | 2025-05-02 |
 | [MenuBackground_Germany.dds](MenuBackground_Germany.dds) | 384 KB | 2025-05-02 |
@@ -249,6 +251,12 @@
 | [tvt_web\templates\form.html](tvt_web/templates/form.html) | 1 KB | 2025-05-01 |
 | [tvt_web\TvsT mission generator.png](tvt_web/TvsT mission generator.png) | 25 KB | 2025-05-01 |
 | [tvt_web\tvt_web.py](tvt_web/tvt_web.py) | 2 KB | 2025-05-01 |
+
+## Water perfect settings
+| File | Size | Modified |
+|------|------|----------|
+| [Water perfect settings\perfect water.png](Water perfect settings/perfect water.png) | 899 KB | 2025-05-05 |
+| [Water perfect settings\TvT Water Rendering Polish Bump-Mapped Waves & Cinematic Reflections.txt](Water perfect settings/TvT Water Rendering Polish Bump-Mapped Waves & Cinematic Reflections.txt) | 2 KB | 2025-05-05 |
 
 ## Whirlwinds over Vietnan (WOV) important
 | File | Size | Modified |
