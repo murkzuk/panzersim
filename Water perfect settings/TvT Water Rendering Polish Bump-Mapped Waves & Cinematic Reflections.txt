@@ -1,0 +1,51 @@
+TvT Water Rendering Polish: Bump-Mapped Waves & Cinematic Reflections
+
+1. Introduction
+TvT’s water is flat and blurry by default. This guide shows how to:
+- Enable high-resolution reflections, bump-mapped waves, and fresnel edge lighting
+- Maintain high FPS (~100)
+
+2. Prerequisites
+- A working T‑34 vs Tiger install
+- Notepad++ (or any text editor)
+- BaseTerrain.script (in …\T34vsTiger\Scripts\Common\)
+- Backup plan: copy BaseTerrain.script to BaseTerrain.script.bak
+
+3. Update Water Parameters in BaseTerrain.script
+1. Backup BaseTerrain.script:
+   copy BaseTerrain.script BaseTerrain.script.bak
+2. Open BaseTerrain.script in Notepad++.
+3. Find the water block (search for "WaterMirrorDetail"):
+   // TvT water rendering defaults
+   float WaterMirrorDetail   = 0.2;
+   int   WaterMirrorTexSize  = 256;
+   float LargeWavePeriod      = 8.0;
+   float LargeWaveWidth       = 75.0;
+   float LargeWaveHeight      = 1.5;
+   float WavesBumpScale       = 0.01;
+   float ReflectDistortion    = 0.1;
+   float WaterFresnelPower    = 1.0;
+4. Replace the entire block with:
+   // Enhanced water rendering
+   float WaterMirrorDetail   = 1.0;       // full-res mirror
+   int   WaterMirrorTexSize  = 1024;      // high-res reflection texture
+   float LargeWavePeriod      = 4.0;      // faster rolling waves
+   float LargeWaveWidth       = 150.0;    // wider swells
+   float LargeWaveHeight      = 3.0;      // taller crests
+   float WavesBumpScale       = 0.03;     // stronger bump mapping
+   float ReflectDistortion    = 0.25;     // subtle ripple distortion
+   float WaterFresnelPower    = 2.5;      // pronounced edge lighting
+5. Save (Ctrl+S).
+
+4. Test In-Game
+1. Launch TvT and approach water.
+2. Observe reflections on the surface and wave shapes.
+3. Note FPS; it should remain near your baseline (~100 FPS).
+
+5. Troubleshooting
+- If water appears black, ensure no syntax errors in BaseTerrain.script.
+- To revert, restore BaseTerrain.script.bak.
+
+6. Next Steps
+- Combine with Horizon & Forest polish for a fully cinematic world.
+- Share your screenshots and performance results on the forum.
