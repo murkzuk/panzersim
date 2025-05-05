@@ -4,12 +4,15 @@
 | File | Size | Modified |
 |------|------|----------|
 | [.gitignore](.gitignore) | 0 KB | 2025-05-04 |
+| [after baseterrain edit.png](after baseterrain edit.png) | 1535 KB | 2025-05-05 |
+| [before baseterrain edit.png](before baseterrain edit.png) | 1416 KB | 2025-05-05 |
 | [build_index.py](build_index.py) | 1 KB | 2025-05-02 |
 | [dummy_missing_wavs.zip](dummy_missing_wavs.zip) | 1 KB | 2025-05-02 |
 | [export_threads.py](export_threads.py) | 1 KB | 2025-05-04 |
 | [forum_topics.csv](forum_topics.csv) | 6 KB | 2025-05-04 |
-| [GPT Handoff_Notes.txt](GPT Handoff_Notes.txt) | 8 KB | 2025-05-04 |
-| [index.md](index.md) | 86 KB | 2025-05-04 |
+| [GPT Handoff_Notes.txt](GPT Handoff_Notes.txt) | 10 KB | 2025-05-04 |
+| [Horizon & Forest Polish Tutorial.zip](Horizon & Forest Polish Tutorial.zip) | 5309 KB | 2025-05-05 |
+| [index.md](index.md) | 92 KB | 2025-05-04 |
 | [index_forum.py](index_forum.py) | 0 KB | 2025-05-04 |
 | [MainMenuBackground_1.dds](MainMenuBackground_1.dds) | 384 KB | 2025-05-02 |
 | [MenuBackground_Germany.dds](MenuBackground_Germany.dds) | 384 KB | 2025-05-02 |
@@ -31,6 +34,19 @@
 | File | Size | Modified |
 |------|------|----------|
 | [3rd person far plane fix  tvt 25\BaseTerrain.script](3rd person far plane fix  tvt 25/BaseTerrain.script) | 20 KB | 2025-05-02 |
+
+## Horizon & Forest Polish Tutorial
+| File | Size | Modified |
+|------|------|----------|
+| [Horizon & Forest Polish Tutorial\after baseterrain edit.png](Horizon & Forest Polish Tutorial/after baseterrain edit.png) | 1535 KB | 2025-05-05 |
+| [Horizon & Forest Polish Tutorial\before baseterrain edit.png](Horizon & Forest Polish Tutorial/before baseterrain edit.png) | 1416 KB | 2025-05-05 |
+| [Horizon & Forest Polish Tutorial\Horizon_Forest_Polish_Tutorial.txt](Horizon & Forest Polish Tutorial/Horizon_Forest_Polish_Tutorial.txt) | 1 KB | 2025-05-05 |
+| [Horizon & Forest Polish Tutorial\Textures\Forest_1.tex](Horizon & Forest Polish Tutorial/Textures/Forest_1.tex) | 5 KB | 2005-07-25 |
+| [Horizon & Forest Polish Tutorial\Textures\Forest_1.tex.orig](Horizon & Forest Polish Tutorial/Textures/Forest_1.tex.orig) | 5 KB | 2006-05-16 |
+| [Horizon & Forest Polish Tutorial\Textures\Forest_2.tex](Horizon & Forest Polish Tutorial/Textures/Forest_2.tex) | 1365 KB | 2005-06-30 |
+| [Horizon & Forest Polish Tutorial\Textures\Forest_2.tex.orig](Horizon & Forest Polish Tutorial/Textures/Forest_2.tex.orig) | 341 KB | 2006-05-16 |
+| [Horizon & Forest Polish Tutorial\Textures\foreststripe.tex](Horizon & Forest Polish Tutorial/Textures/foreststripe.tex) | 1365 KB | 2005-09-19 |
+| [Horizon & Forest Polish Tutorial\Textures\foreststripe.tex.orig](Horizon & Forest Polish Tutorial/Textures/foreststripe.tex.orig) | 64 KB | 2006-09-18 |
 
 ## Images
 | File | Size | Modified |
