@@ -4,17 +4,17 @@
 | File | Size | Modified |
 |------|------|----------|
 | [.gitignore](.gitignore) | 0 KB | 2025-05-04 |
-| [after baseterrain edit.png](after baseterrain edit.png) | 1535 KB | 2025-05-05 |
-| [before baseterrain edit.png](before baseterrain edit.png) | 1416 KB | 2025-05-05 |
+| [after baseterrain edit.png](after baseterrain edit.png) | 1535 KB | 2025-05-06 |
+| [before baseterrain edit.png](before baseterrain edit.png) | 1416 KB | 2025-05-06 |
 | [build_index.py](build_index.py) | 1 KB | 2025-05-02 |
 | [dummy_missing_wavs.zip](dummy_missing_wavs.zip) | 1 KB | 2025-05-02 |
-| [Enhancing Shadows in T-34 vs. Tiger A Simple Modding Guide .odt](Enhancing Shadows in T-34 vs. Tiger A Simple Modding Guide .odt) | 141 KB | 2025-05-05 |
-| [Enhancing Shadows.odt](Enhancing Shadows.odt) | 35 KB | 2025-05-05 |
+| [Enhancing Shadows in T-34 vs. Tiger A Simple Modding Guide .odt](Enhancing Shadows in T-34 vs. Tiger A Simple Modding Guide .odt) | 141 KB | 2025-05-06 |
+| [Enhancing Shadows.odt](Enhancing Shadows.odt) | 35 KB | 2025-05-06 |
 | [export_threads.py](export_threads.py) | 1 KB | 2025-05-04 |
 | [forum_topics.csv](forum_topics.csv) | 6 KB | 2025-05-04 |
-| [GPT Handoff_Notes.txt](GPT Handoff_Notes.txt) | 10 KB | 2025-05-04 |
-| [Horizon & Forest Polish Tutorial.zip](Horizon & Forest Polish Tutorial.zip) | 5309 KB | 2025-05-05 |
-| [index.md](index.md) | 93 KB | 2025-05-05 |
+| [GPT Handoff_Notes.txt](GPT Handoff_Notes.txt) | 11 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial.zip](Horizon & Forest Polish Tutorial.zip) | 5309 KB | 2025-05-06 |
+| [index.md](index.md) | 94 KB | 2025-05-06 |
 | [index_forum.py](index_forum.py) | 0 KB | 2025-05-04 |
 | [MainMenuBackground_1.dds](MainMenuBackground_1.dds) | 384 KB | 2025-05-02 |
 | [MenuBackground_Germany.dds](MenuBackground_Germany.dds) | 384 KB | 2025-05-02 |
@@ -22,8 +22,8 @@
 | [Panzersim_T34_vs_Tiger_Threads.zip](Panzersim_T34_vs_Tiger_Threads.zip) | 58 KB | 2025-05-04 |
 | [properties radar.png](properties radar.png) | 12 KB | 2025-05-02 |
 | [replace_mission_names.py - Shortcut.lnk](replace_mission_names.py - Shortcut.lnk) | 0 KB | 2025-05-02 |
-| [T-34 vs Tiger Library _ panzersim.url](T-34 vs Tiger Library _ panzersim.url) | 0 KB | 2025-05-02 |
-| [TVT Mission Builder.url](TVT Mission Builder.url) | 0 KB | 2025-05-01 |
+| [T-34 vs Tiger Library _ panzersim.url](T-34 vs Tiger Library _ panzersim.url) | 0 KB | 2025-05-06 |
+| [TVT Mission Builder.url](TVT Mission Builder.url) | 0 KB | 2025-05-06 |
 | [tvt.reg](tvt.reg) | 11 KB | 2025-05-02 |
 | [TvT_GitHub_Suggestions.txt](TvT_GitHub_Suggestions.txt) | 0 KB | 2025-05-04 |
 | [TvT_Locale_Fix_v1.0.zip](TvT_Locale_Fix_v1.0.zip) | 1 KB | 2025-05-02 |
@@ -40,15 +40,15 @@
 ## Horizon & Forest Polish Tutorial
 | File | Size | Modified |
 |------|------|----------|
-| [Horizon & Forest Polish Tutorial\after baseterrain edit.png](Horizon & Forest Polish Tutorial/after baseterrain edit.png) | 1535 KB | 2025-05-05 |
-| [Horizon & Forest Polish Tutorial\before baseterrain edit.png](Horizon & Forest Polish Tutorial/before baseterrain edit.png) | 1416 KB | 2025-05-05 |
-| [Horizon & Forest Polish Tutorial\Horizon_Forest_Polish_Tutorial.txt](Horizon & Forest Polish Tutorial/Horizon_Forest_Polish_Tutorial.txt) | 1 KB | 2025-05-05 |
-| [Horizon & Forest Polish Tutorial\Textures\Forest_1.tex](Horizon & Forest Polish Tutorial/Textures/Forest_1.tex) | 5 KB | 2005-07-25 |
-| [Horizon & Forest Polish Tutorial\Textures\Forest_1.tex.orig](Horizon & Forest Polish Tutorial/Textures/Forest_1.tex.orig) | 5 KB | 2006-05-16 |
-| [Horizon & Forest Polish Tutorial\Textures\Forest_2.tex](Horizon & Forest Polish Tutorial/Textures/Forest_2.tex) | 1365 KB | 2005-06-30 |
-| [Horizon & Forest Polish Tutorial\Textures\Forest_2.tex.orig](Horizon & Forest Polish Tutorial/Textures/Forest_2.tex.orig) | 341 KB | 2006-05-16 |
-| [Horizon & Forest Polish Tutorial\Textures\foreststripe.tex](Horizon & Forest Polish Tutorial/Textures/foreststripe.tex) | 1365 KB | 2005-09-19 |
-| [Horizon & Forest Polish Tutorial\Textures\foreststripe.tex.orig](Horizon & Forest Polish Tutorial/Textures/foreststripe.tex.orig) | 64 KB | 2006-09-18 |
+| [Horizon & Forest Polish Tutorial\after baseterrain edit.png](Horizon & Forest Polish Tutorial/after baseterrain edit.png) | 1535 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial\before baseterrain edit.png](Horizon & Forest Polish Tutorial/before baseterrain edit.png) | 1416 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial\Horizon_Forest_Polish_Tutorial.txt](Horizon & Forest Polish Tutorial/Horizon_Forest_Polish_Tutorial.txt) | 1 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial\Textures\Forest_1.tex](Horizon & Forest Polish Tutorial/Textures/Forest_1.tex) | 5 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial\Textures\Forest_1.tex.orig](Horizon & Forest Polish Tutorial/Textures/Forest_1.tex.orig) | 5 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial\Textures\Forest_2.tex](Horizon & Forest Polish Tutorial/Textures/Forest_2.tex) | 1365 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial\Textures\Forest_2.tex.orig](Horizon & Forest Polish Tutorial/Textures/Forest_2.tex.orig) | 341 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial\Textures\foreststripe.tex](Horizon & Forest Polish Tutorial/Textures/foreststripe.tex) | 1365 KB | 2025-05-06 |
+| [Horizon & Forest Polish Tutorial\Textures\foreststripe.tex.orig](Horizon & Forest Polish Tutorial/Textures/foreststripe.tex.orig) | 64 KB | 2025-05-06 |
 
 ## Images
 | File | Size | Modified |
@@ -246,41 +246,41 @@
 ## tvt_web
 | File | Size | Modified |
 |------|------|----------|
-| [tvt_web\__pycache__\mission_builder.cpython-313.pyc](tvt_web/__pycache__/mission_builder.cpython-313.pyc) | 11 KB | 2025-05-01 |
-| [tvt_web\mission_builder.py](tvt_web/mission_builder.py) | 7 KB | 2025-05-01 |
-| [tvt_web\templates\form.html](tvt_web/templates/form.html) | 1 KB | 2025-05-01 |
-| [tvt_web\TvsT mission generator.png](tvt_web/TvsT mission generator.png) | 25 KB | 2025-05-01 |
-| [tvt_web\tvt_web.py](tvt_web/tvt_web.py) | 2 KB | 2025-05-01 |
+| [tvt_web\__pycache__\mission_builder.cpython-313.pyc](tvt_web/__pycache__/mission_builder.cpython-313.pyc) | 11 KB | 2025-05-06 |
+| [tvt_web\mission_builder.py](tvt_web/mission_builder.py) | 7 KB | 2025-05-06 |
+| [tvt_web\templates\form.html](tvt_web/templates/form.html) | 1 KB | 2025-05-06 |
+| [tvt_web\TvsT mission generator.png](tvt_web/TvsT mission generator.png) | 25 KB | 2025-05-06 |
+| [tvt_web\tvt_web.py](tvt_web/tvt_web.py) | 2 KB | 2025-05-06 |
 
 ## Water perfect settings
 | File | Size | Modified |
 |------|------|----------|
-| [Water perfect settings\perfect water.png](Water perfect settings/perfect water.png) | 899 KB | 2025-05-05 |
-| [Water perfect settings\TvT Water Rendering Polish Bump-Mapped Waves & Cinematic Reflections.txt](Water perfect settings/TvT Water Rendering Polish Bump-Mapped Waves & Cinematic Reflections.txt) | 2 KB | 2025-05-05 |
+| [Water perfect settings\perfect water.png](Water perfect settings/perfect water.png) | 899 KB | 2025-05-06 |
+| [Water perfect settings\TvT Water Rendering Polish Bump-Mapped Waves & Cinematic Reflections.txt](Water perfect settings/TvT Water Rendering Polish Bump-Mapped Waves & Cinematic Reflections.txt) | 2 KB | 2025-05-06 |
 
 ## Whirlwinds over Vietnan (WOV) important
 | File | Size | Modified |
 |------|------|----------|
 | [Whirlwinds over Vietnan (WOV) important\execution.log](Whirlwinds over Vietnan (WOV) important/execution.log) | 486 KB | 2025-05-03 |
-| [Whirlwinds over Vietnan (WOV) important\import_wov_mission.py](Whirlwinds over Vietnan (WOV) important/import_wov_mission.py) | 3 KB | 2025-05-04 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Atmosphere.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Atmosphere.script) | 1 KB | 2005-09-26 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Content.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Content.script) | 840 KB | 2025-05-04 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\forest_c1.tex](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/forest_c1.tex) | 4096 KB | 2005-07-04 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\hmap_c1.raw](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/hmap_c1.raw) | 32784 KB | 2006-03-31 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\hwater_c1.raw](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/hwater_c1.raw) | 8200 KB | 2004-12-28 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\lnd_c1.tex](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/lnd_c1.tex) | 2048 KB | 2005-04-21 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\micro_c1.bmp](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/micro_c1.bmp) | 4096 KB | 2006-01-11 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Mission.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Mission.script) | 55 KB | 2006-06-16 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Mission_1.zip](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Mission_1.zip) | 107 KB | 2025-05-03 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\MissionC1M1Strings.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/MissionC1M1Strings.script) | 12 KB | 2006-03-30 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\MissionTasks.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/MissionTasks.script) | 28 KB | 2006-05-25 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\PositionWatchers.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/PositionWatchers.script) | 16 KB | 2006-03-22 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\RouterZone_c1.bmp](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/RouterZone_c1.bmp) | 4097 KB | 2006-07-04 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Terrain.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Terrain.script) | 2 KB | 2005-12-27 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\TerrainZone_c1.bmp](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/TerrainZone_c1.bmp) | 4097 KB | 2006-05-05 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\WorldMatricies.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/WorldMatricies.script) | 1 KB | 2005-12-27 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\~TerrainZone_c1.bmp](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/~TerrainZone_c1.bmp) | 4097 KB | 2005-12-27 |
-| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov.7z](Whirlwinds over Vietnan (WOV) important/Mission_1 wov.7z) | 21244 KB | 2025-05-04 |
+| [Whirlwinds over Vietnan (WOV) important\import_wov_mission.py](Whirlwinds over Vietnan (WOV) important/import_wov_mission.py) | 3 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Atmosphere.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Atmosphere.script) | 1 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Content.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Content.script) | 840 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\forest_c1.tex](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/forest_c1.tex) | 4096 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\hmap_c1.raw](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/hmap_c1.raw) | 32784 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\hwater_c1.raw](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/hwater_c1.raw) | 8200 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\lnd_c1.tex](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/lnd_c1.tex) | 2048 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\micro_c1.bmp](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/micro_c1.bmp) | 4096 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Mission.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Mission.script) | 55 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Mission_1.zip](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Mission_1.zip) | 107 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\MissionC1M1Strings.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/MissionC1M1Strings.script) | 12 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\MissionTasks.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/MissionTasks.script) | 28 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\PositionWatchers.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/PositionWatchers.script) | 16 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\RouterZone_c1.bmp](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/RouterZone_c1.bmp) | 4097 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\Terrain.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/Terrain.script) | 2 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\TerrainZone_c1.bmp](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/TerrainZone_c1.bmp) | 4097 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\WorldMatricies.script](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/WorldMatricies.script) | 1 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov\~TerrainZone_c1.bmp](Whirlwinds over Vietnan (WOV) important/Mission_1 wov/~TerrainZone_c1.bmp) | 4097 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\Mission_1 wov.7z](Whirlwinds over Vietnan (WOV) important/Mission_1 wov.7z) | 21244 KB | 2025-05-06 |
 | [Whirlwinds over Vietnan (WOV) important\Missions\Campaign_1\forest_c1.tex](Whirlwinds over Vietnan (WOV) important/Missions/Campaign_1/forest_c1.tex) | 4096 KB | 2005-07-04 |
 | [Whirlwinds over Vietnan (WOV) important\Missions\Campaign_1\hmap_c1.raw](Whirlwinds over Vietnan (WOV) important/Missions/Campaign_1/hmap_c1.raw) | 32784 KB | 2006-03-31 |
 | [Whirlwinds over Vietnan (WOV) important\Missions\Campaign_1\hwater_c1.raw](Whirlwinds over Vietnan (WOV) important/Missions/Campaign_1/hwater_c1.raw) | 8200 KB | 2004-12-28 |
@@ -615,16 +615,16 @@
 | [Whirlwinds over Vietnan (WOV) important\Scripts\Units\VietnameseVolunteerGunUnit.script](Whirlwinds over Vietnan (WOV) important/Scripts/Units/VietnameseVolunteerGunUnit.script) | 3 KB | 2005-09-01 |
 | [Whirlwinds over Vietnan (WOV) important\Scripts\Units\VietnameseVolunteerRifleUnit.script](Whirlwinds over Vietnan (WOV) important/Scripts/Units/VietnameseVolunteerRifleUnit.script) | 3 KB | 2005-09-01 |
 | [Whirlwinds over Vietnan (WOV) important\TvT_GitHub_Suggestions.txt](Whirlwinds over Vietnan (WOV) important/TvT_GitHub_Suggestions.txt) | 0 KB | 2025-05-04 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\Briefing.png](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/Briefing.png) | 16 KB | 2025-05-04 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\Briefing.tex](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/Briefing.tex) | 1024 KB | 2006-03-06 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\GameMenuSinglepayerBackground.png](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/GameMenuSinglepayerBackground.png) | 637 KB | 2025-05-04 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\GameMenuSinglepayerBackground.tex](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/GameMenuSinglepayerBackground.tex) | 384 KB | 2006-06-23 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\MissionC1M1.rsr](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/MissionC1M1.rsr) | 22 KB | 2006-06-29 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\t34_85_weapon_list.txt](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/t34_85_weapon_list.txt) | 1 KB | 2025-05-04 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\tiger_weapon_list.txt](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/tiger_weapon_list.txt) | 1 KB | 2025-05-04 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\TvT loading screen.png](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/TvT loading screen.png) | 1839 KB | 2025-05-04 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\WeaponNames.rsr](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/WeaponNames.rsr) | 4 KB | 2006-02-28 |
-| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\WoV loading screen.png](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/WoV loading screen.png) | 1551 KB | 2025-05-04 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\Briefing.png](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/Briefing.png) | 16 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\Briefing.tex](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/Briefing.tex) | 1024 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\GameMenuSinglepayerBackground.png](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/GameMenuSinglepayerBackground.png) | 637 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\GameMenuSinglepayerBackground.tex](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/GameMenuSinglepayerBackground.tex) | 384 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\MissionC1M1.rsr](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/MissionC1M1.rsr) | 22 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\t34_85_weapon_list.txt](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/t34_85_weapon_list.txt) | 1 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\tiger_weapon_list.txt](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/tiger_weapon_list.txt) | 1 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\TvT loading screen.png](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/TvT loading screen.png) | 1839 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\WeaponNames.rsr](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/WeaponNames.rsr) | 4 KB | 2025-05-06 |
+| [Whirlwinds over Vietnan (WOV) important\WoV loading screen vs TvT\WoV loading screen.png](Whirlwinds over Vietnan (WOV) important/WoV loading screen vs TvT/WoV loading screen.png) | 1551 KB | 2025-05-06 |
 | [Whirlwinds over Vietnan (WOV) important\wov main folder.png](Whirlwinds over Vietnan (WOV) important/wov main folder.png) | 70 KB | 2025-05-04 |
 | [Whirlwinds over Vietnan (WOV) important\WoV scripts comparison\BaseTerrain.script.txt](Whirlwinds over Vietnan (WOV) important/WoV scripts comparison/BaseTerrain.script.txt) | 17 KB | 2025-05-02 |
 | [Whirlwinds over Vietnan (WOV) important\WoV_radio_chatter_notes.txt](Whirlwinds over Vietnan (WOV) important/WoV_radio_chatter_notes.txt) | 2 KB | 2025-05-04 |
@@ -634,9 +634,9 @@
 ## WORKING tvt mission builder CLI
 | File | Size | Modified |
 |------|------|----------|
-| [WORKING tvt mission builder CLI\PROMPT tvt_mission_builder_cli.txt](WORKING tvt mission builder CLI/PROMPT tvt_mission_builder_cli.txt) | 0 KB | 2025-05-01 |
-| [WORKING tvt mission builder CLI\TvsT Manual and Guide.url](WORKING tvt mission builder CLI/TvsT Manual and Guide.url) | 0 KB | 2025-05-01 |
-| [WORKING tvt mission builder CLI\tvt_mission_builder_cli.py](WORKING tvt mission builder CLI/tvt_mission_builder_cli.py) | 5 KB | 2025-05-04 |
+| [WORKING tvt mission builder CLI\PROMPT tvt_mission_builder_cli.txt](WORKING tvt mission builder CLI/PROMPT tvt_mission_builder_cli.txt) | 0 KB | 2025-05-06 |
+| [WORKING tvt mission builder CLI\TvsT Manual and Guide.url](WORKING tvt mission builder CLI/TvsT Manual and Guide.url) | 0 KB | 2025-05-06 |
+| [WORKING tvt mission builder CLI\tvt_mission_builder_cli.py](WORKING tvt mission builder CLI/tvt_mission_builder_cli.py) | 5 KB | 2025-05-06 |
 
 ## ZW scripts 2025
 | File | Size | Modified |
