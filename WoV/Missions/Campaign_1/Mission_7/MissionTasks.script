@@ -1,0 +1,440 @@
+
+
+ class C1M7WingmanTask extends CWingmanTask
+ {
+   void Init()
+   {
+     CWingmanTask::Init();
+     SetRadarDetailedEnemies(true);
+   }
+
+   event void ToHome()
+   {
+     //logError(m_LeaderID);
+     SetEnemyReactionType(ERT_FRIGID);
+     Wingman_Follow(m_LeaderID);
+   }
+
+   event void OnEnemyCame(String TargetID)
+   {
+      //String TargetID = GetTargetedEnemy();
+
+      logWarning("Wingman find Enemy with ID = " + TargetID  + "OnEnemyTargeted is ON");
+       //отработка OnEnemyTargeted
+      if(TargetID.IsStartsWith("tgt_m7_Gaz"))
+      {
+        sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M7AttackBeginning"]);
+        if(GetMission().isDebug)
+        {
+          logError("Dist Gunship2 vs Gaz5 is " + new String(new #GameController().GetObject(SOID_MissionController).distance("MainPlayerUnit_Gunship_2", "tgt_m7_Gaz_5")));
+          logError("Dist Wingman2 vs Gaz5 is " + new String(new #GameController().GetObject(SOID_MissionController).distance("MainPlayerUnit_Wingman", "tgt_m7_Gaz_5")));
+        }
+       sendEvent(0.0, "GroupUnit_Gunship_gr", "Find_VK",[]);
+  //   sendEvent(0.0, "GroupUnit_Gunship_gr", "ColumnAttack",[]);
+  //   logWarning("MOSID_Completed = " + new String(MOSID_Completed)  + "CC1M7Mission::MOSID_Completed is " + new String(CC1M7Mission::MOSID_Completed) );
+
+       GetMission().SetObjectiveStatus(0, CC1M7Mission::MOSID_Completed);
+
+       if(GetMission().isDebug)
+          logWarning("Wingman find Enemy with ID = " + TargetID  + " Complete task_0 vis_task_1");
+       //SetObjectiveStatus(1, MOSID_Completed);
+       GetMission().SetObjectiveVisible(1, true);
+      }
+   }
+ }
+ // sendEvent( 0.0, "GroupUnit_tgt_m7_Gaz", "StopColumn", []);
+ // sendEvent( 0.0, "GroupUnit_tgt_m7_Gaz", "StartColumn", []);
+ // sendEvent( 0.0, "GroupUnit_tgt_m7_Gaz", "ActivateMovement", [true]);
+
+
+ class tgt_m7_Gaz_UnitGroup extends  CBaseUnitGroup
+ {
+  boolean isStart = false;
+  boolean isStop = false;
+  event void StartColumn()
+  {
+    if(isStart)
+        return;
+    if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + "  tgt_m7_Gaz_UnitGroup pop delayed order!!");
+    ActivateMovement(true);
+    PopDelayedOrder();
+    isStart = true;
+  }
+   void  OnPathEndReached()
+  {
+//  logWarning("Group " + m_GroupID + " reached the end of the path");
+//  sendEvent(0.0, "GroupUnit_Gunship_gr", "ColumnAttack",[]);
+    sendEvent(0.0, "GroupUnit_Gunship_gr", "Find_VK",[]);
+  }
+
+
+  event void StopColumn()
+  {
+    if(isStop)
+        return;
+
+    if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + "  tgt_m7_Gaz_UnitGroup STOP!!");
+
+    ActivateMovement(false);
+    Teleport_Navpoint();
+
+
+
+        //fireEvent(1.5, [], "Wingman_TakeOff", []);
+    //fireEvent(1.5, [], "SetRadarUnit", []);
+    //fireEvent(1.5, [], "Start_Gunship", []);
+    fireEvent(1.5, [], "vk_unload", []);
+   // sendEvent(0.0, "GroupUnit_Gunship_gr", "ColumnAttack",[]);
+  }
+  void Teleport_Navpoint()
+  {
+    Component Mission = GetMission();
+    Component Gaz3 = Mission.GetObject("tgt_m7_Gaz_3");
+    Matrix Position = getPosition(Gaz3);
+    Vector UnitYVec = Position.yvec;
+    Vector UnitXVec = Position.xvec;
+    Position.origin = Position.origin + 200.0 * UnitYVec - 200.0*UnitXVec;
+
+    Mission.CreateObject(
+           "NavPoint_Unload_1",
+           "NavPoint",
+           "CZAxisCylNavPoint",
+           Position,
+           [
+             ["Detect", false],
+             ["Range",  0.0],
+             ["Name",   ""],
+             ["PositionType", "Ground"],
+             ["Mask",   [[],[]]]
+           ]
+         );
+
+    Position.origin = Position.origin - 200.0 * UnitYVec - 200.0*UnitXVec;
+    Mission.CreateObject(
+           "NavPoint_Unload_2",
+           "NavPoint",
+           "CZAxisCylNavPoint",
+           Position,
+           [
+             ["Detect", false],
+             ["Range",  0.0],
+             ["Name",   ""],
+             ["PositionType", "Ground"],
+             ["Mask",   [[],[]]]
+           ]
+         );
+
+
+  }
+ }
+ class Gaz_task extends CBaseAITask
+ {
+
+
+  void OnHitByEnemy(String _EnemyID)
+  {
+    if(_EnemyID.IsStartsWith("MainPlayerUnit"))
+    {
+      m_Group.StopColumn();
+      m_Group.isStop = true;
+    }
+  }
+
+ }
+ class tgt_m7_vk_gr_Road  extends CBaseUnitGroup
+  {
+    void Init()
+    {
+
+      CBaseUnitGroup::Init();
+      ActivateGroup(false);
+      SetImmortalMode(true);
+     }
+
+   event void vk_stay()
+   {
+     if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " Road VK Activate ");
+     ActivateGroup(true);
+     ActivateFire(false);
+     ActivateMovement(false);
+   }
+
+  }
+
+ class tgt_m7_vk_gr_Base  extends CBaseUnitGroup
+ {
+  float   ChooseNavPoint    = 0.5;
+  String Gaz_ID = "";
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateGroup(false);
+  }
+
+   event void vk_hide()
+   {
+     ActivateGroup(false);
+   }
+
+  event void vk_unload()
+  {
+   if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " Unload to point ID=" + Gaz_ID);
+
+   String _NavPoint_Unload;
+
+   if(Gaz_ID == "")
+   {
+     logError("Unknown ID transport unload!!!");
+     return;
+   }
+
+   if (rand(0.0, 1.0) >= ChooseNavPoint)
+      SetOrder_Unload( Gaz_ID, "NavPoint_Unload_1", 500, 20);
+   else
+      SetOrder_Unload( Gaz_ID, "NavPoint_Unload_2", 500, 20);
+  }
+ }
+ class tgt_m7_vk_gr1  extends tgt_m7_vk_gr_Base
+ {
+  String Gaz_ID = "tgt_m7_Gaz_1";
+ }
+ class tgt_m7_vk_gr2  extends tgt_m7_vk_gr_Base
+ {
+  String Gaz_ID = "tgt_m7_Gaz_2";
+ }
+ class tgt_m7_vk_gr3  extends tgt_m7_vk_gr_Base
+ {
+  String Gaz_ID = "tgt_m7_Gaz_3";
+ }
+ class tgt_m7_vk_gr4  extends tgt_m7_vk_gr_Base
+ {
+  String Gaz_ID = "tgt_m7_Gaz_4";
+ }
+ class tgt_m7_vk_gr5  extends tgt_m7_vk_gr_Base
+ {
+  String Gaz_ID = "tgt_m7_Gaz_5";
+ }
+ class tgt_m7_vk_task  extends CBaseAITask
+ {
+
+  event void Unload(
+      String _TransportID,
+      Matrix _TransportPoint,
+      Vector _UnloadPoint,
+      String _GuardPoint,
+      float  _GuardRadius,
+      float  _GuardSpeed
+    )
+  {
+    ActivateBehavior(true);
+    SetFrigidMode(true);
+    SetPosition(eliminateRotationAlongXAndY(
+              createMatrixFromOriginAndXVec(_UnloadPoint - _TransportPoint.origin, _TransportPoint.origin)));
+
+    ShowUnit(true);
+
+
+    SetFirstQueueOrders([
+                          ["Unload",  "PlayUnloadAnimation",    [_TransportID], "OnUnloadAnimationEnd"],
+//                        ["Unload" , "SetOrder_MoveTo_Direct", [_UnloadPoint, 0.0f], "OnStopped"],
+                          //["Unload" , "SetFrigidMode",   [false], ""],
+                          ["Unload" , "SetOrder_Guard",  [_GuardPoint, _GuardRadius, _GuardSpeed], ""]
+                        ]);
+
+  }
+
+ }
+
+ //      sendEvent(0.0, "MainPlayerUnit_Gunship_2", "Wingman_TakeOff", []);
+ //      (new #GameController()).GetObject("MainPlayerUnit_Gunship_2").TakeOff();
+ //      sendEvent(0.0, "GroupUnit_Gunship_gr", "SetOrder_Recharge", ["NavPoint_MainPlayerUnitLandingBase"]);
+ //      sendEvent(0.0, "GroupUnit_Gunship_gr", "Gunship_Home", []);
+ //      sendEvent(0.0, "GroupUnit_Gunship_gr", "ColumnAttack", []);
+
+ //
+ class  C1M7Gunship_gr extends CBaseUnitGroup
+ {
+  boolean isGunShipStarted = false;
+  event void ColumnAttack()
+  {
+   SetOrder_Attack(GetMission().KillPrimaryList,ERT_AGGRESSIVE);
+
+  }
+
+  void OnEnemyTargeted(
+      Component _UnitAlerted  // group unit that spotted enemy unit
+   )
+  {
+     String TargetedUnit = _UnitAlerted.GetTargetedEnemy();
+     logError("[C1M7Gunship_gr]!!!!ENEMY " + TargetedUnit);
+     CBaseUnitGroup::OnEnemyTargeted(_UnitAlerted);
+     GetMission().PropUnit(TargetedUnit);
+  }
+
+  event void StopFind_VK()
+  {
+    SetEnemyReactionType(ERT_DEFENSIVE);
+    m_CurrentOrder.m_EnemyReactionType = ERT_DEFENSIVE;
+
+    if(GetMission().isDebug)
+        logWarning("[StopFind_VK]Group ID=" + getIdentificator(user) + " sopt attack // enemy reaction=" + new String(m_CurrentOrder.m_EnemyReactionType));
+  }
+
+  event void Find_VK()
+  {
+    logWarning("Find_VK is entered");
+    Array ApproachPoints = [
+
+                            GetNavPointBehPos("NavPoint_Way_tgt_m7_4"),
+                            GetNavPointBehPos("NavPoint_Way_tgt_m7_3"),
+                            GetNavPointBehPos("NavPoint_Way_tgt_m7_2")
+                                                    ];
+
+    SetOrder_MoveToEx(ApproachPoints, 45.0f );
+
+  }
+ /*
+   void OnPathEndReached()
+  {
+   if(GetMission().isDebug)
+      logWarning("Group " + m_GroupID + " reached the end of the path");
+
+   SetOrder_MoveToEx( ["NavPoint_WayMainPlayerUnit_2", "NavPoint_WayMainPlayerUnit_1"], 10.0 );
+  }
+  */
+  void OnQueueOrdersEnd(String _OrderGroupID)
+  {
+   if(GetMission().isDebug)
+      logWarning("Group " + m_GroupID + " OnQueueOrdersEnd the end. OrderID=" + _OrderGroupID);
+
+    if(_OrderGroupID != "MoveToEx")
+    {
+     CBaseUnitGroup::OnQueueOrdersEnd(_OrderGroupID);
+     return;
+    }
+
+  /*  SetOrder_MoveToEx(["NavPoint_Way_tgt_m7_6", 40.0f],
+                      ["NavPoint_Way_tgt_m7_1", 40.0f]
+                     ); */
+     logWarning("Second MoveToEx is entered");
+    Array ApproachPoints = [
+                            GetNavPointBehPos("NavPoint_Way_tgt_m7_4"),
+                            GetNavPointBehPos("NavPoint_Way_tgt_m7_3"),
+                            GetNavPointBehPos("NavPoint_Way_tgt_m7_2")
+
+                           ];
+
+
+    SetOrder_MoveToEx( ApproachPoints, 20.0f );
+
+  }
+
+  event void  GunshipSearch()
+
+  {
+     logWarning("GunshipSearch m_CurrentOrder was " +new String(m_CurrentOrder.m_MovingSpeed));
+     m_CurrentOrder.m_MovingSpeed = 10.0f;
+     logWarning("GunshipSearch m_CurrentOrder now " +new String(m_CurrentOrder.m_MovingSpeed));
+  }
+
+  event void Gunship_Home()
+  {
+     CancelAllOrders();
+     ForEachUnitTask("SetFrigidMode", [true]);
+     m_CurrentOrder.m_MovingSpeed = 40.0f;
+     SetOrder_Recharge("NavPoint_MainPlayerUnitLandingBase");
+  }
+//      sendEvent(0.0, "GroupUnit_Gunship_gr", "Gunship_Home", []);
+
+  event void Start_Gunship()
+  {
+    if(isGunShipStarted)
+        return;
+
+     ForEachUnitTask("Start", []);
+     sendEvent( 5.0, getIdentificator(user), "PopDelayedOrder", []);
+     isGunShipStarted = true;
+  }
+ }
+ class C1M7GunShipTask extends CWingmanTask
+ {
+  void Init()
+  {
+    DisableLifeEffects(getIdentificator(user));
+  }
+
+  void Start()
+  {
+    EnableLifeEffects(getIdentificator(user));
+    sendEvent(10.0, getIdentificator(user), "Vzlet", []);
+  }
+
+  event void Vzlet()
+  {
+     if(GetMission().isDebug)
+      logWarning("Gunships TakeOFF");
+
+    GetSelf().TakeOff();
+  }
+
+  void OnEnemyTargeted()
+   {
+    String EnemyID = GetTargetedEnemy();
+    logError("[C1M7GunShipTask]!!!!ENEMY " + EnemyID);
+     GetMission().PropUnit(EnemyID);
+    m_Group.OnEnemyTargeted(this);
+   }
+
+  event void SetRadarUnit()
+  {
+    Array   _Mask = [["ENEMY"], ["NEUTRAL"]];
+    Component Object = GetMission().GetObject(getIdentificator(user));
+
+    Component Behavior = GetBehavior();
+    if (null == Behavior)
+        return;
+
+    Component Content = GetMission().GetContent();
+    if (null == Content)
+      return;
+
+    Array ObjRec = Content.FindObjectRecord(getIdentificator(user));
+    if (ObjRec.isEmpty())
+      return;
+
+    Component PropertiesMap = new CPropertiesMap(ObjRec[CBaseContent::INDEX_Properties]);
+
+    if (GetMission().isDebug)
+    {
+      logError(getIdentificator(user));
+      logWarning("       New Mask=" + new String(_Mask));
+      logWarning("    ObjRec=" + new String(ObjRec[CBaseContent::INDEX_Properties]));
+    }
+
+    PropertiesMap.Set("BehRadarMask", _Mask);
+    Object.SetBehRadarMask(Behavior, PropertiesMap);
+
+    if (GetMission().isDebug)
+      logWarning("   new ObjRec=" + new String(ObjRec[CBaseContent::INDEX_Properties]));
+  }
+
+ }
+
+class C1M7_Guardians  extends CBaseUnitGroup
+{
+  void Init()
+    {
+      if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " Guardians INIT ");
+
+      CBaseUnitGroup::Init();
+      ActivateMovement(false);
+      ActivateRadar(false);
+      ActivateFire(false);
+    }
+}
+

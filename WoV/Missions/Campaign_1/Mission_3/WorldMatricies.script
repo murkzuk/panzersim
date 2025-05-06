@@ -1,0 +1,56 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CM3WorldMatrices extends CWorldMatrices
+{
+  final static float MatrixWidth  = 81000.0;
+  final static float MatrixHeight = 81000.0;
+}
+
+
+class CM3LandscapeLayer extends CLandscapeLayer
+{
+  final static int     ImageWidth              = 4097;
+  final static int     ImageHeight             = 4097;
+
+  final static String ImageFileName           = "Missions/Campaign_1/hmap_c1.raw";
+
+  //final static float  FloatValueFactor        = 0.040000*257.0;
+  final static float  FloatValueFactor        = 0.060000*257.0;
+
+}
+
+class CM3WaterHeights extends CBaseWaterHeightsLayer
+{
+  final static String ImageFileName           = "Missions/Campaign_1/hwater_c1.raw";
+
+  //final static float  FloatValueFactor        = 0.040000*257.0;
+  final static float  FloatValueFactor        = 0.060000*257.0;
+}
+
+class CM3TerrainZoneLayer extends CTerrainZoneLayer, CBaseZoneMap
+{
+  final static String ImageFileName           = "Missions/Campaign_1/TerrainZone_c1.bmp";
+}
+
+class CM3RouterZoneLayer extends CTerrainZoneLayer, CBaseZoneMap
+{
+  final static String ImageFileName           = "Missions/Campaign_1/RouterZone_c1.bmp";
+}
+
+
+class CM3MicroTextures1 extends CMicroTexLayer
+{
+  final static String ImageFileName           = "Missions/Campaign_1/micro_c1.bmp";
+}
+
+//class CM3LZTexture extends CBaseBitmapLayer
+//{
+//  final static String ImageFileName           = "Missions/Campaign_1/Mission_3/C1M3LZ.bmp";
+//}

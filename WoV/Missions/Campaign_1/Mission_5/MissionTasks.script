@@ -1,0 +1,286 @@
+
+class GroupUnit_VietnameseFake_Olbani extends CBaseUnitGroup
+{
+  void Init()
+  {
+    ForEachUnitTask("ActivateMovement", [false]);
+    ForEachUnitTask("ActivateRadar", [false]);
+    ForEachUnitTask("ActivateFire", [false]);
+  }
+}
+
+ class C1M5WingmanTask extends CWingmanTask
+ {
+  event void ToHome()
+  {
+    //logError(m_LeaderID);
+    SetEnemyReactionType(ERT_FRIGID);
+    Wingman_Follow(m_LeaderID);
+  }
+
+  event void DisconnectWingman()
+  {
+    if(GetMission().isDebug)
+        logWarning(" Wingman Disconnect");
+
+     WingmanDisconnect();
+     sendEvent(0.0, "MainPlayerUnit_Wingman_1", "MoveToAttackMortar", []);
+  }
+
+  event void MoveToAttackMortar()
+  {
+    if(GetMission().isDebug)
+        logWarning("[WingmanTask::MoveToAttackMortar]");
+
+    SetOrder_MoveTo(GetNavPointBehPos("NavPoint_MainPlayerUnit_WingmanAttack"), 10.0);
+  }
+ }
+
+ class C1M5WingmanGroup extends CBaseUnitGroup
+ {
+   void OnPathEndReached()
+   {
+     if(GetMission().isDebug)
+        logWarning("OnPathEndReached for C1M5WingmanGroup");
+     SetOrder_Recharge("NavPoint_Plei_Me_Base");
+   }
+ }
+
+ class C1M5TransportTask extends CTransportWingmanTask
+ {
+    boolean TransportMoveToLand = false;
+
+    void Init()
+    {
+      Component Helicopter = new #GameController().GetObject(getIdentificator(user));
+      if (Helicopter != null)
+      {
+        Helicopter.SetImmortalMode(true);
+      }
+    }
+
+    event void StartTransport()
+    {
+      if(GetMission().isDebug)
+          logError("StartTransport for " + getIdentificator(user));
+
+      sendEvent( 0.0, getIdentificator(user), "Wingman_TakeOff",    [] );
+      sendEvent( 2.0, "C1M1WingmanGroup", "GroupReachZAtEarlyPoint", [true]);
+      sendEvent( rand(5, 10), getIdentificator(user), "SetFlyingHeightTransportHelic", [200.0]);
+    }
+
+    event void MoveToPointLand(float _Height, float _Speed)
+    {
+      if(GetMission().isDebug)
+      {
+        logWarning("[MoveToPointLand] event MoveToPointLand    HelicID=" + getIdentificator(user));
+        logWarning("[MoveToPointLand] _Height=" + new String(_Height) + "  _Speed=" + new String(_Speed));
+      }
+
+      TransportMoveToLand = true;
+      SetFlyingHeight(_Height);
+      SetOrder_MoveTo( GetNavPointBehPos("NavPoint_Landing_" + getIdentificator(user)), _Speed);
+      sendEvent( rand(10, 15), getIdentificator(user), "SetFlyingHeightTransportHelic", [10.0]);
+    }
+
+     void OnStopped()
+     {
+         CTransportWingmanTask::OnStopped();
+         if ( TransportMoveToLand )
+         {
+           sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M5TransportPointLand"]);
+
+           sendEvent(0.0, getIdentificator(user), "Landing", ["NavPoint_Landing_" + getIdentificator(user)]);
+           sendEvent(10.0, getIdentificator(user) + "_DesantGroup", "UnloadHelicopter", [
+              getIdentificator(user), "NavPoint_Landing_See_" + getIdentificator(user)]);
+
+           if(GetMission().isDebug)
+            logWarning(getIdentificator(user) + "_DesantGroup" + " - unload  to point " + "NavPoint_Landing_See_" + getIdentificator(user));
+         }
+     }
+
+     event void SetFlyingHeightTransportHelic(float _Height)
+     {
+       SetFlyingHeight(_Height);
+     }
+ }
+
+
+
+ class C1M5PleiMeDesantTask extends CBaseAITask
+ {
+ }
+
+
+ class  C1M5DesantGroup  extends CBaseUnitGroup
+ {
+   void Init()
+   {
+     SetImmortalMode(true);
+   }
+
+   event void UnloadHelicopter(String _Helic, String _NavPoint)
+   {
+     if(GetMission().isDebug)
+        logWarning("Group ID=" + getIdentificator(user) + " recived  event UnloadHelicopter");
+
+     SetOrder_Unload( _Helic, _NavPoint, 500, 40);
+   }
+
+   event void DestroyGroup()
+   {
+      RefreshUnitsList();
+      for(int i=0; i < m_Units.size(); i++)
+      {
+        Component _Object = GetObject(m_Units[i]);
+        if(_Object != null)
+          if (checkMask(_Object, [], [CLASSIFICATOR_DEAD_OBJECT]))
+           sendEvent( randnum(60), m_Units[i], "SetObjectHitPoints", [m_Units[i], 0.0f]);
+      }
+   }
+ }
+
+ class  C1M5Plei_Me_Uh1d_1_DesantGroup  extends C1M5DesantGroup
+ {
+ }
+ class  C1M5Plei_Me_Uh1d_2_DesantGroup  extends C1M5DesantGroup
+ {
+ }
+ class  C1M5Plei_Me_Uh1d_3_DesantGroup  extends C1M5DesantGroup
+ {
+ }
+ class  C1M5Plei_Me_Uh1d_4_DesantGroup  extends C1M5DesantGroup
+ {
+ }
+
+
+ class C1M5GroupUnit_VietnamesePeasant_Olbani  extends CBaseUnitGroup
+ {
+ }
+
+ class C1M5PeasantTaskStay extends CBasePeasantTask
+ {
+  void Init()
+  {
+     ActivateBehavior(false);
+  }
+ }
+
+ class C1M5PeasantTask extends CBasePeasantTask
+ {
+   void OnEnemyTargeted()
+   {
+     SetEnemyReactionType(ERT_PASSIVE);
+     m_Group.OnEnemyTargeted(this);
+   }
+ }
+
+//
+ // sendEvent(5.0, "GroupUnit_Vietnamese_Motar", "FirePoint", []);
+
+ class C1M5VietnameseMotarGroup  extends CBaseUnitGroup
+{
+    Array m_TargetNavPoint1 = ["NavPoint_XRay_Vietnamese_1A", "NavPoint_XRay_Vietnamese_2A", "NavPoint_XRay_Vietnamese_3A", "NavPoint_XRay_Vietnamese_4A"];
+    Array m_TargetNavPoint2 = ["NavPoint_XRay_Vietnamese_1B", "NavPoint_XRay_Vietnamese_2B", "NavPoint_XRay_Vietnamese_3B", "NavPoint_XRay_Vietnamese_4B"];
+    Array m_TargetNavPoint3 = ["NavPoint_XRay_Vietnamese_1C", "NavPoint_XRay_Vietnamese_2C", "NavPoint_XRay_Vietnamese_3C", "NavPoint_XRay_Vietnamese_4C"];
+    Array m_TargetNavPoint4 = ["NavPoint_XRay_Vietnamese_1D", "NavPoint_XRay_Vietnamese_2D", "NavPoint_XRay_Vietnamese_3D", "NavPoint_XRay_Vietnamese_4D"];
+    Array m_TargetNavPoint5 = ["NavPoint_XRay_Vietnamese_1E", "NavPoint_XRay_Vietnamese_2E", "NavPoint_XRay_Vietnamese_3E", "NavPoint_XRay_Vietnamese_4E"];
+    Array m_TargetNavPoint6 = ["NavPoint_XRay_Vietnamese_1F", "NavPoint_XRay_Vietnamese_2F", "NavPoint_XRay_Vietnamese_3F", "NavPoint_XRay_Vietnamese_4F"];
+
+    int m_CounterFirePlace = 1;
+
+    event void FirePoint()
+    {
+        if (m_CounterFirePlace == 7)
+                m_CounterFirePlace = 1;
+
+        if (m_CounterFirePlace == 1)
+                Array ArrayID = m_TargetNavPoint1;
+        else if (m_CounterFirePlace == 2)
+                Array ArrayID = m_TargetNavPoint2;
+        else if (m_CounterFirePlace == 3)
+                Array ArrayID = m_TargetNavPoint3;
+        else if (m_CounterFirePlace == 4)
+                Array ArrayID = m_TargetNavPoint4;
+        else if (m_CounterFirePlace == 5)
+                Array ArrayID = m_TargetNavPoint5;
+        else if (m_CounterFirePlace == 6)
+                Array ArrayID = m_TargetNavPoint6;
+
+        //logWarning("[FirePoint] for group with ID="+ getIdentificator(user) );
+        Array m_Units = GetUnitsList();
+        for ( int i = 0; i < m_Units.size(); i++)
+        {
+          //logWarning("[FirePoint] for unit with ID="+ m_Units[i]+ " target navpoint ID="+ ArrayID[i]);
+          sendEvent(randnum(10), "GroupUnit_Vietnamese_Motar", "FireMortar", [m_Units[i], ArrayID[i]]);
+        }
+
+        sendEvent( rand(10, 20), getIdentificator(user), "FirePoint", []);
+        m_CounterFirePlace = m_CounterFirePlace + 1;
+    }
+
+    event void FireMortar(String _UnitID, String _TargetID)
+    {
+      InvokeUnitTaskFunction(_UnitID,"SetFireStyle_SpecialFire",[_TargetID ]);
+    }
+}
+
+class C1M5AmericanSkyRidersGroup_1 extends CBaseUnitGroup
+{
+  boolean toHome = false;
+  event void SkyRiderToHome()
+  {
+    toHome = true;
+    SetOrderName("");
+    Vector Home = GetNavPointBehPos("NavPoint_SkyRider_0");
+    if(GetMission().isDebug)
+        logMessage(m_GroupID + " TO HOME!!!");
+//    setOrder_MoveTo(NextDest, m_CurrentOrder.m_MovingSpeed, true);
+     Array ApproachPoints = [GetNavPointBehPos("NavPoint_SkyRider_1"),
+                             GetNavPointBehPos("NavPoint_SkyRider_0")
+                            ];
+
+    SetFirstQueueOrders([
+                  ["ToHome", "SetOrder_MoveToEx", [ApproachPoints, 140.0f], ""],
+                  ["ToHome", "Home", [], ""]
+                       ]);
+  }
+
+  void Home()
+  {
+    CancelAllOrders();
+    if(toHome)
+        ActivateGroup(false);
+  }
+}
+
+class C1M5AmericanSkyRidersGroup_2 extends CBaseUnitGroup
+{
+  boolean toPatrol = false;
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateGroup(false);
+  }
+
+  event void SkyRiderToPatrol()
+  {
+    ActivateGroup(true);
+    toPatrol = true;
+    PopDelayedOrder();
+  }
+}
+
+class C1M5_Guardians  extends CBaseUnitGroup
+{
+    void Init()
+    {
+      if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " Guardians INIT ");
+
+      CBaseUnitGroup::Init();
+      ActivateMovement(false);
+      ActivateRadar(false);
+      ActivateFire(false);
+    }
+}

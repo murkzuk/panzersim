@@ -1,0 +1,152 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CNewCampaignMenu
+  extends CBaseMenu, CNewCampaignControls
+{
+  static String m_MenuClassName = "CNewCampaignMenu";
+
+  final WString m_CustomText = getLocalized("Menu","str_OG_CUSTOM");
+
+  final Array m_DifficultyText = [ 
+                                   getLocalized("Menu","str_OG_EASY"),
+                                   getLocalized("Menu","str_OG_NORMAL"),
+                                   getLocalized("Menu","str_OG_HARD")
+                                 ];
+  final Array m_Campaigns = [
+                              getLocalized("Campaigns","str_CAMPAIGN1")
+                            ];
+
+  int m_Difficulty = 1;
+
+  void OnInitMenu()
+  {
+    Array Props = [
+                    ["SelectedColor",   CUISettings::TextListSelectedColor,   false],
+                    ["NormalColor",     CUISettings::TextListNormalColor,     false],
+                    ["HiSelectedColor", CUISettings::TextListHiSelectedColor, false],
+                    ["HiNormalColor",   CUISettings::TextListHiNormalColor,   false]
+                  ];
+    Component CampaignList = GetObject("NW_CampaignList");
+
+    CampaignList.ClearWithUnregister();
+    CampaignList.SetListScrollStep(25.0/ 768.0);
+    CampaignList.SelectItemByIndex(-1);
+
+    CampaignList.SetSlaveScroller(GetObject("NW_Scroll"));
+    Component Position = new CUIPosition(0.0, 0.0, CampaignList.GetUIPosition().Width, 25.0 / 768.0);
+    for (int i = 0; i < m_Campaigns.size(); i++)
+    {
+      String NewID = "NW_Campaign_" + new String(i);
+      Component Element = CreateUIControl(NewID,
+                             "BitmapButton", 
+                             "CUITextElement", 
+                             Position,
+                             clone(Props));
+      Element.SetText(m_Campaigns[i]);
+      CampaignList.AddControl(NewID);
+    }
+    CampaignList.SelectItemByIndex(0);
+
+    Component Difficulty = GetObject("NW_Difficulty");
+    Difficulty.SetItems(m_DifficultyText);
+    Difficulty.SelectItem(1);
+    Difficulty.CloseList();
+  }
+
+  void CreateCampaign()
+  {
+    int Number = 0;
+    Component GameSettings = new #GameSettings();
+    Array Campaigns = GameSettings.GetPlayersList();
+    if (!Campaigns.isEmpty())
+      Number = GameSettings.LoadPlayerValue(new WString(Campaigns[Campaigns.size() - 1]), L"Number", 0) + 1;
+
+    WString SNum = new WString(Number);
+    if (Number < 10)
+      SNum = L"0000" + SNum;
+    else
+    if (Number < 100)
+      SNum = L"000" + SNum;
+    else
+    if (Number < 1000)
+      SNum = L"00" + SNum;
+    else
+    if (Number < 10000)
+      SNum = L"0" + SNum;
+
+    WString CampaignNum = L"Campaign_" + SNum;
+    WString Name = m_Campaigns[GetObject("NW_CampaignList").GetCurrentItem()];
+    WString IDName = GetObject("NW_PlayerName").GetText();
+    int Difficulty = GetObject("NW_Difficulty").GetCurrentItem();
+
+    GameSettings.SavePlayerValue(CampaignNum, L"Number", Number);
+    GameSettings.SavePlayerValue(CampaignNum, L"Name", Name);
+    GameSettings.SavePlayerValue(CampaignNum, L"IDName", IDName);
+    GameSettings.SavePlayerValue(CampaignNum, L"Status", 1);
+    GameSettings.SavePlayerValue(CampaignNum, L"MaxStatus", 10);
+    GameSettings.SavePlayerValue(CampaignNum, L"Difficulty", Difficulty);
+
+    WString Player = CampaignNum;
+    GameSettings.SavePlayerValue(Player, L"TargetingMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][0]);
+    GameSettings.SavePlayerValue(Player, L"DynamicLift", CGameOptionsMenu::m_DifficultySettings[Difficulty][1]);
+    GameSettings.SavePlayerValue(Player, L"RetreatingBladeStallMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][2]);
+    GameSettings.SavePlayerValue(Player, L"VortexRingMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][3]);
+    GameSettings.SavePlayerValue(Player, L"AircushionMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][4]);
+    GameSettings.SavePlayerValue(Player, L"WindEffectMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][5]);
+    GameSettings.SavePlayerValue(Player, L"PayloadMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][6]);
+    GameSettings.SavePlayerValue(Player, L"ShockwaveMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][7]);
+    GameSettings.SavePlayerValue(Player, L"TargetsOnMap", CGameOptionsMenu::m_DifficultySettings[Difficulty][8]);
+    GameSettings.SavePlayerValue(Player, L"OrientationMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][9]);
+    GameSettings.SavePlayerValue(Player, L"Compass", CGameOptionsMenu::m_DifficultySettings[Difficulty][10]);
+    GameSettings.SavePlayerValue(Player, L"UnlimAmmo", CGameOptionsMenu::m_DifficultySettings[Difficulty][11]);
+    GameSettings.SavePlayerValue(Player, L"UnlimFuel", CGameOptionsMenu::m_DifficultySettings[Difficulty][12]);
+    GameSettings.SavePlayerValue(Player, L"GodMode", CGameOptionsMenu::m_DifficultySettings[Difficulty][13]);
+
+  }
+
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    if (!_ID.IsStartsWith("NW_Difficulty"))
+      GetObject("NW_Difficulty").CloseList();
+
+    if ("NW_OK" == _ID)
+    {
+      CreateCampaign();
+      GoBack();
+    }
+    else
+    if ("NW_Cancel" == _ID)
+      GoBack();
+    else
+    if ("NW_Difficulty_Button" == _ID)
+      GetObject("NW_Difficulty").OpenList();
+    else
+    if ("NW_Scroll_Arrow1" == _ID)
+      GetObject("NW_CampaignList").ScrollUp(25.0/768.0);
+    else
+    if ("NW_Scroll_Arrow2" == _ID)
+      GetObject("NW_CampaignList").ScrollDown(25.0/768.0);
+    else
+    if (_ID.IsStartsWith("NW_Difficulty_Item_"))
+    {
+      GetObject("NW_Difficulty").SelectIDItem(_ID);
+      m_Difficulty = GetObject("NW_Difficulty").GetCurrentItem();
+    }
+    else
+    if (_ID.IsStartsWith("NW_Campaign_"))
+    {
+      GetObject("NW_CampaignList").SelectItem(_ID);
+    }
+
+  }
+
+}

@@ -1,0 +1,1304 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//
+// Base ListElement control
+//
+
+class CBaseUIListElement
+  extends CBaseUIControl
+{
+  static float m_ElementHeight = 0.1;
+
+  static float GetElementHeight()
+  {
+    return m_ElementHeight;
+  }
+
+  void SetSelectedItemState(
+      boolean _Selected
+    )
+  {
+    CBaseUIControl::SetSelectedItemState(_Selected);
+  }
+}
+
+//
+// FilledScrollBar control
+//
+
+class CUIFilledScrollBar
+  extends CBaseUIControl
+{
+  static float DefaultZ = 0.01;
+
+  // attributes
+
+  // compounds
+  Component   m_Arrow1;
+  Component   m_Arrow2;
+  Component   m_Scroll;
+  Component   m_Fill;
+
+  String      m_ControlID;
+  int         m_ScrollPos;
+  int         m_ScrollRange;
+  
+  boolean     m_IsScrollerSizeFixed;
+  float       m_ScrollerFixedWidth;
+  float       m_ScrollerFixedHeight;
+  float       m_FillShift;
+
+
+  // Service functions
+  void Initialize(
+      String _ControlID
+    )
+  {
+    m_ControlID = _ControlID;
+
+    m_Arrow1 = new #BitmapButton<CBaseUIControl>();
+    m_Arrow2 = new #BitmapButton<CBaseUIControl>();
+    m_Scroll = new #SliderCursorControl<CBaseUIControl>();
+    m_Fill   = new #BitmapControl();
+
+    m_Scroll.SetEventHandler(this);
+
+    RegisterObject(m_ControlID + "_Arrow1", m_Arrow1);
+    RegisterObject(m_ControlID + "_Arrow2", m_Arrow2);
+    RegisterObject(m_ControlID + "_Scroll", m_Scroll);
+    RegisterObject(m_ControlID + "_Fill", m_Fill);
+  }
+
+  String GetControlID()
+  {
+    return m_ControlID;
+  }
+
+  void UnregisterControl()
+  {
+    m_Scroll.SetEventHandler(null);
+
+    UnregisterObject(m_ControlID);
+    UnregisterObject(m_ControlID + "_Arrow1");
+    UnregisterObject(m_ControlID + "_Arrow2");
+    UnregisterObject(m_ControlID + "_Scroll");
+    UnregisterObject(m_ControlID + "_Fill");
+  }
+
+  // Construct UI control
+  void Construct(
+      Component _PropMap
+    )
+  {
+    CBaseUIControl::Construct(_PropMap);
+
+    m_Arrow1.SetMaterialManager(m_MenuController.GetMaterialManager());
+
+    m_Arrow1.SetMaterials(
+        _PropMap.Get("MaterialArrow1", "Test material"), 
+        _PropMap.Get("MaterialArrow1", "Test material")
+      );
+    m_Arrow1.SetTextColors(
+        _PropMap.Get("NormalTextColor", new Color(0.5, 0.5, 0.5)),
+        _PropMap.Get("HilitedTextColor", new Color(0.5, 0.5, 0.5))
+      );
+    m_Arrow1.SetRenderLayer(m_MenuController.GetCurrentLayer());
+
+    m_Arrow2.SetMaterialManager(m_MenuController.GetMaterialManager());
+    m_Arrow2.SetMaterials(
+        _PropMap.Get("MaterialArrow2", "Test material"), 
+        _PropMap.Get("MaterialArrow2", "Test material")
+      );
+    m_Arrow2.SetTextColors(
+        _PropMap.Get("NormalTextColor", new Color(0.0, 0.0, 0.0)),
+        _PropMap.Get("HilitedTextColor", new Color(0.0, 0.0, 0.0))
+      );
+    m_Arrow2.SetRenderLayer(m_MenuController.GetCurrentLayer());
+
+    m_Scroll.SetMaterialManager(m_MenuController.GetMaterialManager());
+    m_Scroll.SetMaterials(
+        _PropMap.Get("MaterialScroll", "Test material"), 
+        _PropMap.Get("MaterialScroll", "Test material")
+      );
+    m_Scroll.SetTextColors(
+        _PropMap.Get("NormalSliderColor", new Color(1.0, 1.0, 1.0)),
+        _PropMap.Get("HilitedSliderColor", new Color(1.0, 1.0, 1.0))
+      );
+    m_Scroll.SetRenderLayer(m_MenuController.GetCurrentLayer());
+
+    m_Fill.SetMaterialManager(m_MenuController.GetMaterialManager());
+    m_Fill.SetMaterial(_PropMap.Get("MaterialFill", "Invisible"));
+    m_Fill.SetRenderLayer(m_MenuController.GetCurrentLayer());
+    
+    // Scroll properties
+    SetScrollRange(_PropMap.Get("ScrollRange", 10));
+    SetScrollPos(_PropMap.Get("InitialScrollPos", 0));
+
+    // Fixed size scroller feature
+    m_IsScrollerSizeFixed = _PropMap.Get("IsScrollerSizeFixed", false);
+    m_ScrollerFixedWidth  = _PropMap.Get("ScrollerFixedWidth", 0.05);
+    m_ScrollerFixedHeight = _PropMap.Get("ScrollerFixedHeight", 0.05);
+    m_FillShift           = _PropMap.Get("FillShift", 0.0);
+  }
+
+  // Scroll bar functions
+  void SetScrollPos(int _ScrollPos)
+  {
+    if (_ScrollPos > m_ScrollRange) _ScrollPos = m_ScrollRange;
+    if (_ScrollPos < 0) _ScrollPos = 0;
+
+    m_ScrollPos = _ScrollPos;
+
+    if (null != m_Position) SetPosition(m_Position);
+  }
+
+  void SetScrollRange(int _ScrollRange)
+  {
+    if (_ScrollRange < 1) _ScrollRange = 1;
+
+    m_ScrollRange = _ScrollRange;
+
+    if (null != m_Position) SetPosition(m_Position);
+  }
+
+  // Scrolls one position down
+  void ScrollDown()
+  {
+    SetScrollPos(m_ScrollPos-1);
+  }
+
+  // Scrolls one position up
+  void ScrollUp()
+  {
+    SetScrollPos(m_ScrollPos+1);
+  }
+
+  int  GetScrollPos()
+  {
+    return m_ScrollPos;
+  }
+
+  int  GetScrollRange()
+  {
+    return m_ScrollRange;
+  }
+
+  void SetScrollPhase(
+      float _Phase
+    )
+  {
+    SetScrollPos(iround(_Phase * float(GetScrollRange())));
+  }
+
+  float GetScrollPhase()
+  {
+    return float(GetScrollPos()) / float(GetScrollRange());
+  }
+
+  void SetZ(
+      float _Z
+    )
+  {
+    m_Scroll.SetZ(_Z + 0.001);
+    m_Arrow1.SetZ(_Z + 0.001);
+    m_Arrow2.SetZ(_Z + 0.001);
+    m_Fill.SetZ(_Z);
+  }
+
+  event void OnAttachControl(
+      Component _Control
+    )
+  {
+    m_MenuController.OnAttachControl(_Control);
+  }
+
+  event void OnSliderMoved()
+  {
+    SetScrollPhase(m_Scroll.GetValue());
+  }
+
+  void SetDisabled(
+      boolean _IsDisabled
+    )
+  {
+    m_Scroll.SetDisabled(_IsDisabled);
+    m_Arrow1.SetDisabled(_IsDisabled);
+    m_Arrow2.SetDisabled(_IsDisabled);
+    if (_IsDisabled)
+      m_Fill.SetBitmapColor(new Color(0.5, 0.5, 0.5));
+    else
+      m_Fill.SetBitmapColor(new Color(1.0, 1.0, 1.0));
+  }
+
+  void SetHint(
+      WString _Hint
+    )
+  {
+    m_Scroll.SetHint(_Hint);
+    m_Arrow1.SetHint(_Hint);
+    m_Arrow2.SetHint(_Hint);
+  }
+}
+
+//
+// Horizontal Filled ScrollBar control
+//
+
+class CUIHorizontalFilledScrollBar
+  extends CUIFilledScrollBar
+{
+  // Set position and dimension
+  void SetPosition(
+      Component _UIPosition
+    )
+  {
+    if (_UIPosition.Width < 3.0 * _UIPosition.Height)
+      _UIPosition.Width = 3.0 * _UIPosition.Height;
+
+    float ScrollWidth = float(_UIPosition.Width) / float(m_ScrollRange);
+    if (m_IsScrollerSizeFixed) ScrollWidth = m_ScrollerFixedWidth;
+
+    m_Arrow1.SetPosition(_UIPosition.X, _UIPosition.Y);
+    m_Arrow1.SetDimensions(_UIPosition.Height, _UIPosition.Height);
+
+    m_Arrow2.SetPosition(_UIPosition.X  + _UIPosition.Width - _UIPosition.Height, _UIPosition.Y);
+    m_Arrow2.SetDimensions(_UIPosition.Height, _UIPosition.Height);
+
+    m_Scroll.SetPosition(_UIPosition.X, _UIPosition.Y);
+    m_Scroll.SetMargins(_UIPosition.X  + _UIPosition.Height, 
+      _UIPosition.X - _UIPosition.Height + _UIPosition.Width - ScrollWidth);
+    m_Scroll.SetValue(GetScrollPhase());
+
+    m_Fill.SetPosition(_UIPosition.X + _UIPosition.Height + m_FillShift, _UIPosition.Y);
+    m_Fill.SetDimensions(
+      float(m_ScrollPos) / float(m_ScrollRange) * 
+      (_UIPosition.Width - 2.0 * _UIPosition.Height - ScrollWidth), 
+      _UIPosition.Height);
+
+    if (m_IsScrollerSizeFixed)
+      m_Scroll.SetDimensions(m_ScrollerFixedWidth, m_ScrollerFixedHeight);
+    else
+      m_Scroll.SetDimensions(ScrollWidth, _UIPosition.Height);
+
+    CBaseUIControl::SetPosition(_UIPosition);
+  }
+}
+
+//
+// List control
+//
+
+class CUIListControl
+  extends CBaseUIControl, CBasePersistentContainer
+{
+  static float DefaultZ = 0.01;
+
+  float ControlZ        = DefaultZ;
+
+  // attributes
+
+  // compounds
+  Array     m_Controls;
+  Array     m_ControlsSorted;
+
+  Component m_Scroller       = null;
+  float     m_ListHeight     = 0.0;          // сумма высот всех элементов списка
+  float     m_ListPosition   = 0.0;          // позиция видимой части списка
+  float     m_ListScrollStep = 1.0 / 768.0;  // шаг прокрутки списка
+  float     m_OpenListHeight = 0.0;
+
+  float     m_ListCellPadding = 1.0 / 768.0;
+
+  int       m_CurrentItem    = -1;
+  int       m_CurrentSubItem = -1;
+
+  String    m_ControlID;
+
+  String    m_ItemsCompare   = "";
+  boolean   m_SortDescending = true;
+
+  CUIListControl()
+  {
+  }
+
+  // Service functions
+  void Initialize(
+      String _ControlID
+    )
+  {
+    m_ControlID  = _ControlID;
+  }
+
+  String GetControlID()
+  {
+    return m_ControlID;
+  }
+
+  void UnregisterControl()
+  {
+  }
+
+  // Implementation of CBaseUIControl methods
+
+  // Construct UI control
+  void Construct(
+      Component _PropMap
+    )
+  {
+    CBaseUIControl::Construct(_PropMap);
+
+    m_ListCellPadding = _PropMap.Get("ListCellPadding", m_ListCellPadding);
+  }
+
+  // Setup position and dimension
+  void SetPosition(
+      Component _UIPosition
+    )
+  {
+    CBaseUIControl::SetPosition(_UIPosition);
+
+    // set paren rects
+    for (int Index = 0; Index < m_Controls.size(); Index++)
+      GetObject(m_Controls[Index]).SetParentRect(m_Position);
+
+    // set wheel area
+    if (null != m_Scroller)
+      m_Scroller.SetWheelArea(m_Position.X, m_Position.Y, m_Position.Width, m_Position.Height);
+
+    PositionList();
+  }
+
+  void SetZ(
+      float _Z
+    )
+  {
+    ControlZ = _Z;
+  
+    for (int Index = 0; Index < m_Controls.size(); Index++)
+      GetObject(m_Controls[Index]).SetZ(_Z + 0.01);
+  }
+
+  // special functions
+
+  void AddControl(
+      String _ControlID
+    )
+  {
+    m_Controls.add(_ControlID);
+    m_ControlsSorted.add(_ControlID);
+
+    Component Control = GetObject(_ControlID);
+    Control.SetParentRect(m_Position);
+    m_ListHeight += Control.GetUIPosition().Height;
+
+    UpdateList();
+
+    if (-1 == m_CurrentItem)
+      SelectCurrentItem(0);
+  }
+
+  void ClearWithUnregister()
+  {
+    for (int Index = 0; Index < m_Controls.size(); Index++)
+    {
+      Component Control = GetObject(m_Controls[Index]);
+      if (isFunctionExist(Control, "UnregisterControl", 0))
+        Control.UnregisterControl();
+      else
+        m_ParentMenu.m_MenuController.UnregisterObject(Control.GetControlID());
+    }
+
+    ClearList();
+  }
+
+  void DeleteWithUnregister(
+      String _ControlID
+    )
+  {
+    final int Index = m_Controls.find(_ControlID);
+    if (-1 == Index)
+      return;
+
+    Component Control = GetObject(m_Controls[Index]);
+    if (isFunctionExist(Control, "UnregisterControl", 0))
+      Control.UnregisterControl();
+    else
+      m_ParentMenu.m_MenuController.UnregisterObject(Control.GetControlID());
+
+    m_Controls.remove(Index);
+    m_ControlsSorted.remove(m_ControlsSorted.find(_ControlID));
+
+    m_CurrentItem    = -1;
+    m_CurrentSubItem = -1;
+  }
+
+  void ClearList()
+  {
+    m_Controls.clear();
+    m_ControlsSorted.clear();
+
+    m_CurrentItem    = -1;
+    m_CurrentSubItem = -1;
+    m_ListPosition   = 0.0;
+
+    UpdateScroller();
+  }
+
+  void SetSlaveScroller(
+      Component _Scroller
+    )
+  {
+    if (null != m_Scroller)
+    {
+      m_Scroller.SetScrollHandler(null);
+      m_Scroller.SetWheelArea(0.0, 0.0, 0.0, 0.0);
+    }
+
+    m_Scroller = _Scroller;
+    if (null != m_Scroller)
+    {
+      m_Scroller.SetScrollHandler(this);
+      m_Scroller.SetWheelArea(m_Position.X, m_Position.Y, m_Position.Width, m_Position.Height);
+    }
+  }
+
+  void ScrollUp(
+      float _Step
+    )
+  {
+    m_ListPosition -= _Step;
+
+    if (m_ListPosition < 0.0)
+      m_ListPosition = 0.0;
+    
+    UpdateList();
+  }
+
+  void ScrollDown(
+      float _Step
+    )
+  {
+    if (m_ListPosition + _Step + m_Position.Height <= m_ListHeight + m_ListCellPadding*m_Controls.size())
+      m_ListPosition += _Step;
+
+    UpdateList();
+  }
+  
+  void SetListScrollStep(
+      float _ScrollStep
+    )
+  {
+    m_ListScrollStep = _ScrollStep;
+  }
+
+  void SetScrollPos(
+      int _Pos
+    )
+  {
+    float Position = 0.0;
+    if (!m_Controls.isEmpty())
+      Position = m_ListScrollStep * float(_Pos);
+
+    if (Position != m_ListPosition)
+    {
+      m_ListPosition = Position;
+      UpdateList();
+    }
+  }
+
+  float GetScrollableRange()
+  {
+    float ScrollableRange = m_ListHeight - m_Position.Height;
+
+    if (ScrollableRange > 0.0)
+      return ScrollableRange;
+
+    return 0.0;
+  }
+
+  void UpdateScroller()
+  {
+    if (null == m_Scroller) return;
+    
+    float ScrollPhase     = 0.0;
+    float ScrollableRange = GetScrollableRange();
+
+    if (ScrollableRange != 0.0) 
+      ScrollPhase = m_ListPosition / ScrollableRange;
+
+//    m_Scroller.SetScrollRange(max(0, ifloor((m_ListHeight + m_Position.Height) / m_ListScrollStep)));
+    m_Scroller.SetScrollRange(max(0, ifloor((m_ListHeight + m_ListCellPadding*m_Controls.size() - m_Position.Height ) / m_ListScrollStep)));
+    m_Scroller.SetScrollPos(iround(m_ListPosition / m_ListScrollStep));
+  }
+  
+  void PositionList()
+  {
+    float PositionY = m_Position.Y - 1.0/768.0 - m_ListPosition;
+    m_ListHeight = 0.0;
+    for (int Index = 0; Index < m_ControlsSorted.size(); Index++)
+    {
+      Component Position = GetObject(m_ControlsSorted[Index]).GetUIPosition();
+
+      Position.X = m_Position.X;
+      Position.Y = PositionY;
+
+      GetObject(m_ControlsSorted[Index]).SetPosition(Position);
+
+      PositionY += Position.Height + m_ListCellPadding;
+      m_ListHeight += Position.Height;
+    }
+  }
+
+  void SelectItemByIndex(
+      int _Index
+    )
+  {
+    SelectItemByIndex(_Index, -1);
+  }
+
+  void SelectItemByIndex(
+      int _Index,
+      int _SubItem
+    )
+  {
+    m_CurrentItem    = -1;
+    m_CurrentSubItem = -1;
+
+    for (int Index = 0; Index < m_Controls.size(); Index++)
+    {
+      Component Control = GetObject(m_Controls[Index]);
+
+      if (_Index == Index)
+      {
+        if (isFunctionExist(Control, "SetSelectedItemState", 2))
+        {
+          Control.SetSelectedItemState(true, _SubItem);
+          m_CurrentSubItem = _SubItem;
+        }
+        else
+          Control.SetSelectedItemState(true);
+
+        m_CurrentItem = Index;
+      }
+      else
+        Control.SetSelectedItemState(false);
+    }
+  }
+
+  boolean SelectItem(
+      String _ID
+    )
+  {
+    return SelectItem(_ID, -1);
+  }
+
+  boolean SelectItem(
+      String _ID,
+      int    _SubItem
+    )
+  {
+    m_CurrentItem    = -1;
+    m_CurrentSubItem = -1;
+
+    boolean Result = false;
+
+    for (int Index = 0; Index < m_Controls.size(); Index++)
+    {
+      Component Control = GetObject(m_Controls[Index]);
+
+      if (_ID == m_Controls[Index])
+      {
+        if (isFunctionExist(Control, "SetSelectedItemState", 2))
+        {
+          Control.SetSelectedItemState(true, _SubItem);
+          m_CurrentSubItem = _SubItem;
+        }
+        else
+          Control.SetSelectedItemState(true);
+
+        m_CurrentItem = Index;
+        Result        = true;
+      }
+      else
+        Control.SetSelectedItemState(false);
+    }
+
+    return Result;
+  }
+
+  void SelectCurrentItem(
+      int _CurrentItem
+    )
+  {
+    SelectCurrentItem(_CurrentItem, -1);
+  }
+
+  void SelectCurrentItem(
+      int _CurrentItem,
+      int _SubItem
+    )
+  {
+    if (_CurrentItem <  0 ||
+        _CurrentItem >= m_Controls.size())
+      return;
+      
+    if (m_CurrentItem != -1)
+      GetObject(m_Controls[m_CurrentItem]).SetSelectedItemState(false);
+
+    m_CurrentSubItem = -1;
+      
+    Component Control = GetObject(m_Controls[_CurrentItem]);
+    if (isFunctionExist(Control, "SetSelectedItemState", 2))
+    {
+      Control.SetSelectedItemState(true, _SubItem);
+      m_CurrentSubItem = _SubItem;
+    }
+    else
+      Control.SetSelectedItemState(true);
+
+    m_CurrentItem = _CurrentItem;
+  }
+
+  int GetCurrentItem()
+  {
+    return m_CurrentItem;
+  }
+
+  int GetCurrentSubItem()
+  {
+    return m_CurrentSubItem;
+  }
+
+  void SetCurrentItem(
+      int _CurrentItem
+    )
+  {
+    SetCurrentItem(_CurrentItem, -1);
+  }
+
+  void SetCurrentItem(
+      int _CurrentItem,
+      int _SubItem
+    )
+  {
+    m_CurrentItem    = _CurrentItem;
+    m_CurrentSubItem = _SubItem;
+  }
+
+  String GetItemID(
+      int _Index
+    )
+  {
+    if (_Index >= 0 && _Index < m_Controls.size())
+      return m_Controls[_Index];
+
+    return "";
+  }
+
+  int size()
+  {
+    return m_Controls.size();
+  }
+
+  int GetItem(
+      String _ID
+    )
+  {
+    int nItem = -1;
+
+    for (int Index = 0; Index < m_Controls.size(); Index++)
+    {
+      if (_ID == m_Controls[Index])
+      {
+        nItem = Index;
+        break;
+      }
+    }
+    return nItem;
+  }
+
+  void UpdateList()
+  {
+    PositionList();
+    UpdateScroller();
+  }
+
+  //
+  // Sorting
+  //
+
+  void ToggleSorting(
+      String _Compare
+    )
+  {
+    if (_Compare != m_ItemsCompare)
+    {
+      m_ItemsCompare   = _Compare;
+      m_SortDescending = false;
+    }
+    else
+      m_SortDescending = !m_SortDescending;
+
+    Sort();
+  }
+
+  void Sort()
+  {
+    if (!m_ItemsCompare.isEmpty())
+      m_ControlsSorted.sort(this, "Compare");
+
+    UpdateList();
+  }
+
+  boolean Compare(
+      String _A,
+      String _B
+    )
+  {
+    return m_SortDescending ^ (
+        getObjectVariable(GetObject(_A), m_ItemsCompare) <
+        getObjectVariable(GetObject(_B), m_ItemsCompare)
+      );
+  }
+
+  //
+  // CBasePersistentContainer
+  //
+
+  Array GetPersistents()
+  {
+    Array Result = [];
+
+    for (int i = 0; i < m_Controls.size(); i++)
+      Result.add(GetObject(m_Controls[i]));
+
+    return Result;
+  }
+
+  //
+  // IPersistent
+  //
+
+  variant GetToken()
+  {
+    return GetControlID();
+  }
+
+  variant GetState()
+  {
+    int ScrollPos = 0;
+
+    if (null != m_Scroller)
+      ScrollPos = m_Scroller.GetScrollPos();
+
+    return [ 
+        CBasePersistentContainer::GetState(),
+        GetItemID(GetCurrentItem()), 
+        ScrollPos,
+        m_SortDescending,
+        m_ItemsCompare,
+        GetCurrentSubItem()
+      ];
+  }
+
+  void SetState(
+      variant _State
+    )
+  {
+    CBasePersistentContainer::SetState(_State[0]);
+
+    SelectItem(_State[1], _State[5]);
+
+    m_SortDescending = _State[3];
+    m_ItemsCompare   = _State[4];
+    Sort();
+
+    SetScrollPos(_State[2]);
+  }
+}
+
+//
+// Base Openable ListElement control
+//
+
+class CBaseUIOpenableListElement
+  extends CBaseUIControl, IPersistent
+{
+  boolean m_IsInfoOpen = false;
+
+  //
+  // IPersistent
+  //
+
+  variant GetToken()
+  {
+    return GetControlID();
+  }
+
+  variant GetState()
+  {
+    return GetOpenState();
+  }
+
+  void SetState(
+      variant _State
+    )
+  {
+    SetOpenState(_State);
+  }
+
+  //
+  // Interface
+  //
+
+  boolean GetOpenState()
+  {
+    return m_IsInfoOpen;
+  }
+
+  void SetOpenState(
+      boolean _Open
+    )
+  {
+    m_IsInfoOpen = _Open;
+
+    UpdateHeight();
+  }
+ 
+  void ToggleOpenState()
+  {
+    SetOpenState(!m_IsInfoOpen);
+  }
+
+}
+
+//
+// CSortableListContainer
+//
+
+class CSortableListContainer
+{
+  final static Map   SortHeaders;
+  final static Color ColorHeader     = new Color(0.745098, 0.745098, 0.745098, 1.0);
+  final static Color ColorHeaderHigh = new Color(0.584314, 0.976471,      1.0, 1.0);
+
+  static void OnInitMenu(
+      Component _Menu,
+      Map       _SortHeaders,
+      Component _List
+    )
+  {
+    UpdateColors(_Menu, _SortHeaders, _List.m_ItemsCompare);
+  }
+
+  void OnInitMenu(
+      Component _List
+    )
+  {
+    OnInitMenu(this, SortHeaders, _List);
+  }
+
+  static boolean OnControlActivated(
+      Component _Menu,
+      Map       _SortHeaders,
+      Component _List,
+      String    _ID
+    )
+  {
+    if (!_SortHeaders.find(_ID))
+      return false;
+
+    _List.ToggleSorting(_SortHeaders.getValue());
+    UpdateColors(_Menu, _SortHeaders, _SortHeaders.getValue());
+  
+    return true;
+  }
+
+  boolean OnControlActivated(
+      Component _List,
+      String    _ID
+    )
+  {
+    return OnControlActivated(this, SortHeaders, _List, _ID);
+  }
+  
+  static void UpdateColors(
+      Component _Menu,
+      Map       _SortHeaders,
+      String    _Compare
+    )
+  {
+    for (_SortHeaders.gotoBegin(); !_SortHeaders.isAtEnd(); _SortHeaders.gotoNext())
+      if (_Compare != _SortHeaders.getValue())
+        _Menu.GetObject(_SortHeaders.getKey()).SetTextColors(ColorHeader,     ColorHeaderHigh);
+      else
+        _Menu.GetObject(_SortHeaders.getKey()).SetTextColors(ColorHeaderHigh, ColorHeaderHigh);
+  }
+
+  void UpdateColors(
+      String _Compare
+    )
+  {
+    UpdateColors(this, SortHeaders, _Compare);
+  }
+}
+
+//
+// Trend control
+//
+
+class CUITrend
+  extends CUIGraph
+{
+  final static int IDX_COLOR  = 0;
+  final static int IDX_WIDTH  = 1;
+  final static int IDX_VALUES = 2;
+
+  final static int GraphSize  = 13;
+
+  Map   Trends        = new Map();
+  int   TrendPosition = 0;
+  int   FirstValue    = 0;
+  int   LastValue     = 0;
+  float MaxY          = 0.0;
+  float OptimizedMaxY = 0.0;
+
+  Component m_Scroller = null;
+
+  void AddTrend(
+      String _Name,
+      Color  _GraphColor,
+      float  _LineWidth,
+      Array  _Values
+    )
+  {
+    Trends.insert(_Name, [_GraphColor, _LineWidth, _Values]);
+
+    Refresh();
+
+    UpdateGraph();
+    UpdateScroller();
+  }
+
+  void Refresh()
+  {
+    boolean MoveToEnd = false;
+    if (TrendPosition == GetScrollableRange())
+      MoveToEnd = true;
+
+    RefreshBorders();
+
+    if (MoveToEnd)
+      GotoEnd();
+  }
+
+  void RefreshBorders()
+  {
+    float First = 0.0;
+    float Last  = 0.0;
+    MaxY = 0.0;
+
+    for (Trends.gotoBegin(); !Trends.isAtEnd(); Trends.gotoNext())
+    {
+      Array Values = Trends.getValue()[IDX_VALUES];
+
+      for (int i = 0; i < Values.size(); i++)
+      {
+        if (Values[i].x < First)
+          First = Values[i].x;
+        if (Values[i].x > Last)
+          Last = Values[i].x;
+        if (Values[i].y > MaxY)
+          MaxY = Values[i].y;
+      }
+    }
+
+    FirstValue = int(First);
+    LastValue  = int(Last) + 1;
+  }
+
+  int GetLastPosition()
+  {
+    return LastValue - FirstValue - GraphSize;
+  }
+
+  void GotoEnd()
+  {
+    SetTrendPosition(GetScrollableRange());
+  }
+
+  void SetTrendPosition(
+      int _Position
+    )
+  {
+    if (_Position < 0)
+      TrendPosition = 0;
+    else
+    if (_Position > GetScrollableRange())
+      TrendPosition = GetScrollableRange();
+    else
+      TrendPosition = _Position;
+
+    UpdateGraph();
+    UpdateScroller();
+  }
+
+  void ScrollLeft()
+  {
+    SetTrendPosition(TrendPosition--);
+  }
+
+  void ScrollRight()
+  {
+    SetTrendPosition(TrendPosition++);
+  }
+
+  int GetScrollableRange()
+  {
+    if (GetLastPosition() < 0)
+      return 0;
+    else
+      return GetLastPosition();
+  }
+
+  void SetSlaveScroller(
+      Component _Scroller
+    )
+  {
+    if (null != m_Scroller)
+    {
+      m_Scroller.SetScrollHandler(null);
+      m_Scroller.SetWheelArea(0.0, 0.0, 0.0, 0.0);
+    }
+
+    m_Scroller = _Scroller;
+    m_Scroller.SetScrollHandler(this);
+  }
+
+  void SetScrollPos(
+      int _Pos
+    )
+  {
+    SetTrendPosition(_Pos);
+  }
+
+  void UpdateScroller()
+  {
+    if (null == m_Scroller) return;
+
+    m_Scroller.SetScrollRange(GetScrollableRange());
+    m_Scroller.SetScrollPos(TrendPosition);
+  }
+
+  void UpdateGraph()
+  {
+    // align to right
+    float Position = float(TrendPosition);
+    if (GetLastPosition() < 0)
+      Position = float(GetLastPosition());
+
+    Clear();
+    for (Trends.gotoBegin(); !Trends.isAtEnd(); Trends.gotoNext())
+    {
+      Array Values = Trends.getValue()[IDX_VALUES];
+      Array Graph  = [];
+      for (int i = 0; i < Values.size(); i++)
+        if (Values[i].x >= Position &&
+            Values[i].x <  Position + float(GraphSize))
+          Graph.add(new Vector(Values[i].x - Position, Values[i].y, Values[i].z));
+
+      AddGraph(
+          Trends.getKey(),
+          Trends.getValue()[IDX_COLOR],
+          Trends.getValue()[IDX_WIDTH],
+          Graph
+        );
+    }
+
+    OptimizeTrendMaximum();
+
+    int CurYear  = CDateTime::Now().Year;
+    int CurMonth = CDateTime::Now().Month;
+    int CurTime  = (CurYear * 12 + CurMonth) - LastValue + int(Position);
+
+    m_ParentMenu.OnChangeTrendPosition(CurTime);
+  }
+
+  void OptimizeTrendMaximum()
+  {
+    int Power = ifloor(log10(MaxY));
+    if (Power < 0) Power = 0;
+    float Multiple = pow(10.0, Power);
+
+    for (float Exponent = 1.0; Exponent <= 10.0; Exponent += 1.0)
+      if (MaxY < Multiple * Exponent)
+      {
+        OptimizedMaxY = Multiple * Exponent;
+        SetYScaleMaximum(OptimizedMaxY);
+        break;
+      }
+  }
+}
+
+//
+// ObjectiveElement control
+//
+
+class CUIObjectiveElement
+  extends CBaseUIListElement
+{
+  static float DefaultZ = 0.01;
+
+  // objective status materials ($WARNING in order of CMission::MOSID_..)
+  final static Array StatusMaterial = [
+      "ObjectiveInProgress",
+      "ObjectiveCompleted",
+      "ObjectiveFailed"
+    ];
+
+  // attributes
+
+  // compounds
+  Component m_ObjectiveText;
+  Component m_Status;
+
+  String    m_ControlID;
+  boolean   m_IsSelected = false;
+
+  final static Color TextColor       = new Color(1.0, 1.0, 1.0, 1.0);
+  final static float m_ElementHeight = 25.0 / 768.0;
+  final static float FontSize        = 24.0 / 1024.0;
+
+  // Service functions
+  void Initialize(
+      String _ControlID
+    )
+  {
+    m_ControlID = _ControlID;
+
+    m_ObjectiveText = new #TextControl<CUIEditField>();
+    m_Status        = new #BitmapControl<CUIBitmap>();
+
+    RegisterObject(m_ControlID + "_ObjectiveText", m_ObjectiveText);
+    RegisterObject(m_ControlID + "_Status",        m_Status);
+  }
+
+  String GetControlID()
+  {
+    return m_ControlID;
+  }
+
+  void UnregisterControl()
+  {
+    UnregisterObject(m_ControlID);
+    UnregisterObject(m_ControlID + "_ObjectiveText");
+    UnregisterObject(m_ControlID + "_Status");
+  }
+
+  // Implementation of CBaseUIControl methods
+
+  // Construct UI control
+  void Construct(
+      Component _PropMap
+    )
+  {
+    CBaseUIControl::Construct(_PropMap);
+
+    m_ObjectiveText.SetFont("Arial", FontSize);
+    m_ObjectiveText.SetText(L"[Error] no objective text!");
+    m_ObjectiveText.SetTextColor(_PropMap.Get("TextColor", new Color(1.0, 1.0, 1.0, 1.0)));
+    m_ObjectiveText.SetAlignment(0.0);
+    m_ObjectiveText.SetDimensions(430.0 / 1024.0, m_ElementHeight);
+
+    m_Status.SetMaterialManager(m_MenuController.GetMaterialManager());
+    m_Status.SetMaterial(StatusMaterial[0]);
+    m_Status.SetRenderLayer(m_MenuController.GetCurrentLayer());
+    m_Status.EnableHitTest(false);
+    m_Status.SetDimensions(20.0 / 1024.0, 20.0 / 768.0);
+  }
+
+  // Setup position and dimension
+  void SetPosition(
+      Component _UIPosition
+    )
+  {
+    m_ObjectiveText.SetPosition(_UIPosition.X, _UIPosition.Y);
+    m_Status       .SetPosition(_UIPosition.X + 440.0 / 1024.0, _UIPosition.Y + 0.0 / 768.0);
+
+    CBaseUIControl::SetPosition(_UIPosition);
+
+    UpdateHeight();
+  }
+
+  void SetZ(
+      float _Z
+    )
+  {
+    m_ObjectiveText.SetZ(_Z + 0.001);
+    m_Status       .SetZ(_Z + 0.002);
+  }
+
+  // Appearance settings
+
+  void SetSelectedItemState(
+      boolean _Selected
+    )
+  {
+    m_IsSelected = _Selected;
+
+    CBaseUIListElement::SetSelectedItemState(_Selected);
+  }
+
+  void UpdateHeight()
+  {
+    Component Position = m_Position;
+
+    Position.Width  = 0.3;
+    Position.Height = m_ElementHeight;
+
+    CBaseUIListElement::SetPosition(Position);
+  }
+
+  void SetParentRect(
+      Component _Rect
+    )
+  {
+    m_ObjectiveText.SetParentRect(_Rect);
+    m_Status       .SetParentRect(_Rect);
+  }
+
+  // Set info functions
+
+  void SetObjectiveText(
+      WString _Text
+    )
+  {
+    m_ObjectiveText.SetText(_Text);
+  }
+
+  void SetObjectiveStatus(
+      int _Status
+    )
+  {
+    m_Status.SetMaterial(StatusMaterial[_Status]);
+  }
+
+  void SetStatusVisible(
+      boolean _Enabled
+    )
+  {
+    if (_Enabled)
+      m_Status.SetDimensions(20.0 / 1024.0, 20.0 / 768.0);
+    else
+      m_Status.SetDimensions(0.0, 0.0);
+
+  }
+
+}

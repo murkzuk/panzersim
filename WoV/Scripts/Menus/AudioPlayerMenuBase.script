@@ -1,0 +1,437 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CAudioPlayerMenuBase
+{
+  final static Array DefaultElementProps = [
+      ["FontName",        "Arial",                              false],
+      ["FontSize",        CUISettings::TextListFontSize,        false],
+      ["SelectedColor",   CUISettings::TextListSelectedColor,   false],
+      ["NormalColor",     CUISettings::TextListNormalColor,     false],
+      ["HiSelectedColor", CUISettings::TextListHiSelectedColor, false],
+      ["HiNormalColor",   CUISettings::TextListHiNormalColor,   false]
+    ];
+
+  Component m_FileBrowser     = new #FileBrowser();
+  Component m_MusicController = new #GameController().GetObject("MusicController");
+
+  Array     m_Files;
+  Array     m_PlayList;
+  boolean   m_IsMusicSettingsChanged = false;
+
+  WString   m_MusicFolder;
+  WString   m_DefaultFolder;
+
+  float     m_SoundVolume;
+  float     m_MusicVolume;
+
+  //
+  // Construction
+  //
+
+  CAudioPlayerMenuBase()
+  {
+    m_FileBrowser.FilesPattern = CUISettings::MusicFilesPattern;
+  }
+
+  //
+  // CBaseMenu
+  //
+
+  void OnInitMenu()
+  {
+    m_DefaultFolder = m_FileBrowser.CurrentDir + L"Music";
+    GetSettings();
+
+    ApplySettings();
+    CheckChanges();
+
+    GetObject("PlayList").SetSlaveScroller(GetObject("PlayListScroll"));
+    GetObject("FilesList").SetSlaveScroller(GetObject("FilesListScroll"));
+
+    UpdateFilesList();
+
+    UpdatePlayList();
+
+    m_MusicController.SetEventHandler(this);
+
+  }
+
+  void OnCloseMenu()
+  {
+    m_MusicController.SetEventHandler(null);
+    m_MusicController.RestoreSettings();
+  }
+
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    if ("DefaultsButton" == _ID ||
+        "ResetPlaylist"  == _ID)
+    {
+      m_MusicFolder = m_DefaultFolder;
+      m_FileBrowser.CurrentDir = m_MusicFolder;
+      UpdateFilesList();
+      m_PlayList = [];
+      m_MusicController.Playlist = [];
+      for (int i = 0; i < m_Files.size(); i++)
+        if (-1 == m_FileBrowser.GetDirsList().find(m_Files[i]))
+        {
+          m_PlayList.add(m_Files[i]);
+          m_MusicController.Playlist = m_MusicController.Playlist + [m_FileBrowser.CurrentDir + m_Files[i]];
+        }
+
+      UpdatePlayList();
+//      m_IsMusicSettingsChanged = true;
+    }
+    else
+    if ("ApplyButton"    == _ID)
+    {
+      m_MusicController.SaveSettings();
+      new #GameSettings().SetUserValue(L"MusicDir", m_MusicFolder);
+      m_IsMusicSettingsChanged = false;
+    }
+    else
+    if ("DownFolder"     == _ID)
+    { 
+      if (WindowIsExists("FileBrowserCombo"))
+        WindowClose("FileBrowserCombo");
+
+      Component Combo = WindowOpen("CFileBrowserComboMenu", "FileBrowserCombo");
+      Combo.SetHandlerMenu(this);
+      Combo.SetFileBrowser(m_FileBrowser);
+
+      Component Position = GetObject("DriveComboField").GetUIPosition();
+      Combo.SetMenuPosition(Position.X, Position.Y + Position.Height);
+    }
+    else
+    if ("h_effects_Arrow1" == _ID)
+      GetObject("h_effects").ScrollDown();
+    else
+    if ("h_effects_Arrow2" == _ID)
+      GetObject("h_effects").ScrollUp();
+    else
+    if ("h_music_Arrow1" == _ID)
+      GetObject("h_music").ScrollDown();
+    else
+    if ("h_music_Arrow2" == _ID)
+      GetObject("h_music").ScrollUp();
+    else
+    if ("PlayListScroll_Arrow1" == _ID)
+      GetObject("PlayList").ScrollUp(14.0 / 768.0);
+    else
+    if ("PlayListScroll_Arrow2" == _ID)
+      GetObject("PlayList").ScrollDown(14.0 / 768.0);
+    else
+    if ("FilesListScroll_Arrow1" == _ID)
+      GetObject("FilesList").ScrollUp(14.0 / 768.0);
+    else
+    if ("FilesListScroll_Arrow2" == _ID)
+      GetObject("FilesList").ScrollDown(14.0 / 768.0);
+    else
+    if (_ID.IsStartsWith("FilesListItem_"))
+      GetObject("FilesList").SelectItem(_ID.GetPartPreceding("_"));
+
+    if (_ID.IsStartsWith("h_effects") ||
+        _ID.IsStartsWith("h_music"))
+      SetSettings();
+
+    if (_ID.IsStartsWith("FileBrowserCombo"))
+    {
+      m_MusicFolder = m_FileBrowser.CurrentDir;
+      UpdateFilesList();
+      m_PlayList = [];
+      m_MusicController.Playlist = [];
+      for (int i = 0; i < m_Files.size(); i++)
+        if (-1 == m_FileBrowser.GetDirsList().find(m_Files[i]))
+        {
+          m_PlayList.add(m_Files[i]);
+          m_MusicController.Playlist = m_MusicController.Playlist + [m_FileBrowser.CurrentDir + m_Files[i]];
+        }
+
+      UpdatePlayList();
+    }
+
+
+    CheckChanges();
+  }
+
+  void OnControlActivatedDouble(
+      String _ID
+    )
+  {
+    if (_ID.IsStartsWith("FilesListItem_"))
+    {
+      final int iFile = GetObject("FilesList").GetCurrentItem();
+      if (-1 != iFile)
+      {
+        if (-1 != m_FileBrowser.GetDirsList().find(m_Files[iFile]))
+        {
+          m_FileBrowser.ChangeDir(m_Files[iFile]);
+
+          UpdateFilesList();
+
+
+          m_MusicController.Playlist = [];
+          m_PlayList = [];
+          for (int i = 0; i < m_Files.size(); i++)
+          {
+            if (-1 == m_FileBrowser.GetDirsList().find(m_Files[i]))
+            {
+              m_PlayList.add(m_Files[i]);
+              m_MusicController.Playlist = m_MusicController.Playlist + [m_FileBrowser.CurrentDir + m_Files[i]];
+
+            }
+          }
+          m_IsMusicSettingsChanged   = true;
+  
+          UpdatePlayList();
+
+        }
+      }
+    }
+    else
+    if (_ID.IsStartsWith("PlayListItem_"))
+    {
+      GetObject("PlayList").SelectItem(_ID.GetPartPreceding("_"));
+
+      final int iMusic = GetObject("PlayList").GetCurrentItem();
+      if (-1 != iMusic)
+      {
+        m_MusicController.Play(iMusic);
+      }
+    }
+
+    CheckChanges();
+  }
+
+  //
+  // Events
+  //
+
+  void OnCurrentMusicChanged()
+  {
+    GetObject("PlayList").SelectItemByIndex(m_MusicController.GetCurrentMusic());
+  }
+
+  void OnDirSelected(
+      WString _Dir
+    )
+  {
+    m_FileBrowser.CurrentDir = _Dir;
+    m_MusicFolder = m_FileBrowser.CurrentDir;
+    m_Files = m_FileBrowser.GetFilesList();
+    UpdateFilesList();
+  }
+
+  //
+  // Service
+  //
+
+  UpdateFilesList()
+  {
+    UpdateFilesList(DefaultElementProps);
+  }
+
+  void UpdateFilesList(
+      Array _ElementProps
+    )
+  {
+    Component FilesList = GetObject("FilesList");
+
+    FilesList.ClearWithUnregister();
+    FilesList.SetListScrollStep(14.0 / 768.0);
+
+    Array Dirs  = m_FileBrowser.GetDirsList();
+    Array Files = m_FileBrowser.GetFilesList();
+
+    if (!Dirs.isEmpty())
+      if (Dirs[0] == L".")
+        Dirs.remove(0);
+
+    m_Files = Dirs;
+
+    Component Position = new CUIPosition(0.0, 0.0, 0.25, 20.0 / 768.0);
+
+    for (int i = 0; i < m_Files.size(); i++)
+    {
+      final String NewID = "FilesListItem_" + new String(i);
+      Component Element = CreateUIControl(
+          NewID, 
+          "", 
+          "CUIFilelistElement", 
+          Position, 
+          clone(_ElementProps)
+        );
+
+      Element.SetTitle(m_Files[i]);
+
+      if (i < Dirs.size())
+        Element.SetType(1);
+      else
+        Element.SetType(0);
+
+      FilesList.AddControl(NewID);
+    }
+
+    m_Files = Dirs + Files;
+    // Update DriveComboText
+    Component DriveComboField = GetObject("DriveComboField");
+    if (null != DriveComboField)
+    {
+      final Array PathItems = m_FileBrowser.CurrentDir.Tokenize(L"\\");
+
+      DriveComboField.SetTitle(PathItems[PathItems.size() - 1]);
+
+      if (PathItems.size() > 1)
+        DriveComboField.SetType(2);     // Opened folder
+      else
+        DriveComboField.SetType(3);     // Hard drive
+    }
+    m_MusicFolder = m_FileBrowser.CurrentDir;
+  }
+
+  void UpdatePlayList()
+  {
+    UpdatePlayList(DefaultElementProps);
+  }
+
+  void UpdatePlayList(
+      Array _ElementProps
+    )
+  {
+    Component PlayList = GetObject("PlayList");
+
+    variant State = PlayList.GetState();
+
+    PlayList.ClearWithUnregister();
+    PlayList.SetListScrollStep(14.0 / 768.0);
+    PlayList.SelectItemByIndex(-1);
+
+    final Array Musics = m_MusicController.Playlist;
+
+    Component Position = new CUIPosition(0.0, 0.0, 512.0 / 1024.0, 20.0 / 768.0);
+    
+    for (int i = 0; i < Musics.size(); i++)
+    {
+      final String NewID = "PlayListItem_" + new String(i);
+      Component Element = CreateUIControl(
+          NewID, 
+          "", 
+          "CUIPlaylistElement", 
+          Position, 
+          clone(_ElementProps)
+        );
+
+      final WString MusicFile = Musics[i];
+
+      Element.SetFileName(m_PlayList[i]);
+
+      Array MusicInfo = m_MusicController.GetMusicInfo(MusicFile);
+      if (ST_ARRAY == getVariableType(MusicInfo))
+      {
+        Element.SetDuration(MusicInfo[0]);
+        Element.SetTitle(MusicInfo[1], MusicInfo[2]);
+      }
+      else
+        Element.SetTitle(L"", L"");
+
+      Element.UpdateHint();
+
+      PlayList.AddControl(NewID);
+    }
+
+    PlayList.SetState(State);
+
+    OnCurrentMusicChanged();
+  }
+
+  //
+  // Settings
+  //
+
+  void GetSettings()
+  {
+    Component GameSettings = new #GameSettings();
+
+    m_MusicFolder = GameSettings.GetUserValue(L"MusicDir", L"");
+    if (m_MusicFolder == L"")
+    {
+      m_MusicFolder = m_DefaultFolder;
+      m_FileBrowser.CurrentDir = m_MusicFolder;
+      UpdateFilesList();
+      m_PlayList = [];
+      m_MusicController.Playlist = [];
+      for (int i = 0; i < m_Files.size(); i++)
+        if (-1 == m_FileBrowser.GetDirsList().find(m_Files[i]))
+        {
+          m_PlayList.add(m_Files[i]);
+          m_MusicController.Playlist = m_MusicController.Playlist + [m_FileBrowser.CurrentDir + m_Files[i]];
+        }
+
+      UpdatePlayList();
+      m_MusicController.SaveSettings();
+      new #GameSettings().SetUserValue(L"MusicDir", m_MusicFolder);
+      m_IsMusicSettingsChanged = false;
+    }
+
+    GetObject("h_effects").SetScrollPhase(GameSettings.GetSoundFxVolume());
+    GetObject("h_music").SetScrollPhase(GameSettings.GetMusicVolume());
+  }
+
+  void SetSettings()
+  {
+    Component GameSettings = new #GameSettings();
+
+    GameSettings.SetSoundFxVolume(GetObject("h_effects").GetScrollPhase());
+    GameSettings.SetMusicVolume(GetObject("h_music").GetScrollPhase());
+  }
+
+  void CheckChanges()
+  {
+    Component GameSettings = new #GameSettings();
+
+    boolean IsChanged = 
+      iround(GameSettings.GetSoundFxVolume()*100) != iround(m_SoundVolume*100) ||
+      iround(GameSettings.GetMusicVolume()*100)   != iround(m_MusicVolume*100) ||
+      m_IsMusicSettingsChanged;
+
+    GetObject("ApplyButton").SetDisabled(!IsChanged);
+  }
+
+  void ApplySettings()
+  {
+    Component GameSettings = new #GameSettings();
+    m_FileBrowser.CurrentDir = m_MusicFolder;
+    m_PlayList = m_FileBrowser.GetFilesList();
+
+    UpdatePlayList();
+    m_SoundVolume = GameSettings.GetSoundFxVolume();
+    m_MusicVolume = GameSettings.GetMusicVolume();
+  }
+
+  void CancelSettings()
+  {
+    Component GameSettings = new #GameSettings();
+
+    GameSettings.SetSoundFxVolume(m_SoundVolume);
+    GameSettings.SetMusicVolume(m_MusicVolume);
+  }
+
+  void ResetSettings()
+  {
+    Component GameSettings = new #GameSettings();
+    
+    GameSettings.SetSoundFxVolume(CGameSettings::SoundVolume);
+    GameSettings.SetMusicVolume(CGameSettings::MusicVolume);
+
+    GetSettings();
+  }
+}

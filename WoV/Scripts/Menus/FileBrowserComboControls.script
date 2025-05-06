@@ -1,0 +1,45 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+//                                                                   
+//  Automatically-generated menu script file                         
+//  DO NOT EDIT!                                                     
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class CFileBrowserComboControls
+{
+  static String m_ControlListClassFile = "Scripts/Menus/FileBrowserComboControls.script";
+  static String m_ControlListClassName = "CFileBrowserComboControls";
+
+  static Array m_UIControls = [
+    [
+      "CancelContextMenuButton",
+      "BitmapButton",
+      "CUIButton",
+      new CUIPosition(
+          0.000000,
+          0.000000,
+          1.000000,
+          1.000000
+        ),
+      [
+        ["Z", 0.0, false],
+        ["MaterialNormal", "Invisible", false],
+        ["MaterialHilited", "Invisible", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.000000, false],
+        ["Alignment", 0.500000, true],
+        ["Text", ["Menu", "str_EMPTY_STRING"], false],
+        ["NormalTextColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), false],
+        ["HilitedTextColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), false]
+      ]
+    ]
+  ];
+}

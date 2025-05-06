@@ -1,0 +1,505 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CCommonStatusScreen
+{
+  Array Fonts = [];
+
+  float ScaleX = 128.0 / 800.0;
+  float ScaleY = 128.0 / 600.0;
+
+  float HPixels = 800.0f;
+  float VPixels = 600.0f;
+
+  int CurrentMode = 800;
+
+  Array Devices =
+    [
+      [ "PilotFirst",
+        [ 506.5 / 800.0, 59.5 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "pilot first", 0 ]
+      ],
+      [ "PilotSecond",
+        [ 511.5 / 800.0, 61.5 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "pilot second", 0 ]
+      ],
+      [ "GunnerLeft",
+        [ 543.25 / 800.0, 70.95 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "gunner left", 0 ]
+      ],
+      [ "GunnerRight",
+        [ 532.25 / 800.0, 68.75 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "gunner right", 0 ]
+      ],
+      [ "Engine",
+        [ 564.5 / 800.0, 38.5 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "engine", 0 ]
+      ],
+      [ "Transmission",
+        [ 567.5 / 800.0, 40.5 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "transmission", 0 ]
+      ],
+      [ "FuelTank",
+        [ 563.25 / 800.0, 75.75 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "fuel tank", 0 ]
+      ],
+      [ "MainRotor",
+        [ 478.5 / 800.0, 15.5 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "rotor", 0 ]
+      ],
+      [ "TailRotor",
+        [ 743.5 / 800.0,  5.5 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "tail rotor", 0 ]
+      ],
+      [ "TailRail",
+        [ 608.5 / 800.0, 34.5 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "tail rotor transmission", 0 ]
+      ]
+    ];
+
+  Component MatManager = new #MaterialManager<CCockpitSkin>();
+
+  Array WireframeHeli  = [ 479.5 / 800.0, 0.5 / 600.0, "N", "N", "N", "N", ScaleX, ScaleY, "heli base", 0 ];
+
+  void CCommonStatusScreen(
+      int _Width,
+      int _Height
+    )
+  {
+    MatManager.EnableReload = false; // new script and MatManager instances will be created instead of reloading
+                                     // to be sure we have proper order of applying new screen dims
+
+    float NewHPixels = 800.0;
+    float NewVPixels = 600.0;
+    int   NewMode    = 800;
+
+    float X0 = WireframeHeli[0];
+    float Y0 = WireframeHeli[1];
+
+    if (_Width <= 800)
+    {
+      NewMode    = 800;
+      NewHPixels = 800.0;
+      NewVPixels = 600.0;
+    }
+    else
+    if (_Width <= 1024)
+    {
+      NewMode    = 1024;
+      NewHPixels = 1024;
+      NewVPixels = 768;
+    }
+    else
+    {
+      NewMode    = 1280;
+      NewHPixels = 1280;
+      NewVPixels = 960;
+    }
+
+    if (NewMode == CurrentMode)
+      return;
+
+    float HKoeff = NewHPixels / HPixels;
+    float VKoeff = NewVPixels / VPixels;
+
+    for (int i = 0; i < Devices.size(); i++)
+    {
+      Devices[i][1][6] = Devices[i][1][6] / HKoeff;
+      Devices[i][1][7] = Devices[i][1][7] / VKoeff;
+    }
+
+    WireframeHeli[6] = WireframeHeli[6] / HKoeff;
+    WireframeHeli[7] = WireframeHeli[7] / VKoeff;
+
+    CurrentMode = NewMode;
+    HPixels = NewHPixels;
+    VPixels = NewVPixels;
+    logMessage("current CCommonStatusScreen mode " + new String(CurrentMode));
+  }
+
+  void CCommonStatusScreen()
+  {
+    CCommonStatusScreen(800, 600);
+  }
+
+  boolean IsShouldBeReloaded(
+      int _Width,
+      int _Height
+    )
+  {
+    if (_Width <= 800)
+    {
+      return (CurrentMode != 800);
+    }
+    else
+    if (_Width <= 1024)
+    {
+      return (CurrentMode != 1024);
+    }
+    else
+    {
+      return (CurrentMode != 1280);
+    }
+  }
+
+}
+
+class CockpitPilotControls
+{
+  final static Array Switchers = [
+				   ["RMISlave",              0.520, 1.0f - 0.385, 0.494, 1.0f - 0.340, "OnRMISwitch", "GeneralSwitch"],
+				   ["AlarmSwitch",	     0.653, 1.0f - 0.053, 0.634, 1.0f - 0.032, "OnAlarmSwitch", "GeneralButton"],
+                                   // pedestal
+                                   // Caution panel
+                                   ["ResetTest",             0.921, 1.0f - 0.900, 0.868, 1.0f - 0.863, "OnResetTestSwitch", "GeneralSwitch"],
+                                   // engine panel
+                                   ["LowRpmAudio",           0.701, 1.0f - 0.859, 0.751, 1.0f - 0.891, "OnLowRpmAudioSwitch", "GeneralSwitch"],
+                                   ["Fuel",                  0.701, 1.0f - 0.959, 0.751, 1.0f - 0.933, "OnFuelSwitch", "GeneralSwitch"],
+                                   ["AuxFuelLeft",           0.650, 1.0f - 0.853, 0.695, 1.0f - 0.887, "OnAuxFuelLeftSwitch", "GeneralSwitch"],
+                                   ["AuxFuelRight",          0.650, 1.0f - 0.887, 0.695, 1.0f - 0.910, "OnAuxFuelRightSwitch", "GeneralSwitch"],
+                                   ["DeIce",                 0.650, 1.0f - 0.910, 0.695, 1.0f - 0.933, "", "GeneralSwitch"],
+                                   ["Gov",                   0.696, 1.0f - 0.989, 0.649, 1.0f - 0.960, "OnGovSwitch", "GeneralSwitch"],
+                                   // m-158 panel
+                                   ["Armament",              0.648, 1.0f - 0.894, 0.602, 1.0f - 0.858, "OnArmamentSwitch", "GeneralSwitch"],
+                                   ["RktPair",               0.650, 1.0f - 0.934, 0.606, 1.0f - 0.907, "OnRktPairSwitch", "GeneralSwitch"],
+                                   ["RktReset",              0.606, 1.0f - 0.949, 0.596, 1.0f - 0.940, "OnRktResetSwitch", "GeneralSwitch"],
+                                   // extended power panel
+                                   ["PanelPower",            0.256, 1.0f - 0.905, 0.205, 1.0f - 0.871, "OnPanelPowerSwitch", "GeneralSwitch"],
+                                   ["CrewCall",              0.249, 1.0f - 0.982, 0.217, 1.0f - 0.950, "OnCrewCallSwitch", ""],
+
+                                   // ac power panel
+                                   ["MissionINVTR",          0.890, 1.0f - 0.646, 0.800, 1.0f - 0.610, "OnMissionINVTRSwitch", "GeneralSwitch"],
+                                   ["GNDPWR",                0.885, 1.0f - 0.688, 0.805, 1.0f - 0.657, "OnGNDPWRSwitch", "GeneralSwitch"],
+                                   // extra engine panel
+                                   ["ChipDet",               0.994, 1.0f - 0.857, 0.932, 1.0f - 0.887, "", "GeneralSwitch"],
+                                   ["Cut",                   0.978, 1.0f - 0.923, 0.935, 1.0f - 0.895, "", "GeneralSwitch"],
+                                   ["ForceTrim",             0.918, 1.0f - 0.926, 0.985, 1.0f - 0.951, "", "GeneralSwitch"],
+                                   ["HydCont",               0.921, 1.0f - 0.960, 0.985, 1.0f - 0.991, "", "GeneralSwitch"],
+                                   // FM panel
+                                   ["FMRadio",               0.295, 1.0f - 0.849, 0.250, 1.0f - 0.798, "OnFMRadioSwitch", "GeneralSwitch"]
+                                 ];
+
+  final static float Dx1 = 0.014;
+
+  final static float X0 = 0.766;
+
+  final static float Y1 = 1.0f - 0.902;
+  final static float Y0 = 1.0f - 0.944;
+  final static float Y2 = 1.0f - 0.984;
+
+  final static Array Lighters  = [
+                                   ["AltimeterCodeOFF",      0.924, 1.0f - 0.118, 0.915, 1.0f - 0.109],
+				   ["AltimeterLOW",          0.749, 1.0f - 0.265, 0.723, 1.0f - 0.247],
+				   ["AltimeterEnabled",      0.716, 1.0f - 0.238, 0.705, 1.0f - 0.231],
+				   ["OMNIEnabled",   	     0.618, 1.0f - 0.458, 0.666, 1.0f - 0.480],
+                                   ["RMIAnnunicator",        0.856, 1.0f - 0.225, 0.840, 1.0f - 0.210],
+				   ["LowRPM",        	     0.576, 1.0f - 0.050, 0.616, 1.0f - 0.031],
+				   ["MessInd",	     	     0.405, 1.0f - 0.073, 0.368, 1.0f - 0.056],
+				   ["RadioScript",	     0.479, 1.0f - 0.087, 0.460, 1.0f - 0.067],
+				   ["FireAlarm",	     0.708, 1.0f - 0.053, 0.670, 1.0f - 0.033],
+				   ["SystemAlarm",	     0.451, 1.0f - 0.049, 0.407, 1.0f - 0.032],
+                                   // pedestal
+                                   // Caution panel
+                                   // left part
+                                   ["EngineOilPress",        X0 + 9.0 * Dx1, Y0, X0 + 10.0 * Dx1, Y1],
+                                   ["EngineChipDet",         X0 + 6.0 * Dx1, Y0, X0 + 7.0 * Dx1, Y1],
+                                   ["LeftFuelBoost",         X0 + 5.0 * Dx1, Y0, X0 + 6.0 * Dx1, Y1],
+                                   ["RightFuelBoost",        X0 + 4.0 * Dx1, Y0, X0 + 5.0 * Dx1, Y1],
+                                   ["EngFuelPump",           X0 + 3.0 * Dx1, Y0, X0 + 4.0 * Dx1, Y1],
+                                   ["20MinFuel",             X0 + 2.0 * Dx1, Y0, X0 + 3.0 * Dx1, Y1],
+                                   ["FuelFilter",            X0 + 1.0 * Dx1, Y0, X0 + 2.0 * Dx1, Y1],
+                                   ["GovEmer",               X0 + 0.0 * Dx1, Y0, X0 + 1.0 * Dx1, Y1],
+                                   // right part
+                                   ["AuxFuelLow",            X0 + 9.0 * Dx1, Y2, X0 + 10.0 * Dx1, Y0],
+                                   ["XmsnOilPress",          X0 + 8.0 * Dx1, Y2, X0 + 9.0 * Dx1, Y0],
+                                   ["XmsnOilHot",            X0 + 7.0 * Dx1, Y2, X0 + 8.0 * Dx1, Y0],
+                                   ["HydPressure",           X0 + 6.0 * Dx1, Y2, X0 + 7.0 * Dx1, Y0],
+                                   ["EngineInletAir",        X0 + 5.0 * Dx1, Y2, X0 + 6.0 * Dx1, Y0],
+                                   ["InstInverterAC",        X0 + 4.0 * Dx1, Y2, X0 + 5.0 * Dx1, Y0],
+                                   ["DCGenerator",           X0 + 3.0 * Dx1, Y2, X0 + 4.0 * Dx1, Y0],
+                                   ["ExternalPower",         X0 + 2.0 * Dx1, Y2, X0 + 3.0 * Dx1, Y0],
+                                   ["ChipDetector",          X0 + 1.0 * Dx1, Y2, X0 + 2.0 * Dx1, Y0]
+                                 ];
+}
+
+class CockpitCoPilotControls
+{
+  final static Array Switchers = [
+				   ["RMISlave",              0.526, 1.0f - 0.389, 0.497, 1.0f - 0.340, "OnRMISwitch", "GeneralSwitch"],
+				   ["AlarmSwitch",	     0.631, 1.0f - 0.029, 0.658, 1.0f - 0.054, "OnAlarmSwitch", "GeneralButton"],
+                                   // pedestal
+                                   // Caution panel
+                                   ["ResetTest",             0.073, 1.0f - 0.805, 0.119, 1.0f - 0.835, "OnResetTestSwitch", "GeneralSwitch"],
+                                   // engine panel
+                                   ["LowRpmAudio",           0.239, 1.0f - 0.806, 0.296, 1.0f - 0.840, "OnLowRpmAudioSwitch", "GeneralSwitch"],
+                                   ["Fuel",                  0.242, 1.0f - 0.733, 0.297, 1.0f - 0.769, "OnFuelSwitch", "GeneralSwitch"],
+                                   ["AuxFuelLeft",           0.297, 1.0f - 0.810, 0.344, 1.0f - 0.838, "OnAuxFuelLeftSwitch", "GeneralSwitch"],
+                                   ["AuxFuelRight",          0.297, 1.0f - 0.809, 0.344, 1.0f - 0.786, "OnAuxFuelRightSwitch", "GeneralSwitch"],
+                                   ["DeIce",                 0.297, 1.0f - 0.785, 0.344, 1.0f - 0.760, "", "GeneralSwitch"],
+                                   ["Gov",                   0.350, 1.0f - 0.743, 0.297, 1.0f - 0.708, "OnGovSwitch", "GeneralSwitch"],
+                                   // m-158 panel
+                                   ["Armament",              0.346, 1.0f - 0.800, 0.404, 1.0f - 0.838, "OnArmamentSwitch", "GeneralSwitch"],
+                                   ["RktPair",               0.365, 1.0f - 0.768, 0.394, 1.0f - 0.801, "OnRktPairSwitch", "GeneralSwitch"],
+                                   ["RktReset",              0.401, 1.0f - 0.766, 0.391, 1.0f - 0.755, "OnRktResetSwitch", "GeneralSwitch"],
+                                   // extended power panel
+                                   ["PanelPower",            0.792, 1.0f - 0.828, 0.739, 1.0f - 0.793, "OnPanelPowerSwitch", "GeneralSwitch"],
+                                   ["CrewCall",              0.781, 1.0f - 0.752, 0.751, 1.0f - 0.718, "OnCrewCallSwitch", ""],
+                                   // ac power panel
+                                   ["MissionINVTR",          0.115, 1.0f - 0.566, 0.200, 1.0f - 0.596, "OnMissionINVTRSwitch", "GeneralSwitch"],
+                                   ["GNDPWR",                0.115, 1.0f - 0.534, 0.181, 1.0f - 0.559, "OnGNDPWRSwitch", "GeneralSwitch"],
+                                   // extra engine panel
+                                   ["ChipDet",               0.005, 1.0f - 0.801, 0.071, 1.0f - 0.840, "", "GeneralSwitch"],
+                                   ["Cut",                   0.068, 1.0f - 0.800, 0.008, 1.0f - 0.772, "", "GeneralSwitch"],                                     
+                                   ["ForceTrim",             0.071, 1.0f - 0.764, 0.008, 1.0f - 0.740, "", "GeneralSwitch"],
+                                   ["HydCont",               0.071, 1.0f - 0.739, 0.010, 1.0f - 0.714, "", "GeneralSwitch"],
+                                   // FM panel
+                                   ["FMRadio",               0.749, 1.0f - 0.889, 0.702, 1.0f - 0.859, "OnFMRadioSwitch", "GeneralSwitch"]
+   				 ];
+
+  final static float Dx1 = 0.014;
+
+  final static float X0 = 0.090;
+
+  final static float Y2 = 1.0f - 0.720;
+  final static float Y0 = 1.0f - 0.762;
+  final static float Y1 = 1.0f - 0.803;
+
+  final static Array Lighters  = [
+                                   ["AltimeterLOW",   0.764, 1.0f - 0.270, 0.736, 1.0f - 0.239],
+				   ["RMIAnnunicator", 0.863, 1.0f - 0.224, 0.849, 1.0f - 0.209],
+				   ["LowRPM",  	      0.622, 1.0f - 0.053, 0.574, 1.0f - 0.028],
+                                   ["MessInd",	      0.409, 1.0f - 0.075, 0.362, 1.0f - 0.051],
+				   ["RadioScript",    0.482, 1.0f - 0.085, 0.461, 1.0f - 0.068],
+				   ["FireAlarm",      0.714, 1.0f - 0.052, 0.665, 1.0f - 0.031],                                     
+				   ["SystemAlarm",    0.454, 1.0f - 0.048, 0.403, 1.0f - 0.029],
+    
+                                   // pedestal
+                                   // Caution panel
+                                   // left part
+                                   ["EngineOilPress",        X0 + 0.0 * Dx1, Y0, X0 + 1.0 * Dx1, Y1],
+                                   ["EngineChipDet",         X0 + 3.0 * Dx1, Y0, X0 + 4.0 * Dx1, Y1],
+                                   ["LeftFuelBoost",         X0 + 4.0 * Dx1, Y0, X0 + 5.0 * Dx1, Y1],
+                                   ["RightFuelBoost",        X0 + 5.0 * Dx1, Y0, X0 + 6.0 * Dx1, Y1],
+                                   ["EngFuelPump",           X0 + 6.0 * Dx1, Y0, X0 + 7.0 * Dx1, Y1],
+                                   ["20MinFuel",             X0 + 7.0 * Dx1, Y0, X0 + 8.0 * Dx1, Y1],
+                                   ["FuelFilter",            X0 + 8.0 * Dx1, Y0, X0 + 9.0 * Dx1, Y1],
+                                   ["GovEmer",               X0 + 9.0 * Dx1, Y0, X0 + 10.0 * Dx1, Y1],
+                                   // right part
+                                   ["AuxFuelLow",            X0 + 0.0 * Dx1, Y2, X0 + 1.0 * Dx1, Y0],
+                                   ["XmsnOilPress",          X0 + 1.0 * Dx1, Y2, X0 + 2.0 * Dx1, Y0],
+                                   ["XmsnOilHot",            X0 + 2.0 * Dx1, Y2, X0 + 3.0 * Dx1, Y0],
+                                   ["HydPressure",           X0 + 3.0 * Dx1, Y2, X0 + 4.0 * Dx1, Y0],
+                                   ["EngineInletAir",        X0 + 4.0 * Dx1, Y2, X0 + 5.0 * Dx1, Y0],
+                                   ["InstInverterAC",        X0 + 5.0 * Dx1, Y2, X0 + 6.0 * Dx1, Y0],
+                                   ["DCGenerator",           X0 + 6.0 * Dx1, Y2, X0 + 7.0 * Dx1, Y0],
+                                   ["ExternalPower",         X0 + 7.0 * Dx1, Y2, X0 + 8.0 * Dx1, Y0],
+                                   ["ChipDetector",          X0 + 8.0 * Dx1, Y2, X0 + 9.0 * Dx1, Y0]
+                                 ];  
+}
+
+
+class CCockpitAnimManager
+{
+  final static int INDEX_Name      = 0;
+  final static int INDEX_Time      = 1;
+  final static int INDEX_ResetFlag = 2;
+  final static int INDEX_IsCircle  = 3;
+
+  final static int INDEX_Animator  = 4;
+  final static int INDEX_Phase     = 5;
+
+  boolean m_Enabled = true;
+
+  Array AnimInfo = new Array(
+                 [                                      
+                   ["torque_cursor",               4.0 , true, false],
+                   ["psifuel_cursor",              10.0, true, false],
+                   ["hsi_ball",                    1.0, false, false],
+                   ["hsi_arrow",                   5.0, false, false],
+                   ["M60_hsi_bank",                2.0, false, false],
+                   ["alt_cursor",                  1.0, true, true],
+                   ["RMI_Scale_Slave",             1.0, false, true],
+                   ["RMI_Scale_Master",            1.0, false, true],
+                   ["compass",                     1.0, false, true],
+                   ["Omni_Scale",                  1.0, false, true],
+                   ["tangage",                     0.0, true, true],
+                   ["bank",                        0.0, true, true],
+                   ["vertspeed_cursor",            1.0, true, false],
+                   ["Omni_VertLine",               5.0, true, false],
+                   ["Omni_HorLine",                5.0, true, false],
+                   ["speedometer_cursor",          5.0, true, false],
+                   ["toil_transmission_cursor",    60.0, true, false],
+                   ["psioil_transmission_cursor",  200.0, true, false],                   
+                   ["qtyfuel_cursor",              60.0, true, false],                   
+                   ["wheel3_100",                  5.0, false, true],
+                   ["wheel2_100",                  5.0, false, true],
+                   ["wheel1_100",                  5.0, false, true],
+                   ["radioalt_cursor",             4.0, true, false],
+                   ["RMI_BigArrow_Slave",          4.0, true, false],
+                   ["RMI_BigArrow_Master",         4.0, true, false],
+                   ["RMI_SmallArrow_Slave",        4.0, true, false],
+                   ["RMI_SmallArrow_Master",       4.0, true, false],
+                   ["toil_cursor",                 60.0, true, false],
+                   ["psiengineoil_cursor",         200.0, true, false],
+                   ["turbine_cursor",              6.0, true, false],
+                   ["rotor_cursor",                6.0, true, false],
+                   ["mrpm_turbine_cursor",         4.0, true, false],
+                   ["lrpm_turbine_cursor",         0.0, true, true],
+                   ["direct_current_cursor",       4.0, true, false],
+                   ["alternate_current_cursor",    4.0, true, false],
+                   ["load_gen_cursor",             4.0, true, false],
+                   ["load_conv_cursor",            4.0, true, false],
+                   ["temp_cursor",                 300.0, true, false]  
+              ]);
+  
+  CCockpitAnimManager(
+      Component _HostObject,
+      Component _CockpitModel
+    )
+  {    
+    for (int iAnim = 0; iAnim < AnimInfo.size(); iAnim++)
+    {
+      Array Info = AnimInfo[iAnim];
+
+      Component Animator = new #RangeAnimator();
+      setSlaveObject(Animator, _CockpitModel);
+      _HostObject.RegisterObject("ANIMATOR_" + Info[INDEX_Name], Animator); 
+
+      Animator.SetFixedTime(true);
+      Animator.SetAnimationName(Info[INDEX_Name]);
+      Animator.SetAnimationTime(Info[INDEX_Time]);
+      Animator.SetCircleAnimation(Info[INDEX_IsCircle]);
+      Info.add(Animator);
+      Info.add(0.0f); // phase
+
+      Animator.AnimateTo(0.0f);
+    }    
+  }
+
+  int GetIndex(
+      String _AnimName
+    )
+  {
+    for (int iAnim = 0; iAnim < AnimInfo.size(); iAnim++)  
+      if (AnimInfo[iAnim][INDEX_Name] == _AnimName)
+        return iAnim;
+
+    logError("Animation " + _AnimName + " in cockpit manager is not found");
+
+    return -1;
+  }
+  
+  void Enable(
+      boolean _Enable
+    )
+  {
+    if (m_Enabled == _Enable)
+      return;
+
+    m_Enabled = _Enable;
+
+    for (int iAnim = 0; iAnim < AnimInfo.size(); iAnim++)
+    {
+      Array Info  = AnimInfo[iAnim];
+      if (Info[INDEX_ResetFlag])
+      {
+        float Phase = 0.0f;
+        if (_Enable)
+        {
+          Phase = Info[INDEX_Phase];
+          Info[INDEX_Animator].SetAnimationTime(Info[INDEX_Time]);
+        }        
+        else
+          Info[INDEX_Animator].SetAnimationTime(2.0f);
+          
+        Info[INDEX_Animator].AnimateTo(Phase);
+      }
+    }    
+  }
+
+  void AnimateTo(
+      int    _Index,
+      float  _Phase
+    )
+  {
+    if (_Index == -1)
+      return;
+
+    Array Info = AnimInfo[_Index];
+
+    if (m_Enabled)
+    {
+      Info[INDEX_Animator].SetAnimationTime(Info[INDEX_Time]);
+      if (abs(_Phase - Info[INDEX_Phase]) < 0.9f)
+        Info[INDEX_Animator].AnimateTo(_Phase);
+      else
+        Info[INDEX_Animator].SetCurrentPhase(_Phase);
+    }
+
+    Info[INDEX_Phase] = _Phase;
+  }  
+
+  void AnimateTo(
+      int    _Index,
+      float  _Phase,
+      float  _Time
+    )
+  {
+    if (_Index == -1)
+      return;
+
+    Array Info = AnimInfo[_Index];
+
+    if (m_Enabled)
+    {
+      Info[INDEX_Animator].SetAnimationTime(_Time);
+      if (abs(_Phase - Info[INDEX_Phase]) < 0.9f)
+        Info[INDEX_Animator].AnimateTo(_Phase);
+      else
+        Info[INDEX_Animator].SetCurrentPhase(_Phase);
+    }
+
+    Info[INDEX_Phase] = _Phase;
+  }  
+
+  boolean IsAnimating(
+      int _Index
+    )
+  {
+    if (_Index == -1)
+      return false;
+
+    if (!m_Enabled)
+      return false;
+
+    return AnimInfo[_Index][INDEX_Animator].IsAnimating();
+  }
+
+  boolean GetCurrentPhase(
+      int _Index
+    )
+  {
+    if (_Index == -1)
+      return 0.0;
+
+    return AnimInfo[_Index][INDEX_Phase];
+  }
+}
+
+class CCockpitInfoMsgBar
+{
+  boolean UseTimerBar = false;
+
+  Component MatManager = new #MaterialManager<CCockpitSkin>();
+  Array Fonts = [
+      [ "Arial", 0.022 ]
+    ];
+  Array MessageBars = [
+    [ 0.0f, 0.0f, "N", "N", "N", "C", 0, L"" ], // SPEED
+    [ 0.0f, 0.3f, "N", "N", "N", "C", 0, L"" ], // AUTO
+    [ 0.0f, 0.6f, "N", "N", "N", "C", 0, L"" ], // PAUSE
+    [ 0.0f, 0.9f, "N", "N", "N", "C", 0, L"" ]  // MUSIC
+  ];
+
+  final static int MSG_GAMESPEED  = 0;
+  final static int MSG_AUTOPILOT  = 1;
+  final static int MSG_PAUSE      = 2;
+  final static int MSG_MUSIC      = 3;
+}
+

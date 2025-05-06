@@ -1,0 +1,83 @@
+class CC1M9Watcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "NavPoint_MainPlayerUnitLandingBase";     // кто следимт
+  final static Array  ControlPoints = ["MainPlayerUnit"];                       // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                   4427.084961,     //  NavPoint_WayMainPlayerUnit_6
+                                   4767.422852,     //  NavPoint_WayMainPlayerUnit_1
+                                   10021.006836,     //  NavPoint_WayMainPlayerUnit_5
+                                   10231.767578,    //  NavPoint_WayMainPlayerUnit_2
+                                   15641.064453,     //  NavPoint_WayMainPlayerUnit_4
+                                   15993.073242    //  NavPoint_WayMainPlayerUnit_3
+                                  ];
+/*
+ NavPoint_WayMainPlayerUnit_1 = 4767.422852
+ NavPoint_WayMainPlayerUnit_2 = 10231.767578
+ NavPoint_WayMainPlayerUnit_3 = 15993.948242
+ NavPoint_MainPlayerUnit_Attack_1 = 17176.746094
+ NavPoint_MainPlayerUnit_Attack_2 = 16931.152344
+ NavPoint_MainPlayerUnit_OutputAttack_1 = 16662.257813
+ NavPoint_MainPlayerUnit_OutputAttack_2 = 16906.156250
+ NavPoint_WayMainPlayerUnit_4 = 15641.942383
+ NavPoint_WayMainPlayerUnit_5 = 10021.170898
+ NavPoint_WayMainPlayerUnit_6 = 4427.964844
+ */
+
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+  final static int ZoneMask2 = 4;
+  final static int ZoneMask3 = 8;
+  final static int ZoneMask4 = 16;
+  final static int ZoneMask5 = 32;
+  final static int ZoneMask6 = 64;
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M9Watcher::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logError( "(NavPoint_MainPlayerUnitLandingBase-MainPlayerUnit)=  " + new String(GetMission().distance("NavPoint_MainPlayerUnitLandingBase", "MainPlayerUnit")));
+      logError("[AutoPilot path] PathID=" + new String(GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()));
+    }
+
+
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1")
+    {
+      if (_RegionMask == 62 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M9PlayerMovingTo"]);
+      if (_RegionMask == 56 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M9PlayerHalfMovingTo"]);
+    }
+
+
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer2")
+    {
+      if (_RegionMask == 48 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M9PlayerMovingBack"]);
+      if (_RegionMask == 56 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M9PlayerHalfMovingBack"]);
+
+    }
+
+  }
+}
+
+
+

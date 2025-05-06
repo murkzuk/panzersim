@@ -1,0 +1,147 @@
+ class C1M4PeasantTaskStay extends CBasePeasantTask
+ {
+  void Init()
+  {
+     ActivateBehavior(false);
+  }
+ }
+
+
+class C1M4WingmanTask extends CWingmanTask
+{
+  event void ToHome()
+  {
+    logError(m_LeaderID);
+    SetEnemyReactionType(ERT_FRIGID);
+    Wingman_Follow(m_LeaderID);
+  }
+}
+
+
+ class C1M4GroupUnit_VietnamesePeasant_Village_1 extends CBaseUnitGroup
+ {
+   void Init()
+   {
+     CBaseUnitGroup::Init();
+     ActivateFire(false);
+   }
+ }
+
+ class C1M4GroupUnit_VietnamesePeasant_Village_2 extends CBaseUnitGroup
+ {
+   static String NavPointTeleport1 = "NavPoint_Teleport_VietnameseBase_1";
+   static String NavPointTeleport2 = "NavPoint_Teleport_VietnameseBase_2";
+   static float  _ChooseNavPoint    = 0.5;
+
+   void Init()
+   {
+     CBaseUnitGroup::Init();
+     ActivateMovement(false);
+     ForEachUnitTask("ShowUnit", [false]);
+   }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    Matrix NewPos;
+    if (rand(0.0, 1.0) >= _ChooseNavPoint)
+        NewPos = getPosition((new #GameController()).GetObject(NavPointTeleport1));
+    else
+        NewPos = getPosition((new #GameController()).GetObject(NavPointTeleport2));
+
+    if (checkMask(_UnitAlerted, [], [CLASSIFICATOR_DEAD_OBJECT]))
+       _UnitAlerted.SetPosition( NewPos );
+
+    String TargetedUnit = _UnitAlerted.GetTargetedEnemy();
+    if(TargetedUnit.IsStartsWith("MainPlayerUnit"))
+    {
+      _UnitAlerted.ShowUnit(true);
+      _UnitAlerted.ActivateMovement(true);
+    }
+  }
+ }
+
+ class C1M4PeasantTask extends CBasePeasantTask
+ {
+   void OnEnemyTargeted()
+   {
+     m_Group.OnEnemyTargeted(this);
+   }
+ }
+class C1M4SkyRiderTask extends CBaseAITask
+{
+   event void OnBombDetonate(Matrix _Position)
+   {
+     sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M4BombersOnCourse"]);
+   }
+}
+
+class C1M4AmericanSkyRiderGroup extends CBaseUnitGroup
+{
+    void Init()
+    {
+        CBaseUnitGroup::Init();
+        ActivateGroup(false);
+    }
+    // called when Group queue orders is ended
+    void OnQueueOrdersEnd(String _OrderGroupID, Component _UnitTask)
+    {
+        CBaseUnitGroup::OnQueueOrdersEnd(_OrderGroupID, _UnitTask);
+        if (_OrderGroupID == "SpecialBombAttack")
+        {
+            _UnitTask.SetFrigidMode(true);
+            _UnitTask.ActivateBehavior(false);
+            _UnitTask.ShowUnit(false);
+        }
+    }
+
+    //sendEvent(0.0, "GroupUnit_AmericanSkyRiders", "BombAttack", []);
+    event void BombAttack()
+    {
+        ActivateGroup(true);
+
+        SetOrderName("");
+        //logError("Call BombAttack()");
+        Array ApproachPoints = [GetNavPointBehPos("SkyRidersAttackNP_01"),
+                                                        GetNavPointBehPos("SkyRidersAttackNP_02"),
+                                                        GetNavPointBehPos("SkyRidersAttackNP_03")
+                                                        ];
+
+        SetFirstQueueOrders([
+                ["BombAttack", "SetOrder_MoveToEx", [ApproachPoints, 140.0f], ""],
+                ["BombAttack", "Bomben", [], ""]
+                            ]);
+
+        // Behavior.SetOrder_BombAttack(GetNavPointBehPos("SkyRidersAttackNP_03"), Speed, Target, Time, AttackOut);
+    }
+
+    void Bomben()
+    {
+        //logError("Call Bomben()");
+        float    Speed = 100.0;
+        float    Time = 3.0;
+
+        ClearFormation();
+        String Target1 = "SkyRidersBombNPStart_01";
+        Vector AttackOut1 = GetNavPointBehPos("SkyRidersBombNPEnd_01");
+
+        Component Behavior1 = GetUnitBehavior("SkyRider_01");
+
+        if (Behavior1 != null)
+            Behavior1.setOrder_SpecialBombAttack(Behavior1.GetNowPosition(), Speed, Target1, Time, AttackOut1);
+    }
+}
+
+class C1M4_Guardians  extends CBaseUnitGroup
+{
+  void Init()
+  {
+    if(GetMission().isDebug)
+      logWarning("Group  ID=" + getIdentificator(user) + " Guardians INIT ");
+
+    CBaseUnitGroup::Init();
+    ActivateMovement(false);
+    ActivateRadar(false);
+    ActivateFire(false);
+  }
+}
+

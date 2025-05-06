@@ -1,0 +1,235 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CBaseTree
+{
+  // Tree lighting method
+  final static boolean TLM_STATIC  = false;
+  final static boolean TLM_DYNAMIC = true;
+
+  // Tree wind method
+
+  final static int TWM_NONE = 0;
+  final static int TWM_CPU  = 1;
+  final static int TWM_GPU  = 2;
+
+
+  //
+  // Tree parameters
+  //
+  // name of tree model
+  String  TreeModel            = "";
+
+  boolean LeafRocking          = false;
+
+  boolean BranchLightingMethod = TLM_STATIC;
+  boolean FrondLightingMethod  = TLM_STATIC;
+  boolean LeafLightingMethod   = TLM_STATIC;
+
+  int     BranchWindMethod     = TWM_NONE;
+  int     FrondWindMethod      = TWM_NONE;
+  int     LeafWindMethod       = TWM_NONE;
+
+  // Tree size
+  float   TreeSize             = 40.0;
+
+  // Lods distribution
+  Array   ModelLOD             = [40,    70,    140,    200];
+}
+
+//
+// CBambooMD
+//
+
+class CBambooMD
+  extends CBaseTree
+{
+  float  TreeSize  = 10.0;
+  String TreeModel = "Models/Trees/Bamboo_MD.spt";
+  String MaterialID = "bush";
+}
+
+class CBambooMDDestroyed
+  extends CBaseTree
+{
+  float  TreeSize  = 10.0;
+  String TreeModel = "Models/Trees/Bamboo_MDd.spt";
+  String MaterialID = "bush";
+}
+
+//
+// CGimletRT
+//
+
+class CGimletRT
+  extends CBaseTree
+{
+  float  TreeSize  = 10.0;
+  String TreeModel = "Models/Trees/Gimlet_RT.spt";
+}
+
+class CGimletRTDestroyed
+  extends CBaseTree
+{
+  float  TreeSize  = 10.0;
+  String TreeModel = "Models/Trees/Gimlet_RTd.spt";
+}
+
+//
+// CBambooRT
+//
+
+class CBambooRT
+  extends CBaseTree
+{
+  float  TreeSize  = 10.0;
+  String TreeModel = "Models/Trees/Bamboo_RT.spt";
+  String MaterialID = "bush";
+}
+
+class CBambooRTDestroyed
+  extends CBaseTree
+{
+  float  TreeSize  = 10.0;
+  String TreeModel = "Models/Trees/Bamboo_RTd.spt";
+  String MaterialID = "bush";
+}
+
+//
+// CJapaneseMapleRTSummer
+//
+
+class CJapaneseMapleRTSummer
+  extends CBaseTree
+{
+  float  TreeSize  = 6.0;
+  String TreeModel = "Models/Trees/JapaneseMaple_RT_Summer.spt";
+  String MaterialID = "bush";
+}
+
+class CJapaneseMapleRTSummerDestroyed
+  extends CBaseTree
+{
+  float  TreeSize   = 6.0;
+  String TreeModel  = "Models/Trees/JapaneseMaple_RTd_Summer.spt";
+  String MaterialID = "bush";
+}
+
+//
+// CPagodaTreeRT1
+//
+
+class CPagodaTreeRT1
+  extends CBaseTree
+{
+  float  TreeSize  = 8.0;
+  String TreeModel = "Models/Trees/PagodaTree_RT1.spt";
+}
+
+class CPagodaTreeRT1Destroyed
+  extends CBaseTree
+{
+  float  TreeSize   = 8.0;
+  String TreeModel  = "Models/Trees/PagodaTree_RT1D.spt";
+}
+
+//
+// CPagodaTreeRT2
+//
+
+class CPagodaTreeRT2
+  extends CBaseTree
+{
+  float  TreeSize  = 18.0;
+  String TreeModel = "Models/Trees/PagodaTree_RT2.spt";
+}
+
+class CPagodaTreeRT2Destroyed
+  extends CBaseTree
+{
+  float  TreeSize  = 18.0;
+  String TreeModel = "Models/Trees/PagodaTree_RT2d.spt";
+}
+
+//
+// CPagodaTreeRT3
+//
+
+class CPagodaTreeRT3
+  extends CBaseTree
+{
+  float  TreeSize  = 14.0;
+  String TreeModel = "Models/Trees/PagodaTree_RT3.spt";
+}
+
+class CPagodaTreeRT3Destroyed
+  extends CBaseTree
+{
+  float  TreeSize  = 14.0;
+  String TreeModel = "Models/Trees/PagodaTree_RT3d.spt";
+}
+
+//
+// CAmericanBoxwoodRT
+//
+
+class CAmericanBoxwoodRT
+  extends CBaseTree
+{
+  float  TreeSize  = 10.0;
+  String TreeModel = "Models/Trees/AmericanBoxwood_RT.spt";
+  String MaterialID = "bush";
+}
+
+class CAmericanBoxwoodRTDestroyed
+  extends CBaseTree
+{
+  float  TreeSize  = 10.0;
+  String TreeModel = "Models/Trees/AmericanBoxwood_RTd.spt";
+  String MaterialID = "bush";
+}
+
+//
+// CWeepingWillowRT
+//
+
+class CWeepingWillowRT
+  extends CBaseTree
+{
+  float  TreeSize  = 4.0;
+  String TreeModel = "Models/Trees/WeepingWillow_RT.spt";
+}
+
+class CWeepingWillowRTDestroyed
+  extends CBaseTree
+{
+  float  TreeSize  = 4.0;
+  String TreeModel = "Models/Trees/WeepingWillow_RTd.spt";
+}
+
+//
+// CBananaTreeRT
+//
+
+class CBananaTreeRT
+  extends CBaseTree
+{
+  float  TreeSize  = 4.0;
+  String TreeModel = "Models/Trees/BananaTree_RT.spt";
+  String MaterialID = "bush";
+}
+
+class CBananaTreeRTDestroyed
+  extends CBaseTree
+{
+  float  TreeSize  = 4.0;
+  String TreeModel = "Models/Trees/BananaTree_RTd.spt";
+  String MaterialID = "bush";
+}
+

@@ -1,0 +1,232 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CGameEnvironmentMenu
+  extends CBaseMenu, CGameEnvironmentControls
+{
+  static String m_MenuClassName = "CGameEnvironmentMenu";
+
+  final WString m_CustomText = getLocalized("Menu","str_OG_CUSTOM");
+
+  final Array m_DifficultyText = [ 
+                                   getLocalized("Menu","str_OG_EASY"),
+                                   getLocalized("Menu","str_OG_NORMAL"),
+                                   getLocalized("Menu","str_OG_HARD")
+                                 ];
+
+  WString m_MissionText  = getLocalized("Menu","str_CM_MISSION");
+  WString m_OFText       = getLocalized("Menu","str_CM_OF");
+
+  int m_CurrentHelicopter = 0;
+
+  // Helicopter 1 weapons names and description
+  WString m_Heli1_Weapon1_Name        = L"";
+  String  m_Heli1_Weapon1_Image       = "";
+  WString m_Heli1_Weapon1_Description = L"";
+  WString m_Heli1_Weapon2_Name        = L"";
+  String  m_Heli1_Weapon2_Image       = "";
+  WString m_Heli1_Weapon2_Description = L"";
+
+  // Helicopter 2 weapons names and description
+  WString m_Heli2_Weapon1_Name        = L"";
+  String  m_Heli2_Weapon1_Image       = "";
+  WString m_Heli2_Weapon1_Description = L"";
+  WString m_Heli2_Weapon2_Name        = L"";
+  String  m_Heli2_Weapon2_Image       = "";
+  WString m_Heli2_Weapon2_Description = L"";
+
+  void OnInitMenu()
+  {
+    Component Game = new #GameController();
+    Component MenuController = Game.GetMenuController();
+    MenuController.SetDefaultCommands("Fly", "Back");
+
+    Component GameSettings = new #GameSettings();
+    WString Player = GameSettings.GetUserValue(L"CurrentPlayer", L"");
+
+    WString CampaignName = GameSettings.LoadPlayerValue(Player, L"Name", L"");
+    WString PlayerName   = GameSettings.LoadPlayerValue(Player, L"IDName", L"");
+    int Status           = GameSettings.LoadPlayerValue(Player, L"Status", 1);
+    int MaxStatus        = GameSettings.LoadPlayerValue(Player, L"MaxStatus", 1);
+    int Difficulty       = GameSettings.LoadPlayerValue(Player, L"Difficulty", 0);
+    
+    GetObject("CampaignName").SetText(CampaignName);
+    GetObject("PlayerID").SetText(PlayerName);
+    GetObject("MissionNumber").SetText(
+                          m_MissionText + L" " + new WString(Status) + L" " + m_OFText + L" " + new WString(MaxStatus)
+                           );
+
+    if (Difficulty != -1)
+      GetObject("DifficultyText").SetText(m_DifficultyText[Difficulty]);
+    else
+      GetObject("DifficultyText").SetText(m_CustomText);
+
+    GetObject("BriefingText").SetSlaveScroller(GetObject("BriefingScroll"));
+    GetObject("WeaponDescription").SetSlaveScroller(GetObject("DescriptionScroll"));
+
+    FillObjectivesList(0.0);
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    if ("Fly" == _ID)
+    {
+      Component Game = new #GameController();
+      Game.UnloadMission();
+      sendEvent(0.0, SOID_GameController, "BeginNewGame", []);
+    }
+    else
+    if ("Back" == _ID)
+    {
+      if (CMainMenu::DemoMode)
+        GoBack();
+      else
+        Invoke("CampaignMenu");
+    }
+    else
+    if ("BriefingScroll_Arrow1" == _ID)
+      GetObject("BriefingText").ScrollUp();
+    else
+    if ("BriefingScroll_Arrow2" == _ID)
+      GetObject("BriefingText").ScrollDown();
+    else
+    if ("DescriptionScroll_Arrow1" == _ID)
+      GetObject("WeaponDescription").ScrollUp();
+    else
+    if ("DescriptionScroll_Arrow2" == _ID)
+      GetObject("WeaponDescription").ScrollDown();
+    else
+    if ("Heli1" == _ID)
+    {
+      m_CurrentHelicopter = 0;
+      GetObject("Slot1").SetText(m_Heli1_Weapon1_Name);
+      GetObject("Slot2").SetText(m_Heli1_Weapon2_Name);
+      GetObject("Slot1_Image").SetMaterials(m_Heli1_Weapon1_Image, m_Heli1_Weapon1_Image);
+      GetObject("Slot2_Image").SetMaterials(m_Heli1_Weapon2_Image, m_Heli1_Weapon2_Image);
+      GetObject("WeaponDescription").SetText(m_Heli1_Weapon1_Description);
+      GetObject("HeliFrame").SetPosition(0.018749997, 0.296666652);
+      GetObject("SlotFrame").SetPosition(0.338749945, 0.333333254);
+    }
+    else
+    if ("Heli2" == _ID)
+    {
+      m_CurrentHelicopter = 1;
+      GetObject("Slot1").SetText(m_Heli2_Weapon1_Name);
+      GetObject("Slot2").SetText(m_Heli2_Weapon2_Name);
+      GetObject("Slot1_Image").SetMaterials(m_Heli2_Weapon1_Image, m_Heli2_Weapon1_Image);
+      GetObject("Slot2_Image").SetMaterials(m_Heli2_Weapon2_Image, m_Heli2_Weapon2_Image);
+      GetObject("WeaponDescription").SetText(m_Heli2_Weapon1_Description);
+      GetObject("HeliFrame").SetPosition(0.018749997, 0.572666652);
+      GetObject("SlotFrame").SetPosition(0.338749945, 0.333333254);
+    }
+    else
+    if (("Slot1_Image" == _ID) || ("Slot1" == _ID))
+    {
+      if (m_CurrentHelicopter == 0)
+        GetObject("WeaponDescription").SetText(m_Heli1_Weapon1_Description);
+      else
+        GetObject("WeaponDescription").SetText(m_Heli2_Weapon1_Description);
+      GetObject("SlotFrame").SetPosition(0.338749945, 0.333333254);
+    }
+    else
+    if (("Slot2_Image" == _ID) || ("Slot2" == _ID))
+    {
+      if (m_CurrentHelicopter == 0)
+        GetObject("WeaponDescription").SetText(m_Heli1_Weapon2_Description);
+      else
+        GetObject("WeaponDescription").SetText(m_Heli2_Weapon2_Description);
+      GetObject("SlotFrame").SetPosition(0.338749945, 0.451999945);
+    }
+
+    Update(0.0);
+  }
+
+  void FillObjectivesList(
+      float _Z
+    )
+  {
+
+    String MissionClassName = (new #GameController()).m_StartMission;
+    Array Objectives = getStaticClassMember(MissionClassName, "m_MissionObjectives");
+
+    GetObject("CampaignName").SetText(
+        getStaticClassMember(MissionClassName + "_Strings", "str_CampaignName")
+      );
+
+    GetObject("MissionName").SetText(
+        getStaticClassMember(MissionClassName + "_Strings", "str_MissionName")
+      );
+
+    m_Heli1_Weapon1_Name        = getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Weapon1_Name");
+    m_Heli1_Weapon1_Image       = getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Weapon1_Image");
+    m_Heli1_Weapon1_Description = getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Weapon1_Description");
+    m_Heli1_Weapon2_Name        = getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Weapon2_Name");
+    m_Heli1_Weapon2_Image       = getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Weapon2_Image");
+    m_Heli1_Weapon2_Description = getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Weapon2_Description");
+
+    m_Heli2_Weapon1_Name        = getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Weapon1_Name");
+    m_Heli2_Weapon1_Image       = getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Weapon1_Image");
+    m_Heli2_Weapon1_Description = getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Weapon1_Description");
+    m_Heli2_Weapon2_Name        = getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Weapon2_Name");
+    m_Heli2_Weapon2_Image       = getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Weapon2_Image");
+    m_Heli2_Weapon2_Description = getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Weapon2_Description");
+
+    GetObject("Heli1Name").SetText(getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Name"));
+    GetObject("Heli2Name").SetText(getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Name"));
+
+    GetObject("Heli1").SetMaterials(
+                                     getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Image"),
+                                     getStaticClassMember(MissionClassName + "_Strings", "str_Heli1_Image")
+                                   );
+    GetObject("Heli2").SetMaterials(
+                                     getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Image"),
+                                     getStaticClassMember(MissionClassName + "_Strings", "str_Heli2_Image")
+                                   );
+
+    GetObject("Slot1").SetText(m_Heli1_Weapon1_Name);
+    GetObject("Slot2").SetText(m_Heli1_Weapon2_Name);
+
+    GetObject("Slot1_Image").SetMaterials(m_Heli1_Weapon1_Image,m_Heli1_Weapon1_Image);
+    GetObject("Slot2_Image").SetMaterials(m_Heli1_Weapon2_Image,m_Heli1_Weapon2_Image);
+
+    GetObject("WeaponDescription").SetText(m_Heli1_Weapon1_Description);
+
+    WString BriefingText = getStaticClassMember(MissionClassName + "_Strings", "str_BriefingText") + 
+                           L"\n\n" + getLocalized("Menu","str_EM_OBJECTIVES") +
+                           L"\n" + getLocalized("Menu","str_EM_PRIM_OBJECTIVES");
+
+    for (int Index = 0; Index < Objectives.size(); Index++)
+    {
+      if ((Objectives[Index][3]) && (Objectives[Index][0] == CMission::MOTID_Primary))
+        BriefingText = BriefingText + L"\n" + Objectives[Index][1];
+    }
+
+    BriefingText = BriefingText + L"\n" + getLocalized("Menu","str_EM_SEC_OBJECTIVES");
+
+    for (int Index = 0; Index < Objectives.size(); Index++)
+    {
+      if ((Objectives[Index][3]) && (Objectives[Index][0] == CMission::MOTID_Secondary))
+        BriefingText = BriefingText + L"\n" + Objectives[Index][1];
+    }
+
+    GetObject("BriefingText").SetText(BriefingText);
+    
+  }
+
+  void Update(
+      float _DelatTime
+    )
+  {
+    GetObject("BriefingText").Update(); // render time update
+    GetObject("WeaponDescription").Update();
+  }
+
+}

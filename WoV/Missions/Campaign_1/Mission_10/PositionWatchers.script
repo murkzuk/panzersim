@@ -1,0 +1,241 @@
+class CC1M10Watcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "NavPoint_MainPlayerUnitLandingBase";     // кто следит
+  final static Array  ControlPoints = ["MainPlayerUnit"];                       // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                4741.525391,      // NavPoint_WayMainPlayerUnit_1
+                                4802.675293,      // NavPoint_WayMainPlayerUnit_6
+
+                                9961.512695,      // NavPoint_WayMainPlayerUnit_5
+                                10205.709961,     // NavPoint_WayMainPlayerUnit_2
+
+                                15802.295898,     // NavPoint_WayMainPlayerUnit_4
+                                15872.114258      // NavPoint_WayMainPlayerUnit_3
+                                 ];
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+  final static int ZoneMask2 = 4;
+  final static int ZoneMask3 = 8;
+  final static int ZoneMask4 = 16;
+  final static int ZoneMask5 = 32;
+
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  // service
+  boolean IsRing0()
+  {
+    return 0 != (m_RegionMask & ZoneMask0) ;
+  }
+
+  boolean IsRing1()
+  {
+    return 0 == (m_RegionMask & ZoneMask0) && 0 != (m_RegionMask & ZoneMask1) ;
+  }
+
+  boolean IsRing2()
+  {
+    return 0 == (m_RegionMask & ZoneMask1) && 0 != (m_RegionMask & ZoneMask2) ;
+  }
+  boolean IsRing3()
+  {
+    return 0 == (m_RegionMask & ZoneMask2) && 0 != (m_RegionMask & ZoneMask3) ;
+  }
+  boolean IsRing4()
+  {
+    return 0 == (m_RegionMask & ZoneMask3) && 0 != (m_RegionMask & ZoneMask4) ;
+  }
+   boolean IsRing5()
+  {
+    return 0 == (m_RegionMask & ZoneMask4) && 0 != (m_RegionMask & ZoneMask5) ;
+  }
+
+
+  boolean IsOut()
+  {
+    return 0 == m_RegionMask;
+  }
+
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M8WingmanGroup_WatcherBack::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logWarning( "distance(NavPoint_MainPlayerUnitLandingBase, MainPlayerUnit)=" + new String(GetMission().distance("NavPoint_MainPlayerUnitLandingBase", "MainPlayerUnit")));
+      logWarning("[AutoPilot path] PathID=" + new String(GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()));
+    }
+
+
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1")
+    {
+      if (_RegionMask == 62 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10PlayerMovingTo"]);
+      if (_RegionMask == 48 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10PlayerHalfMovingTo"]);
+    }
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer2")
+    {
+      if (_RegionMask == 48 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10PlayerMovingBack"]);
+      if (_RegionMask == 60 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10PlayerHalfMovingBack"]);
+    }
+  }
+}
+
+
+class CC1M10SpeedWatcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "MainPlayerUnit";                                           // кто следит
+  final static Array  ControlPoints = ["Plei_Me_Uh1d_1", "NavPoint_Landing_Plei_Me_Uh1d_1"];     // за кем следим
+  float _dist;
+  float minDist = 2000.0;
+  final static Array RegionDefs = [1000];
+  final static int ZoneMask0 = 1;
+  int m_RegionMask = 0;
+
+  boolean _CloserToMotorboat = true;
+  boolean _WaitPlayer = false;
+
+  Component Uh1DGroup;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+    _Mission.GetObject(_Name).SetUpdatePeriod(20000);
+    Uh1DGroup = _Mission.GetObject("C1M10WingmanGroup");
+    if(Uh1DGroup == null)
+        logError("[CC1M10SpeedWatcher::Initialize]  Component Uh1DGroup == null!    CPositionWatcher do not work!!!");
+    _dist = _Mission.distance("NavPoint_Landing_Plei_Me_Uh1d_1", "MainPlayerUnit");
+  }
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    if(_Point != 1)
+        return;
+
+    m_RegionMask = _RegionMask;
+    Array PosInfo = _PositionWatcher.GetPointInfo(1);
+    Array PositionInfo = _PositionWatcher.GetPositionInfo();
+
+    if(GetMission().distance("NavPoint_Landing_Plei_Me_Uh1d_1", "Plei_Me_Uh1d_1") < minDist)
+        addClassificatorObject("MainPlayerUnit", GetMission().PlayerAttack);
+
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M10SpeedWatcher::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logError( "distance(NavPoint_Landing_Plei_Me_Uh1d_1, MainPlayerUnit)=  " +
+          new String(GetMission().distance("NavPoint_Landing_Plei_Me_Uh1d_1", "MainPlayerUnit")));
+    }
+
+    if(PosInfo[INDEX_Distance] <= _dist)
+    {
+      _dist = PosInfo[INDEX_Distance];
+      _CloserToMotorboat = true;
+    }
+    else
+      _CloserToMotorboat = false;
+
+
+    if(GetMission().isDebug)
+    {
+      logError( "distance(NavPoint_Landing_Plei_Me_Uh1d_1, Plei_Me_Uh1d_1)=  " +
+          new String(GetMission().distance("NavPoint_Landing_Plei_Me_Uh1d_1", "Plei_Me_Uh1d_1")));
+
+      logError(" distance(NavPoint_Landing_Plei_Me_Uh1d_1, Plei_Me_Uh1d_1) < minDist = " +
+          new String(GetMission().distance("NavPoint_Landing_Plei_Me_Uh1d_1", "Plei_Me_Uh1d_1") <= minDist));
+
+    }
+
+    if(GetMission().distance("NavPoint_Landing_Plei_Me_Uh1d_1", "Plei_Me_Uh1d_1") < minDist)
+    {
+      if(GetMission().distance("NavPoint_Landing_Plei_Me_Uh1d_1", "MainPlayerUnit") > minDist)
+         _WaitPlayer = true;
+      else
+         _WaitPlayer = false;
+
+      InCriticalDistance(_WaitPlayer, _PositionWatcher);
+    }
+
+    if(GetMission().isDebug)
+        logWarning("  _WaitPlayer = " + new String(_WaitPlayer));
+  }
+
+
+   void PointRelativeSpeedChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      float     _RelativeSpeed
+    )
+   {
+    if(_Point != 1)
+        return;
+
+     float _speed;
+     Array PosInfo = _PositionWatcher.GetPointInfo(0);
+     Array PositionInfo = _PositionWatcher.GetPositionInfo();
+     if(GetMission().isDebug)
+     {
+       logError( "[CC1M10SpeedWatcher::PointRelativeSpeedChanged] "/* + new String()*/);
+       logMessage("    RelSpeed = " + new String(PosInfo[INDEX_RelSpeed]));
+       logMessage("    Speed " + ControlPoints[_Point] + "  " + new String(PosInfo[INDEX_Speed]));
+       logMessage("    Speed " + Positionable+ "  " + new String(PositionInfo[INDEX_Speed]));
+     }
+     if(GetMission().isDebug)
+     {
+        logWarning("    _CloserToMotorboat = " + new String(_CloserToMotorboat));
+        logWarning("    _WaitPlayer = " + new String(_WaitPlayer));
+     }
+
+     if(_WaitPlayer)
+        return;
+
+     if(_CloserToMotorboat)
+        Uh1DGroup.ChangeMoveSpeed(PositionInfo[INDEX_Speed] + 10.0);
+     else
+        Uh1DGroup.ChangeMoveSpeed(5.0);
+   }
+
+  void Update(Component _Watcher)
+  {
+    Array PosInfo = _Watcher.GetPointInfo(1);
+    PointRelativeSpeedChanged(_Watcher, 1, PosInfo[INDEX_Speed]);
+    PointRegionChanged(_Watcher, 1, PosInfo[INDEX_RegionMask]);
+  }
+
+  void InCriticalDistance(boolean _wait, Component _watcher)
+  {
+     Array PositionInfo = _watcher.GetPositionInfo();
+
+     if(GetMission().isDebug)
+        logWarning("[CC1M10SpeedWatcher::InCriticalDistance]   _wait = " + new String(_wait));
+
+     if(_wait)
+     {
+        Uh1DGroup.ChangeMoveSpeed(0.001);
+        sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10TransportWaiting"]);
+     }
+     else
+        Uh1DGroup.ChangeMoveSpeed(PositionInfo[INDEX_Speed] + 10.0);
+  }
+}

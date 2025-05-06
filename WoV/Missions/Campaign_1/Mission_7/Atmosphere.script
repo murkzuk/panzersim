@@ -1,0 +1,41 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CM7Atmosphere
+  extends CCommonAtmosphere
+{
+  boolean IsLightEnabled        = true;
+  boolean IsAntiSunEnabled      = true;
+
+  Vector  SunDirection   = new Vector(0.172057, 0.907307, -0.383653);        // 02
+  Color   AmbientLight   = new Color(100.0 / 255.0, 100.0 / 255.0, 100.0 / 255.0);
+  Color   SunColor       = new Color(255.0 / 255.0, 255.0 / 255.0, 255.0 / 255.0);
+  Color   AntiSunColor   = new Color(0.827, 0.784, 0.611);
+  float   DistanceToSun  = 20000.0;
+
+  Array   HorizontPos    = [300.0f, 2000.0f];
+
+  float   FogNear        = 0.0;
+  float   FogFar         = 4000.0;
+  float   FogFarMax      = 6000.0;
+
+  Color   FogColorXPos   = new Color( 124.0 / 255.0, 140.0 / 255.0, 154.0 / 255.0); // S
+  Color   FogColorXNeg   = new Color( 124.0 / 255.0, 140.0 / 255.0, 154.0 / 255.0); // N
+  Color   FogColorYPos   = new Color( 124.0 / 255.0, 140.0 / 255.0, 154.0 / 255.0); // E
+  Color   FogColorYNeg   = new Color( 124.0 / 255.0, 140.0 / 255.0, 154.0 / 255.0); // W
+
+  Color   ShadowColor    = new Color(0.7, 0.7, 0.7);
+  float   ShadowFar      = FogFar * 0.7;
+
+  Vector  WindVector     = new Vector(0.0, 1.5, 0.0);
+
+  boolean IsIllumination = false;
+  boolean IsSunVisible   = true;
+  boolean IsLightEnabled = true;
+}

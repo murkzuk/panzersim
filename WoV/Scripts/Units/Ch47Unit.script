@@ -1,0 +1,77 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+class CCH47ChinookExplosion
+  extends CAirVehicleExplosion
+{
+  float  Damage   = 50.0;
+  float  Radius   = 10.0;
+}
+
+
+// ====================================
+// Rotor animators
+// ====================================
+
+class CCh47MRotorAnimator
+  extends CBaseRotorAnimator
+{
+  float  LowSpeedTresh     = 2.7;
+
+  // Flip animation play only in hi speed
+  float  FlipTime          = 0.04;
+  String AnimFlip          = "";
+
+  // Low speed animations
+  Array  LowSpeedJoints    = [ ];
+  Array  LowSpeedAnims     = [
+                                ["mRotor_rotate", 0.0, -1.0, AT_Looping]
+                             ];
+
+  // Hi speed animations
+  Array  HiSpeedJoints     = [ ];
+  Array  HiSpeedAnims      = [
+                                ["mRotor_rotate",  2.6, -1.0, AT_Looping]
+                             ];
+}
+
+class CCh47Unit
+  extends CPlayerUnit
+{
+  final static WString CockpitTargetPointer        = getLocalized("Units", "str_CH47ChinookPointer");
+  final static float   DefaultHitPoints            = CHitPoints::Ch47UnitHitPoints;
+  final static int     Targeting_MapUIElementIndex = 0;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+  static String        PrevExplosionID             = "CH47ChinookExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["AIR", "HELI"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CCh47Unit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_air_ch47Model>(), [200, 100, 2]);
+
+    SetEngineEffects(
+        new #RotorAnimator2<CCh47MRotorAnimator>(),
+        null
+      );
+
+    SetupBehavior(new #VehicleBehavior<CBaseHelicopterBehavior>());
+  }
+
+  void Construct(
+      Component   _Mission,
+      Component   _PropMap
+    )
+  {
+   CPlayerUnit::Construct(_Mission, _PropMap);
+  }
+}

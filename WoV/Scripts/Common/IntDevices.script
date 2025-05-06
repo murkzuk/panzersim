@@ -1,0 +1,1040 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+//
+// Base class for devices
+//
+
+class CInternalDevice
+{
+  // overridable members
+
+  static Array DeviceHPModes           = [DDM_Functioning, DDM_Damaged, DDM_Destroyed];
+  static Array DeviceHPPercents        = [0.5, 0.0];
+  static Array DeviceHPSpecialPercents = [0.5, 0.0];
+
+  // members
+
+  int m_DamageMode  = DDM_Functioning;
+  int m_SpecialMode = -1;
+
+  String  m_DeviceName;
+  WString m_DamageString;
+  String  m_DamageSound;
+
+
+  CInternalDevice()
+  {
+    if (DeviceHPPercents.size() != DeviceHPModes.size() - 1)
+      logError("DeviceHPPercents.size != DeviceHPModes.size() - 1");
+  }
+
+  // public
+
+  void SetDeviceName(
+      String _Name
+    )
+  {
+    m_DeviceName = _Name;
+  }
+
+  void SetHPPercent(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    int DeviceMode = DeviceHPModes[DeviceHPModes.size() - 1];
+
+    for (int i = 0 ; i < DeviceHPPercents.size(); i ++)
+    {
+      if (_Percent > DeviceHPPercents[i])
+      {
+        DeviceMode = DeviceHPModes[i];
+        break;
+      }
+    }
+
+    if (DeviceMode != m_DamageMode)
+    {
+      m_DamageMode = DeviceMode;
+      SetDamageState(_HostObject, DeviceMode);
+    }
+
+    for (int i = DeviceHPSpecialPercents.size() - 1; i >= 0 ; i --)
+    {
+      if (_Percent <= DeviceHPSpecialPercents[i])
+      {
+        if (m_SpecialMode != i)
+        {
+          m_SpecialMode = i;
+          SetSpecialDamageState(_HostObject, DeviceHPSpecialPercents[i]);
+
+          logMessage(m_DeviceName + " damaged.item functionality changed. hitpoints left  " + new String(_Percent) + "%");
+        }
+        break;
+      }
+    }
+  }
+
+  void GetDamageState()
+  {
+    return m_DamageMode;
+  }
+
+  void SwitchDamageLightOn(
+      Component _HostObject,
+      String    _LightName
+    )
+  {
+    if (!_HostObject.m_SystemAlarm)
+    {
+      _HostObject.m_SystemAlarm = true;
+      SwitchLightOn(_HostObject, "SystemAlarm");
+
+      // head animations - take look to light
+      if (_HostObject.m_PilotObject != null)
+        _HostObject.m_PilotObject.SetHeadAction(0.3, 0.7, 1.0);
+      if (_HostObject.m_CoPilotObject != null)
+        _HostObject.m_CoPilotObject.SetHeadAction(0.7, 0.7, 1.0);
+
+    }
+
+    SwitchLightOn(_HostObject, _LightName);
+  }
+
+  void SwitchLightOn(
+      Component _HostObject,
+      String    _LightName
+    )
+  {
+    _HostObject.GetObject("CockpitPanel").SetLightState(_LightName, true);
+    _HostObject.GetObject("CopilotCockpitPanel").SetLightState(_LightName, true);
+  }
+
+  void SwitchLightOff(
+      Component _HostObject,
+      String    _LightName
+    )
+  {
+    _HostObject.GetObject("CockpitPanel").SetLightState(_LightName, false);
+    _HostObject.GetObject("CopilotCockpitPanel").SetLightState(_LightName, false);
+  }
+
+  // overridable service
+
+  void SetDamageState(
+      Component _HostObject,
+      int       _DamageMode
+    )
+  {
+    UpdateDeviceStateScreen(_HostObject, m_DeviceName, _DamageMode);
+    UpdateSignalPanel(_HostObject, m_DeviceName, _DamageMode);
+  }
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    logError("SetSpecialDamageState function for internal device should be overriden");
+  }
+
+  // service
+
+  void UpdateDeviceStateScreen(
+      Component _HostObject,
+      String    _DeviceID,
+      int       _DamageMode
+    )
+  {
+    Component CommonStatusScreen = _HostObject.GetObject("CommonStatusScreen");
+    if (CommonStatusScreen != null)
+      CommonStatusScreen.SetDamage(_DeviceID, _DamageMode);
+  }
+
+  void UpdateWeaponStateScreen(
+      Component _HostObject,
+      String    _DeviceID,
+      int       _DamageMode
+    )
+  {
+    Component WeaponsStatusScreen = _HostObject.GetObject("WeaponsStatusScreen");
+    if (WeaponsStatusScreen != null)
+      WeaponsStatusScreen.SetDamage(_DeviceID, _DamageMode);
+  }
+
+  void UpdateSignalPanel(
+      Component _HostObject,
+      String    _DeviceID,
+      int       _DamageMode
+    )
+  {
+  }
+
+  void SetDamageMessage(
+      WString _DamageString,
+      String  _DamageSound
+    )
+  {
+    m_DamageString = _DamageString;
+    m_DamageSound  = _DamageSound;
+  }
+
+  void SendDamageMessage(
+      Component _Cockpit
+    )
+  {
+    _Cockpit.SendCockpitMessage(m_DamageString, CCockpitColorMap::m_BadNewsColor, m_DamageSound);
+  }
+}
+
+// ==================================
+// Engine virtual device
+// ==================================
+
+class CEngineDevice
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents         = [0.70, 0];
+  static Array DeviceHPSpecialPercents  = [0.70, 0.50, 0];
+
+  float TemperatureUp            = 0.3;
+  float TemperatureDown          = -0.5;
+
+  float NormalTemperature        = 100.0;
+  float MaxTemperature           = 120.0;
+  float CurTemperature           = 0.0f;
+
+  float RelativeOilPressure      = 1.0;
+
+  float OilDuctPowerDrop         = 1.0;
+  float TransmissionPowerDrop    = 1.0;
+
+  float m_OverheatDamage         = 1.0;
+  float MaxOverheatTime          = 300.0;
+  float m_OverheatDelta          = 1.0;
+  float m_OverheatTime           = 0.0f;
+
+  boolean bHaveFuelToWork        = true;
+
+  float m_bCurrentPowerPart      = 1.0f;
+
+  boolean EnabledPower           = true;
+
+  int EffectInstanceID           = -1;
+
+  // from oilduct damage
+  void SetOilDuctPowerDrop(float _DropPower)
+  {
+    OilDuctPowerDrop = _DropPower;
+  }
+
+  // from transmission damage
+  void SetTransmissionPowerDrop(float _DropPower)
+  {
+    TransmissionPowerDrop = _DropPower;
+  }
+
+  // engine damage
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    if (m_DamageMode != DDM_Functioning)
+    {
+      Array EffectData = [];
+
+      if (0 <= m_SpecialMode &&
+          2 >= m_SpecialMode)
+        EffectData = _HostObject.GetDamageEffectName("Engine", m_SpecialMode+1);
+
+      if (2 == EffectData.size())
+      {
+        if (EffectInstanceID != -1)
+          (new #EffectsArray()).DeleteEffect(EffectInstanceID);
+
+        EffectInstanceID = (new #EffectsArray()).CreateEffect(EffectData[1], getPosition(EffectData[0]), EffectData[0]);
+      }
+    }
+
+    Component VehicleController = _HostObject.GetVehicleController();
+    if (VehicleController != null)
+    {
+      float PowerPart;
+      if (m_DamageMode != DDM_Functioning)
+      {
+        if (0 == m_SpecialMode)
+        {
+          CurTemperature += 10.0;
+          PowerPart = 0.95;
+          SwitchDamageLightOn(_HostObject, "EngineChipDet");
+        }
+        if (1 <= m_SpecialMode)
+        {
+          CurTemperature = MaxTemperature;
+          PowerPart = 0.9;
+          SwitchDamageLightOn(_HostObject, "EngineChipDet");
+          SwitchDamageLightOn(_HostObject, "EngFuelPump");
+          SwitchDamageLightOn(_HostObject, "GovEmer");
+          VehicleController.EnableGovernorSwitch(false);
+          _HostObject.m_GovernorWorkEnabled = false;
+        }
+        if (2 <= m_SpecialMode)
+        {
+          CurTemperature = MaxTemperature;
+          PowerPart = 0.0;
+        }
+      }
+
+      m_bCurrentPowerPart = PowerPart * OilDuctPowerDrop * TransmissionPowerDrop;
+
+      if (EnabledPower && bHaveFuelToWork)
+        VehicleController.SetEnginePowerPart(m_bCurrentPowerPart * m_OverheatDamage);
+      else
+        VehicleController.SetEnginePowerPart(0.0f);
+    }
+  }
+
+  // engine work
+  boolean UpdateWorkDevice(
+      Component _HostObject,
+      float     _WorkTime
+    )
+  {
+    boolean Overheat = false;
+    Component VehicleController = _HostObject.GetVehicleController();
+    boolean bEngineWork = bHaveFuelToWork;
+    if (null != VehicleController)
+    {
+      bEngineWork &= VehicleController.GetEngineWork();
+    }
+
+    if (bEngineWork)
+    {
+      // Temperature depends on rpms
+      // overheat can be at over 6600 rpms
+
+      CurTemperature += TemperatureUp * _WorkTime;
+
+      if (_HostObject.m_CurrentValueEngine >= 6600.0 / 60.0 &&
+          CurTemperature >= MaxTemperature)
+      {
+        m_OverheatTime += m_OverheatDelta * _WorkTime;
+        if (m_OverheatTime > MaxOverheatTime)
+          m_OverheatTime = MaxOverheatTime;
+
+        Overheat = true;
+      }
+      else
+      {
+        m_OverheatTime -= m_OverheatDelta * _WorkTime;
+        if (m_OverheatTime < 0.0)
+          m_OverheatTime = 0.0;
+
+        if (CurTemperature > NormalTemperature)
+        {
+          float ApproxTemperature = _HostObject.m_CurrentValueEngine * 60.0 / 6600.0 * MaxTemperature;
+          if (CurTemperature > ApproxTemperature)
+            CurTemperature += (TemperatureDown - TemperatureUp)  * _WorkTime;
+        }
+      }
+    }
+    else // bEngineWork
+    {
+      m_OverheatTime -= m_OverheatDelta * _WorkTime;
+      if (m_OverheatTime < 0.0)
+        m_OverheatTime = 0.0;
+      CurTemperature += TemperatureDown * _WorkTime;
+    }
+
+    if (CurTemperature > MaxTemperature)
+      CurTemperature = MaxTemperature;
+
+    if (CurTemperature < 0.0)
+        CurTemperature = 0.0;
+
+    m_OverheatDamage = 1.0f - m_OverheatTime / MaxOverheatTime;
+    VehicleController.SetEnginePowerPart(m_bCurrentPowerPart * m_OverheatDamage);
+
+    // oil pressure depends on rmps
+    // 2000 rpms equal to 0.25, 7000 to 1.0f
+
+    float OilPressure = 0.0f;
+    if (bEngineWork)
+      OilPressure = 0.75 / 5000.0 * _HostObject.m_CurrentValueEngine * 60.0 + 1.0 - 0.75 / 5000.0 * 7000.0;
+
+    _HostObject.UpdateEngineParameters(CurTemperature, OilPressure, Overheat);
+
+    // update fuel
+    float AllFuel = 0.0;
+    float FuelTankCounter = 0.0;
+
+    AllFuel += _HostObject.FuelTankLF.UpdateFuel(bEngineWork, _HostObject, _WorkTime);
+    FuelTankCounter += 1.0;
+
+    AllFuel += _HostObject.FuelTankRF.UpdateFuel(bEngineWork, _HostObject, _WorkTime);
+    FuelTankCounter += 1.0;
+
+
+    float RealFuel = _HostObject.FuelTankRF.FuelRemainder + _HostObject.FuelTankLF.FuelRemainder;
+
+    if (RealFuel == 0.0)
+    {
+      // empty front tanks
+      SwitchDamageLightOn(_HostObject,"AuxFuelLow");
+      _HostObject.FuelTankLB.IsUsed = true;
+      _HostObject.FuelTankRB.IsUsed = true;
+    }
+
+    AllFuel += _HostObject.FuelTankLB.UpdateFuel(bEngineWork, _HostObject, _WorkTime);
+    FuelTankCounter += 1.0;
+
+    AllFuel += _HostObject.FuelTankRB.UpdateFuel(bEngineWork, _HostObject, _WorkTime);
+    FuelTankCounter += 1.0;
+
+    AllFuel = AllFuel / FuelTankCounter;
+
+    bHaveFuelToWork = (AllFuel > 0.01);
+
+    float FuelPressure = 1.0f;
+
+    if (AllFuel < 0.2)
+      FuelPressure = FuelPressure * (AllFuel + 0.2);
+
+    if (!bHaveFuelToWork ||
+        !EnabledPower    ||
+        !bEngineWork)
+    {
+      FuelPressure = 0.0f;
+    }
+
+    _HostObject.UpdateFuelPressure(FuelPressure);
+
+    if (bHaveFuelToWork && EnabledPower)
+      VehicleController.SetEnginePowerPart(m_bCurrentPowerPart * m_OverheatDamage);
+    else
+      VehicleController.SetEnginePowerPart(0.0f);
+
+    RealFuel += _HostObject.FuelTankRB.FuelRemainder + _HostObject.FuelTankLB.FuelRemainder;
+    RealFuel /= 4.0;
+
+    if (RealFuel < 60.0 / 2000.0) // less then 20 minutes 60 kg
+    {
+      SwitchDamageLightOn(_HostObject, "20MinuteFuel");
+    }
+
+    _HostObject.OnFuelChanged(RealFuel);
+
+    // update transmission
+    if (null != _HostObject.Transmission)
+      _HostObject.Transmission.UpdateParameters(bEngineWork, _HostObject, _WorkTime);
+
+    // update oil system
+    if (null != _HostObject.OilSystem)
+      _HostObject.OilSystem.UpdateParameters(bEngineWork, _HostObject, _WorkTime);
+
+    return true;
+  }
+}
+
+// ==================================
+// FuelTank virtual device
+// ==================================
+
+class CFuelTankBaseDevice
+  extends CInternalDevice
+{
+  int   DeviceId           = -1;
+
+  float FuelRemainder      = 1.0;
+
+  boolean IsUsed           = true;// auto
+  boolean IsOn             = true;// manual
+  boolean IsUnlimited      = false;
+
+  final static float BaseFuelDecrement          = 0.00016;
+  final static float HalfFuelDecrement          = 0.00032;
+  final static float FullFuelDecrement          = 0.00160;
+
+  float FuelDecrement                  = BaseFuelDecrement;
+
+  static Array DeviceHPPercents        = [0.60, 0];
+  static Array DeviceHPSpecialPercents = [0.60, 0.20, 0];
+  static Array FuelTanks               = ["FuelTankLF", "FuelTankRF", "FuelTankLB", "FuelTankRB"];
+
+  int EffectInstanceID = -1;
+
+  void SetDamageState(
+      Component _HostObject,
+      int       _DamageMode
+    )
+  {
+    if (_DamageMode != DDM_Damaged)
+      if (_HostObject.GetDevice(FuelTanks[DeviceId]).GetDamageState() == DDM_Damaged)
+        _DamageMode = DDM_Damaged;
+
+    UpdateDeviceStateScreen(_HostObject, FuelTanks[DeviceId], _DamageMode);
+    UpdateSignalPanel(_HostObject, FuelTanks[DeviceId], _DamageMode);
+  }
+
+  // damage the fuel system
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    Array EffectData = [];
+
+    if (1 <= m_SpecialMode)
+      EffectData = _HostObject.GetDamageEffectName(FuelTanks[DeviceId], m_SpecialMode+1);
+
+    if (2 == EffectData.size())
+    {
+      if (EffectInstanceID != -1)
+        (new #EffectsArray()).DeleteEffect(EffectInstanceID);
+
+      EffectInstanceID = (new #EffectsArray()).CreateEffect(EffectData[1], getPosition(EffectData[0]), EffectData[0]);
+    }
+
+    if (0 == m_SpecialMode)
+    {
+      FuelDecrement = BaseFuelDecrement;
+    }
+    else
+    if (1 == m_SpecialMode)
+    {
+      FuelDecrement = HalfFuelDecrement;
+    }
+    else
+    if (2 == m_SpecialMode)
+    {
+      FuelDecrement = FullFuelDecrement;
+    }
+  }
+
+  // update fuel process
+  float UpdateFuel(
+      boolean   _EngineWork,
+      Component _HostObject,
+      float     _WorkTime
+    )
+  {
+    if (IsUsed && IsOn)
+    {
+      if (_EngineWork)
+      {
+        // update fuel
+        float FuelLeft = FuelDecrement * _WorkTime;
+        if (IsUnlimited) FuelLeft = 0.0f;
+
+        FuelRemainder = FuelRemainder - FuelLeft;
+        if (FuelRemainder < 0.0)
+        {
+          FuelLeft = -FuelRemainder;
+          FuelRemainder = 0.0;
+        }
+      }
+      return FuelRemainder;
+    }
+    return 0.0f;
+  }
+}
+
+class CFuelTankLFDevice
+  extends CFuelTankBaseDevice
+{
+  CFuelTankLFDevice()
+  {
+    DeviceId = 0;
+  }
+
+  // damage the fuel system
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    CFuelTankBaseDevice::SetSpecialDamageState(_HostObject, _Percent);
+    if (_Percent <= 0.0f)
+    {
+      // turn on back tank
+      SwitchDamageLightOn(_HostObject, "LeftFuelBoost");
+      _HostObject.FuelTankLB.IsUsed = true;
+    }
+  }
+
+}
+
+class CFuelTankRFDevice
+  extends CFuelTankBaseDevice
+{
+  CFuelTankRFDevice()
+  {
+    DeviceId = 1;
+  }
+
+  // damage the fuel system
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    CFuelTankBaseDevice::SetSpecialDamageState(_HostObject, _Percent);
+    if (_Percent <= 0.0f)
+    {
+      // turn on back tank
+      SwitchDamageLightOn(_HostObject, "RightFuelBoost");
+      _HostObject.FuelTankRB.IsUsed = true;
+    }
+
+  }
+}
+
+class CFuelTankLBDevice
+  extends CFuelTankBaseDevice
+{
+  boolean IsUsed           = false;
+
+  CFuelTankLBDevice()
+  {
+    DeviceId = 2;
+  }
+}
+
+class CFuelTankRBDevice
+  extends CFuelTankBaseDevice
+{
+  boolean IsUsed           = false;
+  CFuelTankRBDevice()
+  {
+    DeviceId = 3;
+  }
+}
+
+// ==================================
+// Transmission virtual device
+// ==================================
+
+class CTransmissionDevice
+  extends CInternalDevice
+{
+  float RelativeOilPressure        = 0.7;
+  float PressureDelta              = 0.001;
+
+
+  float OilTemperature             = 0.0f;
+  float TemperatureDelta           = 0.2;
+  float MaxOilTemperature          = 100.0f;
+
+  static Array DeviceHPPercents        = [0.50, 0];
+  static Array DeviceHPSpecialPercents = [0.50, 0.20, 0];
+
+  // damage the transmission
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    float PowerDrop = 1.0;
+
+    if (0 <= m_SpecialMode)
+    {
+      PowerDrop = 0.98;
+      SwitchDamageLightOn(_HostObject, "EngineOilPress");
+      SwitchDamageLightOn(_HostObject, "XmsnOilPress");
+    }
+
+    if (1 <= m_SpecialMode)
+    {
+      PowerDrop = 0.95;
+      SwitchDamageLightOn(_HostObject, "XmsnOilHot");
+      SwitchDamageLightOn(_HostObject, "HydPressure");
+    }
+
+    if (2 <= m_SpecialMode)
+    {
+      PowerDrop = 0.0;
+    }
+
+    if (_HostObject.EngineDevice != null)
+      _HostObject.EngineDevice.SetTransmissionPowerDrop(PowerDrop);
+  }
+
+  // update parameters
+  boolean UpdateParameters(
+      boolean   _EngineWork,
+      Component _HostObject,
+      float     _WorkTime
+    )
+  {
+    if (m_DamageMode != DDM_Functioning)
+      RelativeOilPressure -= PressureDelta * _WorkTime;
+
+    if (_EngineWork)
+      OilTemperature += TemperatureDelta * _WorkTime;
+    else
+      OilTemperature -= TemperatureDelta * _WorkTime;
+
+    if (OilTemperature > MaxOilTemperature)
+     OilTemperature = MaxOilTemperature;
+
+    if (OilTemperature < 0.0)
+     OilTemperature = 0.0;
+
+
+    float OilPressure = RelativeOilPressure;
+
+    if (!_EngineWork)
+      OilPressure = 0.0f;
+
+    _HostObject.OnTransmissionChanged(
+        OilPressure,
+        OilTemperature
+      );
+
+    return true;
+  }
+}
+
+// ==================================
+// OilSystem virtual device
+// ==================================
+
+class COilSystemDevice
+  extends CInternalDevice
+{
+  int EffectInstanceID = -1;
+
+  static Array DeviceHPPercents        = [0.50, 0];
+  static Array DeviceHPSpecialPercents = [0.50, 0.20, 0];
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    Array EffectData = [];
+
+    if (0 <= m_SpecialMode)
+      EffectData = _HostObject.GetDamageEffectName("OilSystem", m_SpecialMode+1);
+
+    if (2 == EffectData.size())
+    {
+      if (EffectInstanceID != -1)
+        (new #EffectsArray()).DeleteEffect(EffectInstanceID);
+
+      EffectInstanceID = (new #EffectsArray()).CreateEffect(EffectData[1], getPosition(EffectData[0]), EffectData[0]);
+    }
+
+    float PowerDrop = 1.0;
+
+    if (0 <= m_SpecialMode)
+    {
+      PowerDrop = 0.98;
+      SwitchDamageLightOn(_HostObject, "EngineOilPress");
+    }
+    if (1 <= m_SpecialMode)
+    {
+      PowerDrop = 0.95;
+      SwitchDamageLightOn(_HostObject, "XmsnOilPress");
+    }
+    if (2 <= m_SpecialMode)
+    {
+      PowerDrop = 0.90;
+      SwitchDamageLightOn(_HostObject, "XmsnOilHot");
+    }
+
+    if (_HostObject.EngineDevice != null)
+      _HostObject.EngineDevice.SetOilDuctPowerDrop(PowerDrop);
+  }
+
+  // update parameters
+  boolean UpdateParameters(
+      boolean   _EngineWork,
+      Component _HostObject,
+      float     _WorkTime
+    )
+  {
+    return true;
+  }
+}
+
+// ==================================
+// GunnerLeft virtual device
+// ==================================
+
+class CGunnerBaseDevice
+  extends CInternalDevice
+{
+
+  static Array DeviceHPPercents        = [0.90, 0];
+  static Array DeviceHPSpecialPercents = [0.90, 0.80, 0.70, 0.50, 0.20,0.0];
+
+}
+
+// ==================================
+// GunnerLeft virtual device
+// ==================================
+
+class CGunnerLeftDevice
+  extends CGunnerBaseDevice
+{
+}
+
+// ==================================
+// GunnerRight virtual device
+// ==================================
+
+class CGunnerRightDevice
+  extends CGunnerBaseDevice
+{
+}
+
+// ==================================
+// PilotFirst virtual device
+// ==================================
+
+class CPilotFirstDevice
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.60, 0];
+  static Array DeviceHPSpecialPercents = [0.0];    // pilot immortal
+  //static Array DeviceHPSpecialPercents = [0.60, 0.40, 0.10, 0];
+
+}
+
+// ==================================
+// PilotSecond virtual device
+// ==================================
+
+class CPilotSecondDevice
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.60, 0];
+  static Array DeviceHPSpecialPercents = [0.0];    // pilot immortal
+  //static Array DeviceHPSpecialPercents = [0.60, 0.40, 0.10, 0.0];
+}
+
+// ==================================
+// Right Front HeliPart virtual device
+// ==================================
+
+class CRFHeliPart
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.50, 0];
+  static Array DeviceHPSpecialPercents = [0.50, 0];
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    if (0.50 >= _Percent)
+      _HostObject.m_SpeedometerEnabled = false;
+  }
+}
+
+// ==================================
+// Left Front HeliPart virtual device
+// ==================================
+
+class CLFHeliPart
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.50, 0];
+  static Array DeviceHPSpecialPercents = [0.50, 0];
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    if (0.50 >= _Percent)
+    {
+      _HostObject.m_RMIEnabled = false;
+    }
+  }
+
+}
+
+// ==================================
+// Stabilizers virtual device
+// ==================================
+
+class CStabilizersDevice
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.50, 0];
+  static Array DeviceHPSpecialPercents = [0.50, 0.30, 0];
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    Component VehicleController = _HostObject.GetVehicleController();
+
+    if (0.50 >= _Percent)
+    {
+      SwitchDamageLightOn(_HostObject, "ChipDetector");
+    }
+
+    if (0.50 == _Percent)
+    {
+      VehicleController.SetStabilizersDamage(0.8);
+      VehicleController.EnableRandomStabilizersDamage(true);
+    }
+    else
+    if (0.30 >= _Percent)
+    {
+      VehicleController.SetStabilizersDamage(1.0);
+      VehicleController.EnableRandomStabilizersDamage(false);
+    }
+  }
+}
+
+// ==================================
+// TailRail virtual device
+// ==================================
+
+class CTailRailDevice
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.60, 0];
+  static Array DeviceHPSpecialPercents = [0.60, 0.30, 0.10, 0];
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    if (0.60 >= _Percent)
+    {
+      SwitchDamageLightOn(_HostObject, "ChipDetector");
+    }
+
+    if (0.60 >= _Percent)
+      _HostObject.GetVehicleController().SetTailPitchLatency(rand(0.90, 0.97));
+
+    if (0.30 >= _Percent)
+    {
+      _HostObject.m_OMNIEnabled = false;
+
+      SwitchLightOff(_HostObject, "OMNIEnabled");
+    }
+
+    if (0.10 >= _Percent)
+      _HostObject.GetVehicleController().EnableTailRotorSystem(false);
+  }
+
+}
+
+// ==================================
+// TailUnit virtual device
+// ==================================
+
+class CTailUnitDevice
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.60, 0];
+  static Array DeviceHPSpecialPercents = [0.60, 0.10, 0];
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    if (0.60 == _Percent)
+    {
+      _HostObject.GetVehicleController().SetTailPhaseDisplacement(rand(-0.5, 0.5));
+    }
+    else
+    if (0.10 == _Percent)
+    {
+      Component VehicleController = _HostObject.GetVehicleController();
+      VehicleController.SetTailPhaseDisplacement(1.0);
+      VehicleController.EnableRandomTailPhaseDisplacement(true);
+    }
+    else
+    if (0.0 >= _Percent)
+    {
+      _HostObject.GetVehicleController().EnableTailRotorSystem(false);
+    }
+
+  }
+
+}
+
+// ==================================
+// TailRotor virtual device
+// ==================================
+
+class CTailRotorDevice
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.30, 0];
+  static Array DeviceHPSpecialPercents = [0.30, 0];
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    if (0.30 == _Percent)
+      _HostObject.GetVehicleController().EnableTailVibrationMode(true);
+    else
+    if (0.0 >= _Percent)
+      _HostObject.GetVehicleController().EnableTailRotorSystem(false);
+  }
+
+}
+
+// ==================================
+// MainRotor virtual device
+// ==================================
+
+class CMainRotorDevice
+  extends CInternalDevice
+{
+}
+
+// ==================================
+// Skid device
+// ==================================
+
+class CSkidDevice
+  extends CInternalDevice
+{
+  static Array DeviceHPPercents        = [0.60, 0];
+  static Array DeviceHPSpecialPercents = [0.60, 0];
+
+  void SetSpecialDamageState(
+      Component _HostObject,
+      float     _Percent
+    )
+  {
+    if (0.60 == _Percent)
+    {
+      Component Item = _HostObject.GetItem(m_DeviceName);
+
+      // Hide normal joint model
+      setVisibleState(Item.Joint, false);
+
+      Component Mesh = _HostObject.GetMeshComponent();
+      Component DamagedJoint = Mesh.GetJoint(Item.BaseJointName + "_crashed");
+
+      // Show damaged joint model
+      if (null != DamagedJoint)
+        setVisibleState(DamagedJoint, true);
+    }
+  }
+}

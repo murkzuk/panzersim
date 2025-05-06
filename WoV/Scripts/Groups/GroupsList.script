@@ -1,0 +1,25 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CGroupsList
+{
+  Array ObjectInsertList = [
+      [ "LargeVillage1",   new CInsertObjectDescr("ObjectsGroup", "CPlei_Kueng_Ya_Tong_Group", "") ],
+      [ "CoastalVillage1", new CInsertObjectDescr("ObjectsGroup", "CVillageCoastal_1_Group", "") ],
+      [ "SmallVillage1", new CInsertObjectDescr("ObjectsGroup", "CPlai_Tpang_Group", "") ],
+      [ "DesantGroup_1", new CInsertObjectDescr("ObjectsGroup", "CDesantGroup_1", "") ],
+      [ "DesantGroup_2", new CInsertObjectDescr("ObjectsGroup", "CDesantGroup_2", "") ],
+      [ "DesantGroup_3", new CInsertObjectDescr("ObjectsGroup", "CDesantGroup_3", "") ],
+      [ "DesantGroup_4", new CInsertObjectDescr("ObjectsGroup", "CDesantGroup_4", "") ],
+      [ "DesantGroup_5", new CInsertObjectDescr("ObjectsGroup", "CDesantGroup_5", "") ],
+      [ "DesantGroup_6", new CInsertObjectDescr("ObjectsGroup", "CDesantGroup_6", "") ],
+      [ "DesantGroup_7", new CInsertObjectDescr("ObjectsGroup", "CDesantGroup_7", "") ],
+      [ "DesantGroup_8", new CInsertObjectDescr("ObjectsGroup", "CDesantGroup_8", "") ]
+    ];
+}

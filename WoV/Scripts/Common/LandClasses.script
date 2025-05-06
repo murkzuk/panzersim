@@ -1,0 +1,109 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// class with color (and alpha channel) info for pixel for
+// terrain and zonemap textures and layers
+
+class BaseLandClass
+{ 
+  // label in editor's menu (to register class in menu see MenuConfig.ZoneEditorClasses)
+  String Label = "";
+
+  // color of main terrain texture
+  Color TerrainColor = new Color(0.0, 1.0, 0.0);
+
+  // color of second main terrain texture
+  Color TerrainColor2 = new Color(1.0, 0.0, 0.0);
+  
+  // index of terrain microtexture
+  int MicroTextureIndex = 1;
+
+  // index of terrain second microtexture
+  int MicroTextureIndex2 = 1;
+
+  // color of ZoneMap layer (assume 8bit bmp int data)
+  int ZoneMapValue     = 13;   
+
+  boolean ModifyZoneMapOnly = false;
+  //
+  // converted colors (with alpha channel)
+  //
+
+  Color MainTerrainColor;
+  Color MainTerrainColor2;
+
+  //
+  // Construct
+  //
+
+  BaseLandClass()
+  {
+    MainTerrainColor  = new Color(GetAlphaMixedColor(TerrainColor, MicroTextureIndex));
+    MainTerrainColor2 = new Color(GetAlphaMixedColor(TerrainColor2, MicroTextureIndex2));
+  }
+ 
+  // 
+  // service methods
+  //
+
+  //$TMP  - should be global function 
+  //color + alpha convertation 
+
+  Color GetAlphaMixedColor(
+      Color Src,
+      int AlphaIndex
+    )
+  {
+    Color Res = new Color(Src);
+    float Scale = 1.0 / 8.0 ;
+    Res.a = Scale * AlphaIndex + Scale / 3.0;
+    return Res; 
+  }
+
+}
+
+//$TMP test class
+class GrassLand extends BaseLandClass
+{
+  String Label     = "Grass";
+  int ZoneMapValue = 32;
+}
+
+
+class WaterLand extends BaseLandClass
+{
+  String Label = "Water";
+  
+   // color of main terrain texture
+  Color TerrainColor = new Color(0.0, 0.0, 0.0);
+
+  // color of second main terrain texture
+  Color TerrainColor2 = new Color(0.0, 0.0, 1.0);
+  
+  boolean ModifyZoneMapOnly = true;
+  
+  // color of ZoneMap layer (assume 8bit bmp int data)
+  int ZoneMapValue     = 101;   
+}
+
+class ForestLand extends BaseLandClass
+{
+  String Label = "Forest";
+  
+   // color of main terrain texture
+  Color TerrainColor = new Color(0.0, 0.0, 0.0);
+
+  // color of second main terrain texture
+  Color TerrainColor2 = new Color(0.0, 0.0, 1.0);
+  
+  boolean ModifyZoneMapOnly = true;
+  
+  // color of ZoneMap layer (assume 8bit bmp int data)
+  int ZoneMapValue     = 11;   
+}

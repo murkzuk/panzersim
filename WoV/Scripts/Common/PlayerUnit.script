@@ -1,0 +1,1839 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Base class for all player units
+class CPlayerUnit
+  extends CCockpit, CObject, CExtendUnit, CPlayerStateControl
+{
+  // Joint for cockip camera pilot
+  String    CockpitCameraPilot              = "CockpitCameraPilot";
+  String    CockpitCameraCoPilot            = "CockpitCameraCoPilot";
+
+  String    CockpitCameraM60                = "M60_Camera";
+  String    CockpitCameraM21                = "M21_Camera";
+
+  String    CockpitCameraGunnerLeft         = "CockpitCameraLeftGun";
+  String    CockpitCameraGunnerRight        = "CockpitCameraRightGun";
+
+  String    CockpitNearCameraGunnerLeft     = "CockpitNearCameraLeftGun";
+  String    CockpitNearCameraGunnerRight    = "CockpitNearCameraRightGun";
+
+  String    CockpitCameraGunnerLeftStatic   = "CockpitCameraLeftGunStatic";
+  String    CockpitCameraGunnerRightStatic  = "CockpitCameraRightGunStatic";
+
+  float     m_TotalExtraMass                = 0.0f;
+
+  boolean   m_bAutipilotEnabled             = false;
+  boolean   m_IsManual                      = false;
+  boolean   m_AutoEnable                    = true;
+
+  Component m_VehicleBody                   = null;
+
+  final static Array     RHandPilotsControlJoint;
+  final static Array     LHandPilotsControlJoint;
+
+  final static Array     KillCoPilotTextures;
+        static Array     DeathTexturesTmp = new Array(4, null);
+
+  Array  m_InputFilter =
+      [
+        CTLCMD_SHOW_SIGHT,
+        CTLCMD_SIGHT_BRIGHTNESS_1,
+        CTLCMD_SIGHT_BRIGHTNESS_2,
+        CTLCMD_SIGHT_DISTANCE_1,
+        CTLCMD_SIGHT_DISTANCE_2,
+        CTLCMD_TOGGLE_SIGHT,
+        CTLCMD_TOGGLE_MFD2,
+        CTLCMD_TOGGLE_MFD1,
+        CTLCMD_SET_VIEW_NEAREST,
+        CTLCMD_SET_VIEW_COCKPIT,
+        CTLCMD_SET_VIEW_PERSON1RD,
+        CTLCMD_SET_VIEW_PERSON3RD,
+        CTLCMD_CHANGE_PLAYER_SIT,
+        CTLCMD_CHANGE_GUNNER_SIT,
+        CTLCMD_CHANGE_COCKPIT_COLOR,
+        CTLCMD_CHANGE_SIT,
+        CTLCMD_SET_SIT_0,
+        CTLCMD_SET_SIT_1,
+        CTLCMD_SET_SIT_2,
+        CTLCMD_SET_SIT_3,
+        CTLCMD_GOVERNOR_SWITCH
+      ];
+
+  Array m_PhysicsExcludeSet;
+
+  boolean   m_PlayDestroyAnimAfterFall = true;
+
+  // ======================================
+  // IObject Interface functions
+  // ======================================
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    m_PhysicsExcludeSet.clear();
+
+    // Construct base unit
+    CObject::Construct(_Mission, _PropMap);
+
+    // If manual unit setup manual control
+    boolean IsManual = _PropMap.Get("IsManual", false);
+    m_IsManual = IsManual;
+    if (IsManual)
+    {
+      // Initialize collision control
+      CreateCollisionControl("CBaseCollisionControl");
+
+      // Setup vehicle controller
+      SetupVehicleController(_Mission);
+
+      // initialize manual control
+      SetupManualControl();
+
+      //
+      // Input Throughput setup
+      //
+      Component InputThroughputControl = new #InputThroughputControl();
+      InputThroughputControl.SetUpdateLayer(UPDATE_LAYER_SYSTEM);
+      InputThroughputControl.SetInputFilter(m_InputFilter);
+      InputThroughputControl.SetEventHandler(this);
+      RegisterObject("Throughput", InputThroughputControl);
+
+      // get cockpit mode
+      m_ViewMode = (new #GameSettings()).GetCockpitMode();
+
+      // create player camera
+      SetupCamera();
+
+      // create cockpit
+      SetupCockpit(GetCamera(), _Mission);
+    }
+    else
+    {
+      // Remove inside mesh because is behavior unit
+      BuildOnlyOutsideMesh();
+
+      // Disable personal physics effects for non-manual unit
+      Component Vehicle = GetVehicleController();
+      if (null != Vehicle)
+      {
+        Vehicle.EnableVortexRingEffect(false);
+        Vehicle.EnableRetreatingBladeStallEffect(false);
+      }
+    }
+    SetupFreeFallControl();
+
+    //
+    // construct passangers
+    //
+
+    String Affiliation = _PropMap.Get("Affiliation", "NEUTRAL");
+
+    m_PilotObject       = CreatePassanger(
+                              _Mission,
+                              "PilotObject",
+                              _PropMap.Get("PilotObject", ""),
+                              m_PilotUnitJoint,
+                              Affiliation,
+                              IsManual,
+                              0
+                            );
+
+    m_CoPilotObject     = CreatePassanger(
+                              _Mission,
+                              "CoPilotObject",
+                              _PropMap.Get("CoPilotObject", ""),
+                              m_CoPilotUnitJoint,
+                              Affiliation,
+                              IsManual,
+                              1
+                            );
+    if (IsManual)
+    {
+      m_CoPilotObject.SetupAnimator("HeadTalkAnimator", new #LineAnimator());
+    }
+
+    m_LeftGunnerObject  = CreatePassanger(
+                              _Mission,
+                              "LeftGunnerObject",
+                              _PropMap.Get("LeftGunnerObject", ""),
+                              m_LeftGunnerUnitJoint,
+                              Affiliation,
+                              IsManual,
+                              2
+                            );
+
+    m_RightGunnerObject = CreatePassanger(
+                              _Mission,
+                              "RightGunnerObject",
+                              _PropMap.Get("RightGunnerObject", ""),
+                              m_RightGunnerUnitJoint,
+                              Affiliation,
+                              IsManual,
+                              3
+                            );
+
+    Component HeliVehicle = GetVehicleController();
+    if (HeliVehicle != null)
+      HeliVehicle.SetExcludeSet(m_PhysicsExcludeSet);
+
+//    if (null != m_RightGunnerObject)
+//    {
+//      // create heil animator of gun
+//      SetupAnimator("RightGunAnimator", new #StateAnimator<CRightHeliGunnerAnimator>());
+//    }
+//    if (null != m_LeftGunnerObject)
+//    {
+//      // create heil animator of gun
+//      SetupAnimator("LeftGunAnimator", new #StateAnimator<CLeftHeliGunnerAnimator>());
+//    }
+
+  }
+
+  void Initialize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    // Call inherited function
+    CObject::Initialize(_Mission, _PropMap);
+
+    // Set special classificators
+    if (_PropMap.Get("IsManual", false))
+      addClassificator(user, "PLAYERUNIT");
+
+    // enable projectile camera notify for player unit
+    if (checkMask(user, [ "PLAYERUNIT" ], []))
+      for (int Weapon = 0; Weapon < m_WeaponList.size(); Weapon++)
+        m_WeaponList[Weapon].EnableProjectileCameraNotify(true);
+
+    if (_PropMap.Get("InstantWingman", false))
+    {
+      Component Behavior = GetBehavior();
+      if (Behavior != null)
+      {
+        Behavior.GetTaskScriptHost().SetInstantWingman();
+        Behavior.GetTaskScriptHost().SetWingmanRank(_PropMap.Get("WingmanRank" , 0));
+      }      
+    }
+
+
+    // $TMP
+    if (!_PropMap.Get("IsManual", false))
+    {
+      ChangeUnitSpeed(4.5, 4.5, 3.0);
+      SetWindDustEffectScale(0.15);
+      SetWindDustEffectScale2(0.15);
+    }
+
+    _Mission.AddPlayerObject(getIdentificator(user));
+
+    // Initialize passangers
+    Component PropMap = new CPropertiesMap();
+    if (null != m_PilotObject)
+      m_PilotObject.Initialize(_Mission, PropMap);
+    if (null != m_CoPilotObject)
+      m_CoPilotObject.Initialize(_Mission, PropMap);
+    if (null != m_LeftGunnerObject)
+    {
+      m_LeftGunnerObject.Initialize(_Mission, PropMap);
+  //    Component LeftGunAnimator = GetObject("LeftGunAnimator");
+//      LeftGunAnimator.Initialize(GetGroupObject());
+//      setPositionable(LeftGunAnimator, GetOutsideMesh());
+
+    }
+    if (null != m_RightGunnerObject)
+    {
+      m_RightGunnerObject.Initialize(_Mission, PropMap);
+//      Component RightGunAnimator = GetObject("RightGunAnimator");
+//      RightGunAnimator.Initialize(GetGroupObject());
+//      setPositionable(RightGunAnimator, GetOutsideMesh());
+    }
+
+    for (int i = 0;i < KillCoPilotTextures.size(); i++)
+    {
+      if (DeathTexturesTmp[i] != null)
+        break;
+
+      DeathTexturesTmp[i] = PreLoadTexture(GetInsideMesh(), KillCoPilotTextures[i][1]);
+    }
+
+    m_AutoEnable = true;
+  }
+
+  void Finalize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    String HomePoint = (_PropMap.Get("HomePoint", ""));
+    if (HomePoint != "")
+    {
+      Component Behavior = GetBehavior();
+
+      if (Behavior != null)
+      {
+        Behavior.GetTaskScriptHost().InitHomePoint(HomePoint);
+      }
+      else
+      {
+        Component Pad = _Mission.GetObject(HomePoint);
+        if (isFunctionExist(Pad, "SetCurrentRechargeTransport", 1))
+          Pad.SetCurrentRechargeTransport(getIdentificator(user));
+      }
+    }
+
+    // finalize passangers
+    Component PropMap = new CPropertiesMap();
+    if (null != m_PilotObject)
+      m_PilotObject.Finalize(_Mission, PropMap);
+    if (null != m_CoPilotObject)
+      m_CoPilotObject.Finalize(_Mission, PropMap);
+    if (null != m_LeftGunnerObject)
+      m_LeftGunnerObject.Finalize(_Mission, PropMap);
+    if (null != m_RightGunnerObject)
+      m_RightGunnerObject.Finalize(_Mission, PropMap);
+
+    CObject::Finalize(_Mission, _PropMap);
+    CCockpit::Finalize(_Mission, _PropMap);
+
+    // Calculate unit mass
+    CalculateAdditionalUnitMass();
+  }
+
+  void Shutdown(
+      Component _Mission
+    )
+  {
+/*    Component VehicleController = GetVehicleController();
+    if (VehicleController != null)
+      VehicleController.EnableSound(false);
+*/
+    CObject::Shutdown(_Mission);
+    CCockpit::Shutdown(_Mission);
+
+    m_PilotObject = null;
+    m_CoPilotObject = null;
+    m_LeftGunnerObject = null;
+    m_RightGunnerObject = null;
+
+  }
+
+  // ======================================
+  // Passangers methods
+  // ======================================
+
+  Component CreatePassanger(
+      Component _Mission,
+      String    _PassangerId,
+      String    _PassangerScriptClass,
+      String    _LinkId,
+      String    _Affilation,
+      boolean   _IsManual,
+      int       _Seat
+    )
+  {
+    if (_PassangerScriptClass == "")
+    {
+      logWarning("Passanger script class " + _PassangerScriptClass + " not found");
+      return null;
+    }
+
+    Component Passanger = new #GameObject();
+
+    // Set unit identificator
+    setIdentificator(Passanger, getIdentificator(user) + _PassangerId);
+
+    // Load unit from script
+    if (!loadFromScript(Passanger, _PassangerScriptClass))
+    {
+      logError("Unable to load object from script: " + _ScriptClass);
+      return null;
+    }
+
+    Passanger.SetManualHeli(_IsManual);
+    Passanger.SetGoodAnimator(_IsManual || (_Seat >= 2)); // good gunner animation
+    Passanger.SetSeat(_Seat);
+    // constuct and register
+    Passanger.Construct(_Mission, new CPropertiesMap());
+    Passanger.SetAffiliation(_Affilation);
+    Passanger.SetVehicleBody(m_VehicleBody);
+
+    // register object in mission controller
+    _Mission.RegisterObject(getIdentificator(user) + _PassangerId, Passanger);
+
+    // Link object to outside link
+    {
+      Component Joint = GetOutsideMesh().GetJoint(_LinkId);
+      if (Joint != null)
+        Passanger.LinkToOutside(Joint);
+      else
+       logWarning("Cant find outside link joint " + _LinkId + " for " + _PassangerId);
+    }
+
+    // Link pilot object to inside link
+    if (_IsManual)
+    {
+      Component Joint = GetInsideMesh().GetJoint(_LinkId);
+      if (Joint != null)
+      {
+        Passanger.LinkToInside(Joint);
+        Passanger.LinkToFromEye(Joint);
+      }
+      else
+        logWarning("Cant find inside link joint " + _LinkId + " for " + _PassangerId);
+
+      if (Passanger.GetSeat() < RHandPilotsControlJoint.size() &&
+          Passanger.GetSeat() < LHandPilotsControlJoint.size())
+        Passanger.LinkToControls(GetInsideMesh().GetJoint(RHandPilotsControlJoint[Passanger.GetSeat()]),
+                                 GetInsideMesh().GetJoint(LHandPilotsControlJoint[Passanger.GetSeat()]));
+
+      // Need render this pilots only in user camera
+      Passanger.SetRenderToCamera(getIdentificator(user));
+      Passanger.SetImmortalMode(true);
+    }
+    else
+    {
+      Passanger.BuildOnlyOutsideMesh();
+    }
+
+    removeClassificator(Passanger.GetMeshComponent(), "MainMesh");
+    addClassificator(Passanger.GetMeshComponent(), CLASSIFICATOR_DO_NOT_FIRE_CHECK);
+
+
+    m_PhysicsExcludeSet.add(getIdentificator(user) + _PassangerId);
+
+    return Passanger;
+  }
+
+  float GetPassangersMass()
+  {
+    float fMass = 0.0;
+
+    if (null != m_PilotObject)       fMass += m_PilotObject.GetMass();
+    if (null != m_CoPilotObject)     fMass += m_CoPilotObject.GetMass();
+    if (null != m_LeftGunnerObject)  fMass += m_LeftGunnerObject.GetMass();
+    if (null != m_RightGunnerObject) fMass += m_RightGunnerObject.GetMass();
+
+    return fMass;
+  }
+
+  // ======================================
+  // Behevior methods
+  // ======================================
+
+  void SetupBehavior(
+      Component _Behavior,
+      Component _PilotController
+    )
+  {
+    CObject::SetupBehavior(_Behavior);
+
+    // Setup behavior pilot controller
+    GetBehavior().SetPilotController(_PilotController);
+    setSlaveObject(_PilotController, GetVehicleController());
+    RegisterObject("BehaviorPilotController", _PilotController);
+  }
+
+  // ======================================
+  // Camera methods
+  // ======================================
+
+  void OnChangeCameraPosition()
+  {
+    GetCameraLink().SetChangePositionFlag();
+  }
+
+  Component GetCamera()
+  {
+    return GetObject("UnitCamera");
+  }
+
+  Component GetCameraLink()
+  {
+    return GetObject("CameraLink");
+  }
+
+  void SetupCamera()
+  {
+    Component UnitCamera = GetCamera();
+    if (UnitCamera != null)
+    {
+      logWarning("Camera already initialized");
+      return;
+    }
+
+    UnitCamera = new #Camera<CPlayerCamera>();
+    RegisterObject("UnitCamera", UnitCamera);
+
+    Component CameraLink = new #ObjectCameraLink();
+    setSlaveObject(CameraLink, UnitCamera);
+    CameraLink.SetTargetSurfaceMask(
+        [ CLASSIFICATOR_TERRAIN ],
+        [ ]
+      );
+
+    CameraLink.SetMouseSensitivity(0.001, 0.001);
+    CameraLink.UseSystemTime(true);
+
+    RegisterObject("CameraLink", CameraLink);
+
+    // Get mesh component
+    Component Mesh = GetMeshComponent();
+
+    // Setup camera collision control
+    Component CollisionControl = new #CameraCollisionControl<CPlayerCameraCollisionControl>();
+    setSlaveObject(CollisionControl, UnitCamera);
+    CollisionControl.SetEventHandler(this);
+    RegisterObject("CameraCollisionControl", CollisionControl);
+
+    // Initialize camera link
+    SetDefaultCameraViewMode();
+  }
+
+  void SetDefaultCameraViewMode()
+  {
+    Component CameraLink = GetCameraLink();
+    if (CameraLink == null)
+      return;
+
+    CameraLink.SetCurrentFOV(1.0f);
+
+    Component Mesh = GetMeshComponent();
+
+    CameraLink.EnableCameraSliding(
+        false, // sliding state
+        0.12,  // slide to distance
+        0.2    // sliding speed
+      );
+
+    // Setup object camera linker by modes
+    if (m_ViewMode == CM_Person3rd)
+    {
+      // Link camera to helicopter mesh
+      setPositionable(CameraLink, Mesh);
+
+      // Compute radius
+      float Radius = getBoundingSphere(Mesh)[1] + 5.0;
+      CameraLink.SetFPCControlSettings(
+          Radius,  // MinDistance
+          100.0,  // MaxDistance
+          20.0,    // DistanceSpeed
+          50.0,    // DefaultDistance
+          1.0,     // HorAngleSpeed
+          0.35,    // DefaultHorAngle
+          1.0,     // VertAngleSpeed
+          1.4      // DefaultVertAngl
+        );
+      CameraLink.SetControlState(1);
+
+
+      CameraLink.ForceLinkToObject(false);
+      CameraLink.SetDefaultZAxis(true);
+      // Setup camera position and target
+      CameraLink.SetCameraPosition(
+          CRDSYS_Origin,
+          new Vector(0.0, 0.0, 0.0),
+          -1.0,
+          0.0,
+          0.0
+        );
+      CameraLink.SetCameraViewTarget(
+          CRDSYS_Origin,
+          new Vector(0.0, 0.0, 0.0),
+          false,
+          -1.0,
+          true
+        );
+
+      // Disable part obeject control
+      CameraLink.EnablePartObjectControl(false);
+    }
+    else
+    if (m_ViewMode == CM_CockpitNearest)
+    {
+      String JointName;
+      if (PS_PilotFirst == m_PlayerSit)
+      {
+        JointName = CockpitCameraM60;
+        CameraLink.SetControlState(4);
+      }
+      else
+      if (PS_PilotSecond == m_PlayerSit)
+      {
+        JointName = CockpitCameraM21;
+        CameraLink.SetControlState(4);
+      }
+      else
+      if (PS_GunnerLeft == m_PlayerSit)
+      {
+        CameraLink.SetControlState(0);
+        JointName = CockpitNearCameraGunnerLeft;
+      }
+      else
+      if (PS_GunnerRight == m_PlayerSit)
+      {
+        CameraLink.SetControlState(0);
+        JointName = CockpitNearCameraGunnerRight;
+      }
+
+      Component CameraJoint = Mesh.GetJoint(JointName);
+      if (null == CameraJoint)
+      {
+        logError("Unable to find camera pilot joint: " + JointName);
+        CameraJoint = Mesh;
+      }
+
+      Component CockpitObject = GetInsideMesh();
+      if (null != CockpitObject)
+        CockpitObject.SetAuxiliaryJoint(CameraJoint);
+
+      setPositionable(CameraLink, CameraJoint);
+
+      CameraLink.ForceLinkToObject(true);
+
+      // Initialize part object controller
+      CameraLink.SetPartObject(CockpitObject);
+      CameraLink.EnablePartObjectControl(true);
+      if (PS_PilotFirst == m_PlayerSit ||
+          PS_PilotSecond == m_PlayerSit)
+      {
+        CameraLink.SetJMCControlSettings(
+            0.05,    // MinDistance
+            1.4,     // MaxDistance
+            0.2,     // DistanceSpeed
+            - 0.12,  // DefaultDistance
+            -2.2,    // MinHorAngle
+            2.2,     // MaxHorAngle
+            1.5,     // HorAngleSpeed
+            0.0,     // DefaultHorAngle
+            -0.75,   // MinVertAngle
+            1.2,     // MaxVertAngle
+            1.5,     // VertAngleSpeed
+            0.0      // DefaultVertAngl
+          );
+
+        CameraLink.EnableCameraSliding(
+            true,  // sliding state
+            0.0,   // slide to distance
+            0.2    // sliding speed
+          );
+        CameraLink.SetCurrentFOV(0.50f);
+      }
+      else
+      if (PS_GunnerRight == m_PlayerSit ||
+          PS_GunnerLeft  == m_PlayerSit)
+      {
+        // get params the same as not in nearest mode
+        CameraLink.SetJMCControlSettings(
+            0.05,    // MinDistance
+            0.2,     // MaxDistance
+            0.2,     // DistanceSpeed
+            0.1,     // DefaultDistance
+            -2.2,    // MinHorAngle
+            2.2,     // MaxHorAngle
+            1.5,     // HorAngleSpeed
+            0.0,     // DefaultHorAngle
+            -0.75,   // MinVertAngle
+            1.2,     // MaxVertAngle
+            1.5,     // VertAngleSpeed
+            -0.1     // DefaultVertAngl
+          );
+
+        CameraLink.EnableCameraSliding(
+            true,  // sliding state
+            0.2,   // slide to distance
+            0.1    // sliding speed
+          );
+        CameraLink.SetCurrentFOV(0.33f);
+      }
+    }
+    else
+    {
+
+      String JointName;
+      if (PS_PilotFirst == m_PlayerSit)
+        JointName = CockpitCameraPilot;
+      else
+      if (PS_PilotSecond == m_PlayerSit)
+        JointName = CockpitCameraCoPilot;
+      else
+      if (PS_GunnerLeft == m_PlayerSit)
+      {
+        if (CM_Cockpit == m_ViewMode)
+          JointName = CockpitCameraGunnerLeft;
+        else
+          JointName = CockpitCameraGunnerLeftStatic;
+      }
+      else
+      if (PS_GunnerRight == m_PlayerSit)
+      {
+        if (CM_Cockpit == m_ViewMode)
+          JointName = CockpitCameraGunnerRight;
+        else
+          JointName = CockpitCameraGunnerRightStatic;
+      }
+
+      Component CameraJoint = Mesh.GetJoint(JointName);
+      if (null == CameraJoint)
+      {
+        logError("Unable to find camera pilot joint: " + JointName);
+        CameraJoint = Mesh;
+      }
+
+      Component CockpitObject = GetInsideMesh();
+      if (null != CockpitObject)
+        CockpitObject.SetAuxiliaryJoint(CameraJoint);
+
+      setPositionable(CameraLink, CameraJoint);
+
+      CameraLink.SetJMCControlSettings(
+          0.6,     // MinDistance
+          1.4,     // MaxDistance
+          0.2,     // DistanceSpeed
+          0.1,     // DefaultDistance
+          -2.2,    // MinHorAngle
+          2.2,     // MaxHorAngle
+          1.5,     // HorAngleSpeed
+          0.0,     // DefaultHorAngle
+          -0.75,   // MinVertAngle
+          1.2,     // MaxVertAngle
+          1.5,     // VertAngleSpeed
+          -0.1     // DefaultVertAngl
+        );
+
+      CameraLink.SetControlState(2);
+      CameraLink.ForceLinkToObject(true);
+
+      // Disable part obeject control
+//      CameraLink.EnablePartObjectControl(false);
+
+      if (m_ViewMode == CM_Person1rd)
+        CameraLink.SetControlState(0);
+      else if (m_ViewMode == CM_Cockpit)
+        CameraLink.SetControlState(3);
+
+      if (m_ViewMode != CM_Person1rd)
+      {
+        if (PS_GunnerLeft == m_PlayerSit)
+        {
+          CameraLink.SetControlState(0);
+        }
+        else
+        if (PS_GunnerRight == m_PlayerSit)
+        {
+          CameraLink.SetControlState(0);
+        }
+      }
+
+      // Initialize part object controller
+      CameraLink.SetPartObject(CockpitObject);
+      CameraLink.EnablePartObjectControl(m_ViewMode == CM_Cockpit);
+    }
+
+    // Setup weapons for camera
+    if (m_ViewMode == CM_Cockpit || m_ViewMode == CM_CockpitNearest)
+      SetNearWeaponConfig();
+    else
+    if (m_ViewMode == CM_Person1rd)
+      SetEmptyWeaponConfig();
+    else
+      SetBaseWeaponConfig();
+
+    // Initialize camera collision control
+    Component CollisionControl = GetObject("CameraCollisionControl");
+    if (CollisionControl != null)
+      CollisionControl.EnableControl(CM_Person3rd == m_ViewMode);
+    if (m_ViewMode == CM_Person3rd)
+      setPositionable(CollisionControl, GetMeshComponent());
+
+    // reset listener to avoid dopler effect when changing camera position
+    setPositionable(new #GameController().GetObject(SOID_MainListener), null);
+  }
+
+  // ======================================
+  // vehicle controller
+  // ======================================
+
+  Component CreateVehicleController()
+  {
+    return null;
+  }
+
+  Component GetVehicleController()
+  {
+    return GetObject("VehicleController");
+  }
+
+  void SetupVehicleController(
+      Component _Mission
+    )
+  {
+    // Create Vehicle controller
+    Component VehicleController = GetVehicleController();
+    if (null == VehicleController)
+    {
+      VehicleController = CreateVehicleController();
+      if (null == VehicleController)
+      {
+        logError("Cant setup type of vehicle control for " + getIdentificator(this));
+        return;
+      }
+      RegisterObject("VehicleController", VehicleController);
+    }
+
+    // Create mesh
+    Component Mesh = GetMeshComponent();
+
+    // Initialize control
+    Array Shapes = Mesh.GetCollisionShapes(Mesh.GetRootJoint(), true);
+
+    m_VehicleBody = VehicleController.CreateObject(Mesh, Shapes);
+    VehicleController.SetEventHandler(this);
+    VehicleController.SetCollisionEventHandler(GetStateControl());
+    VehicleController.SetAtmosphereComponent(_Mission.GetMissionAtmosphere());
+    VehicleController.SetupSoundComponents(Mesh, this);
+
+    VehicleController.InitializeDensityFunction(
+        _Mission.GetMissionTerrain().SeaLevel,
+        _Mission.GetMissionTerrain().BaseDensity
+      );
+
+    // Create rotor wind
+    Component RotorWind = new #RotorWind();
+    RotorWind.Initialize(
+        VehicleController,
+        _Mission.GetMissionAtmosphere(),
+        VehicleController.MaxMainWind,
+        VehicleController.Origin +
+          VehicleController.MainRotorSystem.RotorPoint,
+        //VehicleController.MainRotorSystem.Radius
+        10.0f
+      );
+    setPositionable(RotorWind, Mesh);
+    RegisterObject("RotorWind", RotorWind);
+
+    // Setup manual control by collision control
+    Component CollisionControl = GetCollisionControl();
+    if (null != CollisionControl)
+      setSlaveObject(CollisionControl, m_VehicleBody);
+    else
+      logWarning("Initialize collision control before manual control");
+  }
+
+  // ======================================
+  // Manual control
+  // ======================================
+
+  Component CreateManualControl()
+  {
+    return null;
+  }
+
+  Component GetManualControl()
+  {
+    return GetObject("ManualControl");
+  }
+
+  void SetupManualControl()
+  {
+    // Create manual control
+    Component ManualControl = GetManualControl();
+    if (null == ManualControl)
+    {
+      ManualControl = CreateManualControl();
+      if (null == ManualControl)
+      {
+        logError("Cant setup type of manual control for " + getIdentificator(this));
+        return;
+      }
+      RegisterObject("ManualControl", ManualControl);
+    }
+
+    Component VehicleController = GetVehicleController();
+    if (null != VehicleController)
+      setSlaveObject(ManualControl, VehicleController);
+    else
+      logError("Cant setup manual control becouse vehicle controller not found");
+
+    // enable events
+    VehicleController.EnableDropEvents(true);
+
+    // Set classificator for controllable object
+    addClassificator(user, CLASSIFICATOR_CONTROLLABLE);
+  }
+
+  event void EnableManualControl(
+      boolean _IsEnabled
+    )
+  {
+    Component ManualControl = GetManualControl();
+    if (null == ManualControl)
+      return;
+    ManualControl.EnableControl(_IsEnabled);
+  }
+
+  void SetupFreeFallControl()
+  {
+    Component FreeFallControl = new #FreeFallControl<CPlayerFreeFallControl>();
+    setSlaveObject(FreeFallControl, GetMeshComponent());
+    FreeFallControl.SetupLandingSurface(0.5f, 0.0f);
+    FreeFallControl.SetEventHandler(this);
+
+    RegisterObject("FreeFallControl", FreeFallControl);
+  }
+  
+  void StartFreeFall()
+  {
+    Component FreeFallControl = GetObject("FreeFallControl");
+    if (FreeFallControl != null)
+    {
+      setSlaveObject(FreeFallControl, GetPositionProvider()); // need geometry
+      FreeFallControl.EnableFreeFall(true);
+    }
+  }
+
+  // =======================================
+  // Input Throughput control
+  // =======================================
+
+  void OnInputCommand(
+      int _UserCommand
+    )
+  {
+    if ((new #GameController()).IsPaused())
+      return;
+
+    if (CTLCMD_TOGGLE_MFD1 == _UserCommand)
+    {
+      if (!m_CockpitExists)
+        return;
+
+      Component TerrainMap = GetObject("TerrainMap");
+      if (m_ViewMode != CM_Person1rd)
+      {
+        TerrainMap.Enable(!TerrainMap.IsEnabled());
+        if (TerrainMap.IsEnabled())
+        {
+          m_MFDState = 1;
+          TerrainMap.Align2Position(getPosition(GetOutsideMesh()).origin);
+        }
+        else
+          m_MFDState = 0;
+
+        GetObject("CameraLink").EnableMouseControl(m_MouseCameraState && !TerrainMap.IsEnabled());
+
+        ShowCursor(CM_Cockpit == m_ViewMode || TerrainMap.IsEnabled(),
+                   !TerrainMap.IsEnabled());
+
+      }
+      else
+      {
+        m_MFDState = m_MFDState + 1;
+        UpdateMFD();
+        if (TerrainMap.IsEnabled())
+          TerrainMap.Align2Position(getPosition(GetOutsideMesh()).origin);
+      }
+      Component WeaponSelector = GetObject("WeaponSelector");
+      boolean MouseEnable = !TerrainMap.IsEnabled();
+      WeaponSelector.EnableExButton(1, MouseEnable);
+      WeaponSelector.EnableExButton(2, MouseEnable);
+      WeaponSelector.EnableExButton(3, MouseEnable);
+
+      if (PS_GunnerLeft == m_PlayerSit ||
+          PS_GunnerRight == m_PlayerSit)
+      {
+        WeaponSelector.SetMouseEnable(MouseEnable);
+      }
+    }
+    else
+    if (CTLCMD_TOGGLE_MFD2 == _UserCommand)
+    {
+      Component MessageBar = GetObject("MessageBar");
+      if (MessageBar != null)
+        MessageBar.EnableMessages(!MessageBar.IsMessagesEnabled());
+    }
+    else
+    if ((CTLCMD_SET_VIEW_COCKPIT == _UserCommand ||
+        CTLCMD_SET_VIEW_NEAREST == _UserCommand &&
+        !(new #InputController()).GetButtonState(CTLCMD_SHIFT_FUNCTION) &&
+        !(new #InputController()).GetButtonState(CTLCMD_CTRL_FUNCTION)) && m_CanChangeView)
+    {
+      (new #GameSettings()).SetCockpitMode(CM_Cockpit);
+      OnCockpitModeChanged(CM_Cockpit);
+
+      Component Settings = new #GameSettings();
+      Settings.SetCockpitDevicesColor(CCommonStrings::CockpitColorCombo.size() - 1);
+      OnCockpitColorChanged(Settings.GetCockpitDevicesColor());
+    }
+    else
+    if ((CTLCMD_SET_VIEW_PERSON1RD == _UserCommand  ||
+        CTLCMD_SET_VIEW_NEAREST == _UserCommand &&
+        !(new #InputController()).GetButtonState(CTLCMD_SHIFT_FUNCTION) &&
+        (new #InputController()).GetButtonState(CTLCMD_CTRL_FUNCTION)) && m_CanChangeView)
+    {
+      (new #GameSettings()).SetCockpitMode(CM_Person1rd);
+      OnCockpitModeChanged(CM_Person1rd);
+
+      Component Settings = new #GameSettings();
+      Settings.SetCockpitDevicesColor(new #GameController().m_ColorSheme);
+      OnCockpitColorChanged(Settings.GetCockpitDevicesColor());
+
+    }
+    else
+    if (CTLCMD_SET_VIEW_PERSON3RD == _UserCommand && m_CanChangeView)
+    {
+      (new #GameSettings()).SetCockpitMode(CM_Person3rd);
+      OnCockpitModeChanged(CM_Person3rd);
+
+      Component Settings = new #GameSettings();
+      Settings.SetCockpitDevicesColor(CCommonStrings::CockpitColorCombo.size() - 1);
+      OnCockpitColorChanged(Settings.GetCockpitDevicesColor());
+    }
+    else
+    if ((CTLCMD_SET_SIT_0 == _UserCommand) && m_CanChangeView)
+    {
+      SetPlayerControlSit(0);
+      OnPlayerSitChanged(GetPlayerSit());
+
+      if (CM_CockpitNearest == (new #GameSettings()).GetCockpitMode())
+      {
+        (new #GameSettings()).SetCockpitMode(CM_Cockpit);
+        OnCockpitModeChanged(CM_Cockpit);
+      }
+    }
+    else
+    if ((CTLCMD_SET_SIT_1 == _UserCommand) && m_CanChangeView)
+    {
+      SetPlayerControlSit(1);
+      OnPlayerSitChanged(GetPlayerSit());
+
+      if (CM_CockpitNearest == (new #GameSettings()).GetCockpitMode())
+      {
+        (new #GameSettings()).SetCockpitMode(CM_Cockpit);
+        OnCockpitModeChanged(CM_Cockpit);
+      }
+    }
+    else
+    if ((CTLCMD_SET_SIT_2 == _UserCommand) && m_CanChangeView)
+    {
+      int CurControlSit = 2;
+      SetGunnerControlSit(CurControlSit);
+      OnGunnerSitChanged(GetPlayerSit());
+    }
+    else
+    if ((CTLCMD_SET_SIT_3 == _UserCommand) && m_CanChangeView)
+    {
+      int CurControlSit = 3;
+      SetGunnerControlSit(CurControlSit);
+      OnGunnerSitChanged(GetPlayerSit());
+    }
+    else
+    if ((CTLCMD_CHANGE_PLAYER_SIT == _UserCommand) && m_CanChangeView)
+    {
+      SetPlayerControlSit((GetPlayerControlSit() + 1) % 2);  //$TMP number of sits
+      OnPlayerSitChanged(GetPlayerSit());
+
+      if (CM_CockpitNearest == (new #GameSettings()).GetCockpitMode())
+      {
+        (new #GameSettings()).SetCockpitMode(CM_Cockpit);
+        OnCockpitModeChanged(CM_Cockpit);
+      }
+    }
+    else
+    if ((CTLCMD_CHANGE_GUNNER_SIT == _UserCommand) && m_CanChangeView)
+    {
+      int CurControlSit = GetGunnerControlSit();
+      CurControlSit = CurControlSit + 1;
+      if (CurControlSit > 3)
+        CurControlSit = 2;
+
+      SetGunnerControlSit(CurControlSit);
+      OnGunnerSitChanged(GetPlayerSit());
+
+    }
+    else
+    if ((CTLCMD_CHANGE_SIT == _UserCommand) && m_CanChangeView)
+    {
+      int CurSit = (GetPlayerSit() + 1) % 4;
+
+      if (CurSit > 2)
+      {
+        SetGunnerControlSit(CurSit);
+        OnGunnerSitChanged(GetPlayerSit());
+      }
+      else
+      {
+        SetPlayerControlSit(CurSit);
+        OnPlayerSitChanged(GetPlayerSit());
+
+        if (CM_CockpitNearest == (new #GameSettings()).GetCockpitMode())
+        {
+          (new #GameSettings()).SetCockpitMode(CM_Cockpit);
+          OnCockpitModeChanged(CM_Cockpit);
+        }
+      }
+
+    }
+    if (CTLCMD_CHANGE_COCKPIT_COLOR == _UserCommand)
+    {
+      if ((new #GameSettings()).GetCockpitMode() == CM_Person1rd)
+      {
+        new #GameController().m_ColorSheme = (new #GameController().m_ColorSheme + 1) %
+                     (CCommonStrings::CockpitColorCombo.size()-1);
+
+        Component Settings = new #GameSettings();
+        Settings.SetCockpitDevicesColor(new #GameController().m_ColorSheme);
+
+        OnCockpitColorChanged(Settings.GetCockpitDevicesColor());
+      }
+    }
+    else
+    if (CTLCMD_SET_VIEW_NEAREST == _UserCommand &&
+        (new #InputController()).GetButtonState(CTLCMD_SHIFT_FUNCTION) &&
+        !(new #InputController()).GetButtonState(CTLCMD_CTRL_FUNCTION))
+    {
+      int CurControlSit   = GetPlayerSit();
+      int CurCockpitMode  = (new #GameSettings()).GetCockpitMode();
+      if ((CM_Person1rd != CurCockpitMode) && (CM_Person3rd != CurCockpitMode))
+      {
+        if (CM_CockpitNearest == CurCockpitMode)
+          CurCockpitMode = CM_Cockpit;
+        else
+          CurCockpitMode = CM_CockpitNearest;
+
+        (new #GameSettings()).SetCockpitMode(CurCockpitMode);
+        OnCockpitModeChanged(CurCockpitMode);
+
+        Component Settings = new #GameSettings();
+        Settings.SetCockpitDevicesColor(CCommonStrings::CockpitColorCombo.size() - 1);
+        OnCockpitColorChanged(Settings.GetCockpitDevicesColor());
+      }
+
+    }
+    else
+    if (CTLCMD_TOGGLE_SIGHT == _UserCommand)      // toggle sight
+    {
+      ChangeSightState(GetPlayerControlSit());
+    }
+    else
+    if (CTLCMD_GOVERNOR_SWITCH == _UserCommand)      // toggle sight
+    {
+      if (m_bAutipilotEnabled)
+        return;
+
+      EnableGovernorSwitch(!IsEnabledGovernorSwitch(), true);
+    }
+    else
+    if (CTLCMD_SHOW_SIGHT == _UserCommand) // sight on / off
+    {
+      if ((new #GameSettings()).GetCockpitMode() != CM_Person1rd)
+        HideTarget();
+    }
+    else
+    if (CTLCMD_SIGHT_BRIGHTNESS_1 == _UserCommand) // sight brightness increase
+    {
+      if ((new #GameSettings()).GetCockpitMode() != CM_Person1rd)
+      IncreaseSightBright();
+    }
+    else
+    if (CTLCMD_SIGHT_BRIGHTNESS_2 == _UserCommand) // sight brightness decrease
+    {
+      if ((new #GameSettings()).GetCockpitMode() != CM_Person1rd)
+      DecreaseSightBright();
+    }
+    else
+    if (CTLCMD_SIGHT_DISTANCE_1 == _UserCommand) // sight distance increase
+    {
+      IncreaseSightDist();
+    }
+    else
+    if (CTLCMD_SIGHT_DISTANCE_2 == _UserCommand) // sight distance decrease
+    {
+      DecreaseSightDist();
+    }
+  }
+
+  void OnInputEnabled(
+      boolean _Enabled
+    )
+  {
+
+  }
+
+  // =======================================
+  // Collision control
+  // =======================================
+
+  Component CreateCollisionControl(String _ScriptClassName)
+  {
+    Component CollisionControl = new #CollisionControl2();
+    CollisionControl.SetCollisionMask(
+        [ ],
+        [ CLASSIFICATOR_DO_NOT_COLLISION_CHECK, CLASSIFICATOR_PHYSICS_CONTROLLABLE ]
+      );
+  
+    loadFromScript(CollisionControl, _ScriptClassName);
+    setSlaveObject(CollisionControl, GetMeshComponent());
+//    CollisionControl.SetEventHandler(this);
+
+    RegisterObject("CollisionControl", CollisionControl);
+
+    return CollisionControl;
+  }
+
+  Component GetCollisionControl()
+  {
+    return GetObject("CollisionControl");
+  }
+
+  // ===========================================================
+  // Local events
+  // ===========================================================
+
+  event void OnAmmoChanged(
+      Component _Weapon,
+      int       _AmmoQty,
+      int       _FiredAmmo,
+      boolean   _Unlimited
+   )
+  {
+    // check control mode
+    Component VehicleController = GetVehicleController();
+    if (null == VehicleController || !(new #GameSettings()).GetPayloadMode())
+      return;
+
+    m_TotalExtraMass -= _Weapon.AmmoMass * _FiredAmmo;
+
+    if (m_TotalExtraMass < 0.0)
+      m_TotalExtraMass = 0.0;
+
+    VehicleController.SetAdditionalMass(m_TotalExtraMass);
+  }
+
+  event void OnCursorShow(
+      boolean _CursorState
+    )
+  {
+    Component WeaponSelector = GetObject("WeaponSelector");
+    if (WeaponSelector != null)
+      WeaponSelector.Enable(!_CursorState);
+
+    Component CameraLink = GetObject("CameraLink");
+    if (CameraLink != null)
+      CameraLink.EnableMouseControl(!_CursorState);
+  }
+
+  event void ChangeUnitSpeed(
+      float _CurrentValueMain,
+      float _CurrentValueTail,
+      float _CurrentEngineSpeed
+    )
+  {
+    UpdateMainEngineState(_CurrentValueMain);
+    UpdateTailEngineState(_CurrentValueTail);
+
+    if (m_CockpitExists)
+      OnChangeUnitSpeed(_CurrentValueMain, _CurrentEngineSpeed);
+  }
+
+  event void SetFlyState()
+  {
+    sendEvent( 0.0, SOID_MissionController, "HelicSetFlyState", [getIdentificator(user)]);
+  }
+
+  event void SetLandState()
+  {
+    sendEvent( 0.0, SOID_MissionController, "HelicSetLandState", [getIdentificator(user)]);
+  }
+
+  // ===========================================================
+  //  Network wingman interaction
+  // ===========================================================
+
+  event void Player_AddWingman(
+      String _PlayerID,
+      String _WingmanID,
+      int    _WingmanRank
+    )
+  {
+    if ((_PlayerID == getIdentificator(user)) && checkMask(user, ["HOSTMODE"], []))
+    {
+      Component WingmenMenu = GetObject("WingmenMenu");
+      if (WingmenMenu != null)
+      {
+        WingmenMenu.AddWingman(_WingmanID, _WingmanRank);
+      }
+    }
+  }
+
+  event void Player_RemoveWingman(
+      String _PlayerID,
+      String _WingmanID
+    )
+  {
+    if ((_PlayerID == getIdentificator(user)) && checkMask(user, ["HOSTMODE"], []))
+    {
+      RemoveWingman(_WingmanID);
+    }
+  }
+
+  // ==========================================
+  // Second pilot
+  // ==========================================
+
+  // setup second pilot
+  void SetupSecondPilot(Component _SecondPilot)
+  {
+    RegisterObject("SecondPilot", _SecondPilot);
+
+    // Initialize second pilot by current vehicle controller
+    setSlaveObject(_SecondPilot, GetVehicleController());
+    _SecondPilot.EnableControl(true);
+    _SecondPilot.SetEventHandler(this);
+  }
+
+  Component GetSecondPilot()
+  {
+    return GetObject("SecondPilot");
+  }
+
+  event void OnMoveFinished()
+  {
+    Component Mission = new #GameController().GetLoadedMission();
+    if (null != Mission)
+      Mission.OnMoveFinished();
+  }
+
+  // This event call if user can enable/disable autopilot
+  event void OnPilotState(boolean _IsEnabled)
+  {
+    Component Mission = new #GameController().GetLoadedMission();
+    if (null != Mission)
+      Mission.OnPilotState(_IsEnabled);
+  }
+
+  // This event call if autopilot enable/disable programs
+  event void OnPilotEnabled(boolean _IsEnabled)
+  {
+    if (!m_AutoEnable) return;
+
+    // save enabled flag
+    m_bAutipilotEnabled = _IsEnabled;
+
+    // enable/disable manual control
+    Component ManualConrol = GetManualControl();
+    if (null != ManualConrol)
+      ManualConrol.EnableControl(!_IsEnabled);
+
+    // Enable governor switch for autopilot
+    if (_IsEnabled)
+    {
+      EnableGovernorSwitch(true,            true);
+
+      SetSwitchState("Fuel",                true);
+      OnFuelSwitch("Fuel",                  true);
+
+      SetSwitchState("AuxFuelLeft",         true);
+      OnAuxFuelLeftSwitch("AuxFuelLeft",    true);
+
+      SetSwitchState("AuxFuelRight",        true);
+      OnAuxFuelRightSwitch("AuxFuelRight",  true);
+
+      SetSwitchState("Power",               true);
+      OnPowerSwitch("Power",                true);
+
+      SetSwitchState("PanelPower",          true);
+      OnPanelPowerSwitch("PanelPower",      true);
+    }
+
+    // Disable panels
+    if (IsCockpitExists())
+    {
+      // Enable or disable panels
+      EnablePanelsSwitch("AuxFuelLeft", !_IsEnabled);
+      EnablePanelsSwitch("AuxFuelRight", !_IsEnabled);
+      EnablePanelsSwitch("PanelPower", !_IsEnabled);
+      EnablePanelsSwitch("Power", !_IsEnabled);
+      EnablePanelsSwitch("Fuel", !_IsEnabled);
+      EnablePanelsSwitch("Gov", !_IsEnabled);
+
+      Component MessageInfoBar = GetObject("MessageInfoBar");
+      if (MessageInfoBar != null)
+      {
+        WString Text = CGameMessages::str_msg_AutoPilotOn;
+
+        float Time   = 0.0f;
+
+        if (!_IsEnabled)
+        {
+          Text = CGameMessages::str_msg_AutoPilotOff;
+          Time = 3.0f;
+        }
+
+        MessageInfoBar.SetMessage(CCockpitInfoMsgBar::MSG_AUTOPILOT, Text, new Color(1.0, 0.0, 0.0), Time);
+      }
+
+    }
+  }
+
+  // ==========================================
+  // Unit items
+  // ==========================================
+
+  event void OnUnitItemHitPercentChanged(
+      Component _Item,
+      float     _HitPointsProcent     // current hitpoints relative to initial value
+    )
+  {
+    SetPartLifePercent(_Item.ItemName, _HitPointsProcent);
+  }
+
+  event void DestroyItem(
+      Component _Descriptor
+    )
+  {
+    logMessage(getIdentificator(this) + " DestroyItem (" + _Descriptor.ItemName + ")");
+    Component Mesh = GetMeshComponent();
+
+    if (_Descriptor.CrashItem != "")
+    {
+      Component CrashItem = GetObject(_Descriptor.CrashItem + "_CrashModel");
+      if (CrashItem != null)
+      {
+        setVisibleState(CrashItem, true);
+        setVisibleState(CrashItem.GetJoint("ROOT"), false);
+        setVisibleState(CrashItem.GetJoint(_Descriptor.CrashItem), true);
+        setVisibleState(Mesh.GetJoint(_Descriptor.CrashItem), false);
+
+        Component FreeFallControl = GetObject("FreeFallControl_" + _Descriptor.CrashItem);
+        Matrix Position = getPosition(Mesh);
+
+        Position.xvec = new Vector(1.0, 0.0, 0.0);
+        Position.yvec = new Vector(0.0, 0.0, 1.0);
+        Position.zvec = new Vector(0.0, -1.0, 0.0);
+
+        setPosition(CrashItem, Position);
+        setSlaveObject(FreeFallControl, CrashItem);
+
+//        FreeFallControl.EnableFreeFall(true);
+        FreeFallControl.StartFreeFall(new Vector(rand(-20.0, 20.0), rand(-20.0, 20.0), 0.0), true);
+        OnPilotEnabled(false);
+        m_AutoEnable = false;
+
+      }
+    }
+
+    if (_Descriptor.ItemName == "Engine")
+    {
+      Component EngineAnimator1 = GetObject("EngineAnimator1");
+      if (EngineAnimator1 != null)
+      {
+        EngineAnimator1.SetCrashed(true);
+        EngineAnimator1.StopRotor();
+      }
+
+      Component Vehicle = GetVehicleController();
+      if (null != Vehicle)
+      {
+        Vehicle.SetHelicopterMass(1800.0);
+        Vehicle.EnableFreeFall(true, 1000.0, 4.0);
+      }
+
+//    set 3rd person view
+      (new #GameSettings()).SetCockpitMode(CM_Person3rd);
+      OnCockpitModeChanged(CM_Person3rd);
+
+      Component Settings = new #GameSettings();
+      Settings.SetCockpitDevicesColor(CCommonStrings::CockpitColorCombo.size() - 1);
+      OnCockpitColorChanged(Settings.GetCockpitDevicesColor());
+
+      m_CanChangeView = false;
+      Component WeaponSelector = GetObject("WeaponSelector");
+      for (int i = 0; i < m_WeaponList.size(); i++)
+      {
+        WeaponSelector.EnableSlot(i, false);
+//        m_WeaponList[i].Disable();
+      }
+
+      sendEvent(0.0, getIdentificator(GetMission()), "OnObjectDestroyed", [getIdentificator(this)]);
+      OnPilotEnabled(false);
+      m_AutoEnable = false;
+
+    }
+    else
+    if ((_Descriptor.ItemName == "LFHeliPart") || (_Descriptor.ItemName == "RFHeliPart"))
+    {
+      if (Mesh != null)
+//        setVisibleState(Mesh.GetJoint("Body_Details"), false);
+
+      // Create explosion
+      if ("" != PostExplosionID)
+        (new #ExplosionsArray()).CreateExplosion(PostExplosionID, getPosition(this), null, getIdentificator(this));
+
+      // Create death effect & sound
+      if ("" != PostDeathEffect)
+        (new #EffectsArray()).CreateEffect(PostDeathEffect, getPosition(this), this);
+
+      if ("" != PostDeathSound)
+        (new #SoundsArray()).CreateSound(PostDeathSound, getPosition(this));
+
+      if (null != m_PilotObject)
+        m_PilotObject.DestroyObject();
+      if (null != m_CoPilotObject)
+        m_CoPilotObject.DestroyObject();
+      if (null != m_LeftGunnerObject)
+        m_LeftGunnerObject.DestroyObject();
+      if (null != m_RightGunnerObject)
+        m_RightGunnerObject.DestroyObject();
+      OnPilotEnabled(false);
+      m_AutoEnable = false;
+    }
+    else
+    if (_Descriptor.ItemName == "TailRotor")
+    {
+      Component EngineAnimator2 = GetObject("EngineAnimator2");
+      if (EngineAnimator2 != null)
+        EngineAnimator2.EnableControl(false);
+
+      if (Mesh != null)
+      {
+        setVisibleState(Mesh.GetJoint("Static_tRotor"), false);
+        setVisibleState(Mesh.GetJoint("Dyn_tRotor"), false);
+        setVisibleState(Mesh.GetJoint("Body_rear"), false);
+        setVisibleState(Mesh.GetJoint("Body_rear_crashed"), true);
+      }
+      OnPilotEnabled(false);
+      m_AutoEnable = false;
+    }
+/*        for (int i = 0; i < m_WindEffectList2.size(); i++)
+          (new #EffectsArray()).EnableEffect(m_WindEffectList2[i], false);
+
+        for (int i = 0; i < m_WindEffectList.size(); i++)
+          (new #EffectsArray()).EnableEffect(m_WindEffectList[i], false);
+        //$TMP need to use another condition for destroy unit
+      }*/
+
+    // $TMP Create item explosion
+    if (!_Descriptor.Explosions.isEmpty())
+    {
+/*      Matrix Position = getPosition(_Descriptor.Joint);
+      (new #GameController()).GetObject("ExplosionsArray").
+        CreateExplosion(_Descriptor.Explosions[0], Position, null, getIdentificator(this));
+*/
+      if ("" != _Descriptor.Explosions[0])
+        (new #EffectsArray()).CreateEffect(_Descriptor.Explosions[0], getPosition(this), this);
+    }
+
+    // If weapon disable it
+    for (int i = 0; i < m_WeaponList.size(); i++)
+      if (m_WeaponNames[i] == _Descriptor.ItemName)
+      {
+        m_WeaponList[i].Disable();
+      }
+
+    // Destroy children items
+    Component StateControl = GetStateControl();
+    if (StateControl != null)
+    {
+      Array Children = GetChildrenItems(_Descriptor);
+      for (int i = 0; i < Children.size(); i++)
+        StateControl.SetUnitItemHP(Children[i], 0);
+    }
+
+    // Set model state
+    SetModelLifeState(_Descriptor, false);
+
+  }
+
+  event void OnObjectFixed(
+      boolean _Status
+    )
+  {
+    if (_Status)
+      DestroyObject();
+    else
+      RestoreObject();
+  }
+
+  event void RestoreItem(
+      Component _Descriptor
+    )
+  {
+    logMessage(getIdentificator(this) + " RestoreItem (" + _Descriptor.ItemName + ")");
+
+    // If weapon reload it
+    for (int i = 0; i < m_WeaponList.size(); i++)
+      if (m_WeaponNames[i] == _Descriptor.ItemName)
+        m_WeaponList[i].ReloadAmmunition();
+
+    // Restore HP
+    Component StateControl = GetStateControl();
+    StateControl.SetUnitItemHP(_Descriptor.Index, _Descriptor.HitPoints);
+
+    // Set model state
+    SetModelLifeState(_Descriptor, true);
+  }
+
+  void SetModelLifeState(
+      Component _Descriptor,
+      boolean   _State
+    )
+  {
+    if (_State)
+      sendEvent(0.0, getIdentificator(this), "SetModelViewState", [_Descriptor, _State]);
+    else
+      sendEvent(1.0, getIdentificator(this), "SetModelViewState", [_Descriptor, _State]);
+  }
+
+  event void SetModelViewState(
+      Component _Descriptor,
+      boolean   _State
+    )
+  {
+    if (_Descriptor == null)
+    {
+      SetModelViewState(_State);
+    }
+    else
+    {
+      // Get mesh
+      Component Mesh = GetMeshComponent();
+      if (Mesh == null)
+        return;
+
+      // Search for damage state joint
+      Component Damaged = Mesh.GetJoint(
+        Mesh.GetJointName(_Descriptor.Joint) + "_crashed");
+
+      if (Damaged != null)
+      {
+        setVisibleState(_Descriptor.Joint, _State);
+        setVisibleState(Damaged, !_State);
+      }
+
+    }
+  }
+
+  event void OnFallObjectLanded(
+      String  _FallControllerID
+    )
+  {
+    if (!m_IsManual) CObject::PlayDestroyAnimation();
+  }
+
+  event void SetModelViewState(
+      boolean   _State
+    )
+  {
+    CObject::SetModelViewState(_State);
+
+    if (null != m_PilotObject)
+      m_PilotObject.SetModelViewState(_State);
+    if (null != m_CoPilotObject)
+      m_CoPilotObject.SetModelViewState(_State);
+    if (null != m_LeftGunnerObject)
+      m_LeftGunnerObject.SetModelViewState(_State);
+    if (null != m_RightGunnerObject)
+      m_RightGunnerObject.SetModelViewState(_State);
+  }
+
+  event void SetImmortalMode(
+      boolean _Mode
+    )
+  {
+    CObject::SetImmortalMode(_Mode);
+    if (null != m_PilotObject)
+      m_PilotObject.SetImmortalMode(_Mode);
+    if (null != m_CoPilotObject)
+      m_CoPilotObject.SetImmortalMode(_Mode);
+    if (null != m_LeftGunnerObject)
+      m_LeftGunnerObject.SetImmortalMode(_Mode);
+    if (null != m_RightGunnerObject)
+      m_RightGunnerObject.SetImmortalMode(_Mode);
+  }
+
+  event void SetUnlimitedFuel(
+      boolean _Enabled
+    )
+  {
+    FuelTankLF.IsUnlimited = _Enabled;
+    FuelTankRF.IsUnlimited = _Enabled;
+    FuelTankLB.IsUnlimited = _Enabled;
+    FuelTankRB.IsUnlimited = _Enabled;
+  }
+
+  event void DestroyObject()
+  {
+    CObject::DestroyObject();
+
+    if (null != m_PilotObject)
+      m_PilotObject.DestroyObject();
+    if (null != m_CoPilotObject)
+      m_CoPilotObject.DestroyObject();
+    if (null != m_LeftGunnerObject)
+      m_LeftGunnerObject.DestroyObject();
+    if (null != m_RightGunnerObject)
+      m_RightGunnerObject.DestroyObject();
+
+    StartFreeFall();
+  }
+
+  event void DamageObject()
+  {
+    CObject::PlayDamageAnimation();
+  }
+
+  // ==========================================
+  // Service methods
+  // ==========================================
+
+  // calculate weapons mass and other
+  void CalculateAdditionalUnitMass()
+  {
+    // check control mode
+    Component VehicleController = GetVehicleController();
+    if (null == VehicleController || !(new #GameSettings()).GetPayloadMode())
+      return;
+
+    // update helicopter mass
+    m_TotalExtraMass = GetPassangersMass();
+    for (int IndexWeapon = 0; IndexWeapon < m_WeaponList.size(); IndexWeapon++)
+      m_TotalExtraMass += m_WeaponList[IndexWeapon].GetWeaponMass();
+
+    VehicleController.SetAdditionalMass(m_TotalExtraMass);
+  }
+
+  void SetupPersonalNavPoint(
+      Component _Mission,
+      String    _ScriptClass
+    )
+  {
+    _Mission.CreateObject(
+        getIdentificator(user) + "_PersonalNP",
+        "NavPoint",
+        _ScriptClass,
+        getPosition(this),
+        [
+          ["Detect", false],
+          ["Range",  0.0],
+          ["Name",   ""],
+          ["Mask",   [[],[]]]
+        ]
+      );
+
+    Component Point = _Mission.GetObject(getIdentificator(user) + "_PersonalNP");
+    if (Point != null)
+      m_ChildMissionObjects.add(Point);
+  }
+
+  void SetBaseWeaponConfig()
+  {
+    for (int IndexWeapon = 0; IndexWeapon < m_WeaponList.size(); IndexWeapon++)
+      m_WeaponList[IndexWeapon].SetBaseEffects();
+  }
+
+  void SetNearWeaponConfig()
+  {
+    for (int IndexWeapon = 0; IndexWeapon < m_WeaponList.size(); IndexWeapon++)
+      m_WeaponList[IndexWeapon].SetNearEffects();
+  }
+
+  void SetEmptyWeaponConfig()
+  {
+    for (int IndexWeapon = 0; IndexWeapon < m_WeaponList.size(); IndexWeapon++)
+      m_WeaponList[IndexWeapon].SetEmptyEffects();
+  }
+
+  // ==========================================
+  // Effects
+  // ==========================================
+
+  void SetWindDustEffectScale(
+      float _Scale
+    )
+  {
+    for (int Index = 0; Index < m_WindEffectList.size(); Index++)
+    {
+      new #EffectsArray().SetEffectScale(m_WindEffectList[Index], _Scale);
+    }
+  }
+
+  void SetWindDustEffectScale2(
+      float _Scale
+    )
+  {
+    for (int Index = 0; Index < m_WindEffectList2.size(); Index++)
+    {
+      new #EffectsArray().SetEffectScale(m_WindEffectList2[Index], _Scale);
+    }
+  }
+
+  event void KillCoPilot()
+  {
+    for (int i = 0;i < KillCoPilotTextures.size(); i++)
+    {
+      SwitchTexture(GetInsideMesh(), KillCoPilotTextures[i][0], KillCoPilotTextures[i][1]);
+    }
+
+    m_CoPilotObject.Kill();
+  }
+
+  void SetLeftGunnerState(int _Mode)
+  {
+    if (m_LeftGunnerObject == null)
+      return;
+
+    if (m_LeftGunnerObject.GetState() == _Mode)
+      return;
+
+    m_LeftGunnerObject.SetState(_Mode);
+
+    // disable weapon
+//    GetBehavior().setFireStyle_NoFire(m_LeftGunnerObject.GetWeapon(), _Mode != CGunnerUnit::GS_TARGET);
+    Vector Dir = new Vector(0.5, 0.0f, -0.5);
+    Dir.Normalize();
+    m_LeftGunnerObject.GetWeapon().BlockWeapon(_Mode != CGunnerUnit::GS_TARGET, Dir, true);
+  }
+
+  void SetRightGunnerState(int _Mode)
+  {
+    if (m_RightGunnerObject == null)
+      return;
+
+    if (m_RightGunnerObject.GetState() == _Mode)
+      return;
+
+    m_RightGunnerObject.SetState(_Mode);
+
+    // disable weapon
+//    GetBehavior().setFireStyle_NoFire(m_RightGunnerObject.GetWeapon(), _Mode != CGunnerUnit::GS_TARGET);
+
+    Vector Dir = new Vector(0.5, 0.0f, -0.5);
+    Dir.Normalize();
+    m_RightGunnerObject.GetWeapon().BlockWeapon(_Mode != CGunnerUnit::GS_TARGET, Dir, true);
+  }
+
+}
+
+class CPlayerFreeFallControl
+{
+  Vector GravityAccelerate  = CWorldPhysics::GravityVector;
+  float TractiveResistance  = 0.0f;
+  float RotationMomentScale = 0.0f;
+}
+
+class CCrashFreeFallControl
+{
+  Vector GravityAccelerate  = CWorldPhysics::GravityVector;
+  float TractiveResistance  = 1.0f;
+  float RotationMomentScale = 0.0f;
+}

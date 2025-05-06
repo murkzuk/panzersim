@@ -1,0 +1,74 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CRadioNavPoint
+  extends CZAxisCylNavPoint
+{
+  static final int ADF = NAVPOINT_PLAYER_TYPE0;
+  static final int VOR = NAVPOINT_PLAYER_TYPE1;
+  
+  static final float DefaultReceiveDistance = 1000.0;
+  static final float DefaultWaveFreq        = 101.2;
+
+
+  int    m_WaveType        = ADF;
+  int    m_ReceiveDistance = DefaultReceiveDistance;
+  float  m_WaveFreq        = DefaultWaveFreq; // Hz
+
+
+  Array GetDefaultProperties()
+  {   
+    Array Default = CZAxisCylNavPoint::GetDefaultProperties();
+
+    Default.append([
+        ["WaveType",        "ADF"],
+        ["ReceiveDistance", DefaultReceiveDistance],
+        ["WaveFreq",        DefaultWaveFreq]
+      ]);
+
+    return Default;
+  }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+    CZAxisCylNavPoint::SetProperties(_PropMap);
+   
+    m_ReceiveDistance = _PropMap.Get("ReceiveDistance", DefaultReceiveDistance);
+    m_WaveFreq        = _PropMap.Get("WaveFreq", DefaultWaveFreq);
+
+    String WaveType   = _PropMap.Get("WaveType", "ADF");
+
+    m_WaveType = getStaticClassMember("CRadioNavPoint", WaveType);
+
+    SetNavType(m_WaveType);
+  }
+
+  //
+  // Getters
+  //
+
+  float GetWaveFreq()
+  {
+    return m_WaveFreq;
+  }
+
+  float GetReceiveDistance()
+  {
+    return m_ReceiveDistance;
+  }
+
+  int GetWaveType()
+  {
+    return m_WaveType;
+  }
+
+}
+

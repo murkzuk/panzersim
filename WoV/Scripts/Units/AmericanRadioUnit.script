@@ -1,0 +1,119 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CAmericanRadioLoadTransportAnim
+{
+  final static String  AnimationName     = "load";
+  final static float   AnimationTime     = 1.0;
+}
+
+class CAmericanRadioUnloadTransportAnim
+{
+  final static String  AnimationName     = "unload";
+  final static float   AnimationTime     = 1.0;
+}
+
+//Rifle
+class CAmericanRadioRifle
+  extends CMachineGun
+{
+  final static String BulletPatternId = "AmericanSoldierRifleFakeBullet";
+  Component BurstFireSound  = new #Emitter<CM16GunFireSound>();
+
+  final static float LockAngleHMin = - 46;
+  final static float LockAngleHMax =   46;
+  final static float LockAngleVMin = - 46;
+  final static float LockAngleVMax =   46;
+
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod        = 100; // ms
+  final static int  FirePeriodRandAdd = 200;  // ms
+
+  final static float MinDistance      = 1;
+  final static float MaxDistance      = 200;
+
+  final static boolean BurstFire      = true;
+
+  final static int  BurstTime         = 500; // ms
+  final static int  BurstTimeRandAdd  = 1000;    // ms
+
+  final static int  BurstDelay        = 3000; // ms
+  final static int  BurstDelayRandAdd = 2000; // ms
+
+  final static int     AutoRepeatDelay  = 100;
+
+  // gun specific fire mask with priorities
+  final static Array GunSpecificFireMask = [
+                                [["HUMAN"],[]],  // high priority mask
+                                [["AIR"],  []],  // low priority mask
+                                [[],       []]   // low priority mask: RestrictTo, Exclude
+                              ];
+}
+
+// Behavior
+class CAmericanRadioBehavior extends CHumanBehavior
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 700; // m
+  float  MinRadarDistance = 5;    // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( 5.2, 0, 0);
+}
+
+class CAmericanRadioUnit
+  extends CHumanUnit
+{
+  final static float DefaultHitPoints = CHitPoints::AmericanRadioUnitHitPoints;
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND", "HUMAN"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CAmericanRadioUnit()
+  {
+    SetupMesh(new #AnimatedObject<Chum_AmericanRadioModel>(), [200, 100, 50, 10, 3]);
+
+    SetupWeapon("Weapon", new #Weapon<CAmericanRadioRifle>(), ["Fire_A"], null);
+    SetupBehavior(new #HumanBehavior<CAmericanRadioBehavior>());
+
+    //$TODO animator
+    //GetObject("AnimWeapon").EnableAnimator(false);
+    //SetupWeapon("Weapon", new #Weapon<CAmericanRadioRifle>(), ["Fire_A3_1"], new #TargetingAnimator<CHumanTargetingAnimator>());
+
+    LoadAnimations("ChumansAnimation");
+
+    SetupLoadTransportAnimation(new #LineAnimator<CAmericanRadioLoadTransportAnim>(),
+                                new #LineAnimator<CAmericanRadioUnloadTransportAnim>()
+                                );
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CHumanUnit::Construct( _Mission, _PropMap);
+  }
+}

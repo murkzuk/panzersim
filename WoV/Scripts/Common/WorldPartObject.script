@@ -1,0 +1,75 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Base class for all units
+class CWorldPartObject
+{
+
+  // ==========================================
+  // Initialization
+  // ==========================================
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+  }
+   
+  void Initialize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+  }
+   
+  void Shutdown(
+      Component _Mission
+    )
+  {
+  }
+
+  void Finalize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    Array Contents = _PropMap.Get("Contents", []);
+
+    Component Mission = (new #GameController()).GetLoadedMission();
+    if (null == Mission)
+      return;   
+
+    Component WorldObject = Mission.GetObject("WorldObject");
+    if (null == WorldObject)
+      return;   
+
+    WorldObject.Begin();
+
+    for (int i = 0; i < Contents.size(); i++)
+    {
+      logMessage(Contents[i]);
+      Mission.MoveRenderableObject(Contents[i], "WorldObjectGroup");        
+    }
+
+    WorldObject.End();
+  }
+
+  Array GetDefaultProperties()
+  {
+    return [];
+  }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+  }
+
+}

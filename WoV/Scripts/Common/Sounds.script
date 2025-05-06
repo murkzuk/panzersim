@@ -1,0 +1,1132 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CRpmAlarmSound
+{
+  String SoundFile = "Sounds/General_LowRPM.wav";
+}
+
+class CEngineSound
+{
+  float   MinDistance    = 100.0;
+  float   MaxDistance    = 800.0;
+  String  SoundFile      = "";
+
+  boolean PlayOnMove     = false;
+  Vector  SpeedThreshold = new Vector(0.5, 0.5, 100.0);
+
+  boolean Preload          = true;      // Флаг создания буфера для звука при регистрации в CSoundArray
+  int Priority             = DEFAULT_SOUND_PRIORITY;     // Приоритет звука (min..max)= (0..0xFFFFFFFF)
+  int MaxPlayingSameSounds = 10;         // Max Количество одновременно играющих одинаковых звуков
+
+  int     TimeLoop         = 0;//ms      // Если значение ненулевое - проигрывание в цикле в течение указанного времени
+}
+
+// example of complex sounds class
+/*
+class CComplexSound
+{
+
+ final static Array Sounds = [
+                               ["BarrelExplosionSound",    // simple registered 3D pattern ID
+                                 new Vector(0.0, 0.0, 0.0) // Position relative to Placement matrix in CreateInstance3D
+                               ],
+                               [
+                                 "GroundHitSound",
+                                 new Vector(0.0, 0.0, 0.0)]
+                             ];
+}
+*/
+
+class CMovementSound
+{
+  float   MinDistance    = 10.0;
+  float   MaxDistance    = 50.0;
+  String  SoundFile      = "";
+
+  boolean PlayOnMove     = true;
+  Vector  SpeedThreshold = new Vector(0.5, 0.5, 100.0);
+}
+
+//
+// Helicopter sounds
+//
+
+class CPlayerHeliEngineSound
+  extends CEngineSound
+{
+  String  SoundFile      = "Sounds/PlayerHeliEngine.wav";
+  float   MinDistance    = 50.0;
+  float   MaxDistance    = 300.0;
+}
+
+class CHelicopterEngineSound
+  extends CEngineSound
+{
+  String  SoundFile      = "Sounds/HelicopterEngine.wav";
+  float   MinDistance    = 70.0;
+  float   MaxDistance    = 500.0;
+}
+
+
+// Uh1B engine sounds
+class CUh1BRotorFlightSound
+  extends CPlayerHeliEngineSound
+{
+  String  SoundFile      = "Sounds/HEngine1_RotorLoop.wav";
+  //TODO  correct name WAV-file
+}
+
+class CUh1BTurbineFlightSound
+  extends CPlayerHeliEngineSound
+{
+  String  SoundFile      = "Sounds/HEngine1_TurbineLoop.wav";
+  //TODO  correct name WAV-file
+}
+
+class CUh1BTailRotorSound
+  extends CPlayerHeliEngineSound
+{
+  String  SoundFile      = "Sounds/hengine1_rotor2loop.wav";
+  float   MinDistance    = 10.0;
+  float   MaxDistance    = 80.0;
+}
+
+class CUh1BEngineStarterSound
+  extends CPlayerHeliEngineSound
+{
+  String  SoundFile      = "Sounds/hengine1_starter.wav";
+  float   MinDistance    = 50.0;
+  float   MaxDistance    = 50.0;
+}
+
+class CUh1BOverloadEngineSound
+  extends CPlayerHeliEngineSound
+{
+  String  SoundFile      = "Sounds/hengine_overload.wav";
+  float   MinDistance    = 50.0;
+  float   MaxDistance    = 200.0;
+  int     MinMaxType     = SD_MIN;
+}
+
+
+// Uh1D engine sounds
+class CUh1DRotorFlightSound
+  extends CHelicopterEngineSound
+{
+  String  SoundFile      = "Sounds/HEngine2_RotorLoop.wav";
+  float   MinDistance    = 20.0;
+  float   MaxDistance    = 300.0;
+}
+
+class CUh1DTurbineFlightSound
+  extends CHelicopterEngineSound
+{
+  String  SoundFile      = "Sounds/HEngine1_TurbineLoop.wav";
+}
+
+class CUh1DTailRotorSound
+  extends CHelicopterEngineSound
+{
+  String  SoundFile      = "Sounds/hengine1_rotor2loop.wav";
+  float   MinDistance    = 10.0;
+  float   MaxDistance    = 80.0;
+}
+
+
+// All player heli engine sounds
+class CStartEngineSound
+  extends CPlayerHeliEngineSound
+{
+  String  SoundFile      = "Sounds/TakeOff.wav";
+}
+
+class CStopEngineSound
+  extends CPlayerHeliEngineSound
+{
+  String  SoundFile      = "Sounds/TakeDown.wav";
+}
+
+//
+// Movement Sounds
+//
+class CTruckMovementSound
+  extends CMovementSound
+{
+  String  SoundFile      = "Sounds/WEngine2_Loop.wav";
+}
+
+class CJeepMovementSound
+  extends CMovementSound
+{
+  String  SoundFile      = "Sounds/WEngine1_Loop.wav";
+}
+
+class CPlaneMovementSound
+  extends CMovementSound
+{
+  String  SoundFile      = "Sounds/PEngine1_Loop.wav";
+  float   MinDistance    = 500.0;
+  float   MaxDistance    = 2500.0;
+}
+
+
+//
+// Gun Fire sounds
+//
+
+class CGunFireSound
+{
+  float   MinDistance    = 1.0;
+  float   MaxDistance    = 1000.0;
+  String  SoundFile      = "";
+}
+
+class CMachineGunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "";
+  float   MinDistance    = 5.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CLightGunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "";
+  float   MinDistance    = 5.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CHeavyGunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "";
+  float   MinDistance    = 120.0;
+  float   MaxDistance    = 800.0;
+}
+
+class CMortarGunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "Sounds/Weapon_Mortar.wav";
+  float   MinDistance    = 30.0;
+  float   MaxDistance    = 1000.0;
+
+}
+
+class CM16GunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "Sounds/Weapon_M16.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 2000.0;
+}
+
+class CM60GunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "Sounds/Weapon_M60.wav";
+  float   MinDistance    = 100.0;
+  float   MaxDistance    = 2000.0;
+}
+
+class CM134GunFireSound
+  extends CGunFireSound
+{
+  float InitialRandomFrequencyVariation = 0.01;
+
+  String  SoundFile      = "Sounds/Weapon_M134.wav";
+  float   MinDistance    = 50.0;
+  float   MaxDistance    = 800.0;
+}
+
+class CM134GunRotorSound
+{
+  float InitialRandomFrequencyVariation = 0.01;
+
+  String  SoundFile      = "Sounds/Weapon_M134rotor.wav";
+  float   MinDistance    = 10.0;
+  float   MaxDistance    = 500.0;
+}
+
+class CM134GunRotorOffSound
+{
+  String  SoundFile      = "Sounds/Weapon_M134rotor2.wav";
+  float   MinDistance    = 10.0;
+  float   MaxDistance    = 500.0;
+}
+
+class CAK47GunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "Sounds/Weapon_Ak47.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 2000.0;
+}
+
+class CM79GunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "Sounds/Weapon_M79.wav";
+  float   MinDistance    = 100.0;
+  float   MaxDistance    = 500.0;
+}
+
+
+class CSKS45GunFireSound
+  extends CGunFireSound
+{
+  String  SoundFile      = "Sounds/Weapon_Sks45.wav";
+  float   MinDistance    = 100.0;
+  float   MaxDistance    = 500.0;
+}
+
+class CMA2GunFireSound
+  extends CGunFireSound
+{
+  float InitialRandomFrequencyVariation = 0.01;
+
+  String  SoundFile      = "Sounds/Weapon_Ffar.wav";
+  float   MinDistance    = 30.0;
+  float   MaxDistance    = 300.0;
+}
+
+//
+// Explosion sounds
+//
+
+class CExplosionSound
+{
+  float   MinDistance = 100.0;
+  float   MaxDistance = 1000.0;
+  String  SoundFile      = "";
+}
+
+class CHeavyGunBulletExplosionSound
+  extends CExplosionSound
+{
+  //$TMP
+  String  SoundFile      = "Sounds/Explosion_Object_6.wav";
+  //String  SoundFile      = "Sounds/RocketExplosion.wav";
+  float   MinDistance    = 60.0;
+  float   MaxDistance    = 1500.0;
+}
+
+class CMortarGunBulletExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_7.wav";
+  float   MinDistance    = 60.0;
+  float   MaxDistance    = 2000.0;
+}
+
+class CHowitzerGunBulletExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_6.wav";
+  float   MinDistance    = 60.0;
+  float   MaxDistance    = 2000.0;
+}
+
+class CNapalmExplosionSound
+{
+  float   MinDistance    = 1000.0;
+  float   MaxDistance    = 4000.0;
+  String  SoundFile      = "Sounds/Explosion_napalm.wav";
+}
+
+class CNapalmExplosionFireSound
+{
+  float   MinDistance    = 150.0;
+  float   MaxDistance    = 1200.0;
+  String  SoundFile      = "Sounds/Explosion_napalm_fire.wav";
+  int     TimeLoop       = 58 * 1000; // 58 sec
+}
+
+class CComplexNapalmExplosionSound
+{
+  String  SoundFile = "";
+  final static Array SoundFiles = [];
+
+  final static Array Sounds = [
+                                [
+                                  "NapalmExplosionSound",         // simple registered 3D pattern ID
+                                  new Vector(0.0, 0.0, 0.0)  // Position relative to Placement matrix in CreateInstance3D
+                                ],
+                                [
+                                  "NapalmExplosionFireSound",
+                                  new Vector(0.0, 0.0, 0.0)
+                                ]
+                              ];
+}
+
+
+//
+// Unit Explosion
+//
+class CTruckExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Unit_3.wav";
+  float   MinDistance    = 100.0;
+  float   MaxDistance    = 600.0;
+}
+
+
+
+//
+//  Buildings Explosion
+//
+/*
+class CBuildingExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/LargeHouseExplosion.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}   */
+
+class CVietnameseHouseBigExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_1.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CVietnameseHouseBigPileExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_2.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CVietnameseHouseSmallExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_3.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CVietnameseHouseSmallPileExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_4.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CVietnameseGranaryExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_5.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CVietnameseGranaryPileExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_6.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CVietnameseRoofExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_7.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBridgeFootExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_8.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBridgeWoodExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_9.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CTentExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_10.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CTentLongExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_10.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CMedicalTentExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_10.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CMarqueeExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_7.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CRoofExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_10.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CCheckPointExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_11.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWellExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_12.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CTOCExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_13.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBunkerBaseExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_14.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBaseHangarExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_15.wav";
+  float   MinDistance    = 70.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBarrackExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_15.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBunkerAmmoExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_4.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CM29MortarPointExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_16.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CM60CordonPointExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_16.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWatchTowerExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_10.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CHeliPadExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Building_11.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBarrelExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_1.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBarrelFireSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/General_Fire.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+  int     TimeLoop       = 2 * 1000;
+}
+
+class CBarrelPackAFireSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/General_Fire.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+  int     TimeLoop       = 3 * 1000;
+}
+
+class CBarrelPackBFireSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/General_Fire.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+  int     TimeLoop       = 10 * 1000;
+}
+
+class CBarrackFireSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/General_Fire.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+  int     TimeLoop       = 7.3 * 1000;
+}
+
+class CBarrelPackAExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_2.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CBarrelPackBExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_2.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWeaponBoxBigExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_3.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWeaponBoxBigPackAExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_3.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWeaponBoxBigPackBExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_3.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWeaponBoxSmallExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_4.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWeaponBoxSmallPackAExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_4.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWeaponBoxSmallPackBExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_4.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CAmmoBoxExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_5.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CAmmoBoxPackAExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_5.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CAmmoBoxPackBExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_5.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CSampanExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CJunkExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CFenceWickerDeathSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CFenceWireSpiralDeathSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CFenceWireDeathSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CM29MortarExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Unit_1.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CM2A1HowitzerFireSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Weapon_Howitzer.wav ";
+  float   MinDistance    = 30.0;
+  float   MaxDistance    = 300.0;
+}
+
+class CM2A1HowitzerExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Unit_1.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CLightMissileExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Object_8.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CDShKExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/Explosion_Unit_1.wav";
+  float   MinDistance    = 200.0;
+  float   MaxDistance    = 600.0;
+}
+
+
+//
+// Hit effects
+//
+
+
+
+//
+// Terrain effects
+//
+
+class CGroundExplosionSound
+{
+  float   MinDistance    = 50.0;
+  float   MaxDistance    = 200.0;
+  String  SoundFile      = "Sounds/Explosion_Ground.wav";
+}
+
+class CGroundBulletHitSound
+{
+  String  SoundFile      = "Sounds/BulletHit_Ground.wav";
+  float   MinDistance    = 10.0;
+  float   MaxDistance    = 100.0;
+}
+
+//
+// Surround effects
+//
+
+class CMetalExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/RocketExplosion.wav";
+  float   MinDistance    = 100.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CWoodExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/RocketExplosion.wav";
+  float   MinDistance    = 100.0;
+  float   MaxDistance    = 600.0;
+}
+
+class CStoneExplosionSound
+  extends CExplosionSound
+{
+  String  SoundFile      = "Sounds/RocketExplosion.wav";
+  float   MinDistance    = 100.0;
+  float   MaxDistance    = 600.0;
+}
+
+//
+// Forest effects
+//
+
+class CForestBulletHitSound
+  extends CExplosionSound
+{
+  String SoundFile       = "Sounds/BulletHit_Wood.wav";
+  float   MinDistance    = 10.0;
+  float   MaxDistance    = 100.0;
+}
+
+class CForestExplosionSound
+  extends CExplosionSound
+{
+  String SoundFile       = "Sounds/Explosion_Forest.wav";
+  float   MinDistance    = 120.0;
+  float   MaxDistance    = 500.0;
+}
+
+//
+// Water effects
+//
+
+class CWaterBulletHitSound
+  extends CExplosionSound
+{
+  String SoundFile       = "Sounds/BulletHit_Water.wav";
+  float   MinDistance    = 10.0;
+  float   MaxDistance    = 100.0;
+}
+
+class CWaterExplosionSound
+  extends CExplosionSound
+{
+  String SoundFile       = "Sounds/Explosion_Water.wav";
+  float   MinDistance    = 120.0;
+  float   MaxDistance    = 500.0;
+}
+
+//
+// Bullet hit effect helicopter and people
+//
+
+class CBulletHitBodyPeople
+{
+  String SoundFile       = "Sounds/BulletHit_Body.wav";
+  float   MinDistance    = 1.0;
+  float   MaxDistance    = 5.0;
+}
+class CBulletHitHelicopterBody
+{
+  String SoundFile       = "Sounds/BulletHit_Helicopter_1.wav";
+  float   MinDistance    = 1.0;
+  float   MaxDistance    = 5.0;
+}
+class CBulletHitHelicopterGlass
+{
+  String SoundFile       = "Sounds/BulletHit_Helicopter_2.wav";
+  float   MinDistance    = 1.0;
+  float   MaxDistance    = 5.0;
+}
+class CBulletHitHelicopterRicochet
+{
+  String SoundFile       = "Sounds/BulletHit_Helicopter_3.wav";
+  float   MinDistance    = 1.0;
+  float   MaxDistance    = 5.0;
+}
+
+class CBulletHit_KillPilot
+{
+  String SoundFile       = "Sounds/BulletHit_KillPilot.wav";
+  float   MinDistance    = 1.0;
+  float   MaxDistance    = 5.0;
+}
+
+//
+// Fence effects
+//
+
+
+//
+// Pole effects
+//
+
+//
+// Menu sounds
+//
+
+//
+// Mission scripted cinema sound
+//
+
+// Compaing 1
+// Compaing 2
+// Compaing 3
+// Compaing 4
+
+//
+// Array
+//
+
+class CSoundsArray
+{
+  static Array m_SoundsMap          = [];
+  static Array m_SoundsExplosionMap = [];
+  static Array m_SoundsMap2D        = [];
+  static Array m_ComplexSounds      = [];
+
+  static void StaticInitialization()
+  {
+    m_SoundsMap = [
+        // GunFire sounds
+        //["MachineGunFireSound",                  new CMachineGunFireSound()],
+        //["LightGunFireSound",                    new CLightGunFireSound()],
+        //["HeavyGunFireSound",                    new CHeavyGunFireSound()],
+        ["M2A1HowitzerFireSound",                     new CM2A1HowitzerFireSound()],
+        ["MortarGunFireSound",                        new CMortarGunFireSound()],
+        // Explosions sounds
+        ["MA2GunFireSound",                           new CMA2GunFireSound()],
+        ["LightMissileExplosionSound",                new CLightMissileExplosionSound()],
+        ["MortarGunBulletExplosionSound",             new CMortarGunBulletExplosionSound()],
+        ["HowizerGunBulletExplosionSound",            new CHowitzerGunBulletExplosionSound()],
+        ["NapalmExplosionSound",                      new CNapalmExplosionSound()],
+        ["NapalmExplosionFireSound",                  new CNapalmExplosionFireSound()],
+
+        // Units
+         ["TruckExplosionSound",                      new CTruckExplosionSound()],
+         ["M29MortarExplosionSound",                  new CM29MortarExplosionSound()],
+         ["M2A1HowitzerFireSound",                    new CM2A1HowitzerFireSound()],
+         ["M2A1HowitzerExplosionSound",               new CM2A1HowitzerExplosionSound()],
+         ["DShKExplosionSound",                       new CDShKExplosionSound()],
+         ["M79GunFireSound",                          new CM79GunFireSound()],
+
+        // Buildings
+//         ["BuildingExplosionSound",                     new CBuildingExplosionSound()],
+
+         // Hit Bullet body
+         [ "BulletHit_Body",                new CBulletHitBodyPeople() ],
+         [ "BulletHit_Helicopter_body",     new CBulletHitHelicopterBody() ],
+         [ "BulletHit_Helicopter_ricochet", new CBulletHitHelicopterRicochet() ],
+         [ "BulletHit_Helicopter_glass",    new CBulletHitHelicopterGlass() ],
+         [ "BulletHit_KillPilot",           new CBulletHit_KillPilot() ],
+
+         ["VietnameseHouseBigExplosionSound",         new CVietnameseHouseBigExplosionSound()],
+         ["VietnameseHouseBigPileExplosionSound",     new CVietnameseHouseBigPileExplosionSound()],
+         ["VietnameseHouseSmallExplosionSound",       new CVietnameseHouseSmallExplosionSound()],
+         ["VietnameseHouseSmallPileExplosionSound",   new CVietnameseHouseSmallPileExplosionSound()],
+         ["VietnameseGranaryExplosionSound",          new CVietnameseGranaryExplosionSound()],
+         ["VietnameseGranaryPileExplosionSound",      new CVietnameseGranaryPileExplosionSound()],
+         ["VietnameseRoofExplosionSound",             new CVietnameseRoofExplosionSound()],
+         ["BridgeFootExplosionSound",                 new CBridgeFootExplosionSound()],
+         ["BridgeWoodExplosionSound",                 new CBridgeWoodExplosionSound()],
+         ["TentExplosionSound",                       new CTentExplosionSound()],
+         ["TentLongExplosionSound",                   new CTentLongExplosionSound()],
+         ["MedicalTentExplosionSound",                new CMedicalTentExplosionSound()],
+         ["MarqueeExplosionSound",                    new CMarqueeExplosionSound()],
+         ["RoofExplosionSound",                       new CRoofExplosionSound()],
+         ["CheckPointExplosionSound",                 new CCheckPointExplosionSound()],
+         ["WellExplosionSound",                       new CWellExplosionSound()],
+         ["TOCExplosionSound",                        new CTOCExplosionSound()],
+         ["BaseHangarExplosionSound",                 new CBaseHangarExplosionSound()],
+         ["BarrackExplosionSound",                    new CBarrackExplosionSound()],
+         ["BunkerBaseExplosionSound",                 new CBunkerBaseExplosionSound()],
+         ["BunkerAmmoExplosionSound",                 new CBunkerAmmoExplosionSound()],
+         ["M29MortarPointExplosionSound",             new CM29MortarPointExplosionSound()],
+         ["M60CordonPointExplosionSound",             new CM60CordonPointExplosionSound()],
+         ["WatchTowerExplosionSound",                 new CWatchTowerExplosionSound()],
+         ["HeliPadExplosionSound",                    new CHeliPadExplosionSound()],
+
+         ["BarrelFireSound",                          new CBarrelFireSound()],
+         ["BarrelPackAFireSound",                     new CBarrelPackAFireSound()],
+         ["BarrelPackBFireSound",                     new CBarrelPackBFireSound()],
+         ["BarrelExplosionSound",                     new CBarrelExplosionSound()],
+         ["BarrelPackAExplosionSound",                new CBarrelPackAExplosionSound()],
+         ["BarrelPackBExplosionSound",                new CBarrelPackBExplosionSound()],
+         ["BarrackFireSound",                         new CBarrackFireSound()],
+         ["WeaponBoxBigExplosionSound",               new CWeaponBoxBigExplosionSound()],
+         ["WeaponBoxBigPackAExplosionSound",          new CWeaponBoxBigExplosionSound()],
+         ["WeaponBoxBigPackBExplosionSound",          new CWeaponBoxBigExplosionSound()],
+         ["WeaponBoxSmallExplosionSound",             new CWeaponBoxSmallExplosionSound()],
+         ["WeaponBoxSmallPackAExplosionSound",        new CWeaponBoxSmallExplosionSound()],
+         ["WeaponBoxSmallPackBExplosionSound",        new CWeaponBoxSmallExplosionSound()],
+         ["AmmoBoxExplosionSound",                    new CAmmoBoxExplosionSound()],
+         ["AmmoBoxPackAExplosionSound",               new CAmmoBoxExplosionSound()],
+         ["AmmoBoxPackBExplosionSound",               new CAmmoBoxExplosionSound()],
+         ["SampanExplosionSound",                     new CSampanExplosionSound()],
+         ["JunkExplosionSound",                       new CJunkExplosionSound()],
+
+         ["FenceWickerDeathSound",                    new CFenceWickerDeathSound()],
+         ["FenceWireSpiralDeathSound",                new CFenceWireSpiralDeathSound()],
+         ["FenceWireDeathSound",                      new CFenceWireDeathSound()],
+
+        // Hit effects
+
+        // Terrain effects
+         ["GroundExplosionSound",                     new CGroundExplosionSound()],
+         ["GroundBulletHitSound",                     new CGroundBulletHitSound()],
+
+        // Forest effects
+
+         ["ForestBulletHitSound",           new CForestBulletHitSound()],
+         ["ForestExplosionSound",           new CForestExplosionSound()],
+
+        // Forest effects
+
+         ["WaterBulletHitSound",           new CWaterBulletHitSound()],
+         ["WaterExplosionSound",           new CWaterExplosionSound()]
+
+        // Fence effects
+
+        // Pole effects
+
+        // Surround effects
+      ];
+
+    // complex sounds effects (3D sounds)
+
+    m_ComplexSounds = [
+                        [ "ComplexNapalmExplosionSound", new CComplexNapalmExplosionSound()]
+                    ];
+
+
+    // [ Тип Материала , Тип повреждения -> Идентификатор звука ]
+    m_SoundsExplosionMap = [
+        //Bullet hit
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET,          "GroundBulletHitSound"  ],
+        //Explosions
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_MORTARBULLET,    "GroundExplosionSound"  ],
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_EXPLOSION,       "GroundExplosionSound"  ],
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_HOWITZERBULLET,  "GroundExplosionSound"  ],
+        [ CMaterialStructure::MSID_Ground,       CBaseExplosion::CLASSIFICATOR_DAMAGE_ROCKETEXPLOSION,  "GroundExplosionSound" ],
+
+        [ CMaterialStructure::MSID_Forest,       CBaseExplosion::CLASSIFICATOR_DAMAGE_ROCKETEXPLOSION, "ForestExplosionSound"  ],
+        [ CMaterialStructure::MSID_Forest,       CBaseExplosion::CLASSIFICATOR_DAMAGE_MORTARBULLET,    "ForestExplosionSound"  ],
+        [ CMaterialStructure::MSID_Forest,       CBaseExplosion::CLASSIFICATOR_DAMAGE_EXPLOSION,       "ForestExplosionSound"  ],
+        [ CMaterialStructure::MSID_Forest,       CBaseExplosion::CLASSIFICATOR_DAMAGE_HOWITZERBULLET,  "ForestExplosionSound"  ],
+
+        [ CMaterialStructure::MSID_Water,        CBaseExplosion::CLASSIFICATOR_DAMAGE_ROCKETEXPLOSION, "WaterExplosionSound"   ],
+        [ CMaterialStructure::MSID_Water,        CBaseExplosion::CLASSIFICATOR_DAMAGE_MORTARBULLET,    "WaterExplosionSound"   ],
+        [ CMaterialStructure::MSID_Water,        CBaseExplosion::CLASSIFICATOR_DAMAGE_EXPLOSION,       "WaterExplosionSound"   ],
+        [ CMaterialStructure::MSID_Water,        CBaseExplosion::CLASSIFICATOR_DAMAGE_HOWITZERBULLET,  "WaterExplosionSound"   ]
+      ];
+
+    m_SoundsMap2D = [
+                      ["GeneralSwitch", "Sounds/General_Switch.wav"],
+                      ["GeneralButton", "Sounds/General_Button.wav"]
+                    ];
+  }
+
+  void CSoundsArray()
+  {
+    for (int Index = 0; Index < m_SoundsMap2D.size(); Index++)
+      RegisterPattern2D(m_SoundsMap2D[Index][0], m_SoundsMap2D[Index][1]);
+
+    for (int Index = 0; Index < m_SoundsMap.size(); Index++)
+      RegisterPattern(m_SoundsMap[Index][0], m_SoundsMap[Index][1]);
+
+    for (int Index = 0; Index < m_ComplexSounds.size(); Index++)
+      RegisterComplexPattern(m_ComplexSounds[Index][0],  m_ComplexSounds[Index][1]);
+
+
+    for (int Index = 0; Index < m_SoundsExplosionMap.size(); Index++)
+      RegisterSubstanceAlias(
+          m_SoundsExplosionMap[Index][0],
+          m_SoundsExplosionMap[Index][1],
+          m_SoundsExplosionMap[Index][2]
+        );
+  }
+}
+
+

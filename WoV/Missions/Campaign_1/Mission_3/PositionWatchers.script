@@ -1,0 +1,67 @@
+
+
+class CC1M3WingmanGroup_WatcherTalk extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "NavPoint_MainPlayerUnitLandingBase";     // кто следимт
+  final static Array  ControlPoints = ["MainPlayerUnit"];                       // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                3053.958740,
+                                8620.291992
+                                  ];
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  // service
+
+  boolean IsRing0()
+  {
+    return 0 != (m_RegionMask & ZoneMask0) ;
+  }
+
+  boolean IsRing1()
+  {
+    return 0 == (m_RegionMask & ZoneMask0) && 0 != (m_RegionMask & ZoneMask1) ;
+  }
+
+  boolean IsRing2()
+  {
+    return 0 == (m_RegionMask & ZoneMask1) && 0 != (m_RegionMask & ZoneMask2) ;
+  }
+
+  boolean IsOut()
+  {
+    return 0 == m_RegionMask;
+  }
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M3WingmanGroup_WatcherBack::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logError( "NavPoint_WayMainPlayerUnit_1  " + new String(GetMission().distance("NavPoint_MainPlayerUnitLandingBase", "MainPlayerUnit")));
+    }
+
+
+    if (_RegionMask == 2 && GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1")
+      sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M3MoveToForward"]);
+    else if (_RegionMask == 2 && GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1")
+      sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M3MoveToBackward"]);
+  }
+}

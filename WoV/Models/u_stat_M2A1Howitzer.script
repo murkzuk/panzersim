@@ -1,0 +1,93 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+class Cu_stat_M2A1HowitzerModel extends CBaseModel
+{
+  String     MeshFile        = "Models/u_stat_M2A1Howitzer.ms2";
+  String     SkinClass       = "Cu_stat_M2A1HowitzerModelSkin";
+
+  String     RouterMapFile   = "Models/u_stat_M2A1Howitzer.rmap";
+
+  static int InstancesQty    = CBaseModel::DefaultInstancesQty;
+
+  static int ShadowCheckMode = CBaseModel::DefaultShadowCheckMode;
+
+  static boolean PlanarShadow = CBaseModel::DefaultPlanarShadow;
+
+  static float PlanarShadowLodShift = CBaseModel::DefaultPlanarShadowLodShift;
+
+  static boolean UseBoxForIsection = CBaseModel::DefaultUseBoxForIsection;
+
+  Array  Animation = [
+      ["fire", ["Stwol", 0, 30], ["Support1", 0, 30], ["Support2", 0, 30], ["Wheel1", 0, 30], ["Wheel2", 0, 30], ["u_stat_M2A1Howitzer", 0, 30]],
+      ["gun", ["Gun", 0, 1]],
+      ["turret", ["Turret", 0, 1]]
+    ];
+}
+
+class Cu_stat_M2A1HowitzerModelSkin
+{
+  Array Materials = [
+      new CModelMaterial(
+        "0", // material id
+        "Textures/u_stat_M2A1Howitzer.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "Textures/u_stat_M2A1Howitzer_s.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.350000, 0.350000, 0.350000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        10.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "1", // material id
+        "Textures/u_stat_M2A1Howitzer_crashed.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "Textures/u_stat_M2A1Howitzer_s.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.350000, 0.350000, 0.350000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        10.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      )
+    ];
+}

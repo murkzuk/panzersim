@@ -1,0 +1,3138 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//
+// Base class for devices
+//
+
+class CDeviceToItemLink
+{
+  CDeviceToItemLink(
+      String _ItemName
+    )
+  {
+    ItemName = _ItemName;
+  }
+
+  void AddDevice(
+      Component _Device,
+      Array     _HPPoints,
+      Array     _Modes
+    )
+  {
+    Devices.add([_Device, _HPPoints, _Modes]);
+  }
+
+  String ItemName;
+  Array  Devices;
+}
+
+class CCockpit
+{
+  boolean   m_CockpitExists       = false;
+  boolean   m_CockpitEnabled      = true;
+  boolean   m_InputEnabled        = true;
+
+  float     m_RadarRange          = 2100.0f;
+  Array     m_TerrainMapMask      = [[       ], [ "HUMAN" ]];
+  Array     m_GroundRadarMask     = [[       ], [ "HUMAN" ]];
+  Array     m_AirRadarMask        = [[ "AIR" ], [ "HUMAN" ]];
+
+
+  Array     m_ControlsNames       = [];
+
+  int       m_ViewMode            = CM_Person1rd;
+  int       m_PlayerSit           = PS_PilotFirst;
+
+  int       m_PlayerControl       = PS_PilotFirst;
+  int       m_GunnerControl       = PS_GunnerLeft;
+
+  String    m_MsgFontName         = "Century Gothic";
+  String    m_CallsignFontName    = "Century Gothic Bold";
+  float     m_MsgFontSize         = 0.025;
+
+  float     m_AltimeterZero       = 0.0;
+  float     m_AltimeterError      = 70.0; // foots
+
+  String    m_CockpitPanelTexName    = "Textures/u_air_Uh1B_Panel_Pilot_0.tex";
+  String    m_CockpitPanelOnTexName  = "Textures/u_air_Uh1B_Panel_Pilot_1.tex";
+  String    m_CockpitPanelOffTexName = "Textures/u_air_Uh1B_Panel_Pilot_0.tex";
+
+  String    m_CopilotCockpitPanelTexName    = "Textures/u_air_Uh1B_Panel_coPilot_0.tex";
+  String    m_CopilotCockpitPanelOnTexName  = "Textures/u_air_Uh1B_Panel_coPilot_1.tex";
+  String    m_CopilotCockpitPanelOffTexName = "Textures/u_air_Uh1B_Panel_coPilot_0.tex";
+
+  String    m_Pilot_Instrumental_Panel      = "Pilot_Instrumental_Panel";
+  String    m_CoPilot_Instrumental_Panel    = "CoPilot_Instrumental_Panel";
+
+  String    m_PilotUnitJoint       = "Pilot_Seat";
+  String    m_CoPilotUnitJoint     = "coPilot_Seat";
+  String    m_LeftGunnerUnitJoint  = "Left_Gunner_Seat";
+  String    m_RightGunnerUnitJoint = "Right_Gunner_Seat";
+
+  Array     m_ExcludeSet;
+
+  Component m_PilotObject       = null;
+  Component m_CoPilotObject     = null;
+  Component m_LeftGunnerObject  = null;
+  Component m_RightGunnerObject = null;
+
+  int m_MFDState = 0;
+
+  boolean m_MouseCameraState = false;
+
+  Component m_AnimManager;
+
+  boolean m_PilotLookToCamera = false;
+
+  boolean m_BehWeaponActivated = false;
+
+  // ==========================================
+  // Items functioning
+  // ==========================================
+
+  float   m_Torque                  = 0.0f;
+
+  boolean m_SystemAlarm             = false;
+  boolean m_MissionPower            = false;
+  boolean m_PanelPower              = false;
+
+  boolean m_ArmamentState           = false;
+  boolean m_RktResetState           = false;
+
+  boolean m_GovernorEnabled         = false;
+  boolean m_GovernorWorkEnabled     = true;
+
+  boolean m_SpeedometerEnabled      = true;
+
+  boolean m_OMNIEnabled             = true;
+  boolean m_OMNILinesEnabled        = true;
+
+  boolean m_RMIEnabled              = true;
+  boolean m_RMISlaveEnable          = true;
+
+  boolean m_FireNotTest             = true;
+
+  float   m_GasEngineValue          = 0.0;
+
+  float   m_CurrentValueEngine      = 0.0;
+  float   m_CurrentValueMain        = 0.0;
+  float   m_EngineWorkTime          = 0.0;
+  float   m_EngineStopTime          = 0.0;
+
+  float   m_ControlBrightness       = 0.9;
+  float   g_BrightnessDelta         = 0.15;
+
+  float   m_SightDistance           = 10.0;
+  float   g_SightDistanceDelta      = 10.0;
+
+  boolean m_HideTarget              = false;
+
+  boolean m_M60State                = true;
+  boolean m_M21State                = true;
+
+  boolean m_LowRpmSignal            = false;
+  boolean m_SwitchOnAlarmSignal     = false;
+
+  boolean m_IsTestPeriod            = false;
+
+  final static Array m_CautionTestLights = [
+                                   "SystemAlarm",
+                                   // left part
+                                   "EngineOilPress",
+                                   "EngineChipDet",
+                                   "LeftFuelBoost",
+                                   "RightFuelBoost",
+                                   "EngFuelPump",
+                                   "20MinFuel",
+                                   "FuelFilter",
+                                   "GovEmer",
+                                   // right part
+                                   "AuxFuelLow",
+                                   "XmsnOilPress",
+                                   "XmsnOilHot",
+                                   "HydPressure",
+                                   "EngineInletAir",
+                                   "InstInverterAC",
+                                   "DCGenerator",
+                                   "ExternalPower",
+                                   "ChipDetector"
+                                 ];
+
+  float   SensorEventFrequency      = 0.05; // 20 events per second
+
+
+  // ==========================================
+  // Animation indices
+  // ==========================================
+
+  int anim_torque_cursor;
+  int anim_psifuel_cursor;
+  int anim_hsi_ball;
+  int anim_hsi_arrow;
+  int anim_M60_hsi_bank;
+  int anim_alt_cursor;
+  int anim_RMI_Scale_Slave;
+  int anim_RMI_Scale_Master;
+  int anim_compass;
+  int anim_Omni_Scale;
+  int anim_tangage;
+  int anim_bank;
+  int anim_vertspeed_cursor;
+  int anim_Omni_VertLine;
+  int anim_Omni_HorLine;
+  int anim_speedometer_cursor;
+  int anim_toil_transmission_cursor;
+  int anim_psioil_transmission_cursor;
+  int anim_qtyfuel_cursor;
+  int anim_wheel3_100;
+  int anim_wheel2_100;
+  int anim_wheel1_100;
+  int anim_radioalt_cursor;
+  int anim_RMI_BigArrow_Slave;
+  int anim_RMI_BigArrow_Master;
+  int anim_RMI_SmallArrow_Slave;
+  int anim_RMI_SmallArrow_Master;
+  int anim_toil_cursor;
+  int anim_psiengineoil_cursor;
+  int anim_turbine_cursor;
+  int anim_rotor_cursor;
+  int anim_mrpm_turbine_cursor;
+  int anim_lrpm_turbine_cursor;
+  int anim_direct_current_cursor;
+  int anim_alternate_current_cursor;
+  int anim_load_gen_cursor;
+  int anim_load_conv_cursor;
+  int anim_temp_cursor;
+
+  // ==========================================
+  // Internal devices
+  // ==========================================
+
+  Component  EngineDevice           = null;
+  Component  FuelTankLF             = null;
+  Component  FuelTankRF             = null;
+  Component  FuelTankLB             = null;
+  Component  FuelTankRB             = null;
+  Component  Transmission           = null;
+  Component  OilSystem              = null;
+  Component  GunnerLeft             = null;
+  Component  GunnerRight            = null;
+  Component  PilotFirst             = null;
+  Component  PilotSecond            = null;
+  Component  RFHeliPart             = null;
+  Component  LFHeliPart             = null;
+  Component  Stabilizers            = null;
+  Component  TailRail               = null;
+  Component  TailUnit               = null;
+  Component  TailRotor              = null;
+  Component  SkidLeft               = null;
+  Component  SkidRight              = null;
+
+  Map        m_DevicesLinks;
+
+  // ==========================================
+  // Base cockpit methods
+  // ==========================================
+
+  void Shutdown(
+      Component _Mission
+    )
+  {
+    m_AnimManager = null;
+  }
+
+  void Finalize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    // assign heli controls to pilot animator
+    if (null != m_PilotObject)
+      m_PilotObject.SetExtraSlaveObjects([GetInsideMesh(), GetOutsideMesh()]);
+
+    if (!m_CockpitExists)
+      return;
+
+    Component TerrainMap = GetObject("TerrainMap");
+    // navpoints for map
+    Array NavPoints = _Mission.GetNavpointsForPlayerMap();
+    for (int i = 0; i< NavPoints.size();i++)
+    {
+      TerrainMap.AddNavpointsList(NavPoints[i][0], NavPoints[i][1], NavPoints[i][2]);
+    }
+    TerrainMap.SetRanges(_Mission.CockpitMapMinRange,
+                         _Mission.CockpitMapMaxRange,
+                         _Mission.CockpitMapNavNameMaxRange,
+                         _Mission.CockpitMapZoomSteps,
+                         _Mission.CockpitMapAccessBox);
+
+    TerrainMap.SetMarksInitPoint(_Mission.MarksInitPoint);
+    TerrainMap.SetCursorControl(GetObject("Cursor"));
+
+    SetPlayerSit(m_PlayerSit);
+  }
+
+  // ==========================================
+  // Setup cockpit
+  // ==========================================
+
+  void SetupCockpit(
+      Component _Camera,
+      Component _Mission
+    )
+  {
+    // set flag
+    m_CockpitExists = true;
+
+    m_AnimManager = new CCockpitAnimManager(this, GetInsideMesh());
+
+    // Set animation indices
+    anim_torque_cursor              = m_AnimManager.GetIndex("torque_cursor");
+    anim_psifuel_cursor             = m_AnimManager.GetIndex("psifuel_cursor");
+    anim_hsi_ball                   = m_AnimManager.GetIndex("hsi_ball");
+    anim_hsi_arrow                  = m_AnimManager.GetIndex("hsi_arrow");
+    anim_M60_hsi_bank               = m_AnimManager.GetIndex("M60_hsi_bank");
+    anim_alt_cursor                 = m_AnimManager.GetIndex("alt_cursor");
+    anim_RMI_Scale_Slave            = m_AnimManager.GetIndex("RMI_Scale_Slave");
+    anim_RMI_Scale_Master           = m_AnimManager.GetIndex("RMI_Scale_Master");
+    anim_compass                    = m_AnimManager.GetIndex("compass");
+    anim_Omni_Scale                 = m_AnimManager.GetIndex("Omni_Scale");
+    anim_tangage                    = m_AnimManager.GetIndex("tangage");
+    anim_bank                       = m_AnimManager.GetIndex("bank");
+    anim_vertspeed_cursor           = m_AnimManager.GetIndex("vertspeed_cursor");
+    anim_Omni_VertLine              = m_AnimManager.GetIndex("Omni_VertLine");
+    anim_Omni_HorLine               = m_AnimManager.GetIndex("Omni_HorLine");
+    anim_speedometer_cursor         = m_AnimManager.GetIndex("speedometer_cursor");
+    anim_toil_transmission_cursor   = m_AnimManager.GetIndex("toil_transmission_cursor");
+    anim_psioil_transmission_cursor = m_AnimManager.GetIndex("psioil_transmission_cursor");
+    anim_qtyfuel_cursor             = m_AnimManager.GetIndex("qtyfuel_cursor");
+    anim_wheel3_100                 = m_AnimManager.GetIndex("wheel3_100");
+    anim_wheel2_100                 = m_AnimManager.GetIndex("wheel2_100");
+    anim_wheel1_100                 = m_AnimManager.GetIndex("wheel1_100");
+    anim_radioalt_cursor            = m_AnimManager.GetIndex("radioalt_cursor");
+    anim_RMI_BigArrow_Slave         = m_AnimManager.GetIndex("RMI_BigArrow_Slave");
+    anim_RMI_BigArrow_Master        = m_AnimManager.GetIndex("RMI_BigArrow_Master");
+    anim_RMI_SmallArrow_Slave       = m_AnimManager.GetIndex("RMI_SmallArrow_Slave");;
+    anim_RMI_SmallArrow_Master      = m_AnimManager.GetIndex("RMI_SmallArrow_Master");;
+    anim_toil_cursor                = m_AnimManager.GetIndex("toil_cursor");
+    anim_psiengineoil_cursor        = m_AnimManager.GetIndex("psiengineoil_cursor");
+    anim_turbine_cursor             = m_AnimManager.GetIndex("turbine_cursor");
+    anim_rotor_cursor               = m_AnimManager.GetIndex("rotor_cursor");
+    anim_mrpm_turbine_cursor        = m_AnimManager.GetIndex("mrpm_turbine_cursor");
+    anim_lrpm_turbine_cursor        = m_AnimManager.GetIndex("lrpm_turbine_cursor");
+    anim_direct_current_cursor      = m_AnimManager.GetIndex("direct_current_cursor");
+    anim_alternate_current_cursor   = m_AnimManager.GetIndex("alternate_current_cursor");
+    anim_load_gen_cursor            = m_AnimManager.GetIndex("load_gen_cursor");
+    anim_load_conv_cursor           = m_AnimManager.GetIndex("load_conv_cursor");
+    anim_temp_cursor                = m_AnimManager.GetIndex("temp_cursor");
+
+
+    Component RpmAlarmSound = new #Sound2D<CRpmAlarmSound>();
+    RegisterObject("RpmAlarmSound", RpmAlarmSound);
+
+    // create sensor components
+    SetupSensorComponents(_Camera, _Mission);
+/*
+    //
+    // Lens Flare
+    //
+    if (_Mission.m_MissionAtmosphere.IsSunVisible)
+    {
+      Component LensFlare = new #LensFlare<CLensFlare>();
+      setPositionable(LensFlare, _Camera);
+      RegisterObject("LensFlare", LensFlare);
+    }
+*/
+    //
+    // Create cockpit UI controls
+    //
+    SetupCockpitUIControls(_Camera, _Mission);
+
+    //
+    // Create internal devices
+    //
+    CreateInternalDevices();
+
+    //
+    // Init cockpit mode
+    //
+    InitializeCockpitMode();
+
+    //
+    // Init colors
+    //
+    Component Settings = new #GameSettings();
+    if (Settings.GetCockpitDevicesColor() > CCommonStrings::CockpitColorCombo.size() - 1)
+      Settings.SetCockpitDevicesColor(0);
+
+    OnCockpitColorChanged(
+      Settings.GetCockpitDevicesColor());
+
+    // set camera id for all controls
+    SetControlsCameraId(getIdentificator(_Camera));
+
+    SetPlayerSit(m_PlayerSit);
+
+    SetRadioScriptState(true);
+
+    SetupCockpitPanel();
+
+  }
+
+  void SetupCockpitPanel()
+  {
+    SetSwitchState("LowRpmAudio", true);
+    OnLowRpmAudioSwitch("LowRpmAudio", true);
+
+    SetSwitchState("Fuel", true);
+    OnFuelSwitch("Fuel", true);
+
+    SetSwitchState("AuxFuelLeft", true);
+    OnAuxFuelLeftSwitch("AuxFuelLeft", true);
+
+    SetSwitchState("AuxFuelRight", true);
+    OnAuxFuelRightSwitch("AuxFuelRight", true);
+
+    SetSwitchState("RktReset", true);
+    OnRktResetSwitch("RktReset", true);
+
+    SetSwitchState("Armament", true);
+    OnArmamentSwitch("Armament", true);
+
+    SetSwitchState("Power", true);
+    OnPowerSwitch("Power", true);
+
+    SetSwitchState("PanelPower", true);
+    OnPanelPowerSwitch("PanelPower", true);
+
+    SetSwitchState("MissionINVTR", true);
+    OnMissionINVTRSwitch("MissionINVTR", true);
+
+    SetSwitchState("GNDPWR", true);
+    OnGNDPWRSwitch("GNDPWR", true);
+
+    SetSwitchState("FMRadio", true);
+    OnFMRadioSwitch("FMRadio", true);
+
+
+    SetLightState("OMNIEnabled", true);
+
+    // Enable by default governor switch
+    EnableGovernorSwitch(true, false);
+
+    // init animations
+
+    SetAnimationPhase(anim_direct_current_cursor, 28.0 / 30.0); //DCVoltage
+
+    SetAnimationPhase(anim_alternate_current_cursor, 116.0 / 200.0);//ACVoltage
+
+  }
+
+  void SetupSensorComponents(
+      Component _Camera,
+      Component _Mission
+    )
+  {
+    // get mesh component
+    Component Mesh = GetMeshComponent();
+
+    // Chronometer
+    Component Chronometer = new #Chronometer();
+    Chronometer.SetEventHandler(this);
+    Chronometer.SetLocalTime(_Mission.m_LocalTime);
+    RegisterObject("Chronometer", Chronometer);
+
+    // Navigator
+    Component Navigator = new #Navigator();
+    setPositionable(Navigator, Mesh);
+    Navigator.SetEventHandler(this);
+    RegisterObject("Navigator", Navigator);
+
+    // Altimeter
+    Component Altimeter = new #Altimeter();
+    setPositionable(Altimeter, Mesh);
+    Altimeter.SetEventHandler(this);
+    Altimeter.SetEventFrequency(SensorEventFrequency);
+    Altimeter.SetSeaLevel(_Mission.GetMissionTerrain().SeaLevel);
+    Altimeter.SetToleranceAngle(30.0);
+    Altimeter.SetEchoDistance(CMetricConverter::FootsToMetres(5000.0));
+    RegisterObject("Altimeter", Altimeter);
+
+    // Speedometer
+    Component Speedometer = new #Speedometer();
+    setPositionable(Speedometer, Mesh);
+    Speedometer.SetGravityVector(CWorldPhysics::GravityVector);
+    Speedometer.SetAccelerometerInertia(10);
+    Speedometer.SetEventHandler(this);
+    Speedometer.SetEventFrequency(SensorEventFrequency);
+    RegisterObject("Speedometer", Speedometer);
+
+    // position indicator
+    Component PositionIndicator = new #PositionIndicator();
+    setPositionable(PositionIndicator, Mesh);
+    PositionIndicator.SetEventHandler(this);
+    PositionIndicator.SetEventFrequency(SensorEventFrequency);
+    RegisterObject("PositionIndicator", PositionIndicator);
+
+  }
+
+  void CreateGroupControls(
+      Component _Skin,
+      String    _TextureName0,
+      String    _TextureName1
+    )
+  {
+    Component Mesh = GetInsideMesh();
+
+    for (int i = 0; i < _Skin.Materials.size(); i++)
+    {
+      if (_TextureName0 == _Skin.Materials[i].TextureName && _TextureName0 != "")
+      {
+        Component CockpitGroup = GetObject("CockpitGroupILS");
+        if (CockpitGroup == null)
+        {
+          logMessage("CreateGroupControls() - on CockpitGroupILS create");
+
+          CockpitGroup = new #CockpitGroup();
+          addClassificator(CockpitGroup, "COCKPIT_ILS_CONTROL");
+          addClassificator(CockpitGroup, CLASSIFICATOR_NO_POST_EFFECTED);
+
+          CockpitGroup.SetBackground(
+            Mesh.GetMaterials().GetMainTexture(_Skin.Materials[i].MaterialID));
+
+          CockpitGroup.SetRenderMask([ "COCKPIT_ILS_CONTROL" ], [ CLASSIFICATOR_UI ]);
+          RegisterObject("CockpitGroupILS", CockpitGroup);
+          m_ControlsNames.add(["CockpitGroupILS", [CM_Cockpit, CM_CockpitNearest]]);
+        }
+
+        Mesh.GetMaterials().SetMainTexture(
+          _Skin.Materials[i].MaterialID,
+           CockpitGroup.GetRenderTexture()
+        );
+      }
+      if (_TextureName1 == _Skin.Materials[i].TextureName && _TextureName1 != "")
+      {
+        Component CockpitGroup = GetObject("CockpitGroup");
+        if (CockpitGroup == null)
+        {
+          CockpitGroup = new #CockpitGroup();
+          addClassificator(CockpitGroup, "COCKPIT_CONTROL");
+          addClassificator(CockpitGroup, CLASSIFICATOR_NO_POST_EFFECTED);
+
+          CockpitGroup.SetBackground(
+            Mesh.GetMaterials().GetMainTexture(_Skin.Materials[i].MaterialID));
+
+          CockpitGroup.SetRenderMask([ "COCKPIT_CONTROL" ], [ CLASSIFICATOR_UI ]);
+          RegisterObject("CockpitGroup", CockpitGroup);
+          m_ControlsNames.add(["CockpitGroup", [CM_Cockpit, CM_CockpitNearest]]);
+        }
+
+        Mesh.GetMaterials().SetMainTexture(
+          _Skin.Materials[i].MaterialID,
+           CockpitGroup.GetRenderTexture()
+        );
+      }
+    }
+  }
+
+  void SetupCockpitUIControls(
+      Component _Camera,
+      Component _Mission
+    )
+  {
+    // get mesh component
+    Component Mesh = GetMeshComponent();
+
+    CCockpitSkin::TerrainMapTextureName = _Mission.GetTerrainMapTextureName();
+
+    Component CockpitMatManager = new #MaterialManager<CCockpitSkin>();
+
+    // create cockpit panel
+    Component CockpitModel = GetInsideMesh();
+    String MaterialID = FindMaterialID(GetInsideMesh().GetMaterials().Materials, m_CockpitPanelTexName);
+    Component CockpitPanel = new #CockpitPanel();
+    if (MaterialID != "")
+    {
+      CockpitPanel.SetEventHandler(this);
+      CockpitPanel.SetCockpit(CockpitModel,
+                              _Camera,
+                               MaterialID.ConvertToInt(),
+                              m_CockpitPanelOffTexName,
+                              m_CockpitPanelOnTexName,
+                              CockpitPilotControls::Switchers,
+                              CockpitPilotControls::Lighters
+          );
+
+      CockpitPanel.Enable(false);
+      RegisterObject("CockpitPanel", CockpitPanel);
+    }
+    else
+      logWarning(getIdentificator(this) + "::SetupCockpit() : empty MaterialID panel");
+
+    Component CopilotCockpitPanel = new #CockpitPanel();
+    String MaterialID = FindMaterialID(GetInsideMesh().GetMaterials().Materials, m_CopilotCockpitPanelTexName);
+    if (MaterialID != "")
+    {
+      CopilotCockpitPanel.SetEventHandler(this);
+
+      CopilotCockpitPanel.SetCockpit(CockpitModel,
+                              _Camera,
+                               MaterialID.ConvertToInt(),
+                              m_CopilotCockpitPanelOffTexName,
+                              m_CopilotCockpitPanelOnTexName,
+                              CockpitCoPilotControls::Switchers,
+                              CockpitCoPilotControls::Lighters
+          );
+
+      CopilotCockpitPanel.Enable(false);
+      RegisterObject("CopilotCockpitPanel", CopilotCockpitPanel);
+    }
+    else
+      logWarning(getIdentificator(this) + "::SetupCopilotCockpit() : empty MaterialID panel");
+
+    // Create cursor
+    CreateDefaultCursor(this, CockpitMatManager);
+
+    CockpitPanel.SetCursorControl(GetObject("Cursor"));
+    CopilotCockpitPanel.SetCursorControl(GetObject("Cursor"));
+
+    // NavBar
+    Component NavBar = new #NavBar<CNavigatorScreen_Uh1>();
+    NavBar.SetRenderMode(true, false);
+    addClassificator(NavBar, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("NavBar", NavBar);
+    NavBar.SetFontScale(1.0);
+    NavBar.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    m_ControlsNames.add(["NavBar", [CM_Person1rd], [PS_PilotFirst, PS_PilotSecond]]);
+
+    // PositionDial
+    Component PositionDial = new #PositionDial<CPositionDial>();
+    addClassificator(PositionDial, CLASSIFICATOR_NO_POST_EFFECTED);
+    PositionDial.SetRenderMode(true, false);
+    PositionDial.SetFontScale(1.0);
+    PositionDial.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    RegisterObject("PositionDial", PositionDial);
+    m_ControlsNames.add(["PositionDial", [CM_Person1rd], [PS_PilotFirst, PS_PilotSecond]]);
+
+    // Taget pointer
+    Component TargetPointer = new #TargetPointer3<CTargetPointerScreen_Uh1>();
+    addClassificator(TargetPointer, "COCKPIT_CONTROL");
+    addClassificator(TargetPointer, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("TargetPointer", TargetPointer);
+    TargetPointer.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    TargetPointer.SetRenderMode(false, true);
+//    TargetPointer.SetRenderMode(true, false);
+    TargetPointer.SetCrosshairType(1);
+
+    m_ControlsNames.add(["TargetPointer",
+            [CM_Person1rd],
+                        [PS_PilotFirst, PS_PilotSecond, PS_GunnerLeft, PS_GunnerRight]]);
+
+    Component TargetPointerTex = new #TargetPointer3<CTargetPointerTex_Uh1>();
+    RegisterObject("TargetPointerTex", TargetPointerTex);
+    addClassificator(TargetPointerTex, "COCKPIT_CONTROL");
+    addClassificator(TargetPointerTex, CLASSIFICATOR_NO_POST_EFFECTED);
+    TargetPointerTex.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    TargetPointerTex.SetRenderMode(false, false);
+//    TargetPointer.SetRenderMode(true, false);
+    TargetPointerTex.SetCrosshairType(1);
+    TargetPointerTex.Enable(false);
+    m_ControlsNames.add(["TargetPointerTex",
+            [CM_Cockpit, CM_CockpitNearest], [PS_PilotFirst, PS_PilotSecond]]);
+
+    // TerrainMap
+    Component TerrainMap = new #TerrainMap<CUh1bMapView>();;
+    TerrainMap.SetAppearance(0.62, 0.0305, 0.36);
+    addClassificator(TerrainMap, "COCKPIT_CONTROL");
+    addClassificator(TerrainMap, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("TerrainMap", TerrainMap);
+    TerrainMap.Enable(false);
+    //m_ControlsNames.add(["TerrainMap", [CM_Cockpit, CM_Person1rd]]);
+
+    // Dials
+    Component AltimeterDial = new #IndexDial2<CIndexDial_Altimeter>();
+    AltimeterDial.SetRenderMode(true, false);
+    AltimeterDial.SetFontScale(1.0);
+    AltimeterDial.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    addClassificator(AltimeterDial, "COCKPIT_CONTROL");
+    addClassificator(AltimeterDial, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("AltimeterDial", AltimeterDial);
+    m_ControlsNames.add(["AltimeterDial", [CM_Person1rd], [PS_PilotFirst, PS_PilotSecond]]);
+
+    Component SpeedometerDial = new #IndexDial2<CIndexDial_Speedometer>();
+    SpeedometerDial.SetRenderMode(true, false);
+    SpeedometerDial.SetFontScale(1.0);
+    SpeedometerDial.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    addClassificator(SpeedometerDial, "COCKPIT_CONTROL");
+    addClassificator(SpeedometerDial, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("SpeedometerDial", SpeedometerDial);
+    m_ControlsNames.add(["SpeedometerDial", [CM_Person1rd], [PS_PilotFirst, PS_PilotSecond]]);
+
+    Component ClimbDial = new #IndexDial2<CIndexDial_Climb>();
+    ClimbDial.SetRenderMode(true, false);
+    ClimbDial.SetFontScale(1.0);
+    ClimbDial.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    addClassificator(ClimbDial, "COCKPIT_CONTROL");
+    addClassificator(ClimbDial, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("ClimbDial", ClimbDial);
+    m_ControlsNames.add(["ClimbDial", [CM_Person1rd], [PS_PilotFirst, PS_PilotSecond]]);
+
+    Component FuelDial = new #IndexDial2<CIndexDial_Fuel>();
+    FuelDial.SetRenderMode(true, false);
+    FuelDial.SetFontScale(1.0);
+    FuelDial.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    FuelDial.SetValue(1.0);
+    addClassificator(FuelDial, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("FuelDial", FuelDial);
+    m_ControlsNames.add(["FuelDial", [CM_Person1rd], [PS_PilotFirst, PS_PilotSecond]]);
+
+    Component TorqDial = new #IndexDial2<CIndexDial_Torq>();
+    TorqDial.SetRenderMode(true, false);
+    TorqDial.SetFontScale(1.0);
+    TorqDial.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    addClassificator(TorqDial, "COCKPIT_CONTROL");
+    addClassificator(TorqDial, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("TorqDial", TorqDial);
+    m_ControlsNames.add(["TorqDial", [CM_Person1rd], [PS_PilotFirst, PS_PilotSecond]]);
+
+    // Message bar
+    Component MessageBar = new #MessageBar();
+    addClassificator(MessageBar, CLASSIFICATOR_NO_POST_EFFECTED);
+    MessageBar.SetMaterialManager(CockpitMatManager);
+    MessageBar.SetCallSignPosition(2.5 / 800.0, 3.5 / 600.0);
+    MessageBar.SetCallSignMaterial("callsign 800");
+    MessageBar.SetAppearance(80.0 / 800.0, 29.5 / 600.0, 0.50, 0.15);
+
+    RegisterObject("MessageBar", MessageBar);
+    m_ControlsNames.add(["MessageBar",
+      [CM_Cockpit, CM_Person1rd, CM_Person3rd],
+      [PS_PilotFirst, PS_PilotSecond, PS_GunnerLeft, PS_GunnerRight]]);
+
+    Component MessageInfoBar = new #MessageBar2<CCockpitInfoMsgBar>();
+    addClassificator(MessageInfoBar, CLASSIFICATOR_NO_POST_EFFECTED);
+    MessageInfoBar.SetAppearance(10.0 / 800.0, 50.0 / 600.0, 0.10, 0.12);
+
+//    MessageInfoBar.SetMessage(0, L"0_1234567890123456", new Color(1.0, 0.0, 0.0), 100.0);
+//    MessageInfoBar.SetMessage(1, L"1_1234567890123456", new Color(1.0, 0.0, 0.0), 100.0);
+//    MessageInfoBar.SetMessage(2, L"1_1234567890123456", new Color(1.0, 0.0, 0.0), 100.0);
+    RegisterObject("MessageInfoBar", MessageInfoBar);
+
+    // Voice messenger
+    Component VoiceMessenger = new #VoiceMessenger();
+    VoiceMessenger.SetDequeSize(15);
+    VoiceMessenger.AddSoundTable(CSoundTables::CommonSoundTable);
+    VoiceMessenger.AddSoundTable(_Mission.GetVoiceSoundTable());
+    RegisterObject("VoiceMessenger", VoiceMessenger);
+
+    // Weapon selector
+    Component WeaponSelector = new #WeaponSelector<CWeaponSelector>();
+    WeaponSelector.SetWeaponList(GetWeaponList());
+    WeaponSelector.SetEventHandler(this);
+    WeaponSelector.SetAppearance(0.0, 0.0, 1.0, 1.0);
+
+    WeaponSelector.SetDependedFireDelay(1, true); // turn on slot 1
+
+    setPositionable(WeaponSelector, Mesh);
+    addClassificator(WeaponSelector, "COCKPIT_CONTROL");
+    addClassificator(WeaponSelector, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("WeaponSelector", WeaponSelector);
+    m_ControlsNames.add(["WeaponSelector",
+      [CM_Cockpit, CM_CockpitNearest, CM_Person1rd, CM_Person3rd],
+      [PS_PilotFirst, PS_PilotSecond, PS_GunnerLeft, PS_GunnerRight]]);
+
+    // heli status
+    Component CommonScreen = new #CommonStatusScreen<CCommonStatusScreen>();
+    CommonScreen.SetAppearance(0.0, 0.0, 1.0, 1.0);
+    addClassificator(CommonScreen, "COCKPIT_CONTROL");
+    addClassificator(CommonScreen, CLASSIFICATOR_NO_POST_EFFECTED);
+    RegisterObject("CommonStatusScreen", CommonScreen);
+    m_ControlsNames.add(["CommonStatusScreen",
+      [CM_Person1rd],
+      [PS_PilotFirst, PS_PilotSecond, PS_GunnerLeft, PS_GunnerRight]]);
+
+/*
+    // target camera
+    Component TargetCamera = new #TargetCamera<CTargetCamera_test>();
+    setPositionable(TargetCamera, Mesh);
+    TargetCamera.SetEventHandler(this, "TargetCamera");
+    addClassificator(TargetCamera, "COCKPIT_CONTROL");
+    RegisterObject("TargetCamera", TargetCamera);
+    m_ControlsNames.add(["TargetCamera",
+               [CM_Cockpit, CM_Person1rd, CM_Person3rd],
+                     [PS_PilotFirst, PS_PilotSecond, PS_GunnerLeft, PS_GunnerRight]]);
+*/
+    //
+    // group controls
+    //
+    CreateGroupControls(
+      new Cu_air_Uh1b_InsideModelSkin(),
+      "",
+      "Textures/M60_fake.tex");
+  }
+
+  void MouseCameraControl(boolean State)
+  {
+    Component CameraLink = GetObject("CameraLink");
+    if (CameraLink == null)
+      return;
+
+    m_MouseCameraState = State;
+
+    CameraLink.EnableMouseControl(State);
+  }
+
+  void SetPilotsViewMode()
+  {
+    int BaseMode = CPassangerUnit::MT_None;
+    if (CM_Cockpit == m_ViewMode)
+      BaseMode = CPassangerUnit::MT_Inside;
+    else
+    if (CM_Person3rd == m_ViewMode)
+      BaseMode = CPassangerUnit::MT_Outside;
+
+    if (m_PilotObject != null)
+    {
+      int PilotMode = BaseMode;
+      if (CM_Cockpit == m_ViewMode && PS_PilotFirst == m_PlayerSit)
+        PilotMode = CPassangerUnit::MT_FromEye;
+
+      m_PilotObject.SwitchModels(getIdentificator(user), PilotMode);
+    }
+
+    if (m_CoPilotObject != null)
+    {
+      int CoPilotMode = BaseMode;
+      if (CM_Cockpit == m_ViewMode && PS_PilotSecond == m_PlayerSit)
+        CoPilotMode = CPassangerUnit::MT_FromEye;
+
+      m_CoPilotObject.SwitchModels(getIdentificator(user), CoPilotMode);
+    }
+
+    if (m_LeftGunnerObject != null)
+    {
+      int LeftGunnerMode = BaseMode;
+      if (CM_Cockpit == m_ViewMode && PS_GunnerLeft == m_PlayerSit)
+        LeftGunnerMode = CPassangerUnit::MT_None;
+
+      m_LeftGunnerObject.SwitchModels(getIdentificator(user), LeftGunnerMode);
+    }
+
+    if (m_RightGunnerObject != null)
+    {
+      int RightGunnerMode = BaseMode;
+      if (CM_Cockpit == m_ViewMode && PS_GunnerRight == m_PlayerSit)
+        RightGunnerMode = CPassangerUnit::MT_None;
+
+      m_RightGunnerObject.SwitchModels(getIdentificator(user), RightGunnerMode);
+    }
+
+  }
+
+  void InitializeCockpitMode()
+  {
+    // Enable or disable cockpit joint and heli model
+    Component Mesh = GetMeshComponent();
+    if (Mesh == null)
+      return;
+
+    SetPilotsViewMode();
+
+    // Show or hide cockpit joint
+    Component CockpitObject = GetInsideMesh();
+    if (null != CockpitObject)
+    {
+      CockpitObject.EnableRenderToCamera(getIdentificator(user), ((CM_Cockpit == m_ViewMode) || (CM_CockpitNearest == m_ViewMode)));
+    }
+
+    // Enable or disable heli render in player camera
+    Mesh.EnableRenderToCamera(getIdentificator(user), CM_Person3rd == m_ViewMode);
+    Mesh.EnableShadowToCamera(getIdentificator(user), CM_Person3rd == m_ViewMode);
+
+    // Set camera view mode
+    SetDefaultCameraViewMode();
+
+    // Select weapon
+    Component WeaponSelector = GetObject("WeaponSelector");
+    if (WeaponSelector != null)
+    {
+      WeaponSelector.SetOnWeaponDirectionEvent(false);
+      boolean MouseEnable = !GetObject("TerrainMap").IsEnabled();
+
+      if (m_ViewMode == CM_Person1rd)
+      {
+        WeaponSelector.SetRenderMode(true, false);
+        WeaponSelector.SetWeaponAngles(- 32.5, 32.5, - 20.0, 20.0); // $TMP Camera FOV
+      }
+      else
+      {
+        WeaponSelector.SetRenderMode(false, false);
+        WeaponSelector.SetWeaponAngles(- 180.0, 180.0, - 90.0, 90.0);
+      }
+
+      if (PS_PilotFirst == m_PlayerSit)
+      {
+        WeaponSelector.SetManualTargetingSlot(1, false, false);
+        WeaponSelector.SetManualTargetingSlot(3, false, true);
+        WeaponSelector.SetManualTargetingSlot(2, false, true);
+        WeaponSelector.SetDrawScheme(0);
+        WeaponSelector.SetMouseEnable(false);
+
+        boolean State;
+        if (m_ViewMode == CM_CockpitNearest)
+          State = false;
+        else
+          State = true;
+        MouseCameraControl(State);
+      }
+      else
+      if (PS_PilotSecond == m_PlayerSit)
+      {
+        WeaponSelector.SetManualTargetingSlot(3, false, true);
+        WeaponSelector.SetManualTargetingSlot(2, false, true);
+        WeaponSelector.SetManualTargetingSlot(1, true, false);
+        WeaponSelector.SetDrawScheme(0);
+        WeaponSelector.SetMouseEnable(false);
+
+        boolean State;
+        if (m_ViewMode == CM_CockpitNearest)
+          State = false;
+        else
+          State = true;
+        MouseCameraControl(State);
+      }
+      else
+      if (PS_GunnerLeft == m_PlayerSit)
+      {
+        WeaponSelector.SetManualTargetingSlot(1, false, true);
+        WeaponSelector.SetManualTargetingSlot(3, false, true);
+        WeaponSelector.SetManualTargetingSlot(2, true, false);
+        WeaponSelector.SetDrawScheme(1);
+        WeaponSelector.SetMouseEnable(MouseEnable);
+        MouseCameraControl(false);
+      }
+      else
+      if (PS_GunnerRight == m_PlayerSit)
+      {
+        WeaponSelector.SetManualTargetingSlot(1, false, true);
+        WeaponSelector.SetManualTargetingSlot(2, false, true);
+        WeaponSelector.SetManualTargetingSlot(3, true, false);
+        WeaponSelector.SetMouseEnable(MouseEnable);
+        WeaponSelector.SetDrawScheme(2);
+        MouseCameraControl(false);
+      }
+
+      WeaponSelector.EnableSlot(0, m_ArmamentState && m_RktResetState && (PS_PilotFirst == m_PlayerSit || PS_PilotSecond == m_PlayerSit));
+      WeaponSelector.EnableSlot(1, (PS_PilotFirst  == m_PlayerSit || PS_PilotSecond == m_PlayerSit));
+      WeaponSelector.EnableSlot(2, (PS_GunnerLeft  == m_PlayerSit));
+      WeaponSelector.EnableSlot(3, (PS_GunnerRight == m_PlayerSit));
+      WeaponSelector.SetManualTargetingSlot(0, false, false);
+
+      WeaponSelector.SetJoystickEnable(m_ViewMode != CM_Person3rd &&
+                                        (m_ViewMode == CM_Person1rd ||
+                                         (m_ViewMode == CM_CockpitNearest && PS_PilotFirst != m_PlayerSit) ||
+                                         (PS_GunnerLeft  == m_PlayerSit) ||
+                                         (PS_GunnerRight == m_PlayerSit)
+                                        )
+                                      );
+
+      WeaponSelector.EnableExButton(1, MouseEnable);
+      WeaponSelector.EnableExButton(2, MouseEnable);
+      WeaponSelector.EnableExButton(3, MouseEnable);
+
+      GetObject("CameraLink").EnableJoystickControl(!WeaponSelector.IsJoystickEnabled());
+
+
+
+      WeaponSelector.SetOnWeaponDirectionEvent(m_ViewMode == CM_Person1rd);
+    }
+
+    /*
+    Component CopilotM21Target = GetObject("M21CoPilotAnimator");
+    if (CopilotM21Target != null)
+      CopilotM21Target.EnableAnimator( (PS_PilotSecond == m_PlayerSit) &&
+                                       (m_ViewMode == CM_CockpitNearest ||
+                                       (m_ViewMode == CM_Cockpit))
+                                     );
+    */
+
+    // Target pointer
+    Component TargetPointer = GetObject("TargetPointer");
+    if (TargetPointer != null)
+    {
+      if (PS_PilotFirst == m_PlayerSit)
+        TargetPointer.SetCrosshairType(0);
+      else
+      if (PS_PilotSecond == m_PlayerSit)
+        TargetPointer.SetCrosshairType(1);
+      else
+      if (PS_GunnerLeft == m_PlayerSit)
+        TargetPointer.SetCrosshairType(2);
+      else
+      if (PS_GunnerRight == m_PlayerSit)
+        TargetPointer.SetCrosshairType(2);
+
+      if (CM_Person1rd == m_ViewMode)
+        TargetPointer.ControlParams(false);
+      else
+        TargetPointer.ControlParams(true);
+
+      Component TargetPointerTex = GetObject("TargetPointerTex");
+      if (TargetPointerTex == null)
+        TargetPointerTex = TargetPointer;
+
+      if ((CM_Cockpit == m_ViewMode) || (CM_CockpitNearest == m_ViewMode))
+      {
+        TargetPointer.Enable(false);
+        TargetPointer.SetRenderMode(false, false);
+
+        TargetPointerTex.Enable(true);
+        TargetPointerTex.SetRenderMode(false, true);
+        TargetPointerTex.SetFontScale(4.4);
+        TargetPointerTex.SetAppearance(0.1, 0.1, 0.8, 0.8);
+        if (PS_PilotFirst == m_PlayerSit)
+          TargetPointerTex.SetCrosshairType(0);
+        else
+        if (PS_PilotSecond == m_PlayerSit)
+          TargetPointerTex.SetCrosshairType(1);
+      }
+      else
+      {
+        TargetPointerTex.Enable(false);
+        TargetPointerTex.SetRenderMode(false, false);
+
+        TargetPointer.Enable(true);
+        TargetPointer.SetRenderMode(true, false);
+        TargetPointer.SetFontScale(1.3);
+        TargetPointer.SetAppearance(0.375, 0.375, 0.25, 0.25);
+      }
+    }
+
+    // Message bar
+    Component MessageBar = GetObject("MessageBar");
+    if (MessageBar != null)
+    {
+      if (m_ViewMode == CM_Person1rd)
+        MessageBar.EnableRenderSign(true);
+      else
+        MessageBar.EnableRenderSign(false);
+    }
+
+    Component CockpitGroup = GetObject("CockpitGroup");
+    if (CockpitGroup != null)
+      CockpitGroup.SetPendingUpdate(true);
+
+    // enable or disable some controls
+    EnableCockpit(m_CockpitEnabled);
+
+    GetInsideMesh().SetAnimateAlways(true);
+
+    UpdateMFD();
+  }
+
+  void EnableCockpit(
+      boolean _Enable
+    )
+  {
+    if (!m_CockpitExists)
+      return;
+
+    m_CockpitEnabled = _Enable;
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      boolean EnabledByViewMode = false;
+      if (m_ControlsNames[i][1].isEmpty())
+        EnabledByViewMode = true;
+      else
+      {
+      // is this control enable for this cockpit mode
+        for (int j = 0; j <  m_ControlsNames[i][1].size(); j++)
+          EnabledByViewMode |= (m_ViewMode == m_ControlsNames[i][1][j]);
+      }
+
+      boolean EnabledBySitMode = false;
+      if (m_ControlsNames[i].size() < 3)
+        EnabledBySitMode = true;
+      else
+      if (m_ControlsNames[i][2].isEmpty())
+        EnabledBySitMode = true;
+      else
+      {
+      // is this control enable for this cockpit mode
+        for (int j = 0; j <  m_ControlsNames[i][2].size(); j++)
+          EnabledBySitMode |= (m_PlayerSit == m_ControlsNames[i][2][j]);
+      }
+
+      boolean CockpitModeEnabled = EnabledBySitMode & EnabledByViewMode;
+
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (null != Control)
+        Control.Enable(_Enable && CockpitModeEnabled);
+    }
+
+    // Setup animation for base model
+    if (m_CockpitEnabled)
+      GetMeshComponent().SetAnimateAlways(
+        CM_Cockpit == m_ViewMode || CM_Person1rd == m_ViewMode || CM_CockpitNearest == m_ViewMode);
+    else
+      GetMeshComponent().SetAnimateAlways(false);
+
+
+    // $TODO RefreshCockpitViewState();
+  }
+
+  boolean IsCockpitExists()
+  {
+    return m_CockpitExists;
+  }
+
+
+  void SetControlsCameraId(
+      String _CameraId
+    )
+  {
+    if (!m_CockpitExists)
+      return;
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (null != Control)
+      {
+        Control.SetCameraId(_CameraId);
+      }
+    }
+  }
+
+  void RefreshCockpitViewState()
+  {
+  }
+
+  void SetPlayerSit(
+      int  _PlayerSit
+    )
+  {
+    m_PlayerSit = _PlayerSit;
+    m_PilotLookToCamera = false;
+
+    TargetChange();
+
+    Component CockpitObject = GetInsideMesh();
+    if (null != CockpitObject)
+    {
+      CockpitObject.EnableJoint(
+          m_CoPilot_Instrumental_Panel,
+          (JOINT_USAGE_RENDER | JOINT_USAGE_ISECTION),
+          0,
+          (PS_PilotSecond == m_PlayerSit)
+        );
+      CockpitObject.EnableJoint(
+          m_Pilot_Instrumental_Panel,
+          (JOINT_USAGE_RENDER | JOINT_USAGE_ISECTION),
+          0,
+          (PS_PilotSecond != m_PlayerSit)
+        );
+    }
+
+    GetObject("CockpitPanel").Enable(PS_PilotFirst == m_PlayerSit);
+    GetObject("CopilotCockpitPanel").Enable(PS_PilotSecond == m_PlayerSit);
+
+    SetPilotsViewMode();
+
+    SetLeftGunnerState(CGunnerUnit::GS_TARGET);
+    SetRightGunnerState(CGunnerUnit::GS_TARGET);    
+  }
+
+  int GetPlayerSit()
+  {
+    return m_PlayerSit;
+  }
+
+  void SetPlayerControlSit(
+      int  _PlayerSit
+    )
+  {
+    m_PlayerControl = _PlayerSit;
+    SetPlayerSit(m_PlayerControl);
+  }
+
+  int GetPlayerControlSit()
+  {
+    return m_PlayerControl;
+  }
+
+  void SetGunnerControlSit(
+      int  _PlayerSit
+    )
+  {
+    m_GunnerControl = _PlayerSit;
+    SetPlayerSit(m_GunnerControl);
+  }
+
+  int GetGunnerControlSit()
+  {
+    return m_GunnerControl;
+  }
+
+
+  void LinkDeviceToUnitItem(
+      String    _ItemName,
+      Component _Device
+    )
+  {
+    _Device.SetDeviceName(_ItemName);
+    m_DevicesLinks.insert(_ItemName, _Device);
+  }
+
+  Component GetDevice(
+      String _Name
+    )
+  {
+    if (!m_DevicesLinks.find(_Name))
+      return null;
+
+    return m_DevicesLinks.getValue();
+  }
+
+  void CreateInternalDevices()
+  {
+    EngineDevice          = new CEngineDevice();
+    FuelTankLF            = new CFuelTankLFDevice();
+    FuelTankRF            = new CFuelTankRFDevice();
+    FuelTankLB            = new CFuelTankLBDevice();
+    FuelTankRB            = new CFuelTankRBDevice();
+    Transmission          = new CTransmissionDevice();
+    OilSystem             = new COilSystemDevice();
+    GunnerLeft            = new CGunnerLeftDevice();
+    GunnerRight           = new CGunnerRightDevice();
+    PilotFirst            = new CPilotFirstDevice();
+    PilotSecond           = new CPilotSecondDevice();
+    RFHeliPart            = new CRFHeliPart();
+    LFHeliPart            = new CLFHeliPart();
+    Stabilizers           = new CStabilizersDevice();
+    TailRail              = new CTailRailDevice();
+    TailUnit              = new CTailUnitDevice();
+    TailRotor             = new CTailRotorDevice();
+    SkidLeft              = new CSkidDevice();
+    SkidRight             = new CSkidDevice();
+
+    LinkDeviceToUnitItem("Engine",                EngineDevice          );
+    LinkDeviceToUnitItem("FuelTankLF",            FuelTankLF            );
+    LinkDeviceToUnitItem("FuelTankRF" ,           FuelTankRF            );
+    LinkDeviceToUnitItem("FuelTankLB",            FuelTankLB            );
+    LinkDeviceToUnitItem("FuelTankRB" ,           FuelTankRB            );
+    LinkDeviceToUnitItem("Transmission",          Transmission          );
+    LinkDeviceToUnitItem("OilSystem",             OilSystem             );
+    LinkDeviceToUnitItem("GunnerLeft",            GunnerLeft            );
+    LinkDeviceToUnitItem("GunnerRight",           GunnerRight           );
+    LinkDeviceToUnitItem("PilotFirst",            PilotFirst            );
+    LinkDeviceToUnitItem("PilotSecond",           PilotSecond           );
+    LinkDeviceToUnitItem("RFHeliPart",            RFHeliPart            );
+    LinkDeviceToUnitItem("LFHeliPart",            LFHeliPart            );
+    LinkDeviceToUnitItem("Stabilizers",           Stabilizers           );
+    LinkDeviceToUnitItem("TailRail",              TailRail              );
+    LinkDeviceToUnitItem("TailUnit",              TailUnit              );
+    LinkDeviceToUnitItem("TailRotor",             TailRotor             );
+    LinkDeviceToUnitItem("SkidLeft",              SkidLeft              );
+    LinkDeviceToUnitItem("SkidRight",             SkidRight             );
+  }
+
+  // recieved from damaged item
+  void SetPartLifePercent(
+      String _PartName,
+      float  _HPPercent
+    )
+  {
+    if (m_DevicesLinks.find(_PartName))
+    {
+      Component Device = m_DevicesLinks.getValue();
+      Device.SetHPPercent(this, _HPPercent);
+    }
+  }
+
+  void RestoreAllDevices()
+  {
+    m_DevicesLinks.gotoBegin();
+    while (!m_DevicesLinks.isAtEnd())
+    {
+      Component Device = m_DevicesLinks.getValue();
+      Device.SetHPPercent(this, 1.0);
+
+      m_DevicesLinks.gotoNext();
+    }
+    // restore all possible damages
+
+    Component VehicleController = GetVehicleController();
+
+    // PitoTube
+    m_SpeedometerEnabled = true;
+
+    // TailRotor
+    VehicleController.SetTailPitchLatency(0.0);
+    VehicleController.EnableTailRotorSystem(true);
+    VehicleController.EnableTailVibrationMode(false);
+    VehicleController.EnableRandomTailPhaseDisplacement(false);
+    VehicleController.SetTailPhaseDisplacement(0.0);
+
+    // stabilizers
+    VehicleController.SetStabilizersDamage(0.0);
+    VehicleController.EnableRandomStabilizersDamage(false);
+
+    // engine
+    VehicleController.SetEnginePowerPart(1.0);
+  }
+
+  // ==========================================
+  // Cursor control
+  // ==========================================
+
+  void CreateCursor(
+      Component _EventHandler,
+      Component _MatManager,
+      Array _Materials,
+      float  _X,
+      float  _Y,
+      float  _Width,
+      float  _Height
+    )
+  {
+    Component Cursor = new #CursorControl();
+    addClassificator(Cursor, CLASSIFICATOR_NO_POST_EFFECTED);
+    Cursor.SetPosition(_X, _Y);
+    Cursor.SetDimensions(_Width, _Height);
+    Cursor.DefineMaterials(_Materials);
+    Cursor.SetMaterialManager(_MatManager);
+    Cursor.SetEventHandler(_EventHandler);
+    Cursor.SyncWithWindowsCursor(true);
+    RegisterObject("Cursor", Cursor);
+    ShowCursor(false);
+  }
+
+  void CreateDefaultCursor(
+      Component _EventHandler,
+      Component _MatManager
+    )
+  {
+    CreateCursor(
+        _EventHandler,
+        _MatManager,
+        [
+         ["cockpit cursor", 4.0 / 1024.0, 4.0 / 768.0],
+         ["hand point cursor",12.0 / 1024.0, 0.0 / 768.0],
+         ["hand grab cursor",16.0 / 1024.0, 16.0 / 768.0]
+        ],
+        0.5,
+        0.5,
+        32.0 / 1024.0,
+        32.0 / 768.0
+      );
+  }
+
+  void ShowCursor(
+      boolean _Show
+    )
+  {
+    ShowCursor(_Show, true);
+  }
+
+  void ShowCursor(
+      boolean _Show,
+      boolean _ShowOnButton
+    )
+  {
+    Component Cursor = GetObject("Cursor");
+
+    if (_Show)
+    {
+      if (!_ShowOnButton)
+        Cursor.ShowCursorOnAction(5000);
+      Cursor.ShowCursorOnButton(_ShowOnButton);
+    }
+    else
+    {
+      Cursor.ShowCursor(false);
+      Cursor.ShowCursorOnAction(0);
+      Cursor.ShowCursorOnButton(false);
+    }
+
+    Cursor.Enable(_Show);
+  }
+
+  void OnVoiceSoundStopped(
+      String  _MessageId
+    )
+  {
+    if (m_CockpitExists)
+      SetLightState("MessInd", false);
+  }
+
+  void OnVoiceSoundStarted(
+      String  _MessageId
+    )
+  {
+    if (!m_CockpitExists)
+      return;
+
+    Component GameController = new #GameController();
+
+    if (GameController.IsNormalGameSpeed())
+    {
+      Map SoundAnimMap = GetMission().GetSoundAnimMap();
+
+      if (SoundAnimMap.find(_MessageId))
+      {
+        Component HeadAnimator = m_CoPilotObject.GetObject("HeadTalkAnimator");
+        HeadAnimator.SetAnimationName(SoundAnimMap.getValue()[0]);
+        HeadAnimator.SetAnimationTime(SoundAnimMap.getValue()[1]);
+        HeadAnimator.AnimateForward();
+      }
+    }
+  }
+
+  void OnPowerStateChanged()
+  {
+    boolean PanelOn = m_MissionPower && m_PanelPower;
+
+    Component CockpitPanel = GetObject("CockpitPanel");
+    Component CopilotCockpitPanel = GetObject("CopilotCockpitPanel");
+
+    if (null != CockpitPanel)
+    {
+      CockpitPanel.SetMainLightState(PanelOn);
+    }
+    if (null != CopilotCockpitPanel)
+    {
+      CopilotCockpitPanel.SetMainLightState(PanelOn);
+    }
+
+    Component VehicleController = GetVehicleController();
+    if (VehicleController != null)
+      VehicleController.EnableEngine(m_MissionPower);
+
+    m_AnimManager.Enable(PanelOn);
+  }
+
+  // ==========================================
+  // Manual control
+  // ==========================================
+
+  void OnEngineStateChanged(
+      boolean _IsOn
+    )
+  {
+    m_EngineWorkTime = 0.0;
+    m_EngineStopTime = 0.0;
+
+    if (_IsOn)
+      SetAnimationPhase(anim_load_conv_cursor, 11.0 / 12.0);
+    else
+      SetAnimationPhase(anim_load_conv_cursor, 0.0);
+
+//    if (_IsOn)
+//      SetAnimationPhase(anim_load_maingenerator_cursor, 11.0 / 12.0);//MainGenerator
+//    else
+//      SetAnimationPhase(anim_load_maingenerator_cursor, 0.0);
+
+    if (_IsOn)
+      SetAnimationPhase(anim_load_gen_cursor, 11.0 / 12.0); //SecondGenerator
+    else
+      SetAnimationPhase(anim_load_gen_cursor, 0.0);
+
+    if (!_IsOn)
+      SetAnimationPhase(anim_temp_cursor, 0.0);
+
+  }
+
+  void UpdateFuelPressure(
+      float _FuelPressure
+    )
+  {
+    SetAnimationPhase(anim_psifuel_cursor, _FuelPressure * 0.6);
+  }
+
+  event void UpdateOnlineDevices(
+      float _DeltaTime
+    )
+  {
+    if (null != EngineDevice)
+      EngineDevice.UpdateWorkDevice(this, _DeltaTime);
+
+    Component VehicleController = GetVehicleController();
+    if (VehicleController != null)
+    {
+      m_Torque = m_Torque * 0.95 + (1.0 - 0.95) * VehicleController.GetRelativeTractionScale();
+      GetObject("TorqDial").SetValue(m_Torque);
+      SetAnimationPhase(anim_torque_cursor, m_Torque);
+
+      if (VehicleController.GetEngineWork())
+        m_EngineWorkTime = m_EngineWorkTime + _DeltaTime;
+      else
+      {
+        m_EngineStopTime = m_EngineStopTime + _DeltaTime;
+        if (m_EngineStopTime <= 60.0) // stopphase
+        {
+          // gas engine tahometer
+          Component Cockpit = GetInsideMesh();
+          m_GasEngineValue = m_GasEngineValue - 4.0 * _DeltaTime;
+          if (m_GasEngineValue < 0.0)
+            m_GasEngineValue = 0.0;
+
+          SetAnimationPhase(anim_lrpm_turbine_cursor, fmod(m_GasEngineValue, 1.0));
+          SetAnimationPhase(anim_mrpm_turbine_cursor, m_GasEngineValue / 100.0);
+        }
+      }
+
+
+      if (VehicleController.GetEngineWork())
+      {
+        if (m_EngineWorkTime >= 3.0 &&
+            m_EngineWorkTime <= 15.0) // startphase
+        {
+          if (rand(0.0, 1.0) <= 0.3 * _DeltaTime)
+          {
+            if (!IsAnimating(anim_direct_current_cursor)) // DCVoltage
+              SetAnimationPhase(anim_direct_current_cursor, rand(14.0, 28.0) / 30.0);
+          }
+        }
+        else
+        {
+          if (rand(0.0, 1.0) <= 0.1 * _DeltaTime)
+          {
+            if (!IsAnimating(anim_direct_current_cursor))    // DCVoltage
+              SetAnimationPhase(anim_direct_current_cursor, rand(27.0, 28.0) / 30.0);
+          }
+        }
+
+        if (rand(0.0, 1.0) <= 0.1 * _DeltaTime)
+        {
+          if (!IsAnimating(anim_alternate_current_cursor)) //ACVoltage
+            SetAnimationPhase(anim_alternate_current_cursor, rand(112.0, 118.0) / 200.0);
+        }
+//        if (rand(0.0, 1.0) <= 0.1 * _DeltaTime)
+//        {
+//          if (!IsAnimating(anim_load_maingenerator_cursor)) // MainGenerator
+//            SetAnimationPhase(anim_load_maingenerator_cursor, (11.0 + rand(1.0)) / 12.0);
+//        }
+        if (rand(0.0, 1.0) <= 0.1 * _DeltaTime)
+        {
+          if (!IsAnimating(anim_load_gen_cursor)) // SecondGenerator
+            SetAnimationPhase(anim_load_gen_cursor, (11.0 + rand(1.0)) / 12.0);
+        }
+        if (rand(0.0, 1.0) <= 0.1 * _DeltaTime)
+        {
+          if (!IsAnimating(anim_load_conv_cursor)) // Converter
+            SetAnimationPhase(anim_load_conv_cursor, (11.0 + rand(1.0)) / 12.0);
+        }
+
+        if (rand(0.0, 1.0) <= 0.2 * _DeltaTime)
+        {
+          if (!IsAnimating(anim_temp_cursor)) // EXHTemperature
+          {
+            // growing depends on m_CurrentValueEngine
+            // max temp 760 corresponds to max rpms
+            // min work temp 400 corresponds to min rpms
+//            logMessage(new String(m_CurrentValueEngine));
+
+            float EngineValue = (m_CurrentValueEngine * 60.0 - VehicleController.EngineSystem.MinSpeed) / (VehicleController.EngineSystem.MaxSpeed - VehicleController.EngineSystem.MinSpeed);
+
+            float Temperature = 500.0 + (760.0 - 500.0) * EngineValue + rand(100.0);
+            if (Temperature < 400.0) Temperature = 400.0;
+            if (Temperature > 760.0) Temperature = 760.0;
+
+            float Smooth = 0.9;
+            SetAnimationPhase(anim_temp_cursor, GetCurrentPhase(anim_temp_cursor) * Smooth + (1.0 - Smooth) * Temperature / 1000.0);
+          }
+        }
+
+        if (m_EngineWorkTime <= 60.0) // startphase
+        {
+          // gas engine tahometer
+          Component Cockpit = GetInsideMesh();
+          m_GasEngineValue = m_GasEngineValue + 1.5 * _DeltaTime;
+          if (m_GasEngineValue > 70.0)
+            m_GasEngineValue = 70.0;
+
+          SetAnimationPhase(anim_lrpm_turbine_cursor, fmod(m_GasEngineValue, 1.0));
+          SetAnimationPhase(anim_mrpm_turbine_cursor, m_GasEngineValue / 100.0);
+        }
+      }
+
+      float Scale = VehicleController.GetRelativeTractionScale();
+
+      SetWindDustEffectScale(Scale);
+      if (Scale < 0.135)
+        Scale = 0.025 * m_CurrentValueMain;
+      SetWindDustEffectScale2(Scale);
+
+    } // VehicleController != null
+
+    // pilot animations
+    if (m_PilotObject != null && m_CoPilotObject != null)
+    if (m_ViewMode == CM_Cockpit || m_ViewMode == CM_Person3rd)
+    {
+      if (!m_PilotLookToCamera &&
+          m_ViewMode == CM_Cockpit)
+      {
+        Component PassObject;
+        float     LookPhase = 0.5;
+        // take a look to camera when the camera first turn to pilot
+        if (m_PlayerSit == PS_PilotFirst)
+        {           
+          PassObject = m_CoPilotObject;
+          LookPhase  = 1.0f;
+        }
+        else
+        if (m_PlayerSit == PS_PilotSecond)
+        {
+          PassObject = m_PilotObject;
+          LookPhase  = 0.0f;
+        }
+       
+        final float ViewAngle = 0.2f;// rad   
+
+        if (PassObject != null)
+        if (abs(getAngleBetween(getPosition(PassObject.GetInsideMesh().GetJoint("Head")).origin, new Vector(1.0f, 0.0f, 0.0f), new Vector(0.0f, 0.0f, 1.0f))) < ViewAngle)
+        {
+          logMessage("head rotate to camera");
+          // skip any action 
+          PassObject.m_bHeadAction = false;
+
+          PassObject.SetHeadAction(LookPhase, 0.5f, 1.0f);
+          m_PilotLookToCamera = true;
+        }
+      }
+
+      m_PilotObject.ChooseRandomHeadAction(_DeltaTime);
+      m_CoPilotObject.ChooseRandomHeadAction(_DeltaTime);
+    }
+    
+    // gunner animation
+    if (m_ViewMode != CM_Person1rd)
+    {   
+      if (GetBehavior().IsEnemyOnRadar() ||
+          PS_GunnerRight == m_PlayerSit  ||
+          PS_GunnerLeft  == m_PlayerSit  ||
+          m_BehWeaponActivated)
+      {
+        SetLeftGunnerState(CGunnerUnit::GS_TARGET);      
+        SetRightGunnerState(CGunnerUnit::GS_TARGET);      
+      }
+      else
+      {
+/*
+        // occasionally change state 
+        if (rand(0.0, 1.0) <= 0.2 * _DeltaTime)
+        {
+
+          if (rand(0.0, 1.0) <= 0.3)
+            SetLeftGunnerState(CGunnerUnit::GS_TARGET);      
+          else
+            SetLeftGunnerState(CGunnerUnit::GS_FREE);
+
+          if (rand(0.0, 1.0) <= 0.3)
+            SetRightGunnerState(CGunnerUnit::GS_TARGET);      
+          else 
+            SetRightGunnerState(CGunnerUnit::GS_FREE);      
+
+        }
+*/
+          SetLeftGunnerState(CGunnerUnit::GS_FREE);      
+          SetRightGunnerState(CGunnerUnit::GS_FREE);      
+
+
+        if (m_LeftGunnerObject.GetState() == CGunnerUnit::GS_FREE)
+          m_LeftGunnerObject.ChooseRandomHeadAction(_DeltaTime);
+
+        if (m_RightGunnerObject.GetState() == CGunnerUnit::GS_FREE)
+          m_RightGunnerObject.ChooseRandomHeadAction(_DeltaTime);
+      }
+    }
+  }
+
+  void OnTailPitchChanged(
+      float _Pitch
+    )
+  {
+    if (null != m_PilotObject)
+      m_PilotObject.SetRudderPhase((_Pitch + 1.0) * 0.5);
+    if (null != m_CoPilotObject)
+      m_CoPilotObject.SetRudderPhase((_Pitch + 1.0) * 0.5);
+  }
+
+  void OnMainPitchChanged(
+      float _Pitch
+    )
+  {
+    if (null != m_PilotObject)
+      m_PilotObject.SetThrottlePhase(_Pitch);
+    if (null != m_CoPilotObject)
+      m_CoPilotObject.SetThrottlePhase(_Pitch);
+  }
+
+  void OnMainBankTangageChanged(
+      float _Bank,
+      float _Tangage
+    )
+  {
+    _Bank    = (1.0 - _Bank) * 0.5;
+    _Tangage = (1.0 - _Tangage) * 0.5;
+    
+    if (null != m_PilotObject)
+    {  
+      m_PilotObject.SetBankTangagePhase(_Bank, _Tangage);
+    }
+
+    if (null != m_CoPilotObject)
+    {
+      m_CoPilotObject.SetBankTangagePhase(_Bank, _Tangage);
+    }
+  }
+
+  // ==========================================
+  // Service
+  // ==========================================
+
+  void OnChangeUnitSpeed(
+      float _CurrentValueMain,
+      float _CurrentValueEngine
+    )
+  {
+    m_CurrentValueEngine = _CurrentValueEngine;
+    m_CurrentValueMain   = _CurrentValueMain;
+//    logWarning("[Cockpit] ChangeUnitSpeed" + new String(_CurrentValueMain) + " "
+//                                           + new String(_CurrentValueEngine));
+    SetAnimationPhase(anim_rotor_cursor, _CurrentValueMain / 5.83);
+    SetAnimationPhase(anim_turbine_cursor, _CurrentValueEngine / 116.6);
+
+    Component AlarmSound = GetObject("RpmAlarmSound");
+
+    boolean LightState = false;
+    boolean SoundState  = false;
+    float SpeedValue = _CurrentValueMain * 60.0;
+
+    if ((SpeedValue > 0.1) && (SpeedValue < 314.0))
+    {
+      LightState = true;
+      if (SpeedValue < 300.0)
+        SoundState = true;
+    }
+    else
+    if ((SpeedValue > 314.0) && (SpeedValue < 344.0))
+    {
+      if (m_SwitchOnAlarmSignal)
+      {
+        SetSwitchState("LowRpmAudio", true);
+        OnLowRpmAudioSwitch("LowRpmAudio", true);
+        m_SwitchOnAlarmSignal = false;
+      }
+    }
+    else
+    if (SpeedValue > 344.0)
+      LightState = true;
+
+    if (AlarmSound != null)
+    {
+      boolean SoundPlaying = AlarmSound.IsSoundPlaying();
+      boolean NeedToPlay   = SoundState & m_LowRpmSignal;
+
+      if (SoundPlaying != NeedToPlay)
+      {
+        if (NeedToPlay)
+          AlarmSound.PlaySoundBuffer(true);
+        else
+          AlarmSound.StopSoundPlaying(true);
+      }
+    }
+
+    SetLightState("LowRPM", LightState);
+  }
+
+  String FindMaterialID(
+      Array _Materials,
+      String _TextureName
+    )
+  {
+    for (int i = 0; i < _Materials.size(); i++)
+    {
+      /*
+       $TODO : add functions and use it there
+      if (!isFunctionExist(_Materials[i],"GetTextureName", 0) ||
+          !isFunctionExist(_Materials[i],"GetMaterialID", 0))
+      {
+        continue;
+      }
+      */
+      if (_Materials[i].MaterialID == "")
+        continue;
+
+
+      if (_Materials[i].TextureName == _TextureName)
+        return _Materials[i].MaterialID;
+    }
+    return "";
+  }
+
+  void UpdateEngineParameters(
+      float   _Temperature,
+      float   _OilPressure,
+      boolean _Overheat
+    )
+  {
+    SetLightState("SystemAlarm", m_SystemAlarm || _Overheat || m_IsTestPeriod);
+
+    SetAnimationPhase(anim_toil_cursor, (_Temperature + 50.0) / 200.0);
+    SetAnimationPhase(anim_psiengineoil_cursor, _OilPressure);
+  }
+
+
+  // ==========================================
+  // Events
+  // ==========================================
+
+  void OnSwitchChanged(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    // sync pilot's and copilot's panels
+
+    int SitMode = GetPlayerSit();
+
+    if (PS_PilotFirst == SitMode)
+    {
+      Component CopilotCockpitPanel = GetObject("CopilotCockpitPanel");
+      if (null != CopilotCockpitPanel)
+      {
+        CopilotCockpitPanel.SetSwitchState(_ControlName, _State);
+      }
+    }
+    else
+    if (PS_PilotSecond == SitMode)
+    {
+      Component CockpitPanel = GetObject("CockpitPanel");
+      if (null != CockpitPanel)
+      {
+        CockpitPanel.SetSwitchState(_ControlName, _State);
+      }
+    }
+  }
+
+  event void IncreaseSightBright()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    m_ControlBrightness += g_BrightnessDelta;
+
+    if (m_ControlBrightness > 1.0)
+      m_ControlBrightness = 1.0;
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (Control != null)
+        if (isFunctionExist(Control, "ChangeBrightness", 1))
+          Control.ChangeBrightness(m_ControlBrightness);
+    }
+
+    Component CockpitGroup = GetObject("CockpitGroup");
+    if (CockpitGroup != null)
+      CockpitGroup.SetPendingUpdate(true);
+  }
+
+  event void DecreaseSightBright()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    m_ControlBrightness -= g_BrightnessDelta;
+
+    if (m_ControlBrightness < 0.0)
+      m_ControlBrightness = 0.0;
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (Control != null)
+        if (isFunctionExist(Control, "ChangeBrightness", 1))
+          Control.ChangeBrightness(m_ControlBrightness);
+    }
+
+    Component CockpitGroup = GetObject("CockpitGroup");
+    if (CockpitGroup != null)
+      CockpitGroup.SetPendingUpdate(true);
+  }
+
+  event void IncreaseSightDist()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    m_SightDistance += g_SightDistanceDelta;
+
+    if (m_SightDistance > 90.0)
+      m_SightDistance = 90.0;
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (Control != null)
+        if (isFunctionExist(Control, "ChangeDistanceFactor", 1))
+          Control.ChangeDistanceFactor(m_SightDistance);
+    }
+
+    Component CockpitGroup = GetObject("CockpitGroup");
+    if (CockpitGroup != null)
+      CockpitGroup.SetPendingUpdate(true);
+  }
+
+  event void DecreaseSightDist()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    m_SightDistance -= g_SightDistanceDelta;
+
+    if (m_SightDistance < 10.0)
+      m_SightDistance = 10.0;
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (Control != null)
+        if (isFunctionExist(Control, "ChangeDistanceFactor", 1))
+          Control.ChangeDistanceFactor(m_SightDistance);
+    }
+
+    Component CockpitGroup = GetObject("CockpitGroup");
+    if (CockpitGroup != null)
+      CockpitGroup.SetPendingUpdate(true);
+  }
+
+  void TargetChange()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    boolean HideByPlayer = false;
+    if (m_PlayerSit == PS_PilotFirst)
+      HideByPlayer = m_M60State;
+    else
+    if (m_PlayerSit == PS_PilotSecond)
+      HideByPlayer = m_M21State;
+    else
+      return;
+
+    m_HideTarget = HideByPlayer;
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (Control != null)
+        if (isFunctionExist(Control, "HideTarget", 1))
+          Control.HideTarget(m_HideTarget);
+    }
+
+    Component CockpitGroup = GetObject("CockpitGroup");
+    if (CockpitGroup != null)
+      CockpitGroup.SetPendingUpdate(true);
+  }
+
+  event void HideTarget()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    boolean HideByPlayer = false;
+    if (m_PlayerSit == PS_PilotFirst)
+      HideByPlayer = m_M60State;
+    else
+    if (m_PlayerSit == PS_PilotSecond)
+      HideByPlayer = m_M21State;
+    else
+      return;
+
+    m_HideTarget = !m_HideTarget;
+
+    m_HideTarget = (m_HideTarget | HideByPlayer);
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (Control != null)
+        if (isFunctionExist(Control, "HideTarget", 1))
+          Control.HideTarget(m_HideTarget);
+    }
+
+    Component CockpitGroup = GetObject("CockpitGroup");
+    if (CockpitGroup != null)
+      CockpitGroup.SetPendingUpdate(true);
+  }
+
+  //
+  // Switches
+  //
+
+  void OnRMISwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    m_RMISlaveEnable = _State;
+
+  }
+
+  void OnAlarmSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    SetLightState("FireAlarm", _State);
+    m_FireNotTest = _State;
+
+    if (m_FireNotTest)
+      sendEvent(1.0f, getIdentificator(this), "ContinueFireTest", []);
+  }
+
+  event void ContinueFireTest()
+  {
+    if (m_FireNotTest)
+    {
+      SetSwitchState("AlarmSwitch", false, true); // play sound
+      OnAlarmSwitch("AlarmSwitch", false);
+    }
+  }
+
+  //
+  // pedestal
+  //
+
+  //
+  // caution panel
+  //
+
+  void OnResetTestSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    if (_State && !m_IsTestPeriod)
+    {
+      m_IsTestPeriod = true;
+      Component CockpitPanel = GetObject("CockpitPanel");
+      Component CoCockpitPanel = GetObject("CopilotCockpitPanel");
+      sendEvent(1.0f, getIdentificator(this), "OnSkipTestSwitch", [CockpitPanel.GetLightsState()]);
+      for (int i = 0; i < m_CautionTestLights.size(); i++)
+      {
+        CockpitPanel.SetLightState(m_CautionTestLights[i], true);
+        CoCockpitPanel.SetLightState(m_CautionTestLights[i], true);
+      }
+    }
+  }
+
+  event void OnSkipTestSwitch(
+      Map _LightState
+    )
+  {
+    Component CockpitPanel = GetObject("CockpitPanel");
+    Component CoCockpitPanel = GetObject("CopilotCockpitPanel");
+
+    m_IsTestPeriod = false;
+    for (int i = 0; i < m_CautionTestLights.size(); i++)
+    {
+      _LightState.find(m_CautionTestLights[i]);
+      CockpitPanel.SetLightState(m_CautionTestLights[i], _LightState.getValue());
+      CoCockpitPanel.SetLightState(m_CautionTestLights[i], _LightState.getValue());
+    }
+
+    SetSwitchState("ResetTest", false, true); // play sound
+  }
+
+  //
+  // engine panel
+  //
+
+  void OnLowRpmAudioSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    float SpeedValue = m_CurrentValueMain * 60.0;
+    if (294.0 > SpeedValue)
+      m_SwitchOnAlarmSignal = true;
+    m_LowRpmSignal = _State;
+  }
+
+  void OnFuelSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    Component VehicleController = GetVehicleController();
+    if (_State)
+    {
+      EngineDevice.EnabledPower = true;
+      VehicleController.SetEnginePowerPart(EngineDevice.m_bCurrentPowerPart);
+    }
+    else
+    {
+      VehicleController.SetEnginePowerPart(0.0f);
+      EngineDevice.EnabledPower = false;
+    }
+  }
+
+  void OnAuxFuelRightSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    FuelTankRB.IsOn = _State;
+    FuelTankRF.IsOn = _State;
+  }
+
+  void OnAuxFuelLeftSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    FuelTankLF.IsOn = _State;
+    FuelTankLB.IsOn = _State;
+  }
+
+  void OnGovSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    m_GovernorEnabled = _State;
+
+    if (!m_GovernorWorkEnabled)
+      return;
+
+    GetVehicleController().EnableGovernorSwitch(_State);
+
+    SetLightState("GovEmer", !_State);
+  }
+
+  //
+  // m-158 panel
+  //
+  void OnArmamentSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    Component WeaponSelector = GetObject("WeaponSelector");
+
+    // $TODO proper 4 states action
+
+    m_ArmamentState = _State;
+
+    WeaponSelector.EnableSlot(0, m_ArmamentState && m_RktResetState && (PS_PilotFirst == m_PlayerSit || PS_PilotSecond == m_PlayerSit));
+    WeaponSelector.EnableSlot(1, (PS_PilotFirst  == m_PlayerSit || PS_PilotSecond == m_PlayerSit));
+
+  }
+
+  void OnRktPairSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    int FireStyle = WFM_Single;
+    if (_State)
+     FireStyle = WFM_Number;
+
+    GetObject("WeaponSelector").SetWeaponSlotFireStyle(0, FireStyle, 3);
+  }
+
+  void OnRktResetSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    // $TODO enable only if proper ArmamentSwitch state
+
+    m_RktResetState = _State;
+
+    GetObject("WeaponSelector").EnableSlot(0, m_ArmamentState && m_RktResetState && (PS_PilotFirst == m_PlayerSit || PS_PilotSecond == m_PlayerSit));
+  }
+
+  void OnJetissonSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    logWarning("Jetisson switch is not implemented");
+  }
+
+
+  // Power panel
+
+  void OnPowerSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    m_MissionPower = _State;
+    OnPowerStateChanged();
+  }
+
+  // Ex Power panel
+  void OnPanelPowerSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    m_PanelPower = _State;
+    OnPowerStateChanged();
+  }
+
+  void OnCrewCallSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    logWarning("CrewCall switch is not implemented");
+  }
+
+  // ac power panel
+
+  void OnMissionINVTRSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    logWarning("MissionINVTR switch is not implemented");
+  }
+
+  void OnGNDPWRSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    logWarning("GNDPWR switch is not implemented");
+  }
+
+  // FM Radio
+
+  void OnFMRadioSwitch(
+      String    _ControlName,
+      boolean   _State
+    )
+  {
+    // current logic - controls all radio
+    if (_State)
+      GetObject("VoiceMessenger").SetVolume(1.0f);
+    else
+      GetObject("VoiceMessenger").SetVolume(0.0f);
+  }
+
+  event void OnTimeChanged(
+      float _Hours,
+      float _Minutes,
+      float _Seconds
+    )
+  {
+//      logWarning("[Cockpit] current time" + new String(_Hours)
+//                                          + new String(_Minutes)
+//                                          + new String(_Seconds));
+
+    Component Cockpit = GetInsideMesh();
+    Cockpit.SetAnimationPhase("second_cursor", _Seconds / 60.0);
+    Cockpit.SetAnimationPhase("minute_cursor", _Minutes / 60.0);
+    Cockpit.SetAnimationPhase("hour_cursor", (_Hours + _Minutes / 60.0) / 12.0);
+  }
+
+  event void UpdateNavpoint(
+      Component _NavPoint,
+      float     _NavAngle,
+      Vector    _NavDirection
+    )
+  {
+    if (m_RMIEnabled)
+    {
+
+        // clockwise animation
+      float Phase = _NavAngle / Math_DBPI;
+
+      if (Phase < 0.0)
+        Phase = Phase + 1.0f;
+
+      SetAnimationPhase(anim_RMI_BigArrow_Master, Phase);
+
+      if (m_RMISlaveEnable)
+        SetAnimationPhase(anim_RMI_BigArrow_Slave, Phase);
+      else
+        SetAnimationPhase(anim_RMI_BigArrow_Slave, 0.0);
+    }
+
+    if (CM_Person1rd == m_ViewMode)
+    {
+      Component NavBar = GetObject("NavBar");
+      if (m_PlayerSit == PS_PilotSecond &&
+    !m_RMISlaveEnable)
+      {
+        NavBar.SetValues(new Vector(1.0, 0.0, 0.0), 0.0, _NavPoint);
+      }
+      else
+      {
+        NavBar.SetValues(_NavDirection, _NavAngle, _NavPoint);
+      }
+    }
+  }
+
+  event void UpdateHomeNavpoint(
+      Component _NavPoint,
+      float     _NavAngle,
+      Vector    _NavDirection
+    )
+  {
+    if (m_RMIEnabled)
+    {
+      Component Cockpit = GetInsideMesh();
+
+      // clockwise animation
+      float Phase = _NavAngle / Math_DBPI;
+
+      if (Phase < 0.0)
+        Phase = Phase + 1.0f;
+
+      SetAnimationPhase(anim_RMI_SmallArrow_Master, Phase);
+
+      if (m_RMISlaveEnable)
+        SetAnimationPhase(anim_RMI_SmallArrow_Slave, Phase);
+      else
+        SetAnimationPhase(anim_RMI_SmallArrow_Slave, 0.0);
+    }
+  }
+
+  event void OnCockpitModeChanged(
+      int _CockpitMode
+    )
+  {
+    if (!m_CockpitExists)
+      return;
+
+    if (m_ViewMode != _CockpitMode)
+    {
+      if (_CockpitMode == CM_CockpitNearest)
+      {
+        if ((m_PlayerSit == PS_PilotFirst) && (m_M60State))
+         ChangeSightState(m_PlayerControl);
+        else
+        if ((m_PlayerSit == PS_PilotSecond) && (m_M21State))
+         ChangeSightState(m_PlayerControl);
+      }
+      m_ViewMode = _CockpitMode;
+      InitializeCockpitMode();
+    }
+    else
+    {
+      //$TMP
+      Component CockpitGroup = GetObject("CockpitGroup");
+      if (CockpitGroup != null)
+        CockpitGroup.SetPendingUpdate(true);
+    }
+  }
+
+  event void OnCockpitColorChanged(
+      int _ColorIndex
+    )
+  {
+    if (!m_CockpitExists)
+      return;
+
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (Control != null)
+        if (isFunctionExist(Control, "SetColorScheme", 1))
+          Control.SetColorScheme(
+            CCockpitColorMap::m_CockpitDevicesColor[_ColorIndex]);
+    }
+  }
+
+  event void OnGunnerSitChanged(
+      int _GunnerSit
+    )
+  {
+    EnableCockpit(true);
+
+    if (!m_CockpitExists)
+      return;
+
+    InitializeCockpitMode();
+
+  }
+
+  event void OnPlayerSitChanged(
+      int _PlayerSit
+    )
+  {
+    EnableCockpit(true);
+
+    if (!m_CockpitExists)
+      return;
+
+    InitializeCockpitMode();
+  }
+
+  event void OnAltitudeChanged(
+      float   _BaroAltitude,
+      float   _EchoAltitude,
+      boolean _WorkingState
+    )
+  {
+    m_OMNILinesEnabled = (_EchoAltitude <= 62.0);
+
+    // convert to foots
+    _EchoAltitude = CMetricConverter::MetresToFoots(_EchoAltitude);
+    _BaroAltitude = CMetricConverter::MetresToFoots(_BaroAltitude);
+    
+    if (_BaroAltitude < 0.0f)
+      _BaroAltitude = 0.0f;
+    // for altimeter dials
+    Component Cockpit = GetInsideMesh();
+
+    float RadioaltValue = 0.00285 * min(200.0, _EchoAltitude);
+    if (200.0 < _EchoAltitude)
+    {
+      float TempValue = _EchoAltitude-200.0;
+      RadioaltValue += 0.000214 * min(300.0, TempValue);
+    }
+    if (500.0 < _EchoAltitude)
+    {
+      float TempValue = _EchoAltitude-500.0;
+      RadioaltValue += 0.000177 * min(500.0, TempValue);
+    }
+    if (1000.0 < _EchoAltitude)
+    {
+      float TempValue = _EchoAltitude-1000.0;
+      RadioaltValue += 0.000040 * min(4000.0, TempValue);
+    }
+
+    RadioaltValue = min(0.89, RadioaltValue);
+    SetAnimationPhase(anim_radioalt_cursor, RadioaltValue);
+
+    SetLightState("AltimeterEnabled", (_EchoAltitude > 0.0));
+
+    SetLightState("AltimeterCodeOFF", _WorkingState);
+
+    SetLightState("AltimeterLOW", (_EchoAltitude <= 100.0) && (_EchoAltitude > 0.0));
+
+    SetLightState("RMIAnnunicator", false);
+
+    float Height = _BaroAltitude;
+
+    float CursorPhase = Height / 1000.0;
+
+    SetAnimationPhase(anim_alt_cursor, CursorPhase);
+
+    // wheels
+    // we have the common counter - next wheel rotate when previous goes from 9 to 10(0)
+    // circle animations allow values > 1.0f
+
+    float Value1 = Height / 1000.0;
+    {
+      SetAnimationPhase(anim_wheel1_100, Value1);
+    }
+
+    float Value2 = float(ifloor(Value1)) / 10.0;
+    {
+      float DiffV = fmod(Value1, 1.0f);
+      if (DiffV > 0.9)
+      {
+        Value2 = Value2 + (DiffV - 0.9);
+      }
+
+      SetAnimationPhase(anim_wheel2_100, Value2);
+    }
+
+    float Value3 = float(ifloor(Value2)) / 10.0f;
+    {
+      float DiffV = fmod(Value2, 1.0f);
+      if (DiffV > 0.9)
+      {
+        Value3 = Value3 + (DiffV - 0.9);
+      }
+      SetAnimationPhase(anim_wheel3_100, Value3);
+    }
+
+    if (CM_Person1rd == m_ViewMode)
+    {
+      Component Alt = GetObject("AltimeterDial");
+      if (null != Alt)
+      {
+        if (_EchoAltitude >= 0.0)
+        {
+          float Kilos    =  _EchoAltitude / 1000.0;
+          float Hundreds = (_EchoAltitude - float(ifloor(Kilos) * 1000)) / 100.0;
+
+          Alt.SetValue(0, Kilos);
+          Alt.SetValue(1, Hundreds);
+          Alt.SetDigitalValue(_EchoAltitude);
+          Alt.EnableCover(false);
+        }
+        else
+        {
+          Alt.EnableCover(true);
+        }
+      }
+    }
+  }
+
+  void SetRadioScriptState(boolean _State)
+  {
+    SetLightState("RadioScript", _State);
+  }
+
+  void OnFuelChanged(
+      float _ValueToSet
+    )
+  {
+    SetAnimationPhase(anim_qtyfuel_cursor, _ValueToSet);
+
+    if (CM_Person1rd == m_ViewMode)
+    {
+      Component FuelDial = GetObject("FuelDial");
+      if (null != FuelDial)
+        FuelDial.SetValue(_ValueToSet);
+    }
+  }
+
+  void OnTransmissionChanged(
+      float _OilPressure,
+      float _OilTemperature
+    )
+  {
+    SetAnimationPhase(anim_psioil_transmission_cursor, _OilPressure);
+    SetAnimationPhase(anim_toil_transmission_cursor, (_OilTemperature + 50.0) / 200.0);
+  }
+
+  event void OnSpeedChanged(
+      float  _RateOfMovement,
+      float  _RateOfClimb,
+      float  _Overload,
+      Vector _RelativeAccel,
+      Vector _RelativeAngleVelocity,
+      float  _RateOfSway
+    )
+  {
+
+    float RateOfClimbFoots = CMetricConverter::MetresToFoots(_RateOfClimb) * 60.0 / 100.0; // hundreds foots / min
+    float RateOfMovementMiles = CMetricConverter::MetresToNauticalMiles(_RateOfMovement) * 3600;   // miles / h
+
+    if (RateOfMovementMiles < 0.0)
+      RateOfMovementMiles = 0.0;
+
+    // for dials
+    if (m_SpeedometerEnabled)
+      SetAnimationPhase(anim_speedometer_cursor, RateOfMovementMiles / 160.0);
+
+    // OMNI
+    if (m_OMNIEnabled)
+    {
+      if(m_OMNILinesEnabled)
+      {
+        float MaxXValue = 10.0; // m/s
+        float MaxYValue = 10.0; // m/s
+
+        float XValue = - _RateOfMovement;
+        float YValue = - _RateOfSway;
+
+        SetAnimationPhase(anim_Omni_HorLine, XValue / (2.0 * MaxXValue) + 0.5);
+        SetAnimationPhase(anim_Omni_VertLine, YValue / (2.0 * MaxYValue) + 0.5);
+      }
+    }
+
+    if (!m_M60State)
+    {
+      //$TMP
+      SetAnimationPhase(anim_M60_hsi_bank, 0.5f - 0.2f * _RelativeAccel.y - 10.0f * _RelativeAngleVelocity.z);
+    }
+    else
+      SetAnimationPhase(anim_M60_hsi_bank, 1.0f, 1.0f);
+
+    SetAnimationPhase(anim_hsi_arrow, 0.5f + 1.5f*_RelativeAngleVelocity.z);
+
+    SetAnimationPhase(anim_hsi_ball, 0.5f - 0.2f * _RelativeAccel.y - 10.0f * _RelativeAngleVelocity.z);
+
+
+    // not linear scale!
+
+    float ScaleValue = RateOfClimbFoots;
+    if ( abs(ScaleValue) <= 10.0)
+    {
+      ScaleValue = ScaleValue * 2.0;
+    }
+    else
+      ScaleValue = ScaleValue + sign(ScaleValue) * 10.0;
+
+    SetAnimationPhase(anim_vertspeed_cursor, 0.5 + ScaleValue / 80.0);
+
+    if (CM_Person1rd == m_ViewMode)
+    {
+
+      if (m_SpeedometerEnabled)
+      {
+        Component Speed = GetObject("SpeedometerDial");
+        if (null != Speed)
+        {
+          Speed.SetValue(0, RateOfMovementMiles);
+          Speed.SetDigitalValue(RateOfMovementMiles);
+        }
+      }
+
+      Component ClimbDial = GetObject("ClimbDial");
+      if (null != ClimbDial)
+       ClimbDial.SetValue(RateOfClimbFoots);
+    }
+  }
+
+  event void OnHorizonChange(
+      float _CurrentBankAngle,
+      float _CurrentTangage
+    )
+  {
+    // airhorizont
+
+    _CurrentBankAngle = - _CurrentBankAngle;
+
+    float Bank = _CurrentBankAngle / Math_PI;
+
+    if (_CurrentBankAngle < 0.0)
+      _CurrentBankAngle = _CurrentBankAngle + Math_DBPI;
+
+    SetAnimationPhase(anim_bank, _CurrentBankAngle / Math_DBPI);
+    
+    float Tangage = (_CurrentTangage + Math_HALFPI) / Math_PI;
+    SetAnimationPhase(anim_tangage, Tangage);
+
+    final float HeadPhaseDumpfer = 1.0;   
+
+    float HeadBank    = 0.5 + Bank * HeadPhaseDumpfer;
+ 
+    float HeadTangage = 0.5 + (Tangage - 0.5) * HeadPhaseDumpfer + 
+                              abs(Bank) * HeadPhaseDumpfer;
+    
+    if (null != m_PilotObject)
+      m_PilotObject.SetDefaultHeadPhase(HeadBank, HeadTangage);
+
+    if (null != m_CoPilotObject)
+      m_CoPilotObject.SetDefaultHeadPhase(HeadBank, HeadTangage);
+
+    if (CM_Person1rd == m_ViewMode)
+    {
+      GetObject("PositionDial").SetValues(_CurrentBankAngle, _CurrentTangage);
+    }
+  }
+
+  event void OnCompassChange(
+      float _CurrentAngle
+    )
+  {
+    // clockwise animation
+    float Phase = _CurrentAngle / Math_DBPI;
+
+    if (Phase < 0.0)
+      Phase = Phase + 1.0f;
+
+    // OMNI
+    if (m_OMNIEnabled)
+    {
+      SetAnimationPhase(anim_Omni_Scale, Phase);
+    }
+
+    SetAnimationPhase(anim_compass, 1.0 - Phase);
+
+    if (m_RMIEnabled)
+    {
+      SetAnimationPhase(anim_RMI_Scale_Master, Phase);
+
+      if (m_RMISlaveEnable)
+        SetAnimationPhase(anim_RMI_Scale_Slave, Phase);
+      else
+        SetAnimationPhase(anim_RMI_Scale_Slave, 0.0);
+    }
+
+    if (CM_Person1rd == m_ViewMode)
+    {
+      Component NavBar = GetObject("NavBar");
+      NavBar.SetCompassAngle(_CurrentAngle);
+    }
+  }
+
+  event void M60ChangeEnd(
+      int _State
+    )
+  {
+    TargetChange();
+  }
+
+  event void M60Change(
+      int _State
+    )
+  {
+    if (1 == _State)
+      m_M60State = false;
+    else
+      m_M60State = true;
+
+    if (2 != _State)
+      TargetChange();
+
+    if ((2 == _State) && m_ViewMode == CM_CockpitNearest)
+      OnCockpitModeChanged(CM_Cockpit);
+  }
+
+  event void M21ChangeEnd(
+      int _State
+    )
+  {
+    TargetChange();
+  }
+
+  event void M21Change(
+      int _State
+    )
+  {
+    if (1 == _State)
+      m_M21State = false;
+    else
+      m_M21State = true;
+
+    if (2 != _State)
+      TargetChange();
+
+    if ((2 == _State) && m_ViewMode == CM_CockpitNearest)
+      OnCockpitModeChanged(CM_Cockpit);
+  }
+
+  void SendCockpitMessage(
+      WString _Message,
+      Color   _Color
+    )
+  {
+    SendCockpitMessage(L"", _Message, _Color, "");
+  }
+
+  void SendCockpitMessage(
+      WString _Callsign,
+      WString _Message,
+      Color   _Color,
+      String  _SoundId
+    )
+  {
+    if (!m_CockpitExists)
+      return;
+
+    if (_Message != L"")
+    {
+      Component MessageBar = GetObject("MessageBar");
+      if (null != MessageBar)
+        MessageBar.AddSignedMessage(
+             _Callsign,
+            m_CallsignFontName,
+             _Message,
+            m_MsgFontName,
+             _Color,
+            m_MsgFontSize
+          );
+    }
+    // $LOG
+    else
+      logWarning("[Cockpit] SendCockpitMessage called with empty message string");
+
+    if (_SoundId.length() != 0)
+    {
+      Component VoiceMessenger = GetObject("VoiceMessenger");
+      if (null != VoiceMessenger)
+        VoiceMessenger.PlaySound(_SoundId);
+    }
+
+    SetLightState("MessInd", true);
+  }
+
+  event void OnWeaponDirectionChanged(
+      float   _HAngle,
+      float   _VAngle
+    )
+  {
+    Component TargetPointer = GetObject("TargetPointer");
+    if (null != TargetPointer)
+      TargetPointer.SetWeaponDirection(_HAngle, _VAngle);
+  }
+
+  event void RefreshAllNavpoints()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    Component Navigator = GetObject("Navigator");
+    if (null != Navigator)
+    {
+      Component Navigator = GetObject("Navigator");
+      Component Mission   = GetMission();
+      Component HomePoint = Mission.GetObject(Mission.GetMainRadioHomePoint());
+      if (HomePoint == null)
+        logWarning("cockpit navigator homepoint is null");
+      Navigator.SetHomeNavpoint(HomePoint);
+      Navigator.RefreshNavpointList();
+    }
+  }
+
+  void SetCurrentNavpoint(
+      Component _Navpoint
+    )
+  {
+    for (int i = 0; i < m_ControlsNames.size(); i++)
+    {
+      Component Control = GetObject(m_ControlsNames[i][0]);
+      if (null != Control)
+        if (isFunctionExist(Control, "SetCurrentNavpoint", 1))
+          Control.SetCurrentNavpoint(_Navpoint);
+    }
+  }
+
+  void SetWingmenList(
+      Array _WingmenList
+    )
+  {
+    Component WingmenMenu = GetObject("WingmenMenu");
+    if (WingmenMenu != null)
+    {
+      for (int i = 0; i < _WingmenList.size(); i++)
+        if (_WingmenList[i].length() > 0)
+          AddWingman(_WingmenList[i]);
+    }
+  }
+
+  void AddWingman(
+      String _WingmanID
+    )
+  {
+    Component WingmenMenu = GetObject("WingmenMenu");
+    if (WingmenMenu != null)
+    {
+      Component Wingman = (new #GameController()).GetMission().GetObject(_WingmanID);
+      if (Wingman != null)
+      {
+        if (isFunctionExist(Wingman, "GetObject", 1))
+        {
+          Component Behavior = Wingman.GetObject("Behavior");
+          if (Behavior != null)
+          {
+            Component Task = Behavior.GetTaskScriptHost();
+            if ((Task != null) && isFunctionExist(Task, "GetWingmanRank", 0))
+            {
+              int Rank = Task.GetWingmanRank();
+
+              WingmenMenu.AddWingman( _WingmanID, Rank);
+            }
+            else
+              logError("[Cockpit] AddWingman() : unit " + _WingmanID + " does not have task or it is not wingman task");
+
+            return;
+          }
+        }
+
+        if (isFunctionExist(Wingman, "GetWingmanRank", 0))
+        {
+          int Rank = Wingman.GetWingmanRank();
+
+          WingmenMenu.AddWingman(_WingmanID, Rank);
+        }
+        else
+          logError("[Cockpit] AddWingman() : unit " + _WingmanID + " is not either unit or group wingman");
+      }
+      else
+        logError("[Cockpit] AddWingman() : could not get object " + _WingmanID);
+    }
+  }
+
+  void RemoveWingman(
+      String _WingmanID
+    )
+  {
+    Component WingmenMenu = GetObject("WingmenMenu");
+    if (WingmenMenu != null)
+    {
+      WingmenMenu.RemoveWingman( _WingmanID);
+    }
+  }
+
+  void UpdateMFD()
+  {
+    m_MFDState = m_MFDState % 3;
+
+    Component TerrainMap = GetObject("TerrainMap");
+    if (m_ViewMode == CM_Person1rd)
+    {
+      Component CommonStatusScreen = GetObject("CommonStatusScreen");
+
+      TerrainMap.Enable(m_MFDState == 1);
+      CommonStatusScreen.Enable(m_MFDState == 2);
+    }
+
+    GetObject("CameraLink").EnableMouseControl(m_MouseCameraState && !TerrainMap.IsEnabled());
+
+    ShowCursor(CM_Cockpit == m_ViewMode || TerrainMap.IsEnabled(),
+               !TerrainMap.IsEnabled());
+
+  }
+
+  void AddMapNavpoints(
+      Array NavPoints
+    )
+  {
+    TerrainMap.AddNavpointsList(NavPoints[0], NavPoints[1], NavPoints[2]);
+  }
+
+  // Governor switch enable
+  void EnableGovernorSwitch(
+      boolean _bEnable,
+      boolean _PlaySound
+    )
+  {
+    SetSwitchState("Gov", _bEnable, _PlaySound);
+    OnGovSwitch("Gov", _bEnable);
+  }
+
+  boolean IsEnabledGovernorSwitch()
+  {
+    return m_GovernorEnabled;
+  }
+
+  void SetSwitchState(
+      String  _Name,
+      boolean _State
+    )
+  {
+    Component CockpitPanel        = GetObject("CockpitPanel");
+    Component CopilotCockpitPanel = GetObject("CopilotCockpitPanel");
+
+    if (null != CockpitPanel)
+      CockpitPanel.SetSwitchState(_Name, _State);
+    if (null != CopilotCockpitPanel)
+      CopilotCockpitPanel.SetSwitchState(_Name, _State);
+  }
+
+  void SetSwitchState(
+      String  _Name,
+      boolean _State,
+      boolean _PlaySound
+    )
+  {
+    Component CockpitPanel        = GetObject("CockpitPanel");
+    Component CopilotCockpitPanel = GetObject("CopilotCockpitPanel");
+
+    if (null != CockpitPanel)
+      CockpitPanel.SetSwitchState(_Name, _State, _PlaySound);
+    if (null != CopilotCockpitPanel)
+      CopilotCockpitPanel.SetSwitchState(_Name, _State);
+  }
+
+  boolean GetSwitchState(
+      String  _Name
+    )
+  {
+    Component CockpitPanel = GetObject("CockpitPanel");
+    if (null != CockpitPanel)
+      return CockpitPanel.GetSwitchState(_Name);
+
+    return false;     
+  }
+
+  void SetLightState(
+      String  _Name,
+      boolean _State
+    )
+  {
+    Component CockpitPanel        = GetObject("CockpitPanel");
+    Component CopilotCockpitPanel = GetObject("CopilotCockpitPanel");
+
+    if (null != CockpitPanel)
+      CockpitPanel.SetLightState(_Name, _State);
+    if (null != CopilotCockpitPanel)
+      CopilotCockpitPanel.SetLightState(_Name, _State);
+  }
+
+  void SetAnimationPhase(
+      int    _Index,
+      float  _Phase
+    )
+  {
+    m_AnimManager.AnimateTo(_Index, _Phase);
+  }
+
+  void SetAnimationPhase(
+      int    _Index,
+      float  _Phase,
+      float  _Time // 0.0-1.0 time
+    )
+  {
+    m_AnimManager.AnimateTo(_Index, _Phase, _Time);
+  }
+
+  boolean IsAnimating(
+      int _Index
+    )
+  {
+    return m_AnimManager.IsAnimating(_Index);
+  }
+
+  float GetCurrentPhase(
+      int _Index
+    )
+  {
+    return m_AnimManager.GetCurrentPhase(_Index);
+  }
+
+  void EnablePanelsSwitch(
+      String  _Name,
+      boolean _bEnable
+    )
+  {
+    Component CockpitPanel        = GetObject("CockpitPanel");
+    Component CopilotCockpitPanel = GetObject("CopilotCockpitPanel");
+
+    if (null != CockpitPanel)
+      CockpitPanel.EnableManualSwitch(_Name, _bEnable);
+    if (null != CopilotCockpitPanel)
+      CopilotCockpitPanel.EnableManualSwitch(_Name, _bEnable);
+  }
+
+  event void OnGameSpeedChanged()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    Component GameController = new #GameController();
+
+    Component VoiceMessenger = GetObject("VoiceMessenger");
+    if (VoiceMessenger != null)
+    {
+      VoiceMessenger.SkipAndWaitMode(!GameController.IsNormalGameSpeed());
+    }
+    
+
+    Component MessageInfoBar = GetObject("MessageInfoBar");
+    if (MessageInfoBar != null)
+    {        
+      float Time = 0.0f;
+      if (GameController.IsNormalGameSpeed())
+        Time = 3.0f;
+
+      MessageInfoBar.SetMessage(CCockpitInfoMsgBar::MSG_GAMESPEED, GameController.GetCurrentGameSpeedMsg(), new Color(1.0, 0.0, 0.0), Time);
+    }
+  }
+
+  event void OnGamePaused(
+      boolean _IsGamePaused
+    )
+  {
+    if (!m_CockpitExists)
+      return;
+
+    Component MessageInfoBar = GetObject("MessageInfoBar");
+    if (MessageInfoBar != null)
+    {    
+
+      WString Text = L"";
+      if (_IsGamePaused)
+        Text = CGameMessages::str_msg_Pause;
+
+      MessageInfoBar.SetMessage(CCockpitInfoMsgBar::MSG_PAUSE, Text, new Color(1.0, 0.0, 0.0), 0.0);
+    }
+  }
+
+  event void OnMusicPlay(
+      boolean _IsMusicPlaying
+    )
+  {
+    if (!m_CockpitExists)
+      return;
+
+    Component MessageInfoBar = GetObject("MessageInfoBar");
+    if (MessageInfoBar != null)
+    {    
+
+      WString Text = L"";
+      float Time   = 0.0f;
+      if (_IsMusicPlaying)
+      {
+        Text = CGameMessages::str_msg_MusicOn;
+        Time = 2.0f;
+      }
+      else
+      {
+        Text = CGameMessages::str_msg_MusicOff;
+        Time = 2.0f;
+      }
+
+      MessageInfoBar.SetMessage(CCockpitInfoMsgBar::MSG_MUSIC, Text, new Color(1.0, 0.0, 0.0), Time);
+      sendEvent(Time, getIdentificator(this), "ShowMusicTrackNumber", []);
+    }
+  }
+
+  event void ShowMusicTrackNumber()
+  {
+    if (!m_CockpitExists)
+      return;
+
+    Component MessageInfoBar = GetObject("MessageInfoBar");
+    if (MessageInfoBar != null)
+    {    
+      Component MusicController = new #GameController().GetObject("MusicController");
+
+      if (MusicController.IsPlaying())
+      {
+        int Track = MusicController.GetCurrentMusic() + 1;
+        if (Track != 0)
+        {
+          String TrackN = new String(Track);
+          while (TrackN.length() < 2) 
+          {
+            TrackN = "0" + TrackN;
+          }
+
+          WString Text = CGameMessages::str_msg_Track + new WString(TrackN);
+          MessageInfoBar.SetMessage(CCockpitInfoMsgBar::MSG_MUSIC, Text, new Color(1.0, 0.0, 0.0), 3.0);
+        }
+      }      
+    }
+  }
+
+  event void ShowMusicVolume(float _Volume)
+  {
+    if (!m_CockpitExists)
+      return;
+
+    Component MessageInfoBar = GetObject("MessageInfoBar");
+    if (MessageInfoBar != null)
+    {    
+     
+      String Volume = new String(int(_Volume * 100.0));
+      while (Volume.length() < 2) 
+      {
+        Volume = "0" + Volume;
+      }
+      Volume +="%";
+
+      WString Text = L"VOL:" + new WString(Volume);
+      MessageInfoBar.SetMessage(CCockpitInfoMsgBar::MSG_MUSIC, Text, new Color(1.0, 0.0, 0.0), 2.0);
+    }
+  }
+
+  void BehWeaponActivated(boolean _Active)
+  {
+    m_BehWeaponActivated = _Active;
+  }
+}

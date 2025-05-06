@@ -1,0 +1,69 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+class CVietnameseGranaryPileExplosion
+  extends CBuildingExplosion
+
+{
+  float  Damage   = 10.0;
+  float  Radius   = 5.0;
+  String    SoundId  = "VietnameseGranaryPileExplosionSound";
+}
+
+class CVietnameseGranaryPileUnit
+  extends CGroundBuilding
+{
+
+  final static float DefaultHitPoints = CHitPoints::VietnameseGranaryPileUnitHitPoints;
+
+  static String PrevExplosionID = "VietnameseGranaryPileExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CVietnameseGranaryPileUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cbld_VietnameseGranaryPileModel>(), [350, 150, 6]);
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CGroundBuilding::Construct(_Mission, _PropMap);
+
+    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 0.00f);
+  }
+}
+
+class CVietnameseGranaryPileGameUnit extends CVietnameseGranaryPileUnit
+{
+  // Special for radar view
+  // This object GameObject
+
+  final static Array AutomaticClassificators  = ["STRUCTURE", "GROUND"];
+
+  event void OnHitByEnemy(
+      String _EnemyID
+    )
+  {
+    CBuildingStateControl::OnHitByEnemy(_EnemyID);
+    Component Mission = (new #GameController()).GetMission();
+    if (null == Mission)
+      return null;
+
+   Mission.OnHitByEnemyGameObject(getIdentificator(this), _EnemyID);
+  }
+}

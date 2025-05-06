@@ -1,0 +1,149 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CBaseManualControl
+{
+  float EventFrequency        = 0.05; // 20 events per second
+
+  // =========================================
+  // helicopter coefficients
+  // =========================================
+
+  float  HelicopterMass       = 2040.0;           // kg
+  Vector Sizes                = new Vector(26.8, 26.16, 4.72);
+  float  Elastity             = 0.0;
+  float  Friction             = 0.5;
+
+  // local point on helicopter for act of ground force
+  Vector GroundTorquePoint    = new Vector(0.0, 0.0, 0.0);
+
+  // =========================================
+  // helicopter body drop coefficients
+  // =========================================
+
+  // angular damping coefficients by axises X, Y and Z
+  Vector AngularDampingCoeff  = new Vector(5.2, 5.2, 3.5);
+  // linear damping coefficients by axises X, Y and Z
+  Vector LinearDampingCoeff   = new Vector(2.5, 2.7, 7.6);
+
+
+  // =========================================
+  // air cushion effect
+  // =========================================
+  float  AirCushionThickness  = 30.0;            // m
+
+  // =========================================
+  // wind effect
+  // =========================================
+
+  float  WindCoeff            = 20.0;
+
+  // =========================================
+  // retreating blade stall effect
+  // =========================================
+
+  float  MaximumStreamSpeed   = 60.0;             // m/s
+  // coefficient for drop force for blades
+  float  DropForceCoeff       = 0.6;
+
+  // =========================================
+  // flater effect
+  // =========================================
+
+  // range rotor dispersion for all rotations axis
+  Vector DispersionCoeff      = new Vector(1.462, 1.385, 0.1925) * 25.0;
+
+  // =========================================
+  // vortex ring effect
+  // =========================================
+
+  float  LandingMaxSpeed      = 5.9;              // m/s
+  float  VortexRingAngle      = 0.2618;           // rad
+
+  // =========================================
+  // Tail vibration effect
+  // =========================================
+
+  Vector TailTorqueBeats      = new Vector(0.01, 0.01, 0.3);
+
+  // =========================================
+  // helicopter systems
+  // =========================================
+
+  Component MainPitchSystem   = null;
+  Component MainRotorSystem   = null;
+
+  Component TailPitchSystem   = null;
+  Component TailRotorSystem   = null;
+
+  Component TailStabilizer    = null;
+  Component BottomStabilizer  = null;
+  Component WingStabilizer    = null;
+
+  Component EngineSystem      = null;
+
+  // =========================================
+  // additional script properties
+  // =========================================
+
+  // Min takeoff aerodynamic force
+  float  TakeOffMinForce      = 0.0;
+
+  float  AdditionalMass       = 0.0;
+
+  // =========================================
+  // Service methods
+  // =========================================
+
+  void SetupSoundComponents(
+      Component _Mesh,
+      Component _Object
+    )
+  {
+    // engine system
+    {
+      Matrix EnginePosition = getPosition(_Mesh);
+      setPosition(EngineSystem.BaseSound, EnginePosition);
+      setPositionable(EngineSystem.BaseSound, _Mesh);
+      _Object.RegisterObject("EngineSystemEmitter", EngineSystem.BaseSound);
+
+      setPosition(EngineSystem.OverloadSound, EnginePosition);
+      setPositionable(EngineSystem.OverloadSound, _Mesh);
+      _Object.RegisterObject("OverloadEngineSystemEmitter", EngineSystem.OverloadSound);
+
+      setPosition(EngineSystem.StarterSound, EnginePosition);
+      setPositionable(EngineSystem.StarterSound, _Mesh);
+      _Object.RegisterObject("EngineStarterSystemEmitter", EngineSystem.StarterSound);
+    }
+
+    // main rotor system
+    {
+      Matrix MainRotorPosition = getPosition(_Mesh);
+      MainRotorPosition.origin += MainRotorPosition.multVec(MainRotorSystem.RotorPoint);
+      setPosition(MainRotorSystem.RotorSound, MainRotorPosition);
+      setPositionable(MainRotorSystem.RotorSound, _Mesh);
+      _Object.RegisterObject("MainRotorSystemEmitter", MainRotorSystem.RotorSound);
+    }
+
+    // tail rotor system
+    {
+      Matrix TailRotorPosition = getPosition(_Mesh);
+      TailRotorPosition.origin += TailRotorPosition.multVec(TailRotorSystem.RotorPoint);
+      setPosition(TailRotorSystem.RotorSound, TailRotorPosition);
+      setPositionable(TailRotorSystem.RotorSound, _Mesh);
+      _Object.RegisterObject("TailRotorSystemEmitter", TailRotorSystem.RotorSound);
+    }
+  }
+
+  void SetAdditionalMass(float _AdditionalMass)
+  {
+    AdditionalMass = _AdditionalMass;
+    SetHelicopterMass(HelicopterMass + AdditionalMass);
+  }
+}

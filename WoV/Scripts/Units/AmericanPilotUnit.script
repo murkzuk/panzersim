@@ -1,0 +1,74 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//Gun
+class CAmericanPilotGunBulletExplosion
+  extends CMachineGunBulletExplosion
+{
+  float  Damage   = 5.0;
+}
+
+class CAmericanPilotGunBulletControl
+  extends CMachineGunBulletControl
+{
+  String    ExplosionId  = "AmericanPilotGunBulletExplosion";
+  Component BulletRender = new #StaticEffect<CMachineGunBulletEffect>();
+}
+
+class CAmericanPilotGun
+  extends CMachineGun
+{
+  final static String BulletPatternId = "AmericanPilotGunBullet";
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod        = 200; // ms
+  final static int  FirePeriodRandAdd = 50;  // ms
+
+  final static boolean BurstFire      = true;
+  final static int  BurstTime         = 2400; // ms
+  final static int  BurstTimeRandAdd  = 0;    // ms
+
+  final static int  BurstDelay        = 3000; // ms
+  final static int  BurstDelayRandAdd = 2000; // ms
+  // gun specific fire mask with priorities
+  final static Array GunSpecificFireMask = [
+                                [["HUMAN"],[]],  // high priority mask
+                                [["AIR"],  []],  // low priority mask
+                                [[],       []]   // low priority mask: RestrictTo, Exclude
+                              ];
+}
+
+class CAmericanPilotUnit
+  extends CPilotUnit
+{
+  final static float DefaultHitPoints = CHitPoints::AmericanPilotUnitHitPoints;
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CAmericanPilotUnit()
+  {
+    // Setup outside and inside models
+    SetupPassangerMesh(
+        "Chum_AmericanPilotModel",    // Outside mesh
+        "Cnpc_KingsleyModel",            // Inside mesh
+        "Cnpc_PilotPlayerModel"       // From eye mesh
+      );
+    LoadAnimations("CpilotsAnimation");
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CPilotUnit::Construct(_Mission, _PropMap);
+  }
+}

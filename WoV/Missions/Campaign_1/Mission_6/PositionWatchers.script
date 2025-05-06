@@ -1,0 +1,99 @@
+class CC1M6WingmanGroupStartWatcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "NavPoint_MainPlayerUnitLandingBase";     // кто следимт
+  final static Array  ControlPoints = ["MainPlayerUnit"];                       // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                2517.025635,   // NavPoint_WayMainPlayerUnit_6
+                                3313.666016,   // NavPoint_WayMainPlayerUnit_1
+                                11996.046875,  // NavPoint_WayMainPlayerUnit_5
+                                12499.435547,  // NavPoint_WayMainPlayerUnit_2
+                                19085.167969,  // NavPoint_WayMainPlayerUnit_4
+                                19180.505859   // NavPoint_WayMainPlayerUnit_3
+//                                20471.623047,  // NavPoint_MainPlayerUnit_Attack_1
+//                                20858.378906,  // NavPoint_MainPlayerUnit_Attack_2
+//                                20979.902344,  // NavPoint_MainPlayerUnit_OutputAttack_1
+//                                20810.978516,  // NavPoint_MainPlayerUnit_OutputAttack_2
+//                                20816.255859,  // NavPoint_MainPlayerUnit_OutputAttack_3
+                                  ];
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+  final static int ZoneMask2 = 4;
+  final static int ZoneMask3 = 8;
+  final static int ZoneMask4 = 16;
+  final static int ZoneMask4 = 32;
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  // service
+
+  boolean IsRing0()
+  {
+    return 0 != (m_RegionMask & ZoneMask0) ;
+  }
+
+  boolean IsRing1()
+  {
+    return 0 == (m_RegionMask & ZoneMask0) && 0 != (m_RegionMask & ZoneMask1) ;
+  }
+
+  boolean IsRing2()
+  {
+    return 0 == (m_RegionMask & ZoneMask1) && 0 != (m_RegionMask & ZoneMask2) ;
+  }
+  boolean IsRing3()
+  {
+    return 0 == (m_RegionMask & ZoneMask2) && 0 != (m_RegionMask & ZoneMask3) ;
+  }
+  boolean IsRing4()
+  {
+    return 0 == (m_RegionMask & ZoneMask3) && 0 != (m_RegionMask & ZoneMask4) ;
+  }
+
+
+  boolean IsOut()
+  {
+    return 0 == m_RegionMask;
+  }
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M6WingmanGroup_WatcherBack::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logError( "(NavPoint_MainPlayerUnitLandingBase-MainPlayerUnit)=  " + new String(GetMission().distance("NavPoint_MainPlayerUnitLandingBase", "MainPlayerUnit")));
+      logError("[AutoPilot path] PathID=" + new String(GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()));
+    }
+
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1")
+    {
+      if (_RegionMask == 60)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M6PlayerMovingTo"]);
+      else if (_RegionMask == 48)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M6PlayerHalfMovingTo"]);
+      else if (_RegionMask == 32)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M6AttackBeginning"]);
+    }
+    else if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer2")
+    {
+      if (_RegionMask == 32)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M6PlayerMovingBack"]);
+      else if (_RegionMask == 60)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M6PlayerHalfMovingBack"]);
+    }
+  }
+}

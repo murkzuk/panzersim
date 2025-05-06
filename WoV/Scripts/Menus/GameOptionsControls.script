@@ -1,0 +1,855 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+//                                                                   
+//  Automatically-generated menu script file                         
+//  DO NOT EDIT!                                                     
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class CGameOptionsControls
+{
+  static String m_ControlListClassFile = "Scripts/Menus/GameOptionsControls.script";
+  static String m_ControlListClassName = "CGameOptionsControls";
+
+  static Array m_UIControls = [
+    [
+      "Background",
+      "BitmapControl",
+      "CUIBitmap",
+      new CUIPosition(
+          0.000000000,
+          0.000000000,
+          1.000000000,
+          1.000000000
+        ),
+      [
+        ["Material", "SettingsGameMenuBackground", false],
+        ["FrameEnabled", false, true],
+        ["FrameColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["FrameThickness", 1.000000000, true],
+        ["TexMagnifyX", 1.000000000, true],
+        ["TexMagnifyY", 1.000000000, true],
+        ["TexConstAspectRatio", false, true],
+        ["Z", 0.000000000, true],
+        ["Hint", "", true],
+        ["TexU", 0.000000000, true],
+        ["TexV", 0.000000000, true]
+      ]
+    ],
+
+    [
+      "BackButton",
+      "BitmapButton",
+      "CUIButton",
+      new CUIPosition(
+          0.014414065,
+          0.887206197,
+          0.125000000,
+          0.058593750
+        ),
+      [
+        ["MaterialNormal", "Back", false],
+        ["MaterialHilited", "Back", false],
+        ["FontName", "Arial", false],
+        ["NormalTextColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), false],
+        ["HilitedTextColor", new Color(0.800000, 0.000000, 0.000000, 1.000000), false],
+        ["Alignment", 0.500000000, false],
+        ["FontSize", 0.032000002, true],
+        ["Text", ["", ""], false],
+        ["Z", 0.020000000, true],
+        ["LeftIndent", 0.000000000, true],
+        ["NormalMaterialColor", new Color(0.482353, 0.592157, 0.286275, 1.000000), false],
+        ["HilitedMaterialColor", new Color(0.466667, 0.811765, 0.286275, 1.000000), false],
+        ["Hint", "", true],
+        ["MaterialPressed", "", true],
+        ["IsMultiline", false, true]
+      ]
+    ],
+
+    [
+      "ApplyButton",
+      "BitmapButton",
+      "CUIButton",
+      new CUIPosition(
+          0.766093671,
+          0.890334010,
+          0.214843750,
+          0.058593750
+        ),
+      [
+        ["MaterialNormal", "Apply", false],
+        ["MaterialHilited", "Apply", false],
+        ["FontName", "Arial", false],
+        ["NormalTextColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), false],
+        ["HilitedTextColor", new Color(0.800000, 0.000000, 0.000000, 1.000000), false],
+        ["Alignment", 0.500000000, false],
+        ["FontSize", 0.032000002, true],
+        ["Text", ["", ""], false],
+        ["Z", 0.020000000, true],
+        ["LeftIndent", 0.000000000, true],
+        ["NormalMaterialColor", new Color(0.482353, 0.592157, 0.266667, 1.000000), false],
+        ["HilitedMaterialColor", new Color(0.466667, 0.811765, 0.286275, 1.000000), false],
+        ["Hint", "", true],
+        ["MaterialPressed", "", true],
+        ["IsMultiline", false, true]
+      ]
+    ],
+
+    [
+      "GridBackground1",
+      "BitmapControl",
+      "CUIBitmap",
+      new CUIPosition(
+          0.031249998,
+          0.154999986,
+          0.936249852,
+          0.051666666
+        ),
+      [
+        ["Z", 0.000000000, true],
+        ["Hint", "", true],
+        ["Material", "GridBackground", false],
+        ["TexU", 0.000000000, true],
+        ["TexV", 0.000000000, true],
+        ["TexMagnifyX", 1.000000000, true],
+        ["TexMagnifyY", 1.000000000, true],
+        ["TexConstAspectRatio", false, true],
+        ["FrameEnabled", false, true],
+        ["FrameColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["FrameThickness", 1.000000000, true]
+      ]
+    ],
+
+    [
+      "GridBackground2",
+      "BitmapControl",
+      "CUIBitmap",
+      new CUIPosition(
+          0.031249994,
+          0.225000009,
+          0.463749975,
+          0.619999945
+        ),
+      [
+        ["Z", 0.000000000, true],
+        ["Hint", "", true],
+        ["Material", "GridBackground", false],
+        ["TexU", 0.000000000, true],
+        ["TexV", 0.000000000, true],
+        ["TexMagnifyX", 1.000000000, true],
+        ["TexMagnifyY", 1.000000000, true],
+        ["TexConstAspectRatio", false, true],
+        ["FrameEnabled", false, true],
+        ["FrameColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["FrameThickness", 1.000000000, true]
+      ]
+    ],
+
+    [
+      "GridBackground3",
+      "BitmapControl",
+      "CUIBitmap",
+      new CUIPosition(
+          0.512499988,
+          0.224999979,
+          0.454999894,
+          0.616666615
+        ),
+      [
+        ["Z", 0.000000000, true],
+        ["Hint", "", true],
+        ["Material", "GridBackground", false],
+        ["TexU", 0.000000000, true],
+        ["TexV", 0.000000000, true],
+        ["TexMagnifyX", 1.000000000, true],
+        ["TexMagnifyY", 1.000000000, true],
+        ["TexConstAspectRatio", false, true],
+        ["FrameEnabled", false, true],
+        ["FrameColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["FrameThickness", 1.000000000, true]
+      ]
+    ],
+
+    [
+      "Difficulty",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999887,
+          0.163333327,
+          0.917496681,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, false],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "Targeting",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999980,
+          0.238333330,
+          0.444998622,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, false],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "DynamicLift",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999947,
+          0.293333322,
+          0.443748683,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "BladeStall",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999962,
+          0.348333329,
+          0.443748683,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "VortexRing",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999984,
+          0.405000001,
+          0.442499787,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "AirCushion",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999962,
+          0.460000008,
+          0.443748534,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "Wind",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999951,
+          0.516666710,
+          0.443748683,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "Payload",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999966,
+          0.573333383,
+          0.443748683,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "Shockwave",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999940,
+          0.626666725,
+          0.444998682,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "TargetsOnMap",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.038749967,
+          0.681666851,
+          0.446248680,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "Orientation",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.038749963,
+          0.738333523,
+          0.447498679,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "Compass",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.039999954,
+          0.796666801,
+          0.446248710,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "UnlimAmmo",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.523750007,
+          0.240000129,
+          0.433748782,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "UnlimFuel",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.523750007,
+          0.295000136,
+          0.432498813,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ],
+
+    [
+      "Invulnerability",
+      "",
+      "CUIComboBox",
+      new CUIPosition(
+          0.523750007,
+          0.348333448,
+          0.432498813,
+          0.033333335
+        ),
+      [
+        ["Z", 0.020000000, true],
+        ["Hint", "", true],
+        ["ButtonMaterial", "DownArrow", false],
+        ["FontName", "Arial", true],
+        ["FontSize", 0.032000002, true],
+        ["NormalButtonColor", new Color(1.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedButtonColor", new Color(0.000000, 0.000000, 1.000000, 1.000000), true],
+        ["Caption", ["Menu", "str_DEFAULT_COMBOBOX_CAPTION"], true],
+        ["CaptionColor", new Color(0.831373, 0.921569, 0.513726, 1.000000), false],
+        ["Alignment", 0.500000000, true],
+        ["FrameColor", new Color(0.227451, 0.247059, 0.000000, 1.000000), false],
+        ["FrameThickness", 1.000000000, true],
+        ["FrameZ", 0.010000000, true],
+        ["ListCellPadding", 0.001302083, true],
+        ["MaterialArrow1", "Test material", true],
+        ["NormalTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["HilitedTextColor", new Color(0.000000, 0.000000, 0.000000, 1.000000), true],
+        ["MaterialArrow2", "Test material", true],
+        ["MaterialScroll", "Test material", true],
+        ["NormalSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["HilitedSliderColor", new Color(1.000000, 1.000000, 1.000000, 1.000000), true],
+        ["ScrollRange", 10, true],
+        ["InitialScrollPos", 0, true],
+        ["IsScrollerSizeFixed", false, true],
+        ["ScrollerFixedWidth", 0.050000001, true],
+        ["ScrollerFixedHeight", 0.050000001, true],
+        ["MaterialFill", "", true],
+        ["bEnabled", true, true],
+        ["ListAlignment", 0.500000000, false],
+        ["RenderLayer", 23, true],
+        ["Enabled", true, true]
+      ]
+    ]
+  ];
+}

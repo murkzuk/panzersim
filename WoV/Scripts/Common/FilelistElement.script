@@ -1,0 +1,157 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+//
+// Selectible Text control
+//
+
+class CUIFilelistElement
+  extends CBaseUIControl
+{
+  final static Array FileTypeMaterials = [
+      "",
+      "FileFolderClosed Icon",
+      "FileFolderOpened Icon",
+      "FileHardDrive Icon",
+      "FileCDDrive Icon"
+    ];
+
+  static float DefaultZ   = 0.02;
+  static float IconWidth  = 20.0 / 1024.0 ;
+  static float IconHeight = 10.0 / 768.0 * 2.0;
+  
+  Color SelectedColor   = new Color(1.0, 1.0, 1.0);
+  Color NormalColor     = new Color(0.8, 0.8, 0.8);
+  Color HiSelectedColor = new Color(0.7, 0.7, 1.0);
+  Color HiNormalColor   = new Color(0.5, 0.5, 1.0);
+
+  String    m_ControlID = "";
+  Component m_Icon      = null;
+  Component m_Title     = null;
+
+  // Service functions
+  void Initialize(
+      String _ControlID
+    )
+  {
+    m_ControlID = _ControlID;
+
+    m_Title = new #BitmapButton<CUIButton>();
+    m_Icon  = new #BitmapControl<CUIBitmap>();
+
+    RegisterObject(m_ControlID + "_Title", m_Title);
+    RegisterObject(m_ControlID + "_Icon",  m_Icon);
+  }
+
+  String GetControlID()
+  {
+    return m_ControlID;
+  }
+
+  void UnregisterControl()
+  {
+    UnregisterObject(m_ControlID);
+    UnregisterObject(m_ControlID + "_Title");
+    UnregisterObject(m_ControlID + "_Icon");
+  }
+
+  // Construct UI control
+  void Construct(
+      Component _PropMap
+    )
+  {
+    CBaseUIControl::Construct(_PropMap);
+
+    SelectedColor   = _PropMap.Get("SelectedColor",   SelectedColor);
+    NormalColor     = _PropMap.Get("NormalColor",     NormalColor);
+    HiSelectedColor = _PropMap.Get("HiSelectedColor", HiSelectedColor);
+    HiNormalColor   = _PropMap.Get("HiNormalColor",   HiNormalColor);
+
+    m_Title.SetMaterialManager(m_MenuController.GetMaterialManager());
+    m_Title.SetMaterials("Invisible", "Invisible");
+    m_Title.SetFont(
+        _PropMap.Get("FontName", "Arial"),
+        _PropMap.Get("FontSize", 0.032)
+      );
+    m_Title.SetAlignment(_PropMap.Get("Alignment", 0.0));
+    m_Title.SetText(L"");
+    m_Title.SetTextColors(NormalColor, HiNormalColor);
+    m_Title.SetBitmapColors(new Color(1.0, 1.0, 1.0), new Color(1.0, 1.0, 1.0));
+    m_Title.SetRenderLayer(m_MenuController.GetCurrentLayer());
+
+    m_Icon.EnableHitTest(false);
+    m_Icon.SetDimensions(IconWidth, IconHeight);
+    m_Icon.SetRenderLayer(m_MenuController.GetCurrentLayer());
+    m_Icon.SetMaterialManager(m_MenuController.GetMaterialManager());
+  }
+
+  // Setup position and dimension
+  void SetPosition(
+      Component _UIPosition
+    )
+  {
+    m_Title.SetPosition(_UIPosition.X + IconWidth, _UIPosition.Y);
+    m_Title.SetDimensions(_UIPosition.Width - IconWidth, _UIPosition.Height);
+
+    m_Icon.SetPosition(_UIPosition.X, _UIPosition.Y);
+
+    CBaseUIControl::SetPosition(_UIPosition);
+  }
+
+  void SetZ(
+      float _Z
+    )
+  {
+    m_Title.SetZ(_Z);
+    m_Icon.SetZ(_Z);
+  }
+
+  Array GetActualSize()
+  {
+    return [];
+  }
+
+  void SetParentRect(
+      Component _UIPosition
+    )
+  {
+    CBaseUIControl::SetParentRect(_UIPosition);
+
+    m_Title.SetParentRect(m_ParentRect.X, m_ParentRect.Y, m_ParentRect.Width, m_ParentRect.Height);
+    m_Icon.SetParentRect(m_ParentRect.X, m_ParentRect.Y, m_ParentRect.Width, m_ParentRect.Height);
+  }
+
+  void SetSelectedItemState(
+      boolean _Selected
+    )
+  {
+    if (_Selected)
+      m_Title.SetTextColors(SelectedColor, HiSelectedColor);
+    else
+      m_Title.SetTextColors(NormalColor, HiNormalColor);
+
+    CBaseUIControl::SetSelectedItemState(_Selected);
+  }  
+
+  void SetTitle(
+      WString _Text
+    )
+  {
+    m_Title.SetText(_Text);
+  }
+
+  void SetType(
+      float _Type
+    )
+  {
+    m_Icon.SetMaterial(FileTypeMaterials[_Type]);
+    m_Icon.EnableControl(!FileTypeMaterials[_Type].isEmpty());
+  }
+}

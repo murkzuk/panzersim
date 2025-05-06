@@ -1,0 +1,779 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CMenuSkin
+{
+  Array Materials = [
+
+    // ==========================================
+    // BackGround
+    // ==========================================
+
+    new CUIOnDemandMaterial(
+      "MainMenuBackground",
+      "Resources/MainMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "CreditsMenuBackground",
+      "Resources/CreditsMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "CreditsBackgroundMask",
+      "Resources/CreditsMenuBackgroundMask.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "SettingsAudioMenuBackground",
+      "Resources/SettingsAudioMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "SettingsVideoMenuBackground",
+      "Resources/SettingsVideoMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "SettingsJoystickMenuBackground",
+      "Resources/SettingsJoystickMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "SettingsGameMenuBackground",
+      "Resources/SettingsGameMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "PreloadingBackground",
+      "Resources/LoadingMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "SingleBackground",
+      "Resources/GameMenuSinglepayerBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "SettingsMenuBackground",
+      "Resources/SettingsMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    new CUIOnDemandMaterial(
+      "SettingsControlsMenuBackground",
+      "Resources/SettingsControlsMenuBackground.tex",
+      1,
+      1,
+      1024,
+      768
+    ),
+
+    // ==========================================
+    // Buttons
+    // ==========================================
+    new CUIOnDemandMaterial(
+      "NewGame",
+      "Resources/Buttons1.tex",
+      35,
+      10,
+      220,
+      45
+    ),
+    new CUIOnDemandMaterial(
+      "Options",
+      "Resources/Buttons1.tex",
+      35,
+      57,
+      220,
+      45
+    ),
+    new CUIOnDemandMaterial(
+      "Credits",
+      "Resources/Buttons1.tex",
+      35,
+      107,
+      220,
+      45
+    ),
+    new CUIOnDemandMaterial(
+      "Quit",
+      "Resources/Buttons1.tex",
+      35,
+      154,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Invisible",
+      "Resources/Buttons1.tex",
+      1,
+      1,
+      2,
+      2
+    ),
+
+    new CUIOnDemandMaterial(
+      "Video",
+      "Resources/Buttons2.tex",
+      30,
+      58,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Game",
+      "Resources/Buttons2.tex",
+      30,
+      8,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Controls",
+      "Resources/Buttons2.tex",
+      30,
+      155,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Audio",
+      "Resources/Buttons2.tex",
+      30,
+      108,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Joystick",
+      "Resources/Buttons2.tex",
+      30,
+      203,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Back",
+      "Resources/Buttons3.tex",
+      0,
+      10,
+      128,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Apply",
+      "Resources/Buttons3.tex",
+      30,
+      153,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Default",
+      "Resources/Buttons3.tex",
+      30,
+      108,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Restart",
+      "Resources/Buttons3.tex",
+      30,
+      58,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Fly",
+      "Resources/Buttons3.tex",
+      0,
+      200,
+      150,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Change",
+      "Resources/Buttons3.tex",
+      3,
+      139,
+      215,
+      40
+    ),
+
+    new CUIOnDemandMaterial(
+      "ShowDifficulty",
+      "Resources/Buttons4.tex",
+      10,
+      36,
+      240,
+      36
+    ),
+
+    new CUIOnDemandMaterial(
+      "Delete",
+      "Resources/Buttons4.tex",
+      100,
+      70,
+      150,
+      36
+    ),
+
+    new CUIOnDemandMaterial(
+      "New",
+      "Resources/Buttons4.tex",
+      100,
+      5,
+      150,
+      36
+    ),
+
+    new CUIOnDemandMaterial(
+      "ShowAviationGroup",
+      "Resources/Buttons5.tex",
+      1,
+      53,
+      217,
+      36
+    ),
+
+    new CUIOnDemandMaterial(
+      "Complete",
+      "Resources/Buttons6.tex",
+      10,
+      8,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Leave",
+      "Resources/Buttons6.tex",
+      10,
+      58,
+      220,
+      45
+    ),
+
+    new CUIOnDemandMaterial(
+      "Load",
+      "Resources/Buttons6.tex",
+      10,
+      105,
+      220,
+      45
+    ),
+
+    // ==========================================
+    // objective completion mark
+    // ==========================================
+
+    new CUIOnDemandMaterial(
+      "ObjectiveInProgress",
+      "Resources/cursor02.tex",
+      225,
+      1,
+      30,
+      30
+    ),
+
+    new CUIOnDemandMaterial(
+      "ObjectiveCompleted",
+      "Resources/cursor02.tex",
+      193,
+      1,
+      30,
+      30
+    ),
+
+    new CUIOnDemandMaterial(
+      "ObjectiveFailed",
+      "Resources/cursor02.tex",
+      225,
+      1,
+      30,
+      30
+    ),
+
+    // ==========================================
+    // Common
+    // ==========================================
+    new CUIOnDemandMaterial(
+      "ProgressBar",
+      "Resources/Buttons1.tex",
+      4,
+      230,
+      4,
+      4
+    ),
+
+    // ==========================================
+    // Briefing Menu
+    // ==========================================
+
+    new CUIOnDemandMaterial(
+      "UH1B_Picture",
+      "Textures/Briefing.tex",
+      0,
+      0,
+      315,
+      170
+    ),
+
+    new CUIOnDemandMaterial(
+      "M134Minigun_Picture",
+      "Textures/Briefing.tex",
+      0,
+      170,
+      234,
+      56
+    ),
+
+    new CUIOnDemandMaterial(
+      "M158Launcher_Picture",
+      "Textures/Briefing.tex",
+      0,
+      226,
+      234,
+      56
+    ),
+
+    // ==========================================
+    // Settings Menu
+    // ==========================================
+
+    //
+    // MENU1.TEX
+    //
+
+    new CUIOnDemandMaterial(
+      "right arrow button",
+      "Textures/Menu1.tex",
+      45,
+      30,
+      37,
+      41
+    ),
+    new CUIOnDemandMaterial(
+      "left arrow button",
+      "Textures/Menu1.tex",
+      84,
+      30,
+      37,
+      41
+    ),
+    new CUIOnDemandMaterial(
+      "box",
+      "Textures/Menu1.tex",
+      148,
+      30,
+      23,
+      41
+    ),
+    new CUIOnDemandMaterial(
+      "edit box",
+      "Textures/Menu1.tex",
+      123,
+      30,
+      23,
+      41
+    ),
+    new CUIOnDemandMaterial(
+      "button background left",
+      "Textures/Menu1.tex",
+      2,
+      1,
+      3,
+      27
+    ),
+    new CUIOnDemandMaterial(
+      "button background middle",
+      "Textures/Menu1.tex",
+      5,
+      1,
+      3,
+      27
+    ),
+    new CUIOnDemandMaterial(
+      "button background right",
+      "Textures/Menu1.tex",
+      10,
+      1,
+      245,
+      27
+    ),
+    new CUIOnDemandMaterial(
+      "edit box background",
+      "Textures/Menu1.tex",
+      20,
+      32,
+      5,
+      23
+    ),
+    new CUIOnDemandMaterial(
+      "control field background",
+      "Textures/Menu1.tex",
+      20,
+      32,
+      5,
+      23
+    ),
+    new CUIOnDemandMaterial(
+      "mission button background",
+      "Textures/Menu1.tex",
+      32,
+      30,
+      3,
+      38
+    ),
+    new CUIOnDemandMaterial(
+      "transparent button",
+      "Textures/Menu1.tex",
+      18,
+      59,
+      9,
+      9
+    ),
+    new CUIOnDemandMaterial(
+      "campaign button background",
+      "Textures/Menu1.tex",
+      4,
+      30,
+      3,
+      58
+    ),
+    new CUIOnDemandMaterial(
+      "slider button",
+      "Textures/Menu1.tex",
+      19,
+      71,
+      16,
+      16
+    ),
+    new CUIOnDemandMaterial(
+      "progress bar core",
+      "Textures/Menu1.tex",
+      3,
+      217,
+      16,
+      16
+    ),
+    new CUIOnDemandMaterial(
+      "caption",
+      "Textures/Menu1.tex",
+      4,
+      92,
+      10,
+      10
+    ),
+    new CUIOnDemandMaterial(
+      "background",
+      "Textures/Menu1.tex",
+      20,
+      92,
+      10,
+      10
+    ),
+    new CUIOnDemandMaterial(
+      "arrow down",
+      "Textures/Menu1.tex",
+      213,
+      30,
+      37,
+      41
+    ),
+    new CUIOnDemandMaterial(
+      "arrow up",
+      "Textures/Menu1.tex",
+      173,
+      30,
+      37,
+      41
+    ),
+    new CUIOnDemandMaterial(
+      "scroll bar slider",
+      "Textures/Menu1.tex",
+      213,
+      73,
+      37,
+      18
+    ),
+
+    // ==========================================
+    // Yes / No Confirmation
+    // ==========================================
+
+    new CUIOnDemandMaterial(
+      "Uncheck",
+      "Resources/cursor02.tex",
+      225,
+      1,
+      30,
+      30
+    ),
+
+    new CUIOnDemandMaterial(
+      "Check",
+      "Resources/cursor02.tex",
+      193,
+      1,
+      30,
+      30
+    ),
+
+    new CUIOnDemandMaterial(
+      "Background1",
+      "Resources/MainMenuBackground.tex",
+      1,
+      760,
+      10,
+      10
+    ),
+    new CUIOnDemandMaterial(
+      "YesButton",
+      "Resources/Buttons1.tex",
+      4,
+      8,
+      220,
+      40
+    ),
+    new CUIOnDemandMaterial(
+      "NoButton",
+      "Resources/Buttons1.tex",
+      4,
+      50,
+      220,
+      40
+    ),
+
+    // ==========================================
+    // Cursor
+    // ==========================================
+
+    new CAnimatedMaterial(
+        "cursor",
+        ["cursor0", "cursor1", "cursor2", "cursor3"],
+        [100,       100,       100,        2000]
+      ),
+
+    new CUIMaterial(
+      "cursor0",
+      "Resources/cursor01.tex",
+      0,
+      0,
+      32,
+      32
+    ),
+
+    new CUIMaterial(
+      "cursor1",
+      "Resources/cursor01.tex",
+      32,
+      0,
+      32,
+      32
+    ),
+
+    new CUIMaterial(
+      "cursor2",
+      "Resources/cursor01.tex",
+      64,
+      0,
+      32,
+      32
+    ),
+
+    new CUIMaterial(
+      "cursor3",
+      "Resources/cursor01.tex",
+      96,
+      0,
+      32,
+      32
+    ),
+
+    //
+    //  $TMP FROM HTT
+    //
+
+    new CUIOnDemand2Material(
+      "HorProgressBarSlider",
+      "Resources/cursor02.tex",
+      41,
+      49,
+      15,
+      32
+    ),
+
+    new CUIOnDemand2Material(
+      "HorScrollBarLeftArrow",
+      "Resources/cursor02.tex",
+      48,
+      0,
+      20,
+      32
+    ),
+
+    new CUIOnDemand2Material(
+      "HorScrollBarRightArrow",
+      "Resources/cursor02.tex",
+      157,
+      0,
+      20,
+      32
+    ),
+
+    new CUIOnDemand2Material(
+      "HScrollerGrayFill",
+      "Resources/cursor02.tex",
+      94,
+      0,
+      32,
+      32
+    ),
+
+    // V Scroller
+
+    new CUIOnDemand2Material(
+      "VScrollerGrayFill",
+      "Resources/cursor02.tex",
+      1,
+      96,
+      31,
+      32
+    ),
+    new CUIOnDemand2Material(
+      "VScrollerUp",
+      "Resources/cursor02.tex",
+      1,
+      48,
+      32,
+      20
+    ),
+    new CUIOnDemand2Material(
+      "VScrollerDown",
+      "Resources/cursor02.tex",
+      1,
+      157,
+      32,
+      20
+    ),
+    new CUIOnDemand2Material(
+      "VScrollerScroller",
+      "Resources/cursor02.tex",
+      65,
+      49,
+      30,
+      15
+    ),
+
+    new CUIOnDemand2Material(
+      "GridBackground",
+      "Resources/cursor02.tex",
+      1,
+      224,
+      32,
+      32
+    ),
+    new CUIOnDemand2Material(
+      "FileFolderOpened Icon",
+      "Resources/cursor02.tex",
+      205,
+      61,
+      20,
+      15
+    ),
+
+    new CUIOnDemand2Material(
+      "DownArrow",
+      "Resources/cursor02.tex",
+      0,
+      0,
+      32,
+      32
+    ),
+
+    new CUIOnDemand2Material(
+      "FileFolderClosed Icon",
+      "Resources/cursor02.tex",
+      239,
+      66,
+      17,
+      15
+    ),
+    new CUIOnDemand2Material(
+      "FileCDDrive Icon",
+      "Resources/cursor02.tex",
+      204,
+      31,
+      20,
+      17
+    ),
+    new CUIOnDemand2Material(
+      "FileHardDrive Icon",
+      "Resources/cursor02.tex",
+      240,
+      35,
+      17,
+      11
+    )
+  ];
+}
+

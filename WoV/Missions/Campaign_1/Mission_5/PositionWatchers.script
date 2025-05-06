@@ -1,0 +1,115 @@
+class CC1M5WingmanGroupStartWatcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "NavPoint_MainPlayerUnitLandingBase";     // кто следимт
+  final static Array  ControlPoints = ["MainPlayerUnit"];                       // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                    3270.0,
+                                    4300.0,    // старт вертолетов транспортных
+                                    12500.0,
+                                    17000.0,
+                                    21800.0
+                                  ];
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+  final static int ZoneMask2 = 4;
+  final static int ZoneMask3 = 8;
+  final static int ZoneMask4 = 16;
+  final static int ZoneMask4 = 32;
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  // service
+
+  boolean IsRing0()
+  {
+    return 0 != (m_RegionMask & ZoneMask0) ;
+  }
+
+  boolean IsRing1()
+  {
+    return 0 == (m_RegionMask & ZoneMask0) && 0 != (m_RegionMask & ZoneMask1) ;
+  }
+
+  boolean IsRing2()
+  {
+    return 0 == (m_RegionMask & ZoneMask1) && 0 != (m_RegionMask & ZoneMask2) ;
+  }
+  boolean IsRing3()
+  {
+    return 0 == (m_RegionMask & ZoneMask2) && 0 != (m_RegionMask & ZoneMask3) ;
+  }
+  boolean IsRing4()
+  {
+    return 0 == (m_RegionMask & ZoneMask3) && 0 != (m_RegionMask & ZoneMask4) ;
+  }
+
+
+  boolean IsOut()
+  {
+    return 0 == m_RegionMask;
+  }
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M5WingmanGroup_WatcherBack::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logError( "(NavPoint_MainPlayerUnitLandingBase-MainPlayerUnit)=  " + new String(GetMission().distance("NavPoint_MainPlayerUnitLandingBase", "MainPlayerUnit")));
+      logError("[AutoPilot path] PathID=" + new String(GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()));
+    }
+
+
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1" ||
+        GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayerSpin")
+    {
+      if (_RegionMask == 30)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M5PlayerMovingTo"]);
+      else if (_RegionMask == 28)
+      {
+        fireEvent(0.0, [], "StartTransport", []);
+        sendEvent(2.0, "C1M5WingmanGroup", "PopDelayedOrder", []);
+        sendEvent(5.0, "GroupUnit_Vietnamese_Motar", "FirePoint", []);
+      }
+      else if (_RegionMask == 24)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M5PlayerHalfMoviTo"]);
+      else if (_RegionMask == 0)
+      {
+         sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M5AttackBeginning"]);
+
+         sendEvent(10.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_1", "GreenSmokeEffect"]);
+         sendEvent(10.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_1_1", "GreenSmokeEffect"]);
+         sendEvent(10.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_2", "RedSmokeEffect"]);
+         sendEvent(10.0, SOID_MissionController, "CreateSignalSmoke", ["NavPoint_XRay_Smoke_2_1", "RedSmokeEffect"]);
+      }
+    }
+    else if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer2")
+    {
+      if (_RegionMask == 24)
+      {
+         sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M5PlayerMovingBack"]);
+      }
+      else if (_RegionMask == 28)
+      {
+        sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M5PlayerHalfMovingBack"]);
+      }
+
+    }
+
+  }
+}
+

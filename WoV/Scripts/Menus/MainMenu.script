@@ -1,0 +1,119 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CMainMenu
+  extends CBaseMenu, CMainControls
+{
+  static String m_MenuClassName = "CMainMenu";
+
+  static boolean DemoMode = false;
+  int DemoMission = 5;
+
+  static Color BaseTextColor = new Color(0.75, 0.75, 0.75, 1.0);
+  static Color HighTextColor = new Color(1.0,  1.0,  1.0,  1.0);
+
+  void OnInitMenu()
+  {
+    Component Game = new #GameController();
+    Component MenuController = Game.GetMenuController();
+    MenuController.SetDefaultCommands("StartNewGameButton", "QuitButton");
+//    GetObject("MissionsButton").SetText(L"MISSIONS");
+    UpdatePlayList();
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    if ("MissionsButton" == _ID)
+      Invoke("SingleMenu");
+    else
+    if ("StartNewGameButton" == _ID)
+    {
+      if (DemoMode)
+      {
+        CreateCampaign();
+
+        Component GameSettings = new #GameSettings();
+        GameSettings.SetUserValue(L"CurrentPlayer", L"DemoCampaing");
+
+        new #GameController().m_StartMission = CCampaignMenu::Missions[DemoMission][0];
+        Invoke("GameEnvironmentMenu");
+      }
+      else
+        Invoke("CampaignMenu");
+    }
+    else
+    if ("Options" == _ID)
+    {
+      CSettingsMenu::GameButtonVisible = true;
+      CSettingsMenu::BackMenu = "MainMenu";
+      Invoke("SettingsMenu");
+    }
+    else
+    if ("QuitButton" == _ID)
+      OpenWindow("QuitConformationMenu");
+    else
+    if ("Credits" == _ID)
+      Invoke("CreditsMenu");
+  }
+
+  void UpdatePlayList()
+  {
+    Component m_FileBrowser     = new #FileBrowser();
+    m_FileBrowser.FilesPattern = CUISettings::MusicFilesPattern;
+    Component m_MusicController = new #GameController().GetObject("MusicController");
+    Component GameSettings = new #GameSettings();
+
+    WString MusicFolder = GameSettings.GetUserValue(L"MusicDir", L"Music");
+    m_FileBrowser.CurrentDir = MusicFolder;
+    m_MusicController.Playlist = [];
+
+    Array Files = m_FileBrowser.GetFilesList();
+    for (int i = 0; i < Files.size(); i++)
+    {
+      m_MusicController.Playlist = m_MusicController.Playlist + [MusicFolder + Files[i]];
+    }
+    m_MusicController.SaveSettings();
+
+  }
+
+  void CreateCampaign()
+  {
+    Component GameSettings = new #GameSettings();
+
+    WString CampaignNum = L"DemoCampaing";
+
+    GameSettings.SavePlayerValue(CampaignNum, L"Number", 0);
+    GameSettings.SavePlayerValue(CampaignNum, L"Name", L"Demo");
+    GameSettings.SavePlayerValue(CampaignNum, L"IDName", L"Player");
+    GameSettings.SavePlayerValue(CampaignNum, L"Status", 1);
+    GameSettings.SavePlayerValue(CampaignNum, L"MaxStatus", 1);
+    GameSettings.SavePlayerValue(CampaignNum, L"Difficulty", -1);
+
+    WString Player = CampaignNum;
+    GameSettings.SavePlayerValue(Player, L"TargetingMode", GameSettings.GetTargetingMode());
+    GameSettings.SavePlayerValue(Player, L"DynamicLift", GameSettings.GetDynamicLift());
+    GameSettings.SavePlayerValue(Player, L"RetreatingBladeStallMode", GameSettings.GetRetreatingBladeStallMode());
+    GameSettings.SavePlayerValue(Player, L"VortexRingMode", GameSettings.GetVortexRingMode());
+    GameSettings.SavePlayerValue(Player, L"AircushionMode", GameSettings.GetAircushionMode());
+    GameSettings.SavePlayerValue(Player, L"WindEffectMode", GameSettings.GetWindEffectMode());
+    GameSettings.SavePlayerValue(Player, L"PayloadMode", GameSettings.GetPayloadMode());
+    GameSettings.SavePlayerValue(Player, L"ShockwaveMode", GameSettings.GetShockwaveMode());
+    GameSettings.SavePlayerValue(Player, L"TargetsOnMap", GameSettings.GetTargetsOnMap());
+    GameSettings.SavePlayerValue(Player, L"OrientationMode", GameSettings.GetOrientationMode());
+    GameSettings.SavePlayerValue(Player, L"Compass", GameSettings.GetIntelligentCompass());
+    GameSettings.SavePlayerValue(Player, L"UnlimAmmo", GameSettings.GetUnlimAmmo());
+    GameSettings.SavePlayerValue(Player, L"UnlimFuel", GameSettings.GetUnlimitedFuel());
+    GameSettings.SavePlayerValue(Player, L"GodMode", GameSettings.GetGodMode());
+
+  }
+
+
+}

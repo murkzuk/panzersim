@@ -1,0 +1,609 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+//
+// Virtual cockpit
+//
+
+class CIndexDialBase
+{
+  Component MatManager = new #MaterialManager<CCockpitSkin>();
+}
+
+class CIndexDial_Altimeter
+  extends CIndexDialBase
+{
+  Array Fonts  = [
+      [ "Century Gothic", 0.0425 ],
+      [ "Century Gothic Monospace Digits", 0.05 ],
+      [ "Century Gothic Bold", 0.0225  ]
+    ];
+
+  boolean FrameEnabled        = true;
+  boolean DialEnabled         = true;
+  boolean ArrowsEnabled       = true;
+  boolean DigitalValueEnabled = true;
+  boolean DialNameEnabled     = true;
+  float   IndexDialDepth      = 0.0;
+
+  final static float DialX    = 0.10125;
+  final static float DialY    = 1.0 - 0.13667;
+  final static float DialR    = 0.125;
+  final static float DialNumR = 0.0833;
+
+  Array IndexDialMask = [ DialX, DialY, "N", "N", "C", "C", DialR, 0.0, 2.0 * Math_PI, "dummy", UI_MASK_MODE ];
+  
+  // frame
+
+  Array FrameArcs = [
+      [ DialX, DialY, "N", "N", "C", "C", DialR, 0.5, -0.5 * Math_PI, 1.5 * Math_PI, CI_PRIMARY ]
+    ];
+  Array FrameRings   = [];
+  Array FrameNotches = [];
+  Array FrameSymbols = [];
+
+  // dial
+
+  Array DialCenter = [ DialX, DialY, "N", "N", "C", "C" ];
+
+  final static float DialMinAngle   = -0.5 * Math_PI;
+  final static float DialMaxAngle   =  1.5 * Math_PI;
+  final static float DialMinValue   = 0.0;
+  final static float DialMaxValue   = 9.9999;
+
+  Array DialNotches = [
+     //multiple, radiusMin,  radiusMax, width draw fist notch
+      [ 0.2,     DialR - 0.01, DialR,    1.0,  true  ],
+      [ 1.0,     DialR - 0.02, DialR,    1.4,  true  ]
+    ];
+
+  Array DialNumbers = [
+     //multiple, text dist,   text
+      [ 1.0,     DialNumR,  [ 0.0, 0.0, "N", "N", "C", "C", 0, L"" ] ]
+    ];
+
+  // arrows
+
+  boolean ArrowsLimits = false;
+  Array ArrowsCenter   = DialCenter;
+  Array Arrows         = [
+      [ //min angle,     max angle,   min value,  max value
+        [ DialMinAngle, DialMaxAngle,   0.0,       1.0     ],
+        [ DialR - 0.005 - 0.045, 0.025 ],
+        [ DialR - 0.005,         0.00  ],
+        [ DialR - 0.005 - 0.045,-0.025 ],
+        [ DialR - 0.005 - 0.035, 0.00  ]
+      ],
+      [
+        [ DialMinAngle, DialMaxAngle,  0.0,        1.0     ],
+        [ DialR - 0.005 - 0.045,  0.01  ],
+        [ DialR - 0.005,          0.00  ],
+        [ DialR - 0.005 - 0.045, -0.01  ],
+        [ DialR - 0.005 - 0.057,  0.00  ]
+      ]
+    ];
+    
+  // digital value
+  Array DigitalValueText               = [ DialX + 29.0 / 800.0, DialY + 3.0 / 600.0, "N", "N", "F", "C", 1, L"" ];
+  Array DigitalValueFrame              = [ DialX, DialY + 0.00533, "N", "N", "C", "C", 0.0825, 26.0 / 600.0, 0.0025 ];
+  static float DigitalValueFrameRadius = 0.0075;
+
+  Array DigitalValueCoverRects = [
+      [ CI_LIGHT,
+        [DialX - 19.0 / 800.0, DialY -  8.0 / 600.0],
+        [DialX - 30.0 / 800.0, DialY +  3.0 / 600.0],
+        [DialX - 30.0 / 800.0, DialY + 11.0 / 600.0],
+        [DialX - 11.0 / 800.0, DialY -  8.0 / 600.0]
+      ],
+      [ CI_LIGHT,
+        [DialX +  9.0 / 800.0, DialY -  8.0 / 600.0],
+        [DialX - 14.0 / 800.0, DialY + 15.0 / 600.0],
+        [DialX -  7.0 / 800.0, DialY + 15.0 / 600.0],
+        [DialX + 16.0 / 800.0, DialY -  8.0 / 600.0]
+      ],
+      [ CI_LIGHT,
+        [DialX + 30.0 / 800.0, DialY -  1.0 / 600.0],
+        [DialX + 14.0 / 800.0, DialY + 15.0 / 600.0],
+        [DialX + 21.0 / 800.0, DialY + 15.0 / 600.0],
+        [DialX + 30.0 / 800.0, DialY +  6.0 / 600.0]
+      ]
+    ];
+
+  // dial name
+  Array DialNameText      = [ DialX, DialY - 0.033,  "N", "N", "C", "C", 2, L"ALT" ];
+}
+
+class CIndexDial_Speedometer
+  extends CIndexDialBase
+{
+  Array Fonts  = [
+      [ "Century Gothic", 0.04 ],
+      [ "Century Gothic Monospace Digits", 0.05 ],
+      [ "Century Gothic Bold", 0.0225  ]
+    ];
+  
+  boolean FrameEnabled        = true;
+  boolean DialEnabled         = true;
+  boolean ArrowsEnabled       = true;
+  boolean DigitalValueEnabled = true;
+  boolean DialNameEnabled     = true;
+  float   IndexDialDepth      = 0.0;
+
+  final static float DialX    = 1.0 - 0.1025;
+  final static float DialY    = 1.0 - 0.13667;
+  final static float DialR    = 0.125;
+  final static float DialNumR = DialR - 0.048;
+
+  Array IndexDialMask = [ DialX, DialY, "N", "N", "C", "C", DialR, 0.0, 2.0 * Math_PI, "dummy", UI_MASK_MODE ];
+
+  // frame
+  final static float SpeedDialSize = 2.0 * 150.0 / 160.0; // in Phi
+  
+  Array FrameArcs = [
+      [ DialX, DialY, "N", "N", "C", "C", DialR, 0.5, 0.0, 2.0 * Math_PI, CI_PRIMARY ]
+    ];
+
+  Array FrameRings = [
+      [ DialX, DialY, "N", "N", "C", "C", DialR - 2.5 / 600.0, DialR - 1.0 / 600.0, -0.5 * Math_PI + 000.0/150.0 * SpeedDialSize * Math_PI, -0.5 * Math_PI + 090.0/150.0 * SpeedDialSize * Math_PI, CI_FILL      ],
+      [ DialX, DialY, "N", "N", "C", "C", DialR - 2.5 / 600.0, DialR - 1.0 / 600.0, -0.5 * Math_PI + 090.0/150.0 * SpeedDialSize * Math_PI, -0.5 * Math_PI + 117.0/150.0 * SpeedDialSize * Math_PI, CI_ATTENTION ],
+      [ DialX, DialY, "N", "N", "C", "C", DialR - 2.5 / 600.0, DialR - 1.0 / 600.0, -0.5 * Math_PI + 117.0/150.0 * SpeedDialSize * Math_PI, -0.5 * Math_PI + 150.0/150.0 * SpeedDialSize * Math_PI, CI_DANGER    ]
+    ];
+
+  Array FrameNotches = [
+      [-0.5 * Math_PI, DialR - 0.03, DialR, 1.1 ]
+    ];
+
+  Array FrameSymbols = [];
+
+  // dial
+  
+  Array DialCenter = [ DialX, DialY, "N", "N", "C", "C" ];
+    
+  final static float DialMinAngle   = -0.5 * Math_PI;
+  final static float DialMaxAngle   = (SpeedDialSize - 0.5 ) * Math_PI;
+  final static float DialMinValue   = 0.0;
+  final static float DialMaxValue   = 150.0;
+
+  Array DialNotches = [
+     //multiple, radiusMin,   radiusMax, width,    draw first notch
+      [  5.0,    DialR - 0.015,  DialR - 3.5 / 600.0,    1.0,  false   ],
+      [ 10.0,    DialR - 0.022,  DialR - 3.5 / 600.0,    1.0,  false   ],
+      [ 20.0,    DialR - 0.022,  DialR - 3.5 / 600.0,    1.4,  false   ]
+    ];
+    
+  Array DialNumbers = [
+      [ 20.0, DialNumR, [ 0.0, 0.0, "N", "N", "C", "C", 0, L"" ] ]
+    ];
+    
+  Array ArrowsCenter = DialCenter;
+  Array Arrows = [
+      [ //min angle,    max angle,   min value,  max value
+        [ DialMinAngle, DialMaxAngle,   0.0,      150.0 ],
+        [ DialR - 0.01 - 0.047,  0.01  ],
+        [ DialR - 0.01,          0.00  ],
+        [ DialR - 0.01 - 0.047, -0.01  ],
+        [ DialR - 0.01 - 0.038,  0.00  ]
+      ]
+    ];
+    
+  // digital value
+  Array DigitalValueText               = [ DialX + 19.0 / 800.0, DialY + 3.0 / 600.0, "N", "N", "F", "C", 1, L"" ];
+  Array DigitalValueFrame              = [ DialX, DialY + 0.00533, "N", "N", "C", "C", 0.07375, 0.0433, 0.0025 ];
+  static float DigitalValueFrameRadius = 0.0075;
+  
+  Array DigitalValueCoverRects = [];
+  
+  // dial name
+  Array DialNameText      = [ DialX,  DialY - 0.033,  "N", "N", "C", "C", 2, L"KNOTS" ];
+}
+
+class CIndexDial_Climb
+  extends CIndexDialBase
+{
+  Array Fonts  = [
+      [ "Century Gothic", 0.03 ],
+      [ "Century Gothic Bold", 0.0225 ]
+    ];
+  
+  boolean FrameEnabled        = true;
+  boolean DialEnabled         = true;
+  boolean ArrowsEnabled       = true;
+  boolean DigitalValueEnabled = false;
+  boolean DialNameEnabled     = true;
+  float   IndexDialDepth      = 0.0;
+  
+  final static float DialX    = 0.19125;
+  final static float DialY    = 1.0 - 0.02;
+  final static float DialR    = 0.12;
+
+  Array IndexDialMask = [];
+
+  // frame
+  final static float GStep = 0.10975;
+  Array FrameArcs = [
+      [ DialX, DialY, "N", "N", "C", "C", DialR, 0.5, 0.0 * Math_PI, (-0.5 + 0.061) * Math_PI, CI_PRIMARY ]
+    ];
+
+  Array FrameRings = [
+      [ DialX, DialY, "N", "N", "C", "C", DialR - 4.0 / 600.0, DialR - 1.0 / 600.0, (0.0 - GStep*0) * Math_PI, (0.0 - GStep*1) * Math_PI, CI_DANGER, CI_ATTENTION ],
+      [ DialX, DialY, "N", "N", "C", "C", DialR - 4.0 / 600.0, DialR - 1.0 / 600.0, (0.0 - GStep*1) * Math_PI, (0.0 - GStep*2) * Math_PI, CI_ATTENTION, CI_NORMAL ],
+      [ DialX, DialY, "N", "N", "C", "C", DialR - 4.0 / 600.0, DialR - 1.0 / 600.0, (0.0 - GStep*2) * Math_PI, (0.0 - GStep*3) * Math_PI, CI_NORMAL, CI_ATTENTION ],
+      [ DialX, DialY, "N", "N", "C", "C", DialR - 4.0 / 600.0, DialR - 1.0 / 600.0, (0.0 - GStep*3) * Math_PI, (0.0 - GStep*4) * Math_PI, CI_ATTENTION, CI_DANGER ]
+    ];
+
+  Array FrameNotches = [
+      //angle,          radiusMin,        radiusMax,         width
+      [-0.439  * Math_PI, DialR,         DialR + 0.015,       0.5 ],
+      [-0.2195 * Math_PI, DialR - 0.025, DialR - 5.0 / 600.0, 0.5 ],
+      [ 0.0,              DialR,         DialR + 0.012,       0.5 ]
+    ];
+
+  Array FrameSymbols = [
+      [-0.39  * Math_PI, DialR + 0.0233,  [ 0.0, 0.0, "N", "N", "C", "C", 0, L"20" ]  ],
+      [ 0.001 * Math_PI, DialR - 0.03525, [ 0.0, 0.0, "N", "N", "C", "C", 0, L"-20" ] ]
+  ];
+
+  // dial
+  
+  Array DialCenter = [ DialX, DialY, "N", "N", "C", "C" ];
+    
+  final static float DialMinAngle   =   0.0            * Math_PI;
+  final static float DialMaxAngle   = ( -0.5 + 0.061 ) * Math_PI;
+  final static float DialMinValue   = -20.0;
+  final static float DialMaxValue   =  20.0;
+
+  Array DialNotches = [];
+  Array DialNumbers = [];
+    
+  Array ArrowsCenter = DialCenter;
+  Array Arrows = [
+      [ //min angle,     max angle,   min value,  max value
+        [ DialMinAngle, DialMaxAngle,   -20.0,       20.0 ],
+        [ DialR - 0.01 - 0.047,  0.01  ],
+        [ DialR - 0.01333,       0.00  ],
+        [ DialR - 0.01 - 0.047, -0.01  ],
+        [ DialR - 0.01 - 0.038,  0.00  ]
+      ]
+    ];
+
+  Array DialNameText   = [ DialX + 0.0075, DialY - 0.0083,  "N", "N", "C", "C", 1, L"CLIMB" ];
+}
+
+class CIndexDial_Fuel
+  extends CIndexDialBase
+{
+  Array Fonts  = [
+      [ "Century Gothic Bold", 0.0225 ],
+      [ "Century Gothic", 0.0375 ]
+    ];
+  
+  boolean FrameEnabled        = true;
+  boolean DialEnabled         = true;
+  boolean ArrowsEnabled       = true;
+  boolean DigitalValueEnabled = false;
+  boolean DialNameEnabled     = true;
+  float   IndexDialDepth      = 0.0;
+
+  final static float DialX    = 1.0 - 0.19125;
+  final static float DialY    = 1.0 - 0.02;
+  final static float DialR    = 0.12;
+
+  Array IndexDialMask = [];
+
+  // frame
+  Array FrameArcs = [
+      [ DialX, DialY, "N", "N", "C", "C", DialR, 0.5, -1.0 * Math_PI, ( -0.5 - 0.061 ) * Math_PI, CI_PRIMARY ]
+    ];
+  
+  Array FrameRings   = [
+      [ DialX, DialY, "N", "N", "C", "C", DialR - 4.0 / 600.0, DialR - 1.0 / 600.0, -1.0 * Math_PI, -0.91 * Math_PI, CI_DANGER ]
+    ];
+
+  Array FrameNotches = [
+      //angle,          radiusMin,   radiusMax,     width
+      [( -0.5 - 0.061 ) * Math_PI,          DialR,         DialR + 0.015, 0.5 ],
+      [( -0.5 - 0.2195 - 0.061 ) * Math_PI, DialR - 0.025, DialR,         0.5 ],
+      [  -1.0 * Math_PI,                    DialR,         DialR + 0.012, 0.5 ]
+    ];
+
+  Array FrameSymbols = [
+      //angle,        text dist,         text
+      [-0.59 * Math_PI, DialR + 0.02, [ 0.0, 0.0, "N", "N", "C", "C", 1, L"F" ] ],
+      [-0.96 * Math_PI, DialR - 0.03, [ 0.0, 0.0, "N", "N", "C", "C", 1, L"E", CI_DANGER ] ]
+    ];
+
+  // dial
+  
+  Array DialCenter = [ DialX, DialY, "N", "N", "C", "C" ];
+    
+  final static float DialMinAngle   = -1.0 * Math_PI;
+  final static float DialMaxAngle   = ( -0.5 - 0.061 ) * Math_PI;
+  final static float DialMinValue   =  0.0;
+  final static float DialMaxValue   =  1.0;
+
+  Array DialNotches = [];
+  Array DialNumbers = [];
+
+  Array ArrowsCenter = DialCenter;
+  Array Arrows = [
+      [ //min angle,    max angle,   min value,  max value
+        [ DialMinAngle, DialMaxAngle,   0.0,      1.0 ],
+        [ DialR - 0.01 - 0.047,  0.01 ],
+        [ DialR - 0.01333,       0.00 ],
+        [ DialR - 0.01 - 0.047, -0.01 ],
+        [ DialR - 0.01 - 0.038,  0.00 ]
+      ]
+    ];
+    
+  Array DialNameText   = [ DialX, DialY - 0.0083,  "N", "N", "C", "C", 0, L"FUEL" ];  
+}
+
+class CIndexDial_Torq
+  extends CIndexDialBase
+{
+  Array Fonts  = [
+      [ "Century Gothic", 0.0325 ],
+      [ "Century Gothic Bold", 0.0225 ]
+    ];
+  
+  boolean FrameEnabled        = true;
+  boolean DialEnabled         = true;
+  boolean ArrowsEnabled       = true;
+  boolean DigitalValueEnabled = false;
+  boolean DialNameEnabled     = true;
+  float   IndexDialDepth      = 0.1;
+
+  final static float DialX    = 0.08125;
+  final static float DialY    = 1.0 - 0.33667;
+  final static float DialR    = 0.100833;
+
+  Array IndexDialMask = [];
+
+  // frame
+
+  Array FrameArcs = [
+      [ DialX, DialY, "N", "N", "C", "C", DialR, 0.3, 0.0, 2.0 * Math_PI, CI_PRIMARY ]
+    ];
+
+  Array FrameRings   = [];
+  Array FrameNotches = [];
+  Array FrameSymbols = [];
+
+  // dial
+
+  Array DialCenter = [ DialX, DialY, "N", "N", "C", "C" ];
+
+  final static float DialMinAngle   = ( -1.5 + 0.13889 ) * Math_PI;
+  final static float DialMaxAngle   = 0.2667 * Math_PI;
+  final static float DialMinValue   =  0.0;
+  final static float DialMaxValue   =  100.0;
+
+  Array DialNotches = [
+      [ 10.0,  DialR - 0.011667, DialR,  1.0, true ]
+    ];
+  Array DialNumbers = [
+      [ 10.0, 0.073, [ 0.0, 0.0, "N", "N", "C", "C", 0, L"0" ] ]
+    ];
+
+  Array ArrowsCenter = DialCenter;
+  Array Arrows = [
+      [ //min angle,    max angle,   min value,  max value
+        [ DialMinAngle, DialMaxAngle,   0.0,      1.0 ],
+        [ DialR - 0.005 - 0.047,  0.01  ],
+        [ DialR - 0.005,          0.00  ],
+        [ DialR - 0.005 - 0.047, -0.01  ],
+        [ DialR - 0.005 - 0.038,  0.00  ]
+      ]
+    ];
+
+  Array DialNameText   = [ DialX, DialY,  "N", "N", "C", "C", 1, L"TORQ" ];
+}
+
+class CPositionDial
+{
+  Component MatManager  = new #MaterialManager<CCockpitSkin>(); 
+
+  static float HorX = 0.9175;
+  static float HorY = 0.655;
+  static float HorR = 0.10083;
+
+  static float YShift = 0.00375;
+
+  static float TextPosX = 20.0 / 800.0;
+  static float SymSizeX = 4.0 / 800.0;
+  static float SymSizeY = 7.0 / 600.0;
+
+  Array Fonts = [
+      [ "Century Gothic Monospace Digits", 0.045 ],
+      [ "Century Gothic", 0.0425 ],
+      [ "Century Gothic Bold", 0.035 ],
+      [ "Century Gothic Bold", 0.0225 ]
+    ];
+
+  Array ElHorCircle    = [ HorX, HorY, "N", "N", "C", "C", HorR, 0.3, 0.0, 2.0 * Math_PI ];
+  
+  Array HorNotches = [
+      //  angle,                    radiusMin, radiusMax, width, 
+      [-0.5             * Math_PI, -HorR,          HorR,   1.0 ],
+      [( -0.5 + 0.056 ) * Math_PI,  HorR - 0.006,  HorR,   0.3 ],
+      [( -0.5 - 0.056 ) * Math_PI,  HorR - 0.006,  HorR,   0.3 ],
+      [( -0.5 + 0.111 ) * Math_PI,  HorR - 0.006,  HorR,   0.3 ],
+      [( -0.5 - 0.111 ) * Math_PI,  HorR - 0.006,  HorR,   0.3 ],
+      [( -0.5 + 0.167 ) * Math_PI,  HorR - 0.013,  HorR,   0.3 ],
+      [( -0.5 - 0.167 ) * Math_PI,  HorR - 0.013,  HorR,   0.3 ],
+      [( -0.5 + 0.333 ) * Math_PI,  HorR - 0.013,  HorR,   0.3 ],
+      [( -0.5 - 0.333 ) * Math_PI,  HorR - 0.013,  HorR,   0.3 ],
+      [( -0.5 + 0.5   ) * Math_PI,  HorR - 0.015,  HorR,   0.3 ],
+      [( -0.5 - 0.5   ) * Math_PI,  HorR - 0.015,  HorR,   0.3 ]
+    ];
+
+  Array HorFillLevels = [
+      // degree, color index
+      [   0.0,   CI_HORIZON    ],
+      [ -22.0,   CI_HORIZONMID ],
+      [ -90.0,   CI_GROUND     ],
+      [-158.0,   CI_HORIZONMID ],
+      [-180.0,   CI_HORIZON    ]
+    ];
+
+  Array HorFixedArrowRect = [
+     // X                      Y
+      [ HorX           , YShift + HorY - HorR          ],
+      [ HorX - 0.004375, YShift + HorY - HorR + 0.0183 ],
+      [ HorX           , YShift + HorY - HorR + 0.0185 ],
+      [ HorX + 0.004375, YShift + HorY - HorR + 0.0183 ]
+    ];
+
+  Array HorFixedLines = [
+      [ -2.0 / 800.0,  1.0 / 600.0, "C", "C", "N", "N", 4.0 / 800.0, 0.0, 1.0 ],
+      [ -2.0 / 800.0,  0.0,         "C", "C", "N", "N", 4.0 / 800.0, 0.0, 1.0 ],
+
+      [ -0.0575,  0.0, "C", "C", "N", "N", 0.0075, 0.0, 1.0 ],
+      [ -0.0475,  0.0, "C", "C", "N", "N", 0.0075, 0.0, 1.0 ],
+      [ -0.0375,  0.0, "C", "C", "N", "N", 0.0075, 0.0, 1.0 ],
+      [ -0.02625, 0.0, "C", "C", "N", "N", 0.0075, 0.0, 1.0 ],
+      
+      [ 0.0575,  0.0, "C", "C", "N", "N", -0.0075, 0.0, 1.0 ],
+      [ 0.0475,  0.0, "C", "C", "N", "N", -0.0075, 0.0, 1.0 ],
+      [ 0.0375,  0.0, "C", "C", "N", "N", -0.0075, 0.0, 1.0 ],
+      [ 0.02625, 0.0, "C", "C", "N", "N", -0.0075, 0.0, 1.0 ],
+
+      [ 0.0,  0.0,       "C", "C", "N", "N",  0.0075, 0.0083, 1.0 ],
+      [ 0.0,  0.0,       "C", "C", "N", "N", -0.0075, 0.0083, 1.0 ],
+      [  0.0075, 0.0083, "C", "C", "N", "N",  0.005, -0.0083, 1.0 ],
+      [ -0.0075, 0.0083, "C", "C", "N", "N", -0.005, -0.0083, 1.0 ],
+      [  0.0125, 0.0,    "C", "C", "N", "N",  0.0025, 0.0, 1.0 ],
+      [ -0.0125, 0.0,    "C", "C", "N", "N", -0.0025, 0.0, 1.0 ]
+    ];
+
+  static float HorPitchAngle   = 90.0;   // deg
+  static float HorPitchHeight  = HorR * 2.0;
+  
+  Array HorPitchBase = [ HorX, HorY, "N", "N", "N", "N" ];
+
+  Array HorPitchSymbols = [
+      // angle, text (position used as shift from vertical axis)
+      [ 150.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"3" ] ],
+      [ 150.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      [ 120.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"6" ] ],
+      [ 120.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      
+      [  90.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"9" ] ],
+      [  90.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      [  60.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"6" ] ],
+      [  60.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      [  30.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"3" ] ],
+      [  30.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      
+      [ -30.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"3" ] ],
+      [ -30.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      [ -60.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"6" ] ],
+      [ -60.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      [ -90.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"9" ] ],
+      [ -90.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      
+      [-120.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"6" ] ],
+      [-120.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ],
+      [-150.0,  [-TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"3" ] ],
+      [-150.0,  [ TextPosX - SymSizeX, -SymSizeY, "N", "N", "N", "N", 3, L"0" ] ]
+    ];    
+
+  static float LongLine  = 44.0 / 800.0 / 2.0;
+  static float TextLine  = 28.0 / 800.0 / 2.0;
+  static float ShortLine = 10.0 / 800.0 / 2.0;
+  Array HorPitchLines = [
+     // deg,  startX,     finishX,   width 
+      [ 180.0, -HorR,      HorR,      1.0 ],
+      [ 175.0, -ShortLine, ShortLine, 1.0 ],
+      [ 170.0, -LongLine,  LongLine,  1.0 ],
+      [ 165.0, -ShortLine, ShortLine, 1.0 ],
+      [ 160.0, -LongLine,  LongLine,  1.0 ],
+      [ 155.0, -ShortLine, ShortLine, 1.0 ],
+      
+      [ 150.0, -TextLine,  TextLine,  1.0 ],
+      [ 145.0, -ShortLine, ShortLine, 1.0 ],
+      [ 140.0, -LongLine,  LongLine,  1.0 ],
+      [ 135.0, -ShortLine, ShortLine, 1.0 ],
+      [ 130.0, -LongLine,  LongLine,  1.0 ],
+      [ 125.0, -ShortLine, ShortLine, 1.0 ],
+
+      [ 120.0, -TextLine,  TextLine,  1.0 ],
+      [ 115.0, -ShortLine, ShortLine, 1.0 ],
+      [ 110.0, -LongLine,  LongLine,  1.0 ],
+      [ 105.0, -ShortLine, ShortLine, 1.0 ],
+      [ 100.0, -LongLine,  LongLine,  1.0 ],
+      [  95.0, -ShortLine, ShortLine, 1.0 ],
+
+      [  90.0, -TextLine,  TextLine,  1.0 ],
+      [  85.0, -ShortLine, ShortLine, 1.0 ],
+      [  80.0, -LongLine,  LongLine,  1.0 ],
+      [  75.0, -ShortLine, ShortLine, 1.0 ],
+      [  70.0, -LongLine,  LongLine,  1.0 ],
+      [  65.0, -ShortLine, ShortLine, 1.0 ],
+ 
+      [  60.0, -TextLine,  TextLine,  1.0 ],
+      [  55.0, -ShortLine, ShortLine, 1.0 ],
+      [  50.0, -LongLine,  LongLine,  1.0 ],
+      [  45.0, -ShortLine, ShortLine, 1.0 ],
+      [  40.0, -LongLine,  LongLine,  1.0 ],
+      [  35.0, -ShortLine, ShortLine, 1.0 ],
+
+      [  30.0, -TextLine,  TextLine,  1.0 ],
+      [  25.0, -ShortLine, ShortLine, 1.0 ],
+      [  20.0, -LongLine,  LongLine,  1.0 ],
+      [  15.0, -ShortLine, ShortLine, 1.0 ],
+      [  10.0, -LongLine,  LongLine,  1.0 ],
+      [   5.0, -ShortLine, ShortLine, 1.0 ],
+
+      [   0.0, -HorR,      HorR,      1.0 ],
+
+      [  -5.0, -ShortLine, ShortLine, 1.0 ],
+      [ -10.0, -LongLine,  LongLine,  1.0 ],
+      [ -15.0, -ShortLine, ShortLine, 1.0 ],
+      [ -20.0, -LongLine,  LongLine,  1.0 ],
+      [ -25.0, -ShortLine, ShortLine, 1.0 ],
+      [ -30.0, -TextLine,  TextLine,  1.0 ],
+
+      [ -35.0, -ShortLine, ShortLine, 1.0 ],
+      [ -40.0, -LongLine,  LongLine,  1.0 ],
+      [ -45.0, -ShortLine, ShortLine, 1.0 ],
+      [ -50.0, -LongLine,  LongLine,  1.0 ],
+      [ -55.0, -ShortLine, ShortLine, 1.0 ],
+      [ -60.0, -TextLine,  TextLine,  1.0 ],
+
+      [ -65.0, -ShortLine, ShortLine, 1.0 ],
+      [ -70.0, -LongLine,  LongLine,  1.0 ],
+      [ -75.0, -ShortLine, ShortLine, 1.0 ],
+      [ -80.0, -LongLine,  LongLine,  1.0 ],
+      [ -85.0, -ShortLine, ShortLine, 1.0 ],
+      [ -90.0, -TextLine,  TextLine,  1.0 ],
+      
+      [ -95.0, -ShortLine, ShortLine, 1.0 ],
+      [-100.0, -LongLine,  LongLine,  1.0 ],
+      [-105.0, -ShortLine, ShortLine, 1.0 ],
+      [-110.0, -LongLine,  LongLine,  1.0 ],
+      [-115.0, -ShortLine, ShortLine, 1.0 ],
+      [-120.0, -TextLine,  TextLine,  1.0 ],
+
+      [-125.0, -ShortLine, ShortLine, 1.0 ],
+      [-130.0, -LongLine,  LongLine,  1.0 ],
+      [-135.0, -ShortLine, ShortLine, 1.0 ],
+      [-140.0, -LongLine,  LongLine,  1.0 ],
+      [-145.0, -ShortLine, ShortLine, 1.0 ],
+      [-150.0, -TextLine,  TextLine,  1.0 ],
+
+      [-155.0, -ShortLine, ShortLine, 1.0 ],
+      [-160.0, -LongLine,  LongLine,  1.0 ],
+      [-165.0, -ShortLine, ShortLine, 1.0 ],
+      [-170.0, -LongLine,  LongLine,  1.0 ],
+      [-175.0, -ShortLine, ShortLine, 1.0 ]
+    ];
+
+}

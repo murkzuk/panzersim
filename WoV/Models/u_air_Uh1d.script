@@ -1,0 +1,309 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class Cu_air_Uh1dModel extends CBaseModel
+{
+
+  static int     InstancesQty         = CBaseModel::DefaultInstancesQty;
+
+  static int     ShadowCheckMode      = CBaseModel::DefaultShadowCheckMode;
+
+  static boolean PlanarShadow         = CBaseModel::DefaultPlanarShadow;
+
+  static float   PlanarShadowLodShift = CBaseModel::DefaultPlanarShadowLodShift;
+
+  static boolean UseBoxForIsection    = CBaseModel::DefaultUseBoxForIsection;
+  String     MeshFile        = "Models/u_air_Uh1d.ms2";
+  String     SkinClass       = "Cu_air_Uh1dModelSkin";
+
+  String     RouterMapFile   = "Models/u_air_Uh1d.rmap";
+
+  Array  Animation = [
+      ["A1_gun_dn", ["Weapon_A1_gun", 4, 5]],
+      ["A1_gun_mdl", ["Weapon_A1_gun", 2, 3]],
+      ["A1_gun_up", ["Weapon_A1_gun", 0, 1]],
+      ["A1_turret", ["Weapon_A1", 0, 1]],
+      ["F1_gun_dn", ["Weapon_F1_gun", 4, 5]],
+      ["F1_gun_mdl", ["Weapon_F1_gun", 2, 3]],
+      ["F1_gun_up", ["Weapon_F1_gun", 0, 1]],
+      ["F1_turret", ["Weapon_F1", 0, 1]],
+      ["cyclic_bank", ["Cyclic_Left_Joint", 0, 1], ["Cyclic_Right_Joint", 0, 1]],
+      ["cyclic_tangage", ["Cyclic_Left_Joint", 2, 3], ["Cyclic_Right_Joint", 2, 3]],
+      ["dyn_mrotor_flip", ["Dyn_mRotor_Blades", 0, 1]],
+      ["dyn_mrotor_rotate", ["Dyn_mRotor", 0, 3]],
+      ["dyn_mrotor_stretch", ["Dyn_mRotor_Blades1", 0, 1], ["Dyn_mRotor_Blades2", 0, 1], ["Dyn_mRotor_Blades3", 0, 1], ["Dyn_mRotor_Blades4", 0, 1]],
+      ["dyn_trotor_rotate", ["Dyn_tRotor", 0, 3]],
+      ["l_cabin_door", ["L_Cabin_Door", 0, 1]],
+      ["l_cargo_door", ["L_Cargo_Door", 0, 1]],
+      ["l_cargo_door2", ["L_Cargo_Door2", 0, 1]],
+      ["r_cabin_door", ["R_Cabin_Door", 0, 1]],
+      ["r_cargo_door", ["R_Cargo_Door", 0, 1]],
+      ["r_cargo_door2", ["R_Cargo_Door2", 0, 1]],
+      ["rudder", ["Left_Pedal_Joint", 0, 1], ["Right_Pedal_Joint", 0, 1]],
+      ["static_mrotor_bend", ["Static_mRotor_Blade1", 0, 1], ["Static_mRotor_Blade2", 0, 1]],
+      ["static_mrotor_rotate", ["Static_mRotor", 0, 3]],
+      ["static_trotor_rotate", ["Static_tRotor", 0, 3]],
+      ["trottle", ["Trottle_Joint", 0, 1]]
+    ];
+
+  Map    ConfigSets = new Map([
+      [ "modelPanel1ViewSelectedSet", [ "Blade1", "Blade2", "Blades", "Dyn_mRotor", "Dyn_mRotor_Blades", "Dyn_mRotor_Pitch", "Dyn_tRotor", "Static_mRotor", "Static_mRotor_Pitch", "Static_tRotor" ] ],
+      [ "showSet", [ "Blade1", "Blade2", "Blades", "Dyn_mRotor", "Dyn_mRotor_Blades", "Dyn_mRotor_Pitch", "Dyn_tRotor", "Static_mRotor", "Static_mRotor_Pitch", "Static_tRotor" ] ]
+    ]);
+}
+
+class Cu_air_Uh1dModelSkin
+{
+  Array Materials = [
+      new CModelMaterial(
+        "0", // material id
+        "Textures/u_air_Uh1D.tex", // texture name
+        "Textures/u_air_Uh1D_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1D_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        150.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "1", // material id
+        "Textures/u_air_Uh1B_GlassGreen.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "MULTIPLICATIVE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        150.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        0.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "2", // material id
+        "", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 0.099180), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        150.000000, // power
+        false, // double sided
+        1.000000, // glossiness
+        0.300000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "Textures/EnvBox.tex" // envmap name
+      ),
+      new CModelMaterial(
+        "3", // material id
+        "Textures/u_air_Uh1D_rotors.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "4", // material id
+        "Textures/u_air_Uh1D_rotors.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.400000, 0.400000, 0.400000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        10.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "5", // material id
+        "Textures/u_air_Uh1D.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.400000, 0.400000, 0.400000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        10.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "6", // material id
+        "Textures/wpn_M60.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "7", // material id
+        "Textures/hum_AmericanSoldier.tex", // texture name
+        "Textures/hum_AmericanSoldier_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/hum_AmericanSoldier_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "8", // material id
+        "Textures/American_head_1.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      )
+    ];
+}

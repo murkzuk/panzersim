@@ -1,0 +1,98 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CHitPoints
+{
+
+    final static float Uh1bUnitHitPoints            = 1000;
+    final static float Uh1dUnitHitPoints            = 1000;
+    final static float AD4SkyriderUnitHitPoints     = 1000;
+    final static float Ch47UnitHitPoints            = 1000;
+
+    final static float JunkUnitHitPoints            = 400;
+    final static float SampanUnitHitPoints          = 200;
+    final static float PRBMK2UnitHitPoints          = 500;
+
+    final static float M151JeepUnitHitPoints        = 400;
+    final static float M939TruckUnitHitPoints       = 500;
+    final static float Gaz51TruckUnitHitPoints      = 500;
+
+    final static float MortarUnitHitPoints          = 200;
+    final static float M2A1HowitzerUnitHitPoints    = 400;
+    final static float DShKUnitHitPoints            = 100;
+
+    final static float MooreRifleUnitHitPoints      = 100;
+
+    final static float AmericanFinisherUnitHitPoints        = 100;
+    final static float AmericanGunnerUnitHitPoints          = 100;
+    final static float AmericanMedicUnitHitPoints           = 100;
+    final static float AmericanPilotUnitHitPoints           = 100;
+    final static float AmericanPilotQuadeUnitHitPoints      = 100;
+    final static float AmericanPilotKingsleyUnitHitPoints   = 100;
+    final static float AmericanRadioUnitHitPoints           = 100;
+    final static float AmericanSoldierGunUnitHitPoints      = 100;
+    final static float AmericanSoldierRifleUnitHitPoints    = 100;
+    final static float AmericanSoldierGrenadeUnitHitPoints  = 100;
+
+    final static float VietnamesePeasantUnitHitPoints           = 100;
+    final static float VietnameseVolunteerGunUnitHitPoints      = 100;
+    final static float VietnameseVolunteerRifleUnitHitPoints    = 100;
+    final static float VietnameseSoldierGunUnitHitPoints        = 100;
+    final static float VietnameseSoldierRifleUnitHitPoints      = 100;
+    final static float BullUnitHitPoints                        = 100;
+
+    final static float TOCUnitHitPoints             = 400;
+    final static float WatchTowerUnitHitPoints      = 300;
+    final static float BarrackUnitHitPoints         = 300;
+    final static float BaseHangarUnitHitPoints      = 500;
+    final static float BunkerBaseUnitHitPoints      = 400;
+    final static float BunkerAmmoUnitHitPoints      = 400;
+    final static float M60CordonPointUnitHitPoints  = 400;
+    final static float M29MortarPointUnitHitPoints  = 400;
+    final static float CheckPointUnitHitPoints      = 300;
+    final static float HeliPadUnitHitPoints         = 300;
+    final static float TentUnitHitPoints            = 200;
+    final static float TentLongUnitHitPoints        = 200;
+    final static float MarqueeUnitHitPoints         = 200;
+    final static float MedicalTentUnitHitPoints     = 200;
+    final static float RoofUnitHitPoints                      = 200;
+    final static float VietnameseHouseBigUnitHitPoints        = 400;
+    final static float VietnameseHouseBigPileUnitHitPoints    = 400;
+    final static float VietnameseHouseSmallUnitHitPoints      = 400;
+    final static float VietnameseHouseSmallPileUnitHitPoints  = 400;
+    final static float VietnameseGranaryUnitHitPoints         = 400;
+    final static float VietnameseGranaryPileUnitHitPoints     = 400;
+    final static float VietnameseRoofUnitHitPoints            = 400;
+    final static float WellUnitHitPoints                      = 100;
+
+    final static float BridgeFootUnitHitPoints           = 200;
+    final static float BridgeWoodUnitHitPoints           = 500;
+    final static float FenceWickerUnitHitPoints          = 100;
+    final static float FenceWireUnitHitPoints            = 100;
+    final static float FenceWireSpiralUnitHitPoints      = 100;
+    final static float BarrelUnitHitPoints               = 100;
+    final static float BarrelPackAUnitHitPoints          = 100;
+    final static float BarrelPackBUnitHitPoints          = 100;
+
+    final static float WeaponBoxBigUnitHitPoints          = 100;
+    final static float WeaponBoxBigPackAUnitHitPoints     = 100;
+    final static float WeaponBoxBigPackBUnitHitPoints     = 100;
+    final static float WeaponBoxSmallUnitHitPoints        = 100;
+    final static float WeaponBoxSmallPackAUnitHitPoints   = 100;
+    final static float WeaponBoxSmallPackBUnitHitPoints   = 100;
+    final static float AmmoBoxUnitHitPoints               = 100;
+    final static float AmmoBoxPackAUnitHitPoints          = 100;
+    final static float AmmoBoxPackBUnitHitPoints          = 100;
+
+    final static float TableUnitHitPoints           = 100;
+    final static float ChairUnitHitPoints           = 100;
+    final static float BenchUnitHitPoints           = 100;
+    final static float LitterUnitHitPoints          = 100;
+    final static float LitterWithBodyUnitHitPoints  = 100;
+}

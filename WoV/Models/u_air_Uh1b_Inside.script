@@ -1,0 +1,687 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class Cu_air_Uh1b_InsideModel extends CBaseModel
+{
+
+  static int     InstancesQty         = CBaseModel::DefaultInstancesQty;
+
+  static int     ShadowCheckMode      = CBaseModel::DefaultShadowCheckMode;
+
+  static boolean PlanarShadow         = CBaseModel::DefaultPlanarShadow;
+
+  static float   PlanarShadowLodShift = CBaseModel::DefaultPlanarShadowLodShift;
+
+  static boolean UseBoxForIsection    = CBaseModel::DefaultUseBoxForIsection;
+  String     MeshFile        = "Models/u_air_Uh1b_Inside.ms2";
+  String     SkinClass       = "Cu_air_Uh1b_InsideModelSkin";
+
+  String     RouterMapFile   = "Models/u_air_Uh1b_Inside.rmap";
+
+  Array  Animation = [
+      ["A1_gun_dn", ["Weapon_A1_gun", 4, 5]],
+      ["A1_gun_mdl", ["Weapon_A1_gun", 2, 3]],
+      ["A1_gun_up", ["Weapon_A1_gun", 0, 1]],
+      ["A1_turret", ["Weapon_A1", 0, 1]],
+      ["B1_fw", ["Weapon_B1", 0, 1], ["Weapon_B1_turret", 0, 1], ["joint10", 0, 1], ["joint7", 0, 1], ["joint8", 0, 1], ["joint9", 0, 1]],
+      ["B1_ltdn", ["Weapon_B1", 8, 9], ["Weapon_B1_turret", 8, 9], ["joint10", 8, 9], ["joint7", 8, 9], ["joint8", 8, 9], ["joint9", 8, 9]],
+      ["B1_ltup", ["Weapon_B1", 2, 3], ["Weapon_B1_turret", 2, 3], ["joint10", 2, 3], ["joint7", 2, 3], ["joint8", 2, 3], ["joint9", 2, 3]],
+      ["B1_minigun_dyn_rotate", ["Blade1_Inside", 0, 3], ["Blade2_Inside", 0, 3], ["Blades_Inside", 0, 3], ["Body", 0, 3], ["CoPilot_Instrumental_Panel", 0, 3], ["Controls", 0, 3], ["Cyclic_Left_Joint", 0, 3], ["Cyclic_Right_Joint", 0, 3], ["Dyn_mRotor_Blades1", 0, 3], ["Dyn_mRotor_Blades2", 0, 3], ["Dyn_mRotor_Blades3", 0, 3], ["Dyn_mRotor_Blades4", 0, 3], ["Dyn_mRotor_Blades_Inside", 0, 3], ["Dyn_mRotor_Inside", 0, 3], ["Dyn_mRotor_Pitch", 0, 3], ["L_Cabin_Door", 0, 3], ["L_Cargo_Door", 0, 3], ["Left_Gunner_Seat", 0, 3], ["Left_Pedal_Joint", 0, 3], ["M21_handle", 0, 3], ["M21_hor", 0, 3], ["M21_sight", 0, 3], ["M21_vert", 0, 3], ["M60_HSI", 0, 3], ["M60_Sight", 0, 3], ["M60_Sight_1", 0, 3], ["Main_Cocpit_Joint", 0, 3], ["Omni_Hor_Line_Pilot", 0, 3], ["Omni_Hor_Line_coPilot", 0, 3], ["Omni_Shkala_Pilot", 0, 3], ["Omni_Shkala_coPilot", 0, 3], ["Omni_Vert_Line_Pilot", 0, 3], ["Omni_Vert_Line_coPilot", 0, 3], ["Pilot_Instrumental_Panel", 0, 3], ["Pilot_Seat", 0, 3], ["Pilot_lHand", 0, 3], ["Pilot_rHand", 0, 3], ["Pylon1", 0, 3], ["Pylon2", 0, 3], ["RMI_BigArrow_Master_Pilot", 0, 3], ["RMI_BigArrow_Master_coPilot", 0, 3], ["RMI_BigArrow_Slave_Pilot", 0, 3], ["RMI_BigArrow_Slave_coPilot", 0, 3], ["RMI_Shkala_Master_Pilot", 0, 3], ["RMI_Shkala_Master_coPilot", 0, 3], ["RMI_Shkala_Slave_Pilot", 0, 3], ["RMI_Shkala_Slave_coPilot", 0, 3], ["RMI_SmallArrow_Master_Pilot", 0, 3], ["RMI_SmallArrow_Master_coPilot", 0, 3], ["RMI_SmallArrow_Slave_Pilot", 0, 3], ["RMI_SmallArrow_Slave_coPilot", 0, 3], ["ROOT", 0, 3], ["R_Cabin_Door", 0, 3], ["R_Cargo_Door", 0, 3], ["Right_Gunner_Seat", 0, 3], ["Right_Pedal_Joint", 0, 3], ["Rocket10", 0, 3], ["Rocket11", 0, 3], ["Rocket12", 0, 3], ["Rocket13", 0, 3], ["Rocket14", 0, 3], ["Rocket15", 0, 3], ["Rocket2", 0, 3], ["Rocket3", 0, 3], ["Rocket4", 0, 3], ["Rocket5", 0, 3], ["Rocket6", 0, 3], ["Rocket7", 0, 3], ["Rocket8", 0, 3], ["Rocket9", 0, 3], ["Static_mRotor_Blade1", 0, 3], ["Static_mRotor_Blade2", 0, 3], ["Static_mRotor_Blades", 0, 3], ["Static_mRotor_Inside", 0, 3], ["Static_mRotor_Pitch", 0, 3], ["Tape_L", 0, 3], ["Tape_R", 0, 3], ["Trottle_Joint", 0, 3], ["Weapon_A1", 0, 3], ["Weapon_A1_gun", 0, 3], ["Weapon_A1_gun|Shutter", 0, 3], ["Weapon_B1", 0, 3], ["Weapon_B1_minigun", 0, 3], ["Weapon_B1_turret", 0, 3], ["Weapon_C1", 0, 3], ["Weapon_D1", 0, 3], ["Weapon_E1", 0, 3], ["Weapon_E1_minigun", 0, 3], ["Weapon_E1_turret", 0, 3], ["Weapon_F1", 0, 3], ["Weapon_F1_gun", 0, 3], ["Weapon_F1_gun|Shutter", 0, 3], ["c_alt_cursor", 0, 3], ["c_bank", 0, 3], ["c_speedometer_cursor", 0, 3], ["c_tangage", 0, 3], ["c_vertspeed_cursor", 0, 3], ["c_wheel1_100", 0, 3], ["c_wheel2_100", 0, 3], ["c_wheel3_100", 0, 3], ["clock_hours", 0, 3], ["clock_minutes", 0, 3], ["clock_seconds", 0, 3], ["coPilot_Seat", 0, 3], ["coPilot_lHand", 0, 3], ["coPilot_rHand", 0, 3], ["cp_alternate_current_cursor", 0, 3], ["cp_c_alt_cursor", 0, 3], ["cp_c_bank", 0, 3], ["cp_c_speedometer_cursor", 0, 3], ["cp_c_tangage", 0, 3], ["cp_c_vertspeed_cursor", 0, 3], ["cp_c_wheel1_100", 0, 3], ["cp_c_wheel2_100", 0, 3], ["cp_c_wheel3_100", 0, 3], ["cp_clock_hours", 0, 3], ["cp_clock_minutes", 0, 3], ["cp_clock_seconds", 0, 3], ["cp_direct_current_cursor", 0, 3], ["cp_hsi_arrow", 0, 3], ["cp_hsi_ball", 0, 3], ["cp_load_conv_cursor", 0, 3], ["cp_load_gen_cursor", 0, 3], ["cp_lrpm_turbine_cursor", 0, 3], ["cp_mrpm_turbine_cursor", 0, 3], ["cp_p_alt_cursor", 0, 3], ["cp_p_bank", 0, 3], ["cp_p_speedometer_cursor", 0, 3], ["cp_p_tangage", 0, 3], ["cp_p_torque_cursor", 0, 3], ["cp_p_vertspeed_cursor", 0, 3], ["cp_p_wheel1_100", 0, 3], ["cp_p_wheel2_100", 0, 3], ["cp_p_wheel3_100", 0, 3], ["cp_psiengineoil_cursor", 0, 3], ["cp_psifuel_cursor", 0, 3], ["cp_psioil_transmission_cursor", 0, 3], ["cp_qtyfuel_cursor", 0, 3], ["cp_radioaltimeter_cursor", 0, 3], ["cp_rotor_RPM", 0, 3], ["cp_temp_cursor", 0, 3], ["cp_toil_cursor", 0, 3], ["cp_toil_transmission_cursor", 0, 3], ["cp_turbine_RPM", 0, 3], ["joint1", 0, 3], ["joint10", 0, 3], ["joint15", 0, 3], ["joint16", 0, 3], ["joint17", 0, 3], ["joint18", 0, 3], ["joint19", 0, 3], ["joint2", 0, 3], ["joint20", 0, 3], ["joint21", 0, 3], ["joint22", 0, 3], ["joint23", 0, 3], ["joint24", 0, 3], ["joint25", 0, 3], ["joint26", 0, 3], ["joint3", 0, 3], ["joint4", 0, 3], ["joint5", 0, 3], ["joint6", 0, 3], ["joint7", 0, 3], ["joint8", 0, 3], ["joint9", 0, 3], ["mag_compass", 0, 3], ["p_alt_cursor", 0, 3], ["p_alternate_current_cursor", 0, 3], ["p_bank", 0, 3], ["p_direct_current_cursor", 0, 3], ["p_hsi_arrow", 0, 3], ["p_hsi_ball", 0, 3], ["p_load_conv_cursor", 0, 3], ["p_load_gen_cursor", 0, 3], ["p_lrpm_turbine_cursor", 0, 3], ["p_mrpm_turbine_cursor", 0, 3], ["p_psiengineoil_cursor", 0, 3], ["p_psifuel_cursor", 0, 3], ["p_psioil_transmission_cursor", 0, 3], ["p_qtyfuel_cursor", 0, 3], ["p_speedometer_cursor", 0, 3], ["p_tangage", 0, 3], ["p_temp_cursor", 0, 3], ["p_toil_cursor", 0, 3], ["p_toil_transmission_cursor", 0, 3], ["p_torque_cursor", 0, 3], ["p_vertspeed_cursor", 0, 3], ["p_wheel1_100", 0, 3], ["p_wheel2_100", 0, 3], ["p_wheel3_100", 0, 3], ["polySurface1405", 0, 3], ["polySurface1407", 0, 3], ["polySurface1430", 0, 3], ["polySurface36", 0, 3], ["polySurface59", 0, 3], ["polySurface60", 0, 3], ["radioaltimeter_cursor", 0, 3], ["rotor_RPM", 0, 3], ["turbine_RPM", 0, 3], ["wire", 0, 3]],
+      ["B1_minigun_rotate", ["Weapon_B1_minigun", 0, 3]],
+      ["B1_rtdn", ["Weapon_B1", 6, 7], ["Weapon_B1_turret", 6, 7], ["joint10", 6, 7], ["joint7", 6, 7], ["joint8", 6, 7], ["joint9", 6, 7]],
+      ["B1_rtup", ["Weapon_B1", 4, 5], ["Weapon_B1_turret", 4, 5], ["joint10", 4, 5], ["joint7", 4, 5], ["joint8", 4, 5], ["joint9", 4, 5]],
+      ["E1_fw", ["Weapon_E1", 0, 1], ["Weapon_E1_turret", 0, 1], ["joint2", 0, 1], ["joint3", 0, 1], ["joint4", 0, 1], ["joint5", 0, 1]],
+      ["E1_ltdn", ["Weapon_E1", 8, 9], ["Weapon_E1_turret", 8, 9], ["joint2", 8, 9], ["joint3", 8, 9], ["joint4", 8, 9], ["joint5", 8, 9]],
+      ["E1_ltup", ["Weapon_E1", 2, 3], ["Weapon_E1_turret", 2, 3], ["joint2", 2, 3], ["joint3", 2, 3], ["joint4", 2, 3], ["joint5", 2, 3]],
+      ["E1_minigun_dyn_rotate", ["Blade1_Inside", 0, 3], ["Blade2_Inside", 0, 3], ["Blades_Inside", 0, 3], ["Body", 0, 3], ["CoPilot_Instrumental_Panel", 0, 3], ["Controls", 0, 3], ["Cyclic_Left_Joint", 0, 3], ["Cyclic_Right_Joint", 0, 3], ["Dyn_mRotor_Blades1", 0, 3], ["Dyn_mRotor_Blades2", 0, 3], ["Dyn_mRotor_Blades3", 0, 3], ["Dyn_mRotor_Blades4", 0, 3], ["Dyn_mRotor_Blades_Inside", 0, 3], ["Dyn_mRotor_Inside", 0, 3], ["Dyn_mRotor_Pitch", 0, 3], ["L_Cabin_Door", 0, 3], ["L_Cargo_Door", 0, 3], ["Left_Gunner_Seat", 0, 3], ["Left_Pedal_Joint", 0, 3], ["M21_handle", 0, 3], ["M21_hor", 0, 3], ["M21_sight", 0, 3], ["M21_vert", 0, 3], ["M60_HSI", 0, 3], ["M60_Sight", 0, 3], ["M60_Sight_1", 0, 3], ["Main_Cocpit_Joint", 0, 3], ["Omni_Hor_Line_Pilot", 0, 3], ["Omni_Hor_Line_coPilot", 0, 3], ["Omni_Shkala_Pilot", 0, 3], ["Omni_Shkala_coPilot", 0, 3], ["Omni_Vert_Line_Pilot", 0, 3], ["Omni_Vert_Line_coPilot", 0, 3], ["Pilot_Instrumental_Panel", 0, 3], ["Pilot_Seat", 0, 3], ["Pilot_lHand", 0, 3], ["Pilot_rHand", 0, 3], ["Pylon1", 0, 3], ["Pylon2", 0, 3], ["RMI_BigArrow_Master_Pilot", 0, 3], ["RMI_BigArrow_Master_coPilot", 0, 3], ["RMI_BigArrow_Slave_Pilot", 0, 3], ["RMI_BigArrow_Slave_coPilot", 0, 3], ["RMI_Shkala_Master_Pilot", 0, 3], ["RMI_Shkala_Master_coPilot", 0, 3], ["RMI_Shkala_Slave_Pilot", 0, 3], ["RMI_Shkala_Slave_coPilot", 0, 3], ["RMI_SmallArrow_Master_Pilot", 0, 3], ["RMI_SmallArrow_Master_coPilot", 0, 3], ["RMI_SmallArrow_Slave_Pilot", 0, 3], ["RMI_SmallArrow_Slave_coPilot", 0, 3], ["ROOT", 0, 3], ["R_Cabin_Door", 0, 3], ["R_Cargo_Door", 0, 3], ["Right_Gunner_Seat", 0, 3], ["Right_Pedal_Joint", 0, 3], ["Rocket10", 0, 3], ["Rocket11", 0, 3], ["Rocket12", 0, 3], ["Rocket13", 0, 3], ["Rocket14", 0, 3], ["Rocket15", 0, 3], ["Rocket2", 0, 3], ["Rocket3", 0, 3], ["Rocket4", 0, 3], ["Rocket5", 0, 3], ["Rocket6", 0, 3], ["Rocket7", 0, 3], ["Rocket8", 0, 3], ["Rocket9", 0, 3], ["Static_mRotor_Blade1", 0, 3], ["Static_mRotor_Blade2", 0, 3], ["Static_mRotor_Blades", 0, 3], ["Static_mRotor_Inside", 0, 3], ["Static_mRotor_Pitch", 0, 3], ["Tape_L", 0, 3], ["Tape_R", 0, 3], ["Trottle_Joint", 0, 3], ["Weapon_A1", 0, 3], ["Weapon_A1_gun", 0, 3], ["Weapon_A1_gun|Shutter", 0, 3], ["Weapon_B1", 0, 3], ["Weapon_B1_minigun", 0, 3], ["Weapon_B1_turret", 0, 3], ["Weapon_C1", 0, 3], ["Weapon_D1", 0, 3], ["Weapon_E1", 0, 3], ["Weapon_E1_minigun", 0, 3], ["Weapon_E1_turret", 0, 3], ["Weapon_F1", 0, 3], ["Weapon_F1_gun", 0, 3], ["Weapon_F1_gun|Shutter", 0, 3], ["c_alt_cursor", 0, 3], ["c_bank", 0, 3], ["c_speedometer_cursor", 0, 3], ["c_tangage", 0, 3], ["c_vertspeed_cursor", 0, 3], ["c_wheel1_100", 0, 3], ["c_wheel2_100", 0, 3], ["c_wheel3_100", 0, 3], ["clock_hours", 0, 3], ["clock_minutes", 0, 3], ["clock_seconds", 0, 3], ["coPilot_Seat", 0, 3], ["coPilot_lHand", 0, 3], ["coPilot_rHand", 0, 3], ["cp_alternate_current_cursor", 0, 3], ["cp_c_alt_cursor", 0, 3], ["cp_c_bank", 0, 3], ["cp_c_speedometer_cursor", 0, 3], ["cp_c_tangage", 0, 3], ["cp_c_vertspeed_cursor", 0, 3], ["cp_c_wheel1_100", 0, 3], ["cp_c_wheel2_100", 0, 3], ["cp_c_wheel3_100", 0, 3], ["cp_clock_hours", 0, 3], ["cp_clock_minutes", 0, 3], ["cp_clock_seconds", 0, 3], ["cp_direct_current_cursor", 0, 3], ["cp_hsi_arrow", 0, 3], ["cp_hsi_ball", 0, 3], ["cp_load_conv_cursor", 0, 3], ["cp_load_gen_cursor", 0, 3], ["cp_lrpm_turbine_cursor", 0, 3], ["cp_mrpm_turbine_cursor", 0, 3], ["cp_p_alt_cursor", 0, 3], ["cp_p_bank", 0, 3], ["cp_p_speedometer_cursor", 0, 3], ["cp_p_tangage", 0, 3], ["cp_p_torque_cursor", 0, 3], ["cp_p_vertspeed_cursor", 0, 3], ["cp_p_wheel1_100", 0, 3], ["cp_p_wheel2_100", 0, 3], ["cp_p_wheel3_100", 0, 3], ["cp_psiengineoil_cursor", 0, 3], ["cp_psifuel_cursor", 0, 3], ["cp_psioil_transmission_cursor", 0, 3], ["cp_qtyfuel_cursor", 0, 3], ["cp_radioaltimeter_cursor", 0, 3], ["cp_rotor_RPM", 0, 3], ["cp_temp_cursor", 0, 3], ["cp_toil_cursor", 0, 3], ["cp_toil_transmission_cursor", 0, 3], ["cp_turbine_RPM", 0, 3], ["joint1", 0, 3], ["joint10", 0, 3], ["joint15", 0, 3], ["joint16", 0, 3], ["joint17", 0, 3], ["joint18", 0, 3], ["joint19", 0, 3], ["joint2", 0, 3], ["joint20", 0, 3], ["joint21", 0, 3], ["joint22", 0, 3], ["joint23", 0, 3], ["joint24", 0, 3], ["joint25", 0, 3], ["joint26", 0, 3], ["joint3", 0, 3], ["joint4", 0, 3], ["joint5", 0, 3], ["joint6", 0, 3], ["joint7", 0, 3], ["joint8", 0, 3], ["joint9", 0, 3], ["mag_compass", 0, 3], ["p_alt_cursor", 0, 3], ["p_alternate_current_cursor", 0, 3], ["p_bank", 0, 3], ["p_direct_current_cursor", 0, 3], ["p_hsi_arrow", 0, 3], ["p_hsi_ball", 0, 3], ["p_load_conv_cursor", 0, 3], ["p_load_gen_cursor", 0, 3], ["p_lrpm_turbine_cursor", 0, 3], ["p_mrpm_turbine_cursor", 0, 3], ["p_psiengineoil_cursor", 0, 3], ["p_psifuel_cursor", 0, 3], ["p_psioil_transmission_cursor", 0, 3], ["p_qtyfuel_cursor", 0, 3], ["p_speedometer_cursor", 0, 3], ["p_tangage", 0, 3], ["p_temp_cursor", 0, 3], ["p_toil_cursor", 0, 3], ["p_toil_transmission_cursor", 0, 3], ["p_torque_cursor", 0, 3], ["p_vertspeed_cursor", 0, 3], ["p_wheel1_100", 0, 3], ["p_wheel2_100", 0, 3], ["p_wheel3_100", 0, 3], ["polySurface1405", 0, 3], ["polySurface1407", 0, 3], ["polySurface1430", 0, 3], ["polySurface36", 0, 3], ["polySurface59", 0, 3], ["polySurface60", 0, 3], ["radioaltimeter_cursor", 0, 3], ["rotor_RPM", 0, 3], ["turbine_RPM", 0, 3], ["wire", 0, 3]],
+      ["E1_minigun_rotate", ["Weapon_E1_minigun", 0, 3]],
+      ["E1_rtdn", ["Weapon_E1", 6, 7], ["Weapon_E1_turret", 6, 7], ["joint2", 6, 7], ["joint3", 6, 7], ["joint4", 6, 7], ["joint5", 6, 7]],
+      ["E1_rtup", ["Weapon_E1", 4, 5], ["Weapon_E1_turret", 4, 5], ["joint2", 4, 5], ["joint3", 4, 5], ["joint4", 4, 5], ["joint5", 4, 5]],
+      ["F1_gun_dn", ["Weapon_F1_gun", 4, 5]],
+      ["F1_gun_mdl", ["Weapon_F1_gun", 2, 3]],
+      ["F1_gun_up", ["Weapon_F1_gun", 0, 1]],
+      ["F1_turret", ["Weapon_F1", 0, 1]],
+      ["M21sight_fw", ["M21_handle", 13, 14], ["M21_hor", 13, 14], ["M21_vert", 13, 14], ["joint15", 13, 14], ["joint16", 13, 14], ["joint17", 13, 14], ["joint18", 13, 14], ["joint19", 13, 14], ["joint20", 13, 14], ["joint21", 13, 14], ["joint22", 13, 14], ["joint23", 13, 14], ["joint24", 13, 14], ["joint25", 13, 14], ["joint26", 13, 14], ["polySurface1405", 13, 14], ["polySurface1407", 13, 14], ["polySurface1430", 13, 14], ["polySurface36", 13, 14], ["polySurface59", 13, 14], ["polySurface60", 13, 14]],
+      ["M21sight_ltdn", ["M21_handle", 21, 22], ["M21_hor", 21, 22], ["M21_vert", 21, 22], ["joint15", 21, 22], ["joint16", 21, 22], ["joint17", 21, 22], ["joint18", 21, 22], ["joint19", 21, 22], ["joint20", 21, 22], ["joint21", 21, 22], ["joint22", 21, 22], ["joint23", 21, 22], ["joint24", 21, 22], ["joint25", 21, 22], ["joint26", 21, 22], ["polySurface1405", 21, 22], ["polySurface1407", 21, 22], ["polySurface1430", 21, 22], ["polySurface36", 21, 22], ["polySurface59", 21, 22], ["polySurface60", 21, 22]],
+      ["M21sight_ltup", ["M21_handle", 15, 16], ["M21_hor", 15, 16], ["M21_vert", 15, 16], ["joint15", 15, 16], ["joint16", 15, 16], ["joint17", 15, 16], ["joint18", 15, 16], ["joint19", 15, 16], ["joint20", 15, 16], ["joint21", 15, 16], ["joint22", 15, 16], ["joint23", 15, 16], ["joint24", 15, 16], ["joint25", 15, 16], ["joint26", 15, 16], ["polySurface1405", 15, 16], ["polySurface1407", 15, 16], ["polySurface1430", 15, 16], ["polySurface36", 15, 16], ["polySurface59", 15, 16], ["polySurface60", 15, 16]],
+      ["M21sight_open", ["M21_handle", 0, 12], ["M21_hor", 0, 12], ["M21_vert", 0, 12], ["joint15", 0, 12], ["joint16", 0, 12], ["joint17", 0, 12], ["joint18", 0, 12], ["joint19", 0, 12], ["joint20", 0, 12], ["joint21", 0, 12], ["joint22", 0, 12], ["joint23", 0, 12], ["joint24", 0, 12], ["joint25", 0, 12], ["joint26", 0, 12], ["polySurface1405", 0, 12], ["polySurface1407", 0, 12], ["polySurface1430", 0, 12], ["polySurface36", 0, 12], ["polySurface59", 0, 12], ["polySurface60", 0, 12]],
+      ["M21sight_rtdn", ["M21_handle", 19, 20], ["M21_hor", 19, 20], ["M21_vert", 19, 20], ["joint15", 19, 20], ["joint16", 19, 20], ["joint17", 19, 20], ["joint18", 19, 20], ["joint19", 19, 20], ["joint20", 19, 20], ["joint21", 19, 20], ["joint22", 19, 20], ["joint23", 19, 20], ["joint24", 19, 20], ["joint25", 19, 20], ["joint26", 19, 20], ["polySurface1405", 19, 20], ["polySurface1407", 19, 20], ["polySurface1430", 19, 20], ["polySurface36", 19, 20], ["polySurface59", 19, 20], ["polySurface60", 19, 20]],
+      ["M21sight_rtup", ["M21_handle", 17, 18], ["M21_hor", 17, 18], ["M21_vert", 17, 18], ["joint15", 17, 18], ["joint16", 17, 18], ["joint17", 17, 18], ["joint18", 17, 18], ["joint19", 17, 18], ["joint20", 17, 18], ["joint21", 17, 18], ["joint22", 17, 18], ["joint23", 17, 18], ["joint24", 17, 18], ["joint25", 17, 18], ["joint26", 17, 18], ["polySurface1405", 17, 18], ["polySurface1407", 17, 18], ["polySurface1430", 17, 18], ["polySurface36", 17, 18], ["polySurface59", 17, 18], ["polySurface60", 17, 18]],
+      ["M60_hsi_bank", ["M60_HSI", 2, 3]],
+      ["M60_hsi_closed", ["M60_HSI", 0, 1]],
+      ["Omni_HorLine", ["Omni_Hor_Line_Pilot", 0, 2], ["Omni_Hor_Line_coPilot", 0, 2]],
+      ["Omni_Scale", ["Omni_Shkala_Pilot", 0, 3], ["Omni_Shkala_coPilot", 0, 3]],
+      ["Omni_VertLine", ["Omni_Vert_Line_Pilot", 0, 2], ["Omni_Vert_Line_coPilot", 0, 2]],
+      ["RMI_BigArrow_Master", ["RMI_BigArrow_Master_Pilot", 0, 3], ["RMI_BigArrow_Master_coPilot", 0, 3]],
+      ["RMI_BigArrow_Slave", ["RMI_BigArrow_Slave_Pilot", 0, 3], ["RMI_BigArrow_Slave_coPilot", 0, 3]],
+      ["RMI_Scale_Master", ["RMI_Shkala_Master_Pilot", 0, 3], ["RMI_Shkala_Master_coPilot", 0, 3]],
+      ["RMI_Scale_Slave", ["RMI_Shkala_Slave_Pilot", 0, 3], ["RMI_Shkala_Slave_coPilot", 0, 3]],
+      ["RMI_SmallArrow_Master", ["RMI_SmallArrow_Master_Pilot", 0, 3], ["RMI_SmallArrow_Master_coPilot", 0, 3]],
+      ["RMI_SmallArrow_Slave", ["RMI_SmallArrow_Slave_Pilot", 0, 3], ["RMI_SmallArrow_Slave_coPilot", 0, 3]],
+      ["alt_cursor", ["c_alt_cursor", 0, 3], ["cp_c_alt_cursor", 0, 3], ["cp_p_alt_cursor", 0, 3], ["p_alt_cursor", 0, 3]],
+      ["alternate_current_cursor", ["cp_alternate_current_cursor", 0, 1], ["p_alternate_current_cursor", 0, 1]],
+      ["bank", ["c_bank", 0, 3], ["cp_c_bank", 0, 3], ["cp_p_bank", 0, 3], ["p_bank", 0, 3]],
+      ["compass", ["mag_compass", 0, 3]],
+      ["cyclic_bank", ["Cyclic_Left_Joint", 0, 1], ["Cyclic_Right_Joint", 0, 1]],
+      ["cyclic_tangage", ["Cyclic_Left_Joint", 2, 3], ["Cyclic_Right_Joint", 2, 3]],
+      ["direct_current_cursor", ["cp_direct_current_cursor", 0, 1], ["p_direct_current_cursor", 0, 1]],
+      ["dyn_mrotor_flip", ["Dyn_mRotor_Blades_Inside", 0, 1]],
+      ["dyn_mrotor_rotate", ["Dyn_mRotor_Inside", 0, 3]],
+      ["dyn_mrotor_stretch", ["Dyn_mRotor_Blades1", 0, 1], ["Dyn_mRotor_Blades2", 0, 1], ["Dyn_mRotor_Blades3", 0, 1], ["Dyn_mRotor_Blades4", 0, 1]],
+      ["hour_cursor", ["clock_hours", 0, 3], ["cp_clock_hours", 0, 3]],
+      ["hsi_arrow", ["cp_hsi_arrow", 0, 1], ["p_hsi_arrow", 0, 1]],
+      ["hsi_ball", ["cp_hsi_ball", 0, 1], ["p_hsi_ball", 0, 1]],
+      ["l_cabin_door", ["L_Cabin_Door", 0, 1]],
+      ["l_cargo_door", ["L_Cargo_Door", 0, 1]],
+      ["load_conv_cursor", ["cp_load_conv_cursor", 0, 1], ["p_load_conv_cursor", 0, 1]],
+      ["load_gen_cursor", ["cp_load_gen_cursor", 0, 1], ["p_load_gen_cursor", 0, 1]],
+      ["lrpm_turbine_cursor", ["cp_lrpm_turbine_cursor", 0, 3], ["p_lrpm_turbine_cursor", 0, 3]],
+      ["m60_sight", ["M60_Sight_1", 0, 1]],
+      ["minute_cursor", ["clock_minutes", 0, 3], ["cp_clock_minutes", 0, 3]],
+      ["mrpm_turbine_cursor", ["cp_mrpm_turbine_cursor", 0, 2], ["p_mrpm_turbine_cursor", 0, 2]],
+      ["psiengineoil_cursor", ["cp_psiengineoil_cursor", 0, 2], ["p_psiengineoil_cursor", 0, 2]],
+      ["psifuel_cursor", ["cp_psifuel_cursor", 0, 2], ["p_psifuel_cursor", 0, 2]],
+      ["psioil_transmission_cursor", ["cp_psioil_transmission_cursor", 0, 2], ["p_psioil_transmission_cursor", 0, 2]],
+      ["qtyfuel_cursor", ["cp_qtyfuel_cursor", 0, 2], ["p_qtyfuel_cursor", 0, 2]],
+      ["r_cabin_door", ["R_Cabin_Door", 0, 1]],
+      ["r_cargo_door", ["R_Cargo_Door", 0, 1]],
+      ["radioalt_cursor", ["cp_radioaltimeter_cursor", 0, 3], ["radioaltimeter_cursor", 0, 3]],
+      ["rotor_cursor", ["cp_rotor_RPM", 0, 2], ["rotor_RPM", 0, 2]],
+      ["rudder", ["Left_Pedal_Joint", 0, 1], ["Right_Pedal_Joint", 0, 1]],
+      ["second_cursor", ["clock_seconds", 0, 3], ["cp_clock_seconds", 0, 3]],
+      ["speedometer_cursor", ["c_speedometer_cursor", 0, 3], ["cp_c_speedometer_cursor", 0, 3], ["cp_p_speedometer_cursor", 0, 3], ["p_speedometer_cursor", 0, 3]],
+      ["static_mrotor_bend", ["Static_mRotor_Blade1", 0, 1], ["Static_mRotor_Blade2", 0, 1], ["Static_mRotor_Blades", 0, 1]],
+      ["static_mrotor_rotate", ["Static_mRotor_Inside", 0, 3]],
+      ["tangage", ["c_tangage", 0, 12], ["cp_c_tangage", 0, 12], ["cp_p_tangage", 0, 12], ["p_tangage", 0, 12]],
+      ["temp_cursor", ["cp_temp_cursor", 0, 2], ["p_temp_cursor", 0, 2]],
+      ["toil_cursor", ["cp_toil_cursor", 0, 2], ["p_toil_cursor", 0, 2]],
+      ["toil_transmission_cursor", ["cp_toil_transmission_cursor", 0, 2], ["p_toil_transmission_cursor", 0, 2]],
+      ["torque_cursor", ["cp_p_torque_cursor", 0, 1], ["p_torque_cursor", 0, 1]],
+      ["trottle", ["Trottle_Joint", 0, 1]],
+      ["turbine_cursor", ["cp_turbine_RPM", 0, 2], ["turbine_RPM", 0, 2]],
+      ["vertspeed_cursor", ["c_vertspeed_cursor", 0, 2], ["cp_c_vertspeed_cursor", 0, 2], ["cp_p_vertspeed_cursor", 0, 2], ["p_vertspeed_cursor", 0, 2]],
+      ["wheel1_100", ["c_wheel1_100", 0, 3], ["cp_c_wheel1_100", 0, 3], ["cp_p_wheel1_100", 0, 3], ["p_wheel1_100", 0, 3]],
+      ["wheel2_100", ["c_wheel2_100", 0, 3], ["cp_c_wheel2_100", 0, 3], ["cp_p_wheel2_100", 0, 3], ["p_wheel2_100", 0, 3]],
+      ["wheel3_100", ["c_wheel3_100", 0, 3], ["cp_c_wheel3_100", 0, 3], ["cp_p_wheel3_100", 0, 3], ["p_wheel3_100", 0, 3]]
+    ];
+}
+
+class Cu_air_Uh1b_InsideModelSkin
+{
+  Array Materials = [
+      new CModelMaterial(
+        "0", // material id
+        "Textures/u_air_Uh1B_Glass.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Glass, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "1", // material id
+        "Textures/u_air_Uh1B_cockpit1.tex", // texture name
+        "Textures/u_air_Uh1B_cockpit1_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1B_cockpit1_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "2", // material id
+        "Textures/u_air_Uh1B_Cargo.tex", // texture name
+        "Textures/u_air_Uh1B_Cargo_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1B_Cargo_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "3", // material id
+        "Textures/u_air_Uh1B_Panel_coPilot_0.tex", // texture name
+        "Textures/u_air_Uh1B_Panel_coPilot_b.tex", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "4", // material id
+        "Textures/aviahorizon.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "5", // material id
+        "Textures/u_air_Uh1B_Panel_Pilot_0.tex", // texture name
+        "Textures/u_air_Uh1B_Panel_Pilot_b.tex", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "6", // material id
+        "Textures/mag_compass.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "7", // material id
+        "Textures/u_air_Uh1B_M21Sight.tex", // texture name
+        "Textures/u_air_Uh1B_M21Sight_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1B_M21Sight_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "KEYCOLOR", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "8", // material id
+        "Textures/M60_fake.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "9", // material id
+        "Textures/u_air_Uh1B_M60Sight.tex", // texture name
+        "Textures/u_air_Uh1B_M60Sight_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1B_M60Sight_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "KEYCOLOR", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "10", // material id
+        "Textures/u_air_Uh1B_Glass.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "MULTIPLICATIVE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        100.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Glass, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "11", // material id
+        "Textures/u_air_Uh1B_cockpit2.tex", // texture name
+        "Textures/u_air_Uh1B_cockpit2_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1B_cockpit2_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "KEYCOLOR", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "12", // material id
+        "Textures/u_air_Uh1B_rotors.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "13", // material id
+        "Textures/M21.tex", // texture name
+        "Textures/M21_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/M21_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "14", // material id
+        "Textures/wpn_M60.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "Textures/wpn_M60_s.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.450000, 0.450000, 0.450000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "15", // material id
+        "Textures/wpn_M60_Pritsel.tex", // texture name
+        "Textures/wpn_M60_Pritsel_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/wpn_M60_Pritsel_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "16", // material id
+        "Textures/u_air_Uh1B_Seats.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1B_Seats_s.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.450000, 0.450000, 0.450000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        20.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "17", // material id
+        "Textures/u_air_Uh1B_Seats.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.400000, 0.400000, 0.400000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        10.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "18", // material id
+        "Textures/u_air_Uh1B_Seat_Ammo.tex", // texture name
+        "Textures/u_air_Uh1B_Seat_Ammo_b.tex", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "KEYCOLOR", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "19", // material id
+        "Textures/u_air_Uh1B_emergency.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "KEYCOLOR", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "20", // material id
+        "Textures/u_air_Uh1B_Seats.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1B_Seats_s.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.250000, 0.250000, 0.250000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        21.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Metal, // substance type
+        "" // envmap name
+      )
+    ];
+}

@@ -1,0 +1,1394 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CUh1bM60HeliFireBehavior
+  extends CBaseHeliFireBehavior
+{
+  // *** radar parameters
+  float  MaxRadarDistance         = 1300; // m
+  float  MinRadarDistance         = 5;    // m
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 0;    // ms
+
+  float   AttackDistanceMin = 0.0;
+  float   AttackDistanceMax = 500.0;
+}
+
+//  Gun
+class CUh1bM134BulletExplosion
+  extends CM134BulletExplosion
+{
+  float Damage = 30.0;
+}
+
+class CUh1bM134GunBulletControl
+  extends CLightGunBulletControl
+{
+  String    ExplosionId  = "Uh1bM134GunBulletExplosion";
+  Component BulletRender = new #StaticEffect<CM134GunBulletEffect>();
+}
+
+class CUh1bM134Gun
+  extends CLightGun, CPlayerWeapon
+{
+  final static Array  Power = [];
+
+  final static float  InitBulletSpeed = 800.0;
+  //float  InitBulletSpeed = 3.3; //$TMP
+  final static float  FireDeviation   = 0.30;
+
+  final static String  BulletPatternId  = "Uh1bM134Bullet";
+  final static String  FireEffectId     = "M134GunFireEffect";
+  final static String  NearFireEffectId = "M134GunNearFireEffect";
+  final static String  CloudEffectId    = "HeavyGunCloudEffect";//$TMP
+  final static int     Ammunition       = 2000;
+  final static int     TargetCameraFilter = ETC_FILTER_TV;
+
+  final static float   AmmoMass   = 0.035;
+  final static float   WeaponMass = 22.7;
+
+  final static float    LockAngleHMin     = -15.0;
+  final static float    LockAngleHMax     =  15.0;
+  final static float    LockAngleVMin     = -80.0;
+  final static float    LockAngleVMax     =  10.0;
+  final static float    BlockedLockAngle  =  1.0;
+
+  final static boolean IsManualTargetable = true;
+
+  Component BurstFireSound  = new #Emitter<CM134GunFireSound>();
+  Component GunRotorSound   = new #Emitter<CM134GunRotorSound>();
+  Component GunRotorOffSound = new #Emitter<CM134GunRotorOffSound>();
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod          = 100; // ms
+  final static int  FirePeriod2         = 50; // ms
+
+  final static int  FirePeriodRandAdd   = 50; // ms
+
+  final static boolean BurstFire        = true;
+  final static int  BurstTime           = 2000; // ms
+  final static int  BurstTimeRandAdd    = 0; // ms
+
+  final static int  BurstDelay          = 2000; // ms
+  final static int  BurstDelayRandAdd   = 500; // ms
+
+  final static Array GunSpecificFireMask = [
+                                [[], []]
+                              ];
+
+  final static boolean ApplySpeedToBullets = true;
+  final static float   ShellSpeedDeviation = 0.5;
+
+  // feedback effect
+  final static String  FeedbackEffect   = "GunFeedback";
+
+  // Cockpit UI parms
+  final static WString Name             = CWeaponNames::str_M134_FullName;
+  final static WString ShortName        = CWeaponNames::str_M134_ShortName;
+  final static String  IconMaterial     = "m134 icon";
+  final static int     PointerType      = TPT_GUN;
+  final static int     Slot             = 1;
+  final static boolean Primary          = true; // GUN should be marked as Primary
+  final static Array   TimeToLock       = [     // TimeToLock = 0 means this weapon needs no locking process
+                                            [ WFM_Free,   0.5 ],
+                                            [ WFM_Single, 0.5 ]
+                                          ];
+  final static boolean ResetLockOnFire  = false; // Statr locking process after fire
+  final float          TargetingRange   = 1650;  // CAh64aUnit::RadarRange; // range from which the gun can shoot/aim
+  final static int     AutoRepeatDelay  = 100;
+  final static Array   FireModesArc     = [ WFM_Free ];
+  final static Array   FireModesSim     = [ WFM_Free ];
+
+  final static float FireStartTime = 0.5f;
+  final static float FireStateTime = 0.5f;
+  final static float FireStopTime  = 1.1f;
+}
+
+class CUh1bM134LeftGun extends CUh1bM134Gun
+{
+  float    LockAngleHMin     = -6.0;
+  float    LockAngleHMax     =  10.0;
+  float    LockAngleVMin     = -25.0;
+  float    LockAngleVMax     =  5.0;
+
+  void OnWeaponFirePhase(
+      float _Phase
+    )
+  {
+    Component Animator = (new #GameController()).GetObject(getIdentificator(this)).GetObject("Uh1bM134LeftGunRotorAnimator");
+    if (Animator != null)
+    {
+      if (_Phase > 0.0f)
+        Animator.SwitchAnimationOn();
+      else
+        Animator.SwitchAnimationOff();
+    }
+  }
+
+  void OnWeaponFire()
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+  void OnWeaponFire(Array _param)
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+}
+
+class PlayerCUh1bM134LeftGun extends CUh1bM134LeftGun
+{
+  void OnWeaponFire()
+  {
+    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+}
+
+class CUh1bM134RightGun extends CUh1bM134Gun
+{
+  float    LockAngleHMin     = -10.0;
+  float    LockAngleHMax     =  6.0;
+  float    LockAngleVMin     = -25.0;
+  float    LockAngleVMax     =  5.0;
+
+  void OnWeaponFirePhase(
+      float _Phase
+    )
+  {
+    Component Animator = (new #GameController()).GetObject(getIdentificator(this)).GetObject("Uh1bM134RightGunRotorAnimator");
+    if (Animator != null)
+    {
+      if (_Phase > 0.0f)
+        Animator.SwitchAnimationOn();
+      else
+        Animator.SwitchAnimationOff();
+    }
+  }
+
+  void OnWeaponFire()
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+  void OnWeaponFire(Array _param)
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+}
+
+class PlayerCUh1bM134RightGun extends CUh1bM134RightGun
+{
+  void OnWeaponFire()
+  {
+    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+}
+
+class CUh1bM134RotorGunAnimator
+{
+  //  String RotorAnimId  = "rotor";     // Идентификатор анимации быстрого движения
+  //  String FanAnimId    = "up";        // Идентификатор анимации нормального движения
+  float  RotorAccel      = 10.0;         // Скорость изменения частоты оборотов (оборот/сек^2)
+  float  RotorBreakAccel = 5.0;          // Скорость изменения частоты оборотов (оборот/сек^2)
+  float  RotorSpeed   = 5.0;             // Частота при которой включается анимация быстрого движения (оборот/сек)
+  float  EffectSpeed  = 5.0;//0.24;            // Частота анимации быстрого движения (оборот/сек)
+}
+
+class CUh1bM134LeftGunRotorAnimator
+  extends CUh1bM134RotorGunAnimator
+{
+  String RotorAnimId  = "";     // Идентификатор анимации быстрого движения
+  String FanAnimId    = "B1_minigun_rotate";        // Идентификатор анимации нормального движения
+  Array  FanJoints    = [];              // Идентификаторы суставов геометрии нормального движения
+  Array  EffectJoints = [];      // Идентификаторы суставов геометрии быстрого движения
+
+}
+
+class CUh1bM134RightGunRotorAnimator
+  extends CUh1bM134RotorGunAnimator
+{
+  String RotorAnimId  = "";     // Идентификатор анимации быстрого движения
+  String FanAnimId    = "E1_minigun_rotate";        // Идентификатор анимации нормального движен
+  Array  FanJoints    = [];              // Идентификаторы суставов геометрии нормального движения
+  Array  EffectJoints = [];      // Идентификаторы суставов геометрии быстрого движения
+
+}
+
+class CUh1bM134LeftTargetingAnimator
+  extends CTargetingAnimator
+{
+  String LeftUpAnimName = "B1_ltup";
+  String LeftDownAnimName = "B1_ltdn";
+  String RightUpAnimName = "B1_rtup";
+  String RightDownAnimName = "B1_rtdn";
+
+  float  LeftEndAngle   = -10.0;
+  float  RightEndAngle  =  10.0;
+  float  TopEndAngle    =  5.0;
+  float  BottomEndAngle = -25.0;
+}
+
+class CUh1bM134RightTargetingAnimator
+  extends CTargetingAnimator
+{
+  String LeftUpAnimName = "E1_ltup";
+  String LeftDownAnimName = "E1_ltdn";
+  String RightUpAnimName = "E1_rtup";
+  String RightDownAnimName = "E1_rtdn";
+
+  float  LeftEndAngle   = -10.0;
+  float  RightEndAngle  =  10.0;
+  float  TopEndAngle    =  5.0;
+  float  BottomEndAngle = -25.0;
+}
+
+// MA-2 rockets
+class CUh1bMA2Explosion
+  extends CMA2Explosion
+{
+  float  Damage   = 210.0;
+  float  Radius   = 8.0;
+}
+
+class CUh1bMA2Control
+  extends CM3MissileControl
+{
+  String    ExplosionId  = "Uh1bMA2RocketExplosion";
+  Component BulletRender = new #AnimatedObject<Cwpn_FFARModel>();
+}
+
+class CUh1bMA2Launcher
+  extends CLightLauncher, CPlayerWeapon, CCommonStrings
+{
+  final static String  BulletPatternId = "Uh1bMA2Missile";
+  final static String FireSoundId  = "MA2GunFireSound";
+
+  final static int     Ammunition      = 7;
+  final static boolean IsStationary    = true;
+
+  final static float   LockAngleHMin   = -5.0;
+  final static float   LockAngleHMax   =  5.0;
+  final static float   LockAngleVMin   = -5.0;
+  final static float   LockAngleVMax   =  5.0;
+
+  final static int   TargetCameraFilter = ETC_FILTER_THERMAL;
+
+  final static float AmmoMass = 10.5;
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod        = 5000; // ms
+  final static int  FirePeriodRandAdd = 2000; // ms
+
+  final static int  FirePeriod2       = 750; // ms
+
+  final static boolean BurstFire      = true;
+  final static int  BurstTime         = 12000; // ms
+  final static int  BurstTimeRandAdd  = 0; // ms
+
+  final static int  BurstDelay        = 17000; // ms
+  final static int  BurstDelayRandAdd = 3000; // ms
+
+  final static Array GunSpecificFireMask = [
+                                [["GROUND", "NAVAL"], ["HUMAN"]]
+                              ];
+
+  // feedback effect
+  final static String  FeedbackEffect   = "MissileFeedback";
+
+  // Cockpit UI parms
+  final static WString Name             = CWeaponNames::str_MA2_FullName;
+  final static WString ShortName        = CWeaponNames::str_MA2_ShortName;
+  final static String  IconMaterial     = "dummy";
+  final static int     Slot             = 0;
+  final static float   TimeToLock       = 0.0;    // TimeToLock = 0 means this weapon needs no locking process
+  final float          TargetingRange   = 1700;   // CAh64aUnit::RadarRange; // range from which the gun can shoot/aim
+  final static Array   FireModesArc     = [ WFM_Double ];
+  final static Array   FireModesSim     = [ WFM_Double ];
+  final static String  CockpitMaterial  = "WpnATAM"; // material name for CWeaponsStatusScreen
+  final static int     PointerType      = TPT_STINGER;
+
+  // Hangar screen parms
+  static String  GetSmallIcon() { return "rocket stinger icon"; }
+  static String  GetBigIcon()   { return "rocket stinger icon"; }
+  static WString GetTextDesc()  { return str_StingerRocketDesc; }
+  static int     GetAmmoQty()   { return Ammunition; }
+  static WString GetName()      { return Name; }
+  void           InitMasks(String _Affiliation) { SetFriendlyGunFireMask(_Affiliation); }
+
+  //$TMP
+  final static boolean m_ProjectileCameraAttachable = false;
+
+  void OnWeaponFire()
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+  void OnWeaponFire(Array _param)
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+}
+
+class PlayerCUh1bMA2Launcher extends CUh1bMA2Launcher
+{
+  void OnWeaponFire()
+  {
+    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+}
+
+// DoorM60
+class CUh1bDoorM60BulletExplosion
+  extends CM60BulletExplosion
+{
+  float Damage = 30.0;
+}
+
+class CUh1bDoorM60GunBulletControl
+  extends CLightGunBulletControl
+{
+  String    ExplosionId  = "Uh1bDoorM60GunBulletExplosion";
+  Component BulletRender = new #StaticEffect<CM60GunBulletEffect>();
+}
+
+class CUh1bDoorM60Gun
+  extends CLightGun, CPlayerWeapon
+{
+  final static float  InitBulletSpeed = 800.0;
+  //float  InitBulletSpeed = 3.0; //$TMP
+  final static float  FireDeviation   = 0.30;
+
+  final static String  BulletPatternId  = "Uh1bDoorM60Bullet";
+  final static String  NearFireEffectId = "M60GunNearFireEffect";
+
+  final static int     Ammunition       = 1000;
+  final static int     TargetCameraFilter = ETC_FILTER_TV;
+
+  final static float   AmmoMass   = 0.035;
+  final static float   WeaponMass = 10.5;
+
+  final static float   BlockedLockAngle =  2.0;
+
+  Component BurstFireSound  = new #Emitter<CM60GunFireSound>();
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod          = 200; // ms
+  final static int  FirePeriodRandAdd   = 50; // ms
+
+  final static boolean BurstFire        = true;
+  final static int  BurstTime           = 2000; // ms
+  final static int  BurstTimeRandAdd    = 0; // ms
+
+  final static int  BurstDelay          = 2000; // ms
+  final static int  BurstDelayRandAdd   = 500; // ms
+
+  final static Array GunSpecificFireMask = [
+                                [[], []]
+                              ];
+
+  final static boolean ApplySpeedToBullets = true;
+  final static float   ShellSpeedDeviation = 0.5;
+
+  // feedback effect
+  final static String  FeedbackEffect   = "GunFeedback";
+
+  // Cockpit UI parms
+  final static WString Name             = CWeaponNames::str_M60_FullName;
+  final static WString ShortName        = CWeaponNames::str_M60_ShortName;
+  final static String  IconMaterial     = "m60 icon";
+  final static int     PointerType      = TPT_GUN;
+  final static boolean Primary          = true;  // GUN should be marked as Primary
+  final static Array   TimeToLock       = [ // TimeToLock = 0 means this weapon needs no locking process
+                                            [ WFM_Free,   0.5 ],
+                                            [ WFM_Single, 0.5 ]
+                                          ];
+  final static boolean ResetLockOnFire  = false;    // Statr locking process after fire
+  final static float   TargetingRange   = 1650;  // CAh64aUnit::RadarRange; // range from which the gun can shoot/aim
+  final static int     AutoRepeatDelay  = 200;
+  final static Array   FireModesArc     = [ WFM_Free, WFM_Single, WFM_Blocked ];
+  final static Array   FireModesSim     = [ WFM_Free, WFM_Single, WFM_Blocked ];
+
+  final static float DirectionSpeed = 60.0; // deg / sec
+}
+
+class CUh1bLeftDoorM60Gun
+  extends CUh1bDoorM60Gun
+{
+  float   LockAngleHMin    = -80.0;
+  float   LockAngleHMax    =  50.0;
+  float   LockAngleVMin    = -50.0;
+  float   LockAngleVMax    =  20.0;
+
+  final static int     Slot             = 2;
+
+  void OnWeaponFire()
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+  void OnWeaponFire(Array _param)
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+}
+
+class PlayerCUh1bLeftDoorM60Gun extends CUh1bLeftDoorM60Gun
+{
+  void OnWeaponFire()
+  {
+    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+}
+
+class CUh1bRightDoorM60Gun
+  extends CUh1bDoorM60Gun
+{
+  float   LockAngleHMin    = -50.0;
+  float   LockAngleHMax    =  80.0;
+  float   LockAngleVMin    = -50.0;
+  float   LockAngleVMax    =  20.0;
+
+  final static int     Slot             = 3;
+
+  void OnWeaponFire()
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+  void OnWeaponFire(Array _param)
+  {
+//    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+
+}
+
+class PlayerCUh1bRightDoorM60Gun extends CUh1bRightDoorM60Gun
+{
+  void OnWeaponFire()
+  {
+    sendEvent(0.0f, SOID_MissionController, "IncreaseShoots", []);
+  }
+}
+
+class CUh1bLeftDoorTargetingAnimator
+  extends CTargetingAnimator
+{
+  int AnimMethod = 1;
+  String DnPoseName     = "A1_gun_dn";
+  String UpPoseName     = "A1_gun_up";
+  String MdlPoseName    = "A1_gun_mdl";
+
+  String HMoveAnimName  = "A1_turret";
+
+  float  MaxVAngle      = 20;
+  float  MinVAngle      = -50;
+
+  float  HMoveBegAngle  = -10;
+  float  HMoveEndAngle  = -140;
+
+}
+
+class CUh1bRightDoorTargetingAnimator
+  extends CTargetingAnimator
+{
+  int AnimMethod = 1;
+  String DnPoseName     = "F1_gun_dn";
+  String UpPoseName     = "F1_gun_up";
+  String MdlPoseName    = "F1_gun_mdl";
+
+  String HMoveAnimName  = "F1_turret";
+
+  float  MaxVAngle      = 20;
+  float  MinVAngle      = -50;
+
+  float  HMoveBegAngle  = 140;
+  float  HMoveEndAngle  = 10;
+}
+/*
+class CUh1bLeftDoorTargetingAnimator
+  extends CTargetingAnimator
+{
+  String LeftUpAnimName = "A1_leftup1";
+  String LeftDownAnimName = "A1_leftdn1";
+  String RightUpAnimName = "A1_rightup1";
+  String RightDownAnimName = "A1_rightdn1";
+
+  float  LeftEndAngle   = -50.0;
+  float  RightEndAngle  =  50.0;
+  float  TopEndAngle    = -40.0;
+  float  BottomEndAngle =  40.0;
+}
+
+class CUh1bRightDoorTargetingAnimator
+  extends CTargetingAnimator
+{
+  String LeftUpAnimName = "F1_leftup1";
+  String LeftDownAnimName = "F1_leftdn1";
+  String RightUpAnimName = "F1_rightup1";
+  String RightDownAnimName = "F1_rightdn1";
+
+  float  LeftEndAngle   = -50.0;
+  float  RightEndAngle  =  50.0;
+  float  TopEndAngle    = -40.0;
+  float  BottomEndAngle =  40.0;
+}
+*/
+class CUh1bLDoorAnimator
+{
+  String AnimationName = "l_cargo_door";
+  float  AnimationTime = 1.0;
+}
+
+class CUh1bRDoorAnimator
+{
+  String AnimationName = "r_cargo_door";
+  float  AnimationTime = 1.5;
+}
+
+class CUh1bM60RSightAnimator
+{
+  String  AnimationName = "m60_sight";
+  float   AnimationTime = 2.0;
+  boolean FixedTime    = true;
+}
+
+class CUh1bM21CoPilotAnimator
+{
+  int AnimMethod = 4;
+  String LeftUpAnimName = "M21sight_ltup";
+  String LeftDownAnimName = "M21sight_ltdn";
+  String RightUpAnimName = "M21sight_rtup";
+  String RightDownAnimName = "M21sight_rtdn";
+
+  String MoveOutAnimName = "M21sight_open";
+  float  MoveOutTime = 2.0;
+
+  float  LeftEndAngle   = -10.0;
+  float  RightEndAngle  =  10.0;
+  float  TopEndAngle    =  5.0;
+  float  BottomEndAngle =  -25.0;
+}
+
+// =========================================
+// systems properties
+// =========================================
+
+class CUh1bMainPitchSystem
+{
+  Vector BaseDirection      = new Vector(0.0, 0.0, 1.0);  // base direction of pitch system
+  float  MaxCollectivePitch = 0.1096;                     // maximum collective pitch, rad
+  float  MaxCyclicPitch     = 0.0548;                     // maximum cyclic pitch, rad
+}
+
+class CUh1bTailPitchSystem
+{
+  Vector BaseDirection      = new Vector(0.0, 1.0, 0.0);  // base direction of pitch system
+  float  MaxCollectivePitch = 0.1745;                     // maximum collective pitch, rad
+}
+
+class CUh1bMainRotorSystem
+{
+  Vector    RotorPoint     = new Vector(0.0, 0.0, 0.5);  // Точка приложения силы
+
+  float     Radius         = 7.0;                        // Радиус винта, м
+
+  float     LiftCoeff      = 3.3;                        // Коэффициент подъёмной силы, влияющий на максимальную тягу
+                                                         // при статическом подъёме
+
+  float     DragCoeff      = 5.5;                        // Коэфициент сопротивления винта, влияющий на максимальную
+                                                         // подъёмную силу при статическом подъёме
+
+  float     FrictCoeff     = 0.0001;                     // Коэффициент силы сопротивления вращению передаваемой на
+                                                         // двигатель
+
+  float     TorqueCoeff    = 10.0;                        // Коэффициент вращательного момента
+
+  float     AeroLiftCoeff  = 0.0005;                     // Коэффициент аэродинамического подъёма
+
+  float     SpeedScale     = 0.05;                       // Отношение скорости вращения винта к скорости вращения двигателя
+
+  float     RotationCoeff  = 100000.0;                    // Коэффициент дополнительного вращательного момента вокруг
+                                                         // оси-Z создаваемого за счёт вращения винта
+
+  Component RotorSound     = new #Emitter<CUh1BRotorFlightSound>(); // sound effect for working state
+  Array     FreqRange      = [
+                                [0.003,  0.15],
+                                [0.02 ,  0.7],
+                                [0.04 ,  1.4],
+                                [0.1  ,  1.8]
+                             ];
+
+  float     LinkStateSpeed = 1900.0;                    // Скорость турбины при которой идёт сцепка винта
+  float     RotorAccel     = 0.1;                       // Коэффициент трения в оси вертолёта который позволяет
+}
+
+class CUh1bTailRotorSystem
+{
+  Vector RotorPoint     = new Vector(-4.0, 0.0, 0.0);     // point of main rotor
+  float  Radius         = 3.0;                            // Radius of rotor, m
+  float  LiftCoeff      = 0.16;                           // Lift coefficient of rotor
+  float  DragCoeff      = 2.0;                            // Drag coefficient of rotor
+  float  FrictCoeff     = 0.00017;                        // Friction coefficient of rotor for applying to engine
+  float  TorqueCoeff    = 160.0;                           // Torque scale coefficient
+  float  SpeedScale     = 0.15;                           // Rotation speed scale from engine
+
+  Component RotorSound  = new #Emitter<CUh1BTailRotorSound>(); // sound effect for working state
+  Array FreqRange       = [
+                           [0.003,  0.15],
+                           [0.02 ,  0.7],
+                           [0.04 ,  1.4],
+                           [0.1  ,  1.8]
+             ];
+
+  float     LinkStateSpeed = 1900.0;                    // Скорость турбины при которой идёт сцепка винта
+  float     RotorAccel     = 0.1;                       // Коэффициент трения в оси вертолёта который позволяет
+}
+
+class CUh1bStabilizerSystem
+{
+  Array Data = [
+
+      // Tail 1
+      [
+        new Vector(-4.0, 0.0, 0.0),  // act point
+        new Vector( 0.0, 1.0, 0.0),  // normal
+        300.0f,                      // force coeff
+        1300.0f,                     // positive torque coeff
+        6300.0f                      // negative torque coeff
+      ],
+
+      // Tail 2
+      [
+        new Vector(-4.0,  1.0, 0.0), // act point
+        new Vector( 0.0, -1.0, 0.0), // normal
+        300.0f,                      // force coeff
+        1300.0f,                     // positive torque coeff
+        6300.0f                      // negative torque coeff
+      ],
+
+      // Wing 1
+      [
+        new Vector(-4.0,   0.0, 0.0),   // act point
+        new Vector(-0.087, 0.0, 0.996), // normal
+        50.0f,                          // force coeff
+        200.0f,                         // positive torque coeff
+        200.0f                          // negative torque coeff
+      ],
+
+      // Wing 2
+      [
+        new Vector(-4.0,   0.0,  0.0),   // act point
+        new Vector( 0.087, 0.0, -0.996), // normal
+        50.0f,                           // force coeff
+        200.0f,                          // positive torque coeff
+        200.0f                           // negative torque coeff
+      ]
+    ];
+}
+
+class CUh1bEngineSystem
+{
+  float MaxPower      = 2000.0;//600.0;  // maximum horse power
+  float MinSpeed      = 2000.0;  // minimum RPM
+  float MaxSpeed      = 8160.0;  // maximum RPM
+
+  float LowGovRPM     = 6400.0;
+  float HiGovRPM      = 6600.0;
+  float IncGovRPM     = 20.0;
+
+  float MinGovLevel   = 0.77;    // level of governor working
+
+
+  Component BaseSound      = new #Emitter<CUh1BTurbineFlightSound>();         // sound effect for working state
+  Component OverloadSound  = new #Emitter<CUh1BOverloadEngineSound>(); // sound effect for overload engine state
+  Component StarterSound   = new #Emitter<CUh1BEngineStarterSound>();  // soubd effect for engine starter
+}
+
+// Manual control
+class CUh1bManualControl
+  extends CBaseManualControl
+{
+  // =========================================
+  // helicopter coefficients
+  // =========================================
+
+  float  HelicopterMass       = 2040.0;           // kg
+  Vector Sizes                = new Vector(26.8, 26.16, 4.72);
+  Vector Origin               = new Vector(0.0, 0.0, 1.5);
+  float  Elastity             = 0.5;
+  float  Friction             = 1.0f;//0.5;
+
+  float Elasticity        = 0.3;   // ╩ю¤ЇЇшЎшхэЄ єяЁєуюёЄш. ╟эрўхэш  фюыцэ√ ыхцрЄ№ т фшрярчюэх
+                                   //!  юЄ 0.0 фю 1.0. ├фх 0.0 - юсючэрўрхЄ ўЄю Єхыю яюыэюёЄ№■
+                                   //!  яюуыю∙рхЄ ¤эхЁуш■, р 1.0 - яюыэюёЄ№■ юЄЁрцрхЄ.
+
+  //
+  // Physics properties
+  //
+
+  Vector  GravityAccelerate = CWorldPhysics::GravityVector; // Gravity acceleration
+
+  // local point on helicopter for act of ground force
+  Vector GroundTorquePoint    = new Vector(0.0, 0.0, 0.0);
+
+  // =========================================
+  // helicopter body drop coefficients
+  // =========================================
+
+  // angular damping coefficients by axises X, Y and Z
+  Vector AngularDampingCoeff  = new Vector(5.2, 5.2, 3.5);
+  // linear damping coefficients by axises X, Y and Z
+  Vector LinearDampingCoeff   = new Vector(2.5, 2.7, 7.6);
+
+
+  // ===========================================
+  // scale density for compute maximum altitude
+  // ===========================================
+
+  float  DensityFactor        = 2.0f;
+
+  // =========================================
+  // air cushion effect
+  // =========================================
+  float  AirCushionThickness  = 60.0;            // m
+
+  // =========================================
+  // wind effect
+  // =========================================
+
+  float  WindCoeff            = 2.0;
+  float  MaxMainWind          = 80.0;
+
+  // =========================================
+  // retreating blade stall effect
+  // =========================================
+
+  float  MaximumStreamSpeedInPlane = 60.0;       // m/s
+  float  MaximumStreamSpeedInAxis  = 30.0;       // m/s
+  // coefficient for drop force and torque for blades
+  float  DropForceCoeff       = 0.6;
+  float  DropTorqueCoeff      = 0.1;
+
+  // =========================================
+  // flater effect
+  // =========================================
+
+  // range rotor dispersion for all rotations axis
+  Vector DispersionCoeff      = new Vector(1.462, 1.385, 0.1925) * 25.0;
+
+  // =========================================
+  // vortex ring effect
+  // =========================================
+
+  float  LandingMaxSpeed      = 9.0;              // m/s
+  float  VortexRingAngle      = 0.4618;           // rad
+
+  // =========================================
+  // Tail vibration effect
+  // =========================================
+
+  Vector TailTorqueBeats      = new Vector(0.01, 0.01, 0.3);
+
+  // =========================================
+  // helicopter systems
+  // =========================================
+  float  TakeOffMinForce      = 13000.0;
+
+  Component MainPitchSystem   = new CUh1bMainPitchSystem();
+  Component MainRotorSystem   = new CUh1bMainRotorSystem();
+
+  Component TailPitchSystem   = new CUh1bTailPitchSystem();
+  Component TailRotorSystem   = new CUh1bTailRotorSystem();
+
+  Component StabilizerSystem  = new CUh1bStabilizerSystem();
+
+  Component EngineSystem      = new CUh1bEngineSystem();
+}
+
+// ====================================
+// Rotor animators
+// ====================================
+
+class CUh1bMRotorAnimator
+  extends CBaseRotorAnimator
+{
+  float  LowSpeedTresh     = 2.2;
+
+  // Flip animation play only in hi speed
+  float  FlipTime          = 0.04;
+  String AnimFlip          = "dyn_mrotor_flip";
+
+  // Low speed animations
+  Array  LowSpeedJoints    = [ "Static_mRotor_Pitch" ];
+  Array  LowSpeedAnims     = [
+                                ["static_mrotor_bend",   0.0,  2.1, AT_Linear],
+                                ["static_mrotor_rotate", 0.0, -1.0, AT_Looping]
+                             ];
+
+  Array  CrashedJoints     = [ "Static_mRotor_crashed" ];
+  Array  CrashedAnims      = [
+                                ["static_mrotor_bend",   0.0,  2.1, AT_Linear],
+                                ["static_mrotor_rotate", 0.0, -1.0, AT_Looping]
+                             ];
+
+  // Hi speed animations
+  Array  HiSpeedJoints     = [ "Dyn_mRotor_Pitch" ];
+  Array  HiSpeedAnims      = [
+                                ["dyn_mrotor_stretch", 2.6,  4.5, AT_Linear],
+                                ["dyn_mrotor_rotate",  2.6, -1.0, AT_Looping]
+                             ];
+}
+
+class CUh1bTRotorAnimator
+  extends CBaseRotorAnimator
+{
+  float  LowSpeedTresh     = 3.0;
+
+  // Low speed animations
+  Array  LowSpeedJoints    = [ "Static_tRotor" ];
+  Array  LowSpeedAnims     = [
+                                [ "static_trotor_rotate", 0.0, -1.0, AT_Looping ]
+                             ];
+
+  Array  CrashedJoints     = [ "Static_tRotor_crashed" ];
+  Array  CrashedAnims      = [
+                                [ "static_trotor_rotate", 0.0, -1.0, AT_Looping ]
+                             ];
+
+  // Hi speed animations
+  Array  HiSpeedJoints     = [ "Dyn_tRotor" ];
+  Array  HiSpeedAnims      = [
+                                ["dyn_trotor_rotate", 2.6, -1.0, AT_Looping]
+                             ];
+}
+
+class CUh1bSecondPilot
+{
+  Vector GravityVector        = CWorldPhysics::GravityVector;
+
+  // ьръёшьры№эр  Є ур тшэЄр, ъюЄюЁє■ шёяюы№чєхЄ тЄюЁющ яшыюЄ
+  // ъръ Є ує эр ьръёшьры№эюь єуых рЄръш
+  float  MaxMainForce         = 54000.0;
+
+  // ╟рфр■Єё  фтр єуыр, ъюЄюЁ√х юЄтхўр■Є чр фютюЁюЄ эр Ўхы№,
+  // т Єюь ёыєўрх, хёыш хую эхюсїюфшью ёютхЁ°шЄ№ ё яюью∙№■ ъЁхэр.
+  // ┼ёыш єуюы ьхцфє тхЁЄюы╕Єюь ш Ўхы№■ сєфхЄ сюы№°х CorrectedZoneBank єуыр,
+  // Єю юэ сєфхЄ фютюЁрўштрЄ№ фю Єхї яюЁ, яюър ¤ЄюЄ єуюы эх єьхэ№°шЄё
+  // фю UncorrectedZoneBank. ╧юёых Єюую ъръ юэ фюёЄшу хую, яшыюЄ эх сєфхЄ
+  // фютюЁрўштрЄ№ё  яюър, юэ ёэютр эх т√щфхЄ шч єуыр CorrectedZoneBank.
+  float  CorrectedZoneBank    = 0.52359f; // 30 degress
+  float  UncorrectedZoneBank  = 0.0872f;  // 5 degrees
+}
+
+class CUh1bUnit
+  extends CPlayerUnit, CWeaponConfig
+{
+  float m_DestroySpeed = 25.0;
+
+  final static WString CockpitTargetPointer        = getLocalized("Units", "str_UH1BPointer");
+  final static float   DefaultHitPoints            = CHitPoints::Uh1bUnitHitPoints;
+  final static int     Targeting_MapUIElementIndex = 0;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["AIR", "HELI"];
+
+  final static Array RHandPilotsControlJoint        = ["Pilot_rHand", "coPilot_rHand"];
+  final static Array LHandPilotsControlJoint        = ["Pilot_lHand", "coPilot_lHand"];
+
+  static String PostExplosionID                = "WeaponBoxBigExplosion";
+  static String PostDeathEffect                = "Uh1DExplosionEffect";
+  static String PostDeathSound                 = "TruckExplosionSound";
+  static String m_DamageEffect                 = "EngineLightDamageTraceEffect";
+
+
+  final static Array m_WpSlotsQty    =
+    [
+      [ 1 ],
+      [ 1 ],
+      [ 7 ],
+      [ 7 ],
+      [ 1 ],
+      [ 1 ]
+    ];
+  final static Array m_WpNameSuffix  = [ "A", "B", "C", "D", "E", "F" ];
+  Array  m_WpScriptName =
+    [
+      [ "CUh1bLeftDoorM60Gun"  ],
+      [ "CUh1bM134LeftGun"     ],
+      [ "CUh1bMA2Launcher"     ],
+      [ "CUh1bMA2Launcher"     ],
+      [ "CUh1bM134RightGun"    ],
+      [ "CUh1bRightDoorM60Gun" ]
+    ];
+
+  final static Array  m_PlayerWpScriptName =
+    [
+      [ "PlayerCUh1bLeftDoorM60Gun"  ],
+      [ "PlayerCUh1bM134LeftGun"     ],
+      [ "PlayerCUh1bMA2Launcher"     ],
+      [ "PlayerCUh1bMA2Launcher"     ],
+      [ "PlayerCUh1bM134RightGun"    ],
+      [ "PlayerCUh1bRightDoorM60Gun" ]
+    ];
+
+  final static Array  m_WpTargetingAnimatorName =
+    [
+      [ ""/*CUh1bLeftDoorTargetingAnimator"*/  ],
+      [ ""                                     ],
+      [ ""                                     ],
+      [ ""                                     ],
+      [ ""                                     ],
+      [ ""/*CUh1bRightDoorTargetingAnimator"*/ ]
+    ];
+
+  final static Array  m_WpEjectionsName =
+    [
+      [
+        [ "Eject1", "M60Shell", 2.15 ],
+        [ "Eject2", "M60Chain", 2.00 ]
+      ],
+      [
+        [ "Eject", "M134Shell", 1.5 ]
+      ],
+      [ ],
+      [ ],
+      [
+        [ "Eject", "M134Shell", 1.5 ]
+      ],
+      [
+        [ "Eject1", "M60Shell", 2.15 ],
+        [ "Eject2", "M60Chain", 2.00 ]
+      ]
+    ];
+
+
+  final static Array KillCoPilotTextures = [
+                          ["20", "Textures/u_air_Uh1B_Seats_blood.tex"],
+                          ["10", "Textures/u_air_Uh1B_Glass_blood.tex"],
+                          ["0",  "Textures/u_air_Uh1B_Glass_blood.tex"]
+                        ];
+
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CUh1bUnit()
+  {
+    // Setup outside and inside models
+    SetupExtendMesh("Cu_air_Uh1bModel", "Cu_air_Uh1b_InsideModel");
+    GetMeshComponent().SetLods([400, 250, 50, 10, 1]);
+
+    SetupCrashMesh(new #AnimatedObject<Cu_air_Uh1b_crashedModel>(),
+                   ["Door1Animator",
+                    "Door2Animator"]
+                  );
+
+    // This object can be landed to another object
+    SetupLandingControl(["Gear1", "Gear2", "Gear3", "Gear4"]);
+    // SetupRechargePlaceDetector(0.1);
+    SetupObjectToObjectLink();
+
+
+    // Engine effects setup
+    SetEngineComponents(
+        [
+          [ "", "HeliDustEffect" ,        "WindEffects2"],
+          [ "", "HeliDustSprayEffect" ,   "WindEffects"],
+          [ "", "HeliRingDynamicEffect" , "WindEffects"]
+        ]
+      );
+
+  }
+
+  final static Array DefaultWeaponConfig = [ 0, 0, 0, 0, 0, 0 ];
+
+  void Construct(
+      Component   _Mission,
+      Component   _PropMap
+    )
+  {
+    if (_PropMap.Get("IsManual", false))
+      m_WpScriptName = m_PlayerWpScriptName;
+
+    // Setup custom weapon
+    Array WeaponConfig = _PropMap.Get("Weapon", DefaultWeaponConfig);
+    SetupWeapon(WeaponConfig);
+
+    CPlayerUnit::Construct(_Mission, _PropMap);
+
+    if (_PropMap.Get("IsManual", false))
+    {
+      //  joint, hitpoints, effects state array - pair stage-name, itemname
+
+      CreateUnitItem(
+          "Static_mRotor_Pitch",
+          500.0,
+          [ "EngineLightDamageTraceEffect", "EngineMediumDamageTraceEffect", "EngineHeavyDamageTraceEffect" ],
+          //[ 1.0, 180000.0, 1.0, 180000.0 ],
+          [ 1.0, 1125.0, 1.0, 1125.0 ],
+          "Engine"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "Uh1DExplosionEffect" ],
+          //[ 3.0, 10000.0, 3.0, 10000.0 ],
+          [ 3.0, 83.0, 3.0, 83.0 ],
+          "FuelTankLF"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "Uh1DExplosionEffect" ],
+          //[ 3.0, 5000.0, 3.0, 6000.0 ],
+          [ 3.0, 42.0, 3.0, 50.0 ],
+          "FuelTankRF"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "Uh1DExplosionEffect" ],
+          //[ 3.0, 500.0, 3.0, 6000.0 ],
+          [ 3.0, 5.0, 3.0, 50.0 ],
+          "FuelTankLB"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "Uh1DExplosionEffect" ],
+          [ 3.0, 42.0, 3.0, 50.0 ],
+          "FuelTankRB"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "" ],
+          [ 3.0, 3.2, 3.0, 3.75 ],
+          "Transmission"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "" ],
+          [ 3.0, 3.2, 3.0, 3.75 ],
+          "OilSystem"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "" ],
+          [ 3.0, 16.6, 3.0, 20.0 ],
+          "GunnerLeft"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "" ],
+          [ 3.0, 16.6, 3.0, 20.0 ],
+          "GunnerRight"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "" ],
+          [ 3.0, 1.0, 3.0, 1.0 ],
+          "PilotFirst"
+        );
+      CreateUnitItem(
+          "ROOT",
+          500.0,
+          [ "" ],
+          [ 3.0, 1.0, 3.0, 1.0 ],
+          "PilotSecond"
+        );
+      CreateUnitItem(
+          "Body",
+          500.0,
+          [ "Uh1DExplosionEffect" ],
+          [ 3.0, 25.0, 3.0, 30.0 ],
+          "RFHeliPart"
+        );
+      CreateUnitItem(
+          "Body",
+          500.0,
+          [ "Uh1DExplosionEffect" ],
+          [ 3.0, 25.0, 3.0, 30.0 ],
+          "LFHeliPart"
+        );
+      CreateUnitItem(
+          "Stabilizer",
+          500.0,
+          [ "" ],
+          [ 3.0, 25.0, 3.0, 30.0 ],
+          "Stabilizers"
+        );
+      CreateUnitItem(
+          "Body_rear",
+          500.0,
+          [ "" ],
+          [ 3.0, 3.5, 3.0, 4.00 ],
+          "TailRail"
+        );
+      CreateUnitItem(
+          "Body_rear",
+          500.0,
+          [ "Uh1DExplosionEffect" ],
+          [ 3.0, 10.0, 3.0, 15.0 ],
+          "TailUnit"
+        );
+      CreateUnitItem(
+          "Static_tRotor",
+          500.0,
+          [ "" ],
+          [ 3.0, 3.5, 3.0, 4.3 ],
+          "TailRotor"
+        );
+
+      // Create skids object (maximum plane speed, HP mod per 1m/s, maximum axis speed, HP mod per 1m/s)
+      CreateUnitItem(
+          "Skid_Left",
+          60000.0,
+          [ ],
+          [ 5.0, 5000.0, 5.0, 6000.0 ],
+          "SkidLeft"
+        );
+      CreateUnitItem(
+          "Skid_Right",
+          60000.0,
+          [ ],
+          [ 5.0, 5000.0, 5.0, 6000.0 ],
+          "SkidRight"
+        );
+
+      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "L_Cargo_Door_crashed",
+          "GunnerLeft"
+        );
+
+      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "R_Cargo_Door_crashed",
+          "GunnerRight"
+        );
+
+      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "L_Cabin_Door_crashed",
+          "LFHeliPart"
+        );
+
+      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "Blade1_crashed",
+          "Engine"
+        );
+
+      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "Blade2_crashed",
+          "Transmission"
+        );
+
+/*      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "Pylon3|Weapon_A1",
+          "FuelTankLF"
+        );
+
+      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "Blade2_crashed",
+          "FuelTankRF"
+        );
+
+      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "Blade1_crashed",
+          "FuelTankLB"
+        );
+
+      CreateCrashItem(
+          new #AnimatedObject<Cu_air_Uh1bModel>(),
+          "Blade2_crashed",
+          "FuelTankRB"
+        );
+*/
+      //
+      // Second pilot
+      //
+
+      SetupSecondPilot(new #PilotController<CUh1bSecondPilot>());
+
+      // M60 sight animator
+      SetSightEffects(
+          null, //new #RangeAnimator<CUh1bM60LSightAnimator>(),
+          new #RangeAnimator<CUh1bM60RSightAnimator>(),
+          null
+        );
+
+      SetupBehavior(new #VehicleBehavior<CUh1bM60HeliFireBehavior>());
+
+      SetupAnimator("M21CoPilotAnimator", new #TargetingAnimator2<CUh1bM21CoPilotAnimator>());
+    }
+    else
+    {
+      // $TMP
+/*      SetupBehavior(
+          new #VehicleBehavior3<CBaseHelicopterBehavior>(),
+          new #BehPilotController<CUh1bSecondPilot>()
+        );*/
+
+      Component Mesh = GetMeshComponent();
+
+      Matrix EnginePosition = getPosition(GetMeshComponent());
+      Component RotorSound  = new #Emitter<CUh1BRotorFlightSound>();
+      setPosition(RotorSound, EnginePosition);
+      setPositionable(RotorSound, Mesh);
+      RegisterObject("RotorSound", RotorSound);
+      RotorSound.PlaySoundBuffer(true);
+      RotorSound.SetFrequencyMultiplier(1.38);
+
+      // Create rotor wind
+      Component RotorWind = new #RotorWind();
+      RotorWind.Initialize(
+          null,
+          _Mission.GetMissionAtmosphere(),
+          120.0,
+          new Vector(0.0, 0.0, 0.5),
+          7.0
+      );
+      RotorWind.SetTractionScale(0.8);
+      setPositionable(RotorWind, Mesh);
+      RegisterObject("RotorWind", RotorWind);
+
+
+      SetupBehavior(new #VehicleBehavior<CBaseHelicopterBehavior>());
+    }
+
+    // Engine effects setup
+    SetEngineEffects(
+        new #RotorAnimator2<CUh1bMRotorAnimator>(),
+        new #RotorAnimator2<CUh1bTRotorAnimator>()
+      );
+
+    // Door animator
+    SetDoorEffects(
+        new #LineAnimator<CUh1bLDoorAnimator>(),
+        new #LineAnimator<CUh1bRDoorAnimator>()
+      );
+
+    if( !_PropMap.Get( "IsManual", false ) ) {
+      Component AIHelicopterEngineSystem = new #AIHelicopterEngineSystem();
+      AIHelicopterEngineSystem.Initialize( [ [GetObject( "EngineAnimator1" ), GetObject( "EngineAnimator2" )], GetObject( "RotorWind" ), [ GetObject( "RotorSound" ), GetObject( "RotorSound" ), GetObject( "RotorSound" ) ] ] );
+      RegisterObject( "AIEngineSystem", AIHelicopterEngineSystem );
+    }
+
+    SetupAnimator("RightDoorGunAnimator", new #TargetingAnimator2<CUh1bRightDoorTargetingAnimator>());
+    SetupAnimator("LeftDoorGunAnimator", new #TargetingAnimator2<CUh1bLeftDoorTargetingAnimator>());
+
+    SetupAnimator("Uh1bM134LeftGunRotorAnimator", new #RotorAnimator<CUh1bM134LeftGunRotorAnimator>());
+    SetupAnimator("Uh1bM134RightGunRotorAnimator", new #RotorAnimator<CUh1bM134RightGunRotorAnimator>());
+
+    SetupAnimator("Uh1bM134LeftTargetingAnimator", new #TargetingAnimator2<CUh1bM134LeftTargetingAnimator>());
+    SetupAnimator("Uh1bM134RightTargetingAnimator", new #TargetingAnimator2<CUh1bM134RightTargetingAnimator>());
+  }
+
+  void Initialize(
+      Component      _Mission,
+      Component      _PropertiesMap
+    )
+  {
+    CPlayerUnit::Initialize( _Mission, _PropertiesMap );
+
+    SetupPersonalNavPoint( _Mission, "CPersonalNavPoint" );
+
+    //$TMP test - set gunner animators joints
+    if (null != m_RightGunnerObject)
+    {
+      m_RightGunnerObject.InitializeWeapon(m_WeaponList[5]);
+      //GetObject("RightGunAnimator").InitializeWeaponJoint(m_WeaponList[5]);
+    }
+    if (null != m_LeftGunnerObject)
+    {
+      m_LeftGunnerObject.InitializeWeapon(m_WeaponList[0]);
+      //GetObject("LeftGunAnimator").InitializeWeaponJoint(m_WeaponList[0]);
+    }
+
+    setPositionable(GetObject("RightDoorGunAnimator"), GetOutsideMesh());
+    setPositionable(GetObject("RightDoorGunAnimator"), m_WeaponList[5]);
+    setSlaveObject(GetObject("RightDoorGunAnimator"), GetSlaveObject());
+
+    setPositionable(GetObject("LeftDoorGunAnimator"), GetOutsideMesh());
+    setPositionable(GetObject("LeftDoorGunAnimator"), m_WeaponList[0]);
+    setSlaveObject(GetObject("LeftDoorGunAnimator"), GetSlaveObject());
+
+    Component M21CoPilotAnimator = GetObject("M21CoPilotAnimator");
+    if (M21CoPilotAnimator != null)
+    {
+      setPositionable(M21CoPilotAnimator, GetOutsideMesh());
+      setPositionable(M21CoPilotAnimator, m_WeaponList[1]);
+      setSlaveObject(M21CoPilotAnimator, GetSlaveObject());
+    }
+
+    setSlaveObject(GetObject("Uh1bM134LeftGunRotorAnimator"), GetSlaveObject());
+    setSlaveObject(GetObject("Uh1bM134RightGunRotorAnimator"), GetSlaveObject());
+
+    setPositionable(GetObject("Uh1bM134LeftTargetingAnimator"), GetOutsideMesh());
+    setPositionable(GetObject("Uh1bM134LeftTargetingAnimator"), m_WeaponList[1]);
+    setSlaveObject(GetObject("Uh1bM134LeftTargetingAnimator"), GetSlaveObject());
+
+
+    setPositionable(GetObject("Uh1bM134RightTargetingAnimator"), GetOutsideMesh());
+    setPositionable(GetObject("Uh1bM134RightTargetingAnimator"), m_WeaponList[4]);
+    setSlaveObject(GetObject("Uh1bM134RightTargetingAnimator"), GetSlaveObject());
+
+
+
+    // Open cargo doors by default
+    sendEvent(0.0, getIdentificator(this), "OpenDoor", []);
+  }
+
+  // ======================================
+  // Vehicle controller
+  // ======================================
+
+  Component CreateVehicleController()
+  {
+    return (new #HelicopterVehicle<CUh1bManualControl>());
+  }
+
+  void OnHideMesh()
+  {
+    GetObject("EngineAnimator1").EnableControl(false);
+    GetObject("EngineAnimator2").EnableControl(false);
+
+    Component RotorSound = GetObject("RotorSound");
+    if (RotorSound != null)
+      RotorSound.StopSoundPlaying(true);
+
+    //$TMP $TODO instead we should delete effect itself course SetWindDustEffectScale can be called elsewhere
+    SetWindDustEffectScale(0.0f);
+  }
+
+  // ======================================
+  // Manual control
+  // ======================================
+
+  Component CreateManualControl()
+  {
+    return new #ManualHelicopterControl();
+  }
+}
+

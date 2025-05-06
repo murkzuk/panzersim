@@ -1,0 +1,101 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CInstances
+{
+  static void InitializeInstances()
+  {
+    Cbld_BarrackModel::InstancesQty                          = 1;
+    Cbld_BaseHangarModel::InstancesQty                       = 1;
+    Cbld_BridgeFootModel::InstancesQty                       = 1;
+    Cbld_BridgeWoodModel::InstancesQty                       = 9;
+    Cbld_BunkerAmmoModel::InstancesQty                       = 1;
+    Cbld_BunkerBaseModel::InstancesQty                       = 4;
+    Cbld_CheckPointModel::InstancesQty                       = 1;
+    Cbld_HeliPadModel::InstancesQty                          = 8;
+    Cbld_MarqueeModel::InstancesQty                          = 4;
+    Cbld_MedicalTentModel::InstancesQty                      = 1;
+    Cbld_RoofModel::InstancesQty                             = 4;
+    Cbld_TentModel::InstancesQty                             = 8;
+    Cbld_TentLongModel::InstancesQty                         = 4;
+    Cbld_TOCModel::InstancesQty                              = 1;
+    Cbld_VietnameseGranaryModel::InstancesQty                = 1;
+    Cbld_VietnameseGranaryPileModel::InstancesQty            = 1;
+    Cbld_VietnameseHouseBigModel::InstancesQty               = 1;
+    Cbld_VietnameseHouseBigPileModel::InstancesQty           = 1;
+    Cbld_VietnameseHouseSmallModel::InstancesQty             = 1;
+    Cbld_VietnameseHouseSmallPileModel::InstancesQty         = 1;
+    Cbld_VietnameseRoofModel::InstancesQty                   = 1;
+    Cbld_WellModel::InstancesQty                             = 1;
+
+    Cenv_AmmoBoxModel::InstancesQty                          = 2;
+    Cenv_AmmoBoxPackAModel::InstancesQty                     = 8;
+    Cenv_AmmoBoxPackBModel::InstancesQty                     = 8;
+    Cenv_BarrelModel::InstancesQty                           = 2;
+    Cenv_BarrelPackAModel::InstancesQty                      = 8;
+    Cenv_BarrelPackBModel::InstancesQty                      = 8;
+    Cenv_WeaponBoxBigModel::InstancesQty                     = 4;
+    Cenv_WeaponBoxBigPackAModel::InstancesQty                = 8;
+    Cenv_WeaponBoxBigPackBModel::InstancesQty                = 8;
+    Cenv_WeaponBoxSmallModel::InstancesQty                   = 4;
+    Cenv_WeaponBoxSmallPackAModel::InstancesQty              = 8;
+    Cenv_WeaponBoxSmallPackBModel::InstancesQty              = 8;
+
+    Cfence_WickerModel::InstancesQty                         = 8;
+    Cfence_WireModel::InstancesQty                           = 8;
+    Cfence_WireSpiralModel::InstancesQty                     = 8;
+
+    Chum_AmericanFinisherModel::InstancesQty                 = 1;
+    Chum_AmericanMedicModel::InstancesQty                    = 1;
+    Chum_AmericanPilotModel::InstancesQty                    = 1;
+    Chum_AmericanRadioModel::InstancesQty                    = 1;
+    Chum_AmericanSoldierGrenadeModel::InstancesQty           = 1;
+    Chum_AmericanSoldierGunModel::InstancesQty               = 1;
+    Chum_AmericanSoldierRifleModel::InstancesQty             = 1;
+    Chum_VietnamesePeasantModel::InstancesQty                = 1;
+    Chum_VietnameseSoldierGunModel::InstancesQty             = 1;
+    Chum_VietnameseSoldierRifleModel::InstancesQty           = 1;
+    Chum_VietnameseVolunteerGunModel::InstancesQty           = 1;
+    Chum_VietnameseVolunteerRifleModel::InstancesQty         = 1;
+
+    Cnpc_JacksonModel::InstancesQty                          = 1;
+    Cnpc_KingsleyModel::InstancesQty                         = 1;
+    Cnpc_MooreModel::InstancesQty                            = 1;
+    Cnpc_QuadeModel::InstancesQty                            = 1;
+
+    Cu_air_AD4SkyriderModel::InstancesQty                    = 1;
+    Cu_air_Uh1bModel::InstancesQty                           = 2;
+    Cu_air_Uh1b_InsideModel::InstancesQty                    = 1;
+    Cu_air_Uh1dModel::InstancesQty                           = 8;
+
+    Cu_nvl_JunkModel::InstancesQty                           = 1;
+    Cu_nvl_SampanModel::InstancesQty                         = 1;
+
+    Cu_stat_DShKModel::InstancesQty                          = 1;
+    Cu_stat_M29MortarModel::InstancesQty                     = 2;
+    Cu_stat_M29MortarPointModel::InstancesQty                = 1;
+    Cu_stat_M2A1HowitzerModel::InstancesQty                  = 4;
+    Cu_stat_M60CordonPointModel::InstancesQty                = 4;
+    Cu_stat_WatchTowerModel::InstancesQty                    = 1;
+
+    Cu_veh_M151JeepModel::InstancesQty                       = 1;
+    Cu_veh_M939TruckModel::InstancesQty                      = 1;
+
+    Cwpn_Ak47Model::InstancesQty                             = 4;
+    Cwpn_FFARModel::InstancesQty                             = 1;
+    Cwpn_M60_InfModel::InstancesQty                          = 8;
+    Cwpn_M79Model::InstancesQty                              = 1;
+    Cwpn_NapalmModel::InstancesQty                           = 1;
+    Cwpn_SKS45Model::InstancesQty                            = 8;
+    Cwpn_ChainModel::InstancesQty                            = 9;
+    Cwpn_ChainNearModel::InstancesQty                        = 9;
+    Cwpn_ShellModel::InstancesQty                            = 9;
+    Cwpn_ShellNearModel::InstancesQty                        = 9;
+  }
+}

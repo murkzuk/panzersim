@@ -1,0 +1,209 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+//
+// Selectible Text control
+//
+
+class CUIPlaylistElement
+  extends CBaseUIControl
+{
+  static float DefaultZ = 0.02;
+  static float DurationWidth = 40.0 / 1024.0;
+  
+  Color SelectedColor   = new Color(1.0, 1.0, 1.0);
+  Color NormalColor     = new Color(0.8, 0.8, 0.8);
+  Color HiSelectedColor = new Color(0.7, 0.7, 1.0);
+  Color HiNormalColor   = new Color(0.5, 0.5, 1.0);
+
+  String    m_ControlID    = "";
+  Component m_DurationText = null;
+  Component m_Title        = null;
+
+  WString   m_sFileName    = L"";
+  WString   m_sTitle       = L"";
+  WString   m_sAuthor      = L"";
+
+  // Service functions
+  void Initialize(
+      String _ControlID
+    )
+  {
+    m_ControlID    = _ControlID;
+
+    m_Title        = new #BitmapButton<CUIButton>();
+    m_DurationText = new #TextControl<CUIEditField>();
+
+    RegisterObject(m_ControlID + "_Title",    m_Title);
+    RegisterObject(m_ControlID + "_Duration", m_DurationText);
+  }
+
+  String GetControlID()
+  {
+    return m_ControlID;
+  }
+
+  void UnregisterControl()
+  {
+    UnregisterObject(m_ControlID);
+    UnregisterObject(m_ControlID + "_Title");
+    UnregisterObject(m_ControlID + "_Duration");
+  }
+
+  // Construct UI control
+  void Construct(
+      Component _PropMap
+    )
+  {
+    CBaseUIControl::Construct(_PropMap);
+
+    m_Title.SetMaterialManager(m_MenuController.GetMaterialManager());
+    m_Title.SetMaterials("Invisible", "Invisible");
+    m_Title.SetFont(
+        _PropMap.Get("FontName", "Arial"),
+        _PropMap.Get("FontSize", 0.032)
+      );
+    m_DurationText.SetFont(
+        _PropMap.Get("FontName", "Arial"),
+        _PropMap.Get("FontSize", 0.032)
+      );
+    m_Title.SetAlignment(_PropMap.Get("Alignment", 0.0));
+    m_DurationText.SetAlignment(1.0);
+
+    m_Title.SetText(L"");
+    m_DurationText.SetText(L"");
+
+    SelectedColor   = _PropMap.Get("SelectedColor",   SelectedColor);
+    NormalColor     = _PropMap.Get("NormalColor",     NormalColor);
+    HiSelectedColor = _PropMap.Get("HiSelectedColor", HiSelectedColor);
+    HiNormalColor   = _PropMap.Get("HiNormalColor",   HiNormalColor);
+
+    m_Title.SetTextColors(NormalColor, HiNormalColor);
+    m_DurationText.SetTextColor(NormalColor);
+    m_DurationText.EnableFormatting(false);
+
+    m_Title.SetBitmapColors(new Color(1.0, 1.0, 1.0), new Color(1.0, 1.0, 1.0));
+
+    m_Title.SetRenderLayer(m_MenuController.GetCurrentLayer());
+    m_DurationText.SetRenderLayer(m_MenuController.GetCurrentLayer());
+  }
+
+  // Setup position and dimension
+  void SetPosition(
+      Component _UIPosition
+    )
+  {
+    m_Title.SetPosition(_UIPosition.X, _UIPosition.Y);
+    m_Title.SetDimensions(_UIPosition.Width - DurationWidth, _UIPosition.Height);
+
+    m_DurationText.SetPosition(_UIPosition.X + (_UIPosition.Width - DurationWidth), _UIPosition.Y);
+    m_DurationText.SetDimensions(DurationWidth, _UIPosition.Height);
+
+    CBaseUIControl::SetPosition(_UIPosition);
+  }
+
+  void SetZ(
+      float _Z
+    )
+  {
+    m_Title.SetZ(_Z);
+    m_DurationText.SetZ(_Z);
+  }
+
+  Array GetActualSize()
+  {
+    return [];
+  }
+
+  void SetParentRect(
+      Component _UIPosition
+    )
+  {
+    CBaseUIControl::SetParentRect(_UIPosition);
+
+    m_Title.SetParentRect(m_ParentRect.X, m_ParentRect.Y, m_ParentRect.Width, m_ParentRect.Height);
+    m_DurationText.SetParentRect(m_ParentRect.X, m_ParentRect.Y, m_ParentRect.Width, m_ParentRect.Height);
+  }
+
+  void SetSelectedItemState(
+      boolean _Selected
+    )
+  {
+    if (_Selected)
+    {
+      m_Title.SetTextColors(SelectedColor, HiSelectedColor);
+      m_DurationText.SetTextColor(SelectedColor);
+    }
+    else
+    {
+      m_Title.SetTextColors(NormalColor, HiNormalColor);
+      m_DurationText.SetTextColor(NormalColor);
+    }
+
+    CBaseUIControl::SetSelectedItemState(_Selected);
+  }  
+
+  void SetFileName(
+      WString _Text
+    )
+  {
+    m_sFileName = _Text;
+  }
+
+  void SetTitle(
+      WString _Title,
+      WString _Author
+    )
+  {
+    m_sAuthor = _Author;
+    m_sTitle  = _Title;
+
+    WString Title = m_sFileName;
+
+    if (!m_sTitle.isEmpty())
+    {
+      Title = m_sTitle;
+    
+      if (!m_sAuthor.isEmpty())
+        Title = m_sAuthor + L" - " + m_sTitle;
+    }
+
+    m_Title.SetText(Title);
+  }
+
+  void SetDuration(
+      float _Duration
+    )
+  {
+    if (_Duration < 0.0)
+      return;
+
+    WString Minutes = new WString(int(_Duration) / 60);
+    WString Seconds = new WString(int(_Duration) % 60);
+
+    while (Seconds.length() < 2)
+      Seconds = L"0" + Seconds;
+
+    m_DurationText.SetText(Minutes + L":" + Seconds);
+  }
+
+  void UpdateHint()
+  {
+    WString Hint = m_sFileName;
+
+    if (!m_sAuthor.isEmpty())
+      Hint += L"\n" + getLocalized("Menu", "str_MUSIC_AUTHOR")   + L": " + m_sAuthor;
+
+    if (!m_sTitle.isEmpty())
+      Hint += L"\n" + getLocalized("Menu", "str_MUSIC_TITLE")    + L": " + m_sTitle;
+
+    m_Title.SetHint(Hint);
+  }
+}

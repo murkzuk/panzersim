@@ -1,0 +1,211 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//
+//  Mission strings
+//
+
+class CC1M2Mission_Strings extends CCommonStrings
+{
+  // Helicopters 1 & 2 names and images (material name)
+  final static WString str_Heli1_Name                = getLocalized("Units", "str_UH1BMenuName");
+  final static String  str_Heli1_Image               ="UH1B_Picture";
+  final static WString str_Heli2_Name                = getLocalized("Units", "str_UH1BMenuName");
+  final static String  str_Heli2_Image               ="UH1B_Picture";
+
+  // Helicopter 1 weapons names and description
+  final static WString str_Heli1_Weapon1_Name        = getLocalized("Weapon", "str_M134_FullName");
+  final static String  str_Heli1_Weapon1_Image       ="M134Minigun_Picture";
+  final static WString str_Heli1_Weapon1_Description = getLocalized("Weapon", "str_M134_Description");
+  final static WString str_Heli1_Weapon2_Name        = getLocalized("Weapon", "str_MA2_FullName");
+  final static String  str_Heli1_Weapon2_Image       ="M158Launcher_Picture";
+  final static WString str_Heli1_Weapon2_Description = getLocalized("Weapon", "str_MA2_Description");
+
+  // Helicopter 2 weapons names and description
+  final static WString str_Heli2_Weapon1_Name        = getLocalized("Weapon", "str_M134_FullName");
+  final static String  str_Heli2_Weapon1_Image       ="M134Minigun_Picture";
+  final static WString str_Heli2_Weapon1_Description = getLocalized("Weapon", "str_M134_Description");
+  final static WString str_Heli2_Weapon2_Name        = getLocalized("Weapon", "str_MA2_FullName");
+  final static String  str_Heli2_Weapon2_Image       ="M158Launcher_Picture";
+  final static WString str_Heli2_Weapon2_Description = getLocalized("Weapon", "str_MA2_Description");
+
+  // Mission description
+  final static WString str_CampaignName        = getLocalized("C1M2", "str_CampaignName");
+  final static WString str_MissionStatus       = getLocalized("C1M2", "str_MissionStatus");
+  final static WString str_MissionName         = getLocalized("C1M2", "str_MissionName");
+  final static WString str_BriefingText        = getLocalized("C1M2", "str_BriefingText");
+  final static WString str_Objective01         = getLocalized("C1M2", "str_Objective01");
+  final static WString str_Objective02         = getLocalized("C1M2", "str_Objective02");
+  final static WString str_Objective03         = getLocalized("C1M2", "str_Objective03");
+
+  // Radio  beacon
+  final static WString str_Beacon_Pley_Ku        = getLocalized("C1M2", "str_Beacon_Pley_Ku");
+  final static WString str_Beacon_XRAY           = getLocalized("C1M2", "str_Beacon_XRAY");
+  final static WString str_Beacon_Plei_Me        = getLocalized("C1M2", "str_Beacon_Plei_Me");
+  final static WString str_Beacon_LZ_Falcon      = getLocalized("C1M2", "str_Beacon_LZ_Falcon");
+  final static WString str_Beacon_DucCo          = getLocalized("C1M2", "str_Beacon_DucCo");
+
+  final static WString str_Objective01          = getLocalized("C1M2", "str_Objective01");
+  final static WString str_Objective02          = getLocalized("C1M2", "str_Objective02");
+  final static WString str_Objective03          = getLocalized("C1M2", "str_Objective03");
+
+  //NavPoints. Use with string CC1M2Mission_Strings::<Name of String variable>
+  // As example CC1M2Mission_Strings::str_NavPoint_Pier
+
+  final static WString str_NavPoint_Plei_Me     = getLocalized("C1M2", "str_NavPoint_Plei_Me");
+  final static WString str_NavPoint_LZ_Home     = getLocalized("C1M2", "str_NavPoint_LZ_Home");
+  final static WString str_NavPoint_LZ_Falcon   = getLocalized("C1M2", "str_NavPoint_LZ_Falcon");
+  final static WString str_NavPoint_DucCo       = getLocalized("C1M2", "str_NavPoint_DucCo");
+  final static WString str_NavPoint_XRAY        = getLocalized("C1M2", "str_NavPoint_XRAY");
+  final static WString str_NavPoint_Yankee      = getLocalized("C1M2", "str_NavPoint_Yankee");
+  final static WString str_NavPoint_Victor      = getLocalized("C1M2", "str_NavPoint_Victor");
+  final static WString str_NavPoint_Tango       = getLocalized("C1M2", "str_NavPoint_Tango");
+  final static WString str_NavPoint_ChuPong     = getLocalized("C1M2", "str_NavPoint_ChuPong");
+
+  final static WString str_C1M2_Jackson_TakeOff_01     = getLocalized("C1M2", "str_C1M2_Jackson_TakeOff_01");
+  final static WString str_C1M2_Jackson_TakeOff_02     = getLocalized("C1M2", "str_C1M2_Jackson_TakeOff_02");
+
+  final static WString str_c1m2_Jackson_PlayerDeath_01      =   getLocalized("C1M2", "str_C1M2_Jackson_PlayerDeath_01");
+
+  final static WString str_C1M2_Breadshow_Reproof_01      = getLocalized("C1M2", "str_C1M2_Breadshow_Reproof_01");
+
+  final static WString str_C1M2_Breadshow_StartMove_01        = getLocalized("C1M2", "str_C1M2_Breadshow_StartMove_01");
+  final static WString str_C1M2_Breadshow_StartMove_02        = getLocalized("C1M2", "str_C1M2_Breadshow_StartMove_02");
+  final static WString str_C1M2_Breadshow_StartMove_03        = getLocalized("C1M2", "str_C1M2_Breadshow_StartMove_03");
+  final static WString str_C1M2_Breadshow_StartMove_04        = getLocalized("C1M2", "str_C1M2_Breadshow_StartMove_04");
+
+  final static WString str_C1M2_Breadshow_Move_01        = getLocalized("C1M2", "str_C1M2_Breadshow_Move_01");
+  final static WString str_C1M2_Breadshow_Move_02        = getLocalized("C1M2", "str_C1M2_Breadshow_Move_02");
+  final static WString str_C1M2_Breadshow_Move_03        = getLocalized("C1M2", "str_C1M2_Breadshow_Move_03");
+
+  final static WString str_C1M2_Kingsley_TakeOff_01        = getLocalized("C1M2", "str_C1M2_Kingsley_TakeOff_01");
+  final static WString str_C1M2_Kingsley_TakeOff_02        = getLocalized("C1M2", "str_C1M2_Kingsley_TakeOff_02");
+  final static WString str_C1M2_Kingsley_TakeOff_03        = getLocalized("C1M2", "str_C1M2_Kingsley_TakeOff_03");
+
+  final static WString str_C1M2_DispatcherHome_01        = getLocalized("C1M2", "str_C1M2_DispatcherHome_01");
+  final static WString str_C1M2_DispatcherHome_02        = getLocalized("C1M2", "str_C1M2_DispatcherHome_02");
+  final static WString str_C1M2_DispatcherHome_03        = getLocalized("C1M2", "str_C1M2_DispatcherHome_03");
+  final static WString str_C1M2_DispatcherHome_04        = getLocalized("C1M2", "str_C1M2_DispatcherHome_04");
+
+  final static WString str_C1M2_Moore_01       = getLocalized("C1M2", "str_C1M2_Moore_01");
+  final static WString str_C1M2_Moore_02       = getLocalized("C1M2", "str_C1M2_Moore_02");
+  final static WString str_C1M2_Moore_03       = getLocalized("C1M2", "str_C1M2_Moore_03");
+  final static WString str_C1M2_Moore_04       = getLocalized("C1M2", "str_C1M2_Moore_04");
+  final static WString str_C1M2_Moore_05       = getLocalized("C1M2", "str_C1M2_Moore_05");
+  final static WString str_C1M2_Moore_06       = getLocalized("C1M2", "str_C1M2_Moore_06");
+
+  final static WString str_C1M2_Falcon_01        = getLocalized("C1M2", "str_C1M2_Falcon_01");
+  final static WString str_C1M2_Falcon_02        = getLocalized("C1M2", "str_C1M2_Falcon_02");
+
+  final static WString str_C1M2_DispatcherHome_011       = getLocalized("C1M2", "str_C1M2_DispatcherHome_011");
+  final static WString str_C1M2_Breadshow_StartMove_041  = getLocalized("C1M2", "str_C1M2_Breadshow_StartMove_041");
+
+  final static WString str_C1M2_Breadshow_Descent_01     = getLocalized("C1M2", "str_C1M2_Breadshow_Descent_01");
+  final static WString str_C1M2_Moore_Descent_01         = getLocalized("C1M2", "str_C1M2_Moore_Descent_01");
+  final static WString str_C1M2_Breadshow_Descent_02     = getLocalized("C1M2", "str_C1M2_Breadshow_Descent_02");
+  final static WString str_C1M2_Moore_Bombardment_01     = getLocalized("C1M2", "str_C1M2_Moore_Bombardment_01");
+  final static WString str_Skyrider_Bombardment_01     = getLocalized("C1M2", "str_Skyrider_Bombardment_01");
+  final static WString str_C1M2_Moore_Bombardment_02   = getLocalized("C1M2", "str_C1M2_Moore_Bombardment_02");
+  final static WString str_Skyrider_Bombardment_02     = getLocalized("C1M2", "str_Skyrider_Bombardment_02");
+
+  final static WString str_C1M2_Breadshow_Descent_03   = getLocalized("C1M2", "str_C1M2_Breadshow_Descent_03");
+  final static WString str_Moore_Descent_02            = getLocalized("C1M2", "str_Moore_Descent_02");
+
+     final static WString str_Jackson_Return_02     = getLocalized("C1M2", "str_Jackson_Return_02");
+     final static WString str_Breadshow_Return_03   = getLocalized("C1M2", "str_Breadshow_Return_03");
+     final static WString str_Jackson_Return_03     = getLocalized("C1M2", "str_Jackson_Return_03");
+     final static WString str_Breadshow_Return_04   = getLocalized("C1M2", "str_Breadshow_Return_04");
+     final static WString str_Jackson_Return_04     = getLocalized("C1M2", "str_Jackson_Return_04");
+     final static WString str_Jackson_Warning_01    = getLocalized("C1M2", "str_Jackson_Warning_01");
+     final static WString str_Jackson_Warning_02    = getLocalized("C1M2", "str_Jackson_Warning_02");
+     final static WString str_Moore_Return_01       = getLocalized("C1M2", "str_Moore_Return_01");
+     final static WString str_Dispatcher_Return_01  = getLocalized("C1M2", "str_Dispatcher_Return_01");
+     final static WString str_Moore_Return_02       = getLocalized("C1M2", "str_Moore_Return_02");
+     final static WString str_Breadshow_Return_05   = getLocalized("C1M2", "str_Breadshow_Return_05");
+     final static WString str_Moore_Return_03       = getLocalized("C1M2", "str_Moore_Return_03");
+     final static WString str_Breadshow_Return_06   = getLocalized("C1M2", "str_Breadshow_Return_06");
+     final static WString str_Dispatcher_Return_02  = getLocalized("C1M2", "str_Dispatcher_Return_02");
+     final static WString str_Breadshow_Return_07   = getLocalized("C1M2", "str_Breadshow_Return_07");
+     final static WString str_Jackson_Return_05     = getLocalized("C1M2", "str_Jackson_Return_05");
+     final static WString str_Breadshow_Return_08   = getLocalized("C1M2", "str_Breadshow_Return_08");
+     final static WString str_Dispatcher_Return_03  = getLocalized("C1M2", "str_Dispatcher_Return_03");
+     final static WString str_Breadshow_Return_09   = getLocalized("C1M2", "str_Breadshow_Return_09");
+     final static WString str_Dispatcher_Return_04  = getLocalized("C1M2", "str_Dispatcher_Return_04");
+     final static WString str_Jackson_Return_06     = getLocalized("C1M2", "str_Jackson_Return_06");
+     final static WString str_Jackson_Return_07     = getLocalized("C1M2", "str_Jackson_Return_07");
+
+     final static WString str_Skyrider_Bombardment_03     = getLocalized("C1M2", "str_Skyrider_Bombardment_03");
+     final static WString str_Skyrider_Bombardment_04     = getLocalized("C1M2", "str_Skyrider_Bombardment_04");
+     final static WString str_C1M2_Moore_Bombardment_03   = getLocalized("C1M2", "str_C1M2_Moore_Bombardment_03");
+     final static WString str_Skyrider_Bombardment_05     = getLocalized("C1M2", "str_Skyrider_Bombardment_05");
+     final static WString str_C1M2_Moore_Bombardment_04   = getLocalized("C1M2", "str_C1M2_Moore_Bombardment_04");
+     final static WString str_C1M2_Breadshow_Descent_04   = getLocalized("C1M2", "str_C1M2_Breadshow_Descent_04");
+     final static WString str_Moore_Descent_03            = getLocalized("C1M2", "str_Moore_Descent_03");
+     final static WString str_C1M2_Breadshow_Descent_05   = getLocalized("C1M2", "str_C1M2_Breadshow_Descent_05");
+     final static WString str_Jackson_Descent_01          = getLocalized("C1M2", "str_Jackson_Descent_01");
+     final static WString str_Jackson_Descent_02          = getLocalized("C1M2", "str_Jackson_Descent_02");
+     final static WString str_C1M2_Breadshow_Descent_06   = getLocalized("C1M2", "str_C1M2_Breadshow_Descent_06");
+     final static WString str_Jackson_MortarAttack_01     = getLocalized("C1M2", "str_Jackson_MortarAttack_01");
+     final static WString str_Moore_MortarAttack_01       = getLocalized("C1M2", "str_Moore_MortarAttack_01");
+     final static WString str_Jackson_MortarAttack_02     = getLocalized("C1M2", "str_Jackson_MortarAttack_02");
+     final static WString str_Moore_MortarAttack_02       = getLocalized("C1M2", "str_Moore_MortarAttack_02");
+     final static WString str_Kingsley_MortarAttack_01    = getLocalized("C1M2", "str_Kingsley_MortarAttack_01");
+     final static WString str_Breadshow_Return_01         = getLocalized("C1M2", "str_Breadshow_Return_01");
+     final static WString str_Jackson_Return_01           = getLocalized("C1M2", "str_Jackson_Return_01");
+     final static WString str_Kingsley_Return_01          = getLocalized("C1M2", "str_Kingsley_Return_01");
+     final static WString str_Breadshow_Return_02         = getLocalized("C1M2", "str_Breadshow_Return_02");
+
+
+     final static WString str_C1M2_Breadshow_StartMove_042    = getLocalized("C1M2", "str_C1M2_Breadshow_StartMove_042");
+     final static WString str_C1M2_Breadshow_StartMove_043    = getLocalized("C1M2", "str_C1M2_Breadshow_StartMove_043");
+     final static WString str_C1M2_Breadshow_StartMove_044    = getLocalized("C1M2", "str_C1M2_Breadshow_StartMove_044");
+     final static WString str_C1M2_DispatcherHome_012         = getLocalized("C1M2", "str_C1M2_DispatcherHome_012");
+     final static WString str_C1M2_DispatcherHome_013         = getLocalized("C1M2", "str_C1M2_DispatcherHome_013");
+     final static WString str_C1M2_DispatcherHome_014         = getLocalized("C1M2", "str_C1M2_DispatcherHome_014");
+
+     final static WString str_C1M2_Breadshow_Reproof_011      = getLocalized("C1M2", "str_C1M2_Breadshow_Reproof_011");
+     final static WString str_C1M2_Kingsley_Reproof_011       = getLocalized("C1M2", "str_C1M2_Kingsley_Reproof_011");
+     final static WString str_C1M2_Breadshow_Reproof_012      = getLocalized("C1M2", "str_C1M2_Breadshow_Reproof_012");
+     final static WString str_C1M2_Breadshow_Reproof_013      = getLocalized("C1M2", "str_C1M2_Breadshow_Reproof_013");
+     final static WString str_C1M2_DispatcherHome_Reproof_011 = getLocalized("C1M2", "str_C1M2_DispatcherHome_Reproof_011");
+     final static WString str_C1M2_Breadshow_Reproof_014      = getLocalized("C1M2", "str_C1M2_Breadshow_Reproof_014");
+     final static WString str_C1M2_Breadshow_Reproof_015      = getLocalized("C1M2", "str_C1M2_Breadshow_Reproof_015");
+     final static WString str_C1M2_Breadshow_Reproof_016      = getLocalized("C1M2", "str_C1M2_Breadshow_Reproof_016");
+
+     final static WString str_Skyrider_MortarAttack_01        = getLocalized("C1M2", "str_Skyrider_MortarAttack_01");
+     final static WString str_Moore_MortarAttack_03           = getLocalized("C1M2", "str_Moore_MortarAttack_03");
+
+
+     //
+     //Subtitles
+     //
+
+     //Reel2
+     final static WString str_C1M2_reel2_subtitles01         = getLocalized("C1M2", "str_C1M2_reel2_subtitles01");
+
+
+     //
+     //Movies
+     //
+
+     //Reel2
+     final static WString str_C1M2_reel2_Moore_01     = getLocalized("C1M2", "str_C1M2_reel2_Moore_01");
+     final static WString str_C1M2_reel2_Moore_02     = getLocalized("C1M2", "str_C1M2_reel2_Moore_02");
+     final static WString str_C1M2_reel2_Breadshow_01 = getLocalized("C1M2", "str_C1M2_reel2_Breadshow_01");
+     final static WString str_C1M2_reel2_Breadshow_02 = getLocalized("C1M2", "str_C1M2_reel2_Breadshow_02");
+     final static WString str_C1M2_reel2_Breadshow_03 = getLocalized("C1M2", "str_C1M2_reel2_Breadshow_03");
+     final static WString str_C1M2_reel2_Breadshow_04 = getLocalized("C1M2", "str_C1M2_reel2_Breadshow_04");
+     final static WString str_C1M2_reel2_Pilot1_01    = getLocalized("C1M2", "str_C1M2_reel2_Pilot1_01");
+     final static WString str_C1M2_reel2_Pilot1_02    = getLocalized("C1M2", "str_C1M2_reel2_Pilot1_02");
+     final static WString str_C1M2_reel2_Pilot1_03    = getLocalized("C1M2", "str_C1M2_reel2_Pilot1_03");
+     final static WString str_C1M2_reel2_Pilot2_01    = getLocalized("C1M2", "str_C1M2_reel2_Pilot2_01");
+     final static WString str_C1M2_reel2_Pilot2_02    = getLocalized("C1M2", "str_C1M2_reel2_Pilot2_02");
+     final static WString str_C1M2_reel2_Jackson_01   = getLocalized("C1M2", "str_C1M2_reel2_Jackson_01");
+
+}

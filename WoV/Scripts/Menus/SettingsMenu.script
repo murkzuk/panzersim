@@ -1,0 +1,55 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+class CSettingsMenu
+  extends CBaseMenu, CSettingsControls
+{
+  static String m_MenuClassName = "CSettingsMenu";
+  static boolean GameButtonVisible;
+  static String BackMenu;
+
+  void OnInitMenu()
+  {
+    Component Game = new #GameController();
+    Component MenuController = Game.GetMenuController();
+    MenuController.SetDefaultCommands("ControlsButton", "Back");
+    setVisibleState(GetObject("GameButton"), GameButtonVisible);
+    CVideoOptionsMenu::FullMode = GameButtonVisible;
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    if ("GameButton" == _ID)
+    {
+      Component GameSettings = new #GameSettings();
+      GameSettings.SetUserValue(L"CurrentPlayer", L"null");
+      Invoke("GameOptionsMenu");
+    }
+    if ("ControlsButton" == _ID)
+    {
+      CControlsMenu::BackMenu = "SettingsMenu";
+      Invoke("ControlsMenu");
+    }
+    if ("AudioButton" == _ID)
+      Invoke("AudioOptionsMenu");
+    if ("VideoButton" == _ID)
+      Invoke("VideoOptionsMenu");
+    if ("Back" == _ID)
+    {
+      if (BackMenu != "")  
+        Invoke(BackMenu);
+      else
+        GoBack();
+    }
+
+  }
+}

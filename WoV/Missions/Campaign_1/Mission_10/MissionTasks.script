@@ -1,0 +1,254 @@
+class C1M10WingmanTask extends CWingmanTask
+{
+   //final static Array FORMATION_VECTORS = [new Vector(-70, 35, 30), new Vector(-70, -35, 30), new Vector(-140, 70, 30)];
+
+   event void ToHome()
+   {
+    if (GetMission().isDebug)
+        logError(m_LeaderID);
+
+     SetEnemyReactionType(ERT_FRIGID);
+     WingmanDisconnect();
+     //Wingman_Follow(m_LeaderID);
+     SetOrder_MoveTo_Trace(GetNavPointPos("NavPoint_MainPlayerUnitLandingBase"), "NavPoint_MainPlayerUnitLandingBase" ,0.0);
+     sendEvent(5.0, getIdentificator(user), "Connect", []);
+   }
+
+   event void Connect()
+   {
+     if (GetMission().isDebug)
+        logError("Connect");
+
+     WingmanConnect("MainPlayerUnit");
+   }
+
+   void OnEnemyCame( String _EnemyID)
+   {
+      CWingmanTask::OnEnemyCame(_EnemyID);
+
+      if(GetMission().isDebug)
+           logWarning("[OnEnemyCame] Enemy with ID = " + _EnemyID);
+
+      if(_EnemyID.IsStartsWith("C1M10_Barrier_"))
+           sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10AttackBeginning"]);
+
+//      sendEvent(0.0, "MainPlayerUnit_Wingman_1", "DisconnectWingman", []);
+//         sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10PlayerMovingBack"]);
+
+   }
+}
+
+class C1M10WingmanTaskStay extends CWingmanTask
+{
+ void Init()
+ {
+  sendEvent(5.0, getIdentificator(user), "OpenDoor", []); //Было  getIdentificator(this)
+  DisableLifeEffects(getIdentificator(user));
+ }
+}
+
+class C1M10PeasantTaskStay extends CBasePeasantTask
+{
+ void Init()
+ {
+    ActivateBehavior(false);
+ }
+}
+
+class C1M10_Barrier_VietnameseGroup extends CBaseUnitGroup
+{
+ void Init()
+ {
+   CBaseUnitGroup::Init();
+   ActivateMovement(false);
+ }
+
+ event void GroupCanMove()
+ {
+   ActivateMovement(true);
+ }
+}
+
+ class C1M10BoatTask extends CBaseAITask
+ {
+   void Init()
+   {
+    ActivateMovement(false);
+    ActivateFire(false);
+    ActivateRadar(false);
+    SetFrigidMode(true);
+   }
+
+   event void StartBoat()
+   {
+     if (GetMission().isDebug)
+       logError("StartBoat");
+
+     ActivateMovement(true);
+     ActivateFire(true);
+     ActivateRadar(true);
+     m_EnemyReactionType = ERT_PASSIVE;
+
+     Array ApproachPoints = [
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_0"),
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_1"),
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_2"),
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_3"),
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_4"),
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_5"),
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_6"),
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_7"),
+                             GetNavPointBehPos("NavPoint_WayAmricanBoat_8")
+                            ];
+
+     Array Orders;
+
+     for (int i = 0; i < ApproachPoints.size(); i++)
+     {
+       Orders.add(["MoveTo", "setOrder_MoveTo_Direct", [ApproachPoints[i], 10.0], "OnStopped"]);
+     }
+
+     ExtendQueueOrder(Orders);
+   }
+
+   event void StopBoat()        //Эти строки пока останутьс
+   {
+     ActivateMovement(false);
+     ActivateFire(false);
+     ActivateRadar(false);
+   }
+ }
+
+ class C1M10WingmanGroup extends CBaseUnitGroup
+ {
+    Component HelicCurrentOrder = new CGroupOrder();;
+    void Init()
+    {
+      SetImmortalMode(true);
+      SetEnemyReactionType(ERT_PASSIVE);
+    }
+ }
+
+
+ class C1M10TransportTask extends CTransportWingmanTask
+ {
+    void Init()
+    {
+      GetSelf().SetImmortalMode(true);
+    }
+    boolean TransportMoveToLand = false;
+
+    event void StartTransport()
+    {
+      sendEvent(0.0, getIdentificator(user), "Wingman_TakeOff",    [] );
+    }
+
+    //fireEvent( 0.0, [], "MoveToPointLand", [50.0, 100.0]);
+    //fireEvent( 0.0, [], "MoveToPointHome", [50.0, 100.0]);
+    event void MoveToPointLand(float _Height, float _Speed)
+    {
+      sendEvent(0.0, getIdentificator(user), "Wingman_TakeOff",    [] );
+      Wingman_TakeOff();
+      if(GetMission().isDebug)
+      {
+        logWarning("[MoveToPointLand] event MoveToPointLand    HelicID=" + getIdentificator(user));
+        logWarning("[MoveToPointLand] _Height=" + new String(_Height) + "  _Speed=" + new String(_Speed));
+      }
+        TransportMoveToLand = true;
+        SetFlyingHeight(_Height);
+        SetOrder_MoveTo( GetNavPointBehPos("NavPoint_Landing_" + getIdentificator(user)), _Speed);
+        //logError("SetOrder_MoveTo NAVPOINT="+ "NavPoint_Landing_" + getIdentificator(user));
+    }
+
+    //fireEvent( 0.0, [], "MoveToPointHome", [50.0, 100.0]);
+    event void MoveToPointHome(float _Height, float _Speed)
+    {
+      if(GetMission().distance(getIdentificator(user), "MainPlayerUnit") > 2000.0)
+         GetMission().SetObjectiveStatus(1, MOSID_Failed);
+
+      GetMission().SetObjectiveStatus(1, MOSID_Completed);
+
+      GetMission().GetObject("CC1M10SpeedWatcher").SetUpdatePeriod(0);
+      GetMission().GetObject("CC1M10SpeedWatcher").SetEventHandler(null);
+
+      sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10TransportGone"]);
+
+      TransportMoveToLand = false;
+      sendEvent(0.0, getIdentificator(user), "Wingman_TakeOff",    [] );
+
+      addClassificatorObject("MainPlayerUnit", GetMission().PlayerWasProtectionTransport);
+
+      Wingman_TakeOff();
+      if(GetMission().isDebug)
+      {
+        logWarning("[MoveToPointHome] event MoveToPointHome    HelicID=" + getIdentificator(user));
+        logWarning("[MoveToPointHome] _Height=" + new String(_Height) + "  _Speed=" + new String(_Speed));
+      }
+      Wingman_Recharge("NavPoint_LZ_Falcon");
+      SetFlyingHeight(_Height);
+      ChangeMoveSpeed(_Speed);
+      GetMission().PlayerToHome();
+    }
+
+     void OnStopped()
+     {
+         CTransportWingmanTask::OnStopped();
+        //logWarning("[OnStopped] MoveToPointLand=" + new String(MoveToPointLand));
+         if ( TransportMoveToLand )
+         {
+           sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M10TransportLanded"]);
+
+           sendEvent(0.0, getIdentificator(user), "Landing", ["NavPoint_Landing_" + getIdentificator(user)]);
+           sendEvent(10.0, getIdentificator(user) + "_DesantGroup", "LoadHelicopter", [getIdentificator(user), "NavPoint_Landing_See_" + getIdentificator(user)]);
+         }
+     }
+
+
+
+     event void OnGroupLoaded(String _GroupID)
+     {
+       if(GetMission().isDebug)
+          logWarning("[OnGroupLoaded]");
+
+       MoveToPointHome(50.0, 100.0);
+     }
+ }
+
+
+ class C1M10Plei_Me_Uh1d_1_DesantGroup extends  CBaseUnitGroup
+ {
+   void Init()
+   {
+     CBaseUnitGroup::Init();
+     //ActivateGroup(false);
+   }
+
+   event void UnloadHelicopter(String _Helic, String _NavPoint)
+   {
+     if(GetMission().isDebug)
+        logWarning("Group ID=" + getIdentificator(user) + " recived  event UnloadHelicopter");
+
+     SetOrder_Unload( _Helic, _NavPoint, 500, 40);
+   }
+
+   event void LoadHelicopter(String _HelicID, String _NavPoint)
+   {
+      //logWarning("Group ID="+ getIdentificator(user) + " SetOrder_Load in Helic ID=" +_HelicID);
+      SetOrder_Load(_HelicID, false, "LoadToTransportShortRunoffRight");
+      m_CurrentOrder.m_MovingSpeed = 2.0f;
+   }
+ }
+
+ class C1M10_Guardians  extends CBaseUnitGroup
+ {
+   void Init()
+   {
+     if(GetMission().isDebug)
+       logWarning("Group  ID=" + getIdentificator(user) + " Guardians INIT ");
+
+     CBaseUnitGroup::Init();
+     ActivateMovement(false);
+     ActivateRadar(false);
+     ActivateFire(false);
+   }
+ }

@@ -1,0 +1,113 @@
+
+ class C1M6WingmanTask extends CWingmanTask
+ {
+   final static Array FORMATION_VECTORS = [new Vector(-70, 35, 30), new Vector(-70, -35, 30), new Vector(-140, 70, 30)];
+
+   event void ToHome()
+   {
+     //logError(m_LeaderID);
+     SetEnemyReactionType(ERT_FRIGID);
+     Wingman_Follow(m_LeaderID);
+   }
+
+  event void EndPathToHome()
+  {
+    if(GetMission().isDebug)
+        logWarning("Recharge EndPathToHome for unit "+ getIdentificator(user));
+
+    setOrder_MoveTo(GetNavPointBehPos("NavPoint_MainPlayerUnitLandingBase"), 40.0);
+    //SetOrder_Recharge("NavPoint_MainPlayerUnitLandingBase");
+  }
+ }
+
+ class C1M6WingmanGroup extends CBaseUnitGroup
+ {
+
+  event void ToHomeGroup()
+  {
+    ForEachUnitTask("ToHome", []);
+  }
+
+ }
+
+ class C1M6BoatTask extends CBaseAITask
+ {
+  void RetreatUnit()
+  {
+     ActivateMovement(true);
+     //SetOrderName("");
+     Vector Rand = new Vector(rand(10.0, 30.0));
+     Array ApproachPoints = [
+                              GetNavPointBehPos("NavPoint_Junk_Retreat_0") + Rand,
+                              GetNavPointBehPos("NavPoint_Junk_Retreat_1") + Rand,
+                              GetNavPointBehPos("NavPoint_Junk_Retreat_2") + Rand
+                            ];
+
+     SetFirstQueueOrders([
+                  ["Retreat", "SetOrder_MoveToEx", [ApproachPoints, 5.0f], ""],
+                  ["Retreat", "OnStopped", [], ""]
+                    ]);
+
+  }
+ }
+
+ class GroupUnit_NavalBoat extends CBaseUnitGroup
+ {
+  Array NavPointRetreat = ["NavPoint_Junk_Retreat_0", "NavPoint_Junk_Retreat_1", "NavPoint_Junk_Retreat_2"];
+  void Init()
+  {
+    RefreshUnitsList();
+    for( int i = 1; i < m_Units.size(); i++)
+       InvokeUnitTaskFunction(m_Units[i], "ActivateMovement", [false]);
+
+    CBaseUnitGroup::Init();
+  }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    RefreshUnitsList();
+    ForEachUnitTask("RetreatUnit", []);
+  }
+ }
+
+ class GroupUnit_TruckUnit extends CBaseUnitGroup
+ {
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateMovement(false);
+  }
+  /*
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    RefreshUnitsList();
+    SetOrderName("");
+    SetFormation("Column", 20, false, false);
+    Vector Rand = new Vector(rand(10.0, 50.0));
+    Array ApproachPoints = [
+                             GetNavPointBehPos("NavPoint_Track_Retreat_0") + Rand,
+                             GetNavPointBehPos("NavPoint_Track_Retreat_1") + Rand,
+                             GetNavPointBehPos("NavPoint_Track_Retreat_2") + Rand
+                            ];
+
+    SetFirstQueueOrders([
+                 ["Retreat", "SetOrder_MoveToEx", [ApproachPoints, 10.0f], ""],
+                 ["Retreat", "OnStopped", [], ""]
+                   ]);
+  } */
+ }
+
+ class C1M6_Guardians  extends CBaseUnitGroup
+{
+    void Init()
+    {
+      if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " Guardians INIT ");
+
+      CBaseUnitGroup::Init();
+      ActivateMovement(false);
+      ActivateRadar(false);
+      ActivateFire(false);
+    }
+}

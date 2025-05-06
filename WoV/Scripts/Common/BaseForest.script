@@ -1,0 +1,348 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CTreeDescriptor
+{
+  CTreeDescriptor()
+  {
+  }
+
+  CTreeDescriptor(
+      String  _NormalModelClass,
+      String  _DamagedModelClass
+    )
+  {
+    NormalModelClass   = _NormalModelClass;
+    DamagedModelClass  = _DamagedModelClass;
+  }
+
+  String    NormalModelClass;
+  String    DamagedModelClass;
+
+}
+
+class CBaseForest
+{
+  int     QuadtreeDepth                = 8;
+  int     TemplateSize                 = 128;
+
+  Array   LevelDistribution            = [ 1600   ];
+  Array   LevelRangeMin                = [ 2600.0 ];
+  Array   LevelRangeMax                = [ 2600.0 ];
+
+  Array   CellLods                     = [ 
+                                            [ 300.0,  0.90 ], 
+                                            [ 600.0,  0.75 ],
+                                            [ 900.0,  0.50 ],
+                                            [ 1200.0, 0.25 ]    
+                                         ];
+
+  float   BurnDelay                    = 10.0;
+  float   ModelDistance                = 15.0;
+
+  float   ShiftRange                   = 0.01;
+
+  float   HighDensityFactor            = 16.0;
+
+  // Distances for non-bordered cells
+  float   MinVariableDistance          = 470.0;
+  float   MaxVariableDistance          = 530.0;
+  // Distances for bordered cells
+  int     BorderCells                  = 2;
+  float   MinVariableDistanceForBorder = 770.0;
+  float   MaxVariableDistanceForBorder = 830.0;
+
+
+  String  BulletHitEffect              = "ForestBulletHitEffect";
+  String  BulletHitSound               = "ForestBulletHitSound";
+  String  ExplosionEffect              = "ForestExplosionEffect";
+  String  ExplosionSound               = "ForestExplosionSound";
+
+  float   DamageRadiusScale            = 0.2;
+
+  //
+  //  Trees in format [ Main model class, Damaged model class ]
+  //
+
+  final static Component  BambooMD              = new CTreeDescriptor("CBambooMD",              "CBambooMDDestroyed");
+  final static Component  BambooRT              = new CTreeDescriptor("CBambooRT",              "CBambooRTDestroyed");
+  final static Component  GimletRT              = new CTreeDescriptor("CGimletRT",              "CGimletRTDestroyed");
+  final static Component  JapaneseMapleRTSummer = new CTreeDescriptor("CJapaneseMapleRTSummer", "CJapaneseMapleRTSummerDestroyed");
+  final static Component  PagodaTreeRT1         = new CTreeDescriptor("CPagodaTreeRT1",         "CPagodaTreeRT1Destroyed");
+  final static Component  PagodaTreeRT2         = new CTreeDescriptor("CPagodaTreeRT2",         "CPagodaTreeRT2Destroyed");
+  final static Component  PagodaTreeRT3         = new CTreeDescriptor("CPagodaTreeRT3",         "CPagodaTreeRT3Destroyed");
+  final static Component  AmericanBoxwoodRT     = new CTreeDescriptor("CAmericanBoxwoodRT",     "CAmericanBoxwoodRTDestroyed");
+  final static Component  WeepingWillowRT       = new CTreeDescriptor("CWeepingWillowRT",       "CWeepingWillowRTDestroyed");
+  final static Component  BananaTreeRT          = new CTreeDescriptor("CBananaTreeRT",          "CBananaTreeRTDestroyed");
+  final static Component  NullTree              = new CTreeDescriptor();
+
+  Component MaterialManager = new #MaterialManager<CTreeMaterialSubstances>();
+
+  CBaseForest()
+  {
+    MaterialManager.LoadPhysicsTable(CSubstances::PhysicsTable);
+  }
+
+
+}
+
+class CExtraLightForest
+{
+  int   CreationCount = 6;
+  float MinDistance   = 12.0;
+  Array TreeCreationProbability = [
+                                    [CBaseForest::AmericanBoxwoodRT, 0.40],
+                                    [CBaseForest::GimletRT, 0.25],
+                                    [CBaseForest::BananaTreeRT, 0.15],
+                                    [CBaseForest::BambooMD, 0.08],
+                                    [CBaseForest::BambooRT, 0.12]
+                                  ];
+}
+
+class CLightForest
+{
+  int   CreationCount = 30;
+  float MinDistance   = 4.0;
+  Array TreeCreationProbability = [
+                                    [CBaseForest::BambooMD, 0.20],
+                                    [CBaseForest::BambooRT, 0.15],
+                                    [CBaseForest::AmericanBoxwoodRT, 0.20],
+                                    [CBaseForest::JapaneseMapleRTSummer, 0.20],
+                                    [CBaseForest::GimletRT, 0.25]
+                                  ];
+}
+
+class CMiddleForest
+{
+  int   CreationCount = 40;
+  float MinDistance   = 4.0;
+  Array TreeCreationProbability = [
+                                    [CBaseForest::JapaneseMapleRTSummer, 0.05],
+                                    [CBaseForest::WeepingWillowRT, 0.15],
+                                    [CBaseForest::PagodaTreeRT2, 0.15],
+                                    [CBaseForest::AmericanBoxwoodRT, 0.15],
+                                    [CBaseForest::PagodaTreeRT3, 0.15],
+                                    [CBaseForest::BambooMD, 0.2],
+                                    [CBaseForest::PagodaTreeRT1, 0.15]
+                                  ];
+}
+
+class CLargeForest
+{
+
+  int   CreationCount = 70;
+  float MinDistance   = 1.2;
+  Array TreeCreationProbability = [
+                                    [CBaseForest::JapaneseMapleRTSummer, 0.05],
+                                    [CBaseForest::WeepingWillowRT, 0.2],
+                                    [CBaseForest::PagodaTreeRT1, 0.1],
+                                    [CBaseForest::PagodaTreeRT2, 0.3],
+                                    [CBaseForest::PagodaTreeRT3, 0.3],
+                                    [CBaseForest::AmericanBoxwoodRT, 0.05]
+                                  ];
+}
+class CSTBaseForestC1 extends CBaseForest, CBaseZoneMap
+{
+  //
+  // Settings
+  //
+
+  Array ZoneValues = [
+//      ZMC_Forest01,
+//      ZMC_Forest02,
+//      ZMC_Forest03,
+//      ZMC_Forest04,
+//      ZMC_Forest05,
+//      ZMC_Forest06,
+      ZMC_Forest01
+//      ZMC_Forest08,
+//      ZMC_Forest09
+    ];
+
+ Array CellTemplates = [
+   [
+    23,
+    [PagodaTreeRT1, 10.0, 15.0],
+    [PagodaTreeRT2, 16.0, 10.0],
+    [AmericanBoxwoodRT, 18.0, -14.5],
+    [AmericanBoxwoodRT, 4.0, 4.0],
+    [WeepingWillowRT, -14.5, -5.0]
+   ],
+
+   [
+    24,
+    [BambooRT, 10.0, 15.0],
+    [BambooRT, 16.0, 10.0],
+    [BananaTreeRT, 18.0, -14.5],
+    [BambooMD, 4.0, 4.0],
+    [AmericanBoxwoodRT, -14.5, -5.0]
+   ],
+/*
+   [
+    24,
+    [BambooRT, -3.0, -3.0],
+    [BambooMD, -15.0, -15.0],
+    [BambooMD, -2.0, -2.0],
+    [AmericanBoxwoodRT, -11.0, -11.0],
+    [BananaTreeRT, -10.0, -11.0]
+   ],
+*/
+   [
+    25,
+    [JapaneseMapleRTSummer, -5.0, 0.0],
+    [AmericanBoxwoodRT, 5.0, 8.0]
+   ],
+
+   [
+    26,
+    [PagodaTreeRT1, -1.0, -1.0],
+    [AmericanBoxwoodRT, 15.0, -15.0],
+    [AmericanBoxwoodRT, 2.0, 10.0]
+   ],
+
+   [
+    27,
+    false,
+    new CLightForest()
+   ],
+
+   [
+    28,
+    new CMiddleForest()
+   ],
+
+   [
+    29,
+    new CLargeForest()
+   ],
+
+   [
+    30,
+    false,
+    new CExtraLightForest()
+   ]
+  ];
+
+  // This template use with horizontal forest
+  Array VariableTemplates = [
+      [
+        ZMC_Forest01,
+        5,
+        new CMiddleForest()
+      ],
+      [
+        ZMC_Forest02,
+        5,
+        new CLightForest()
+      ],
+      [
+        ZMC_Forest03,
+        5,
+        new CExtraLightForest()
+      ]
+    ];
+
+  Array Descriptors = [
+//        [ BambooMD               ],
+//        [ BambooRT               ],
+//        [ JapaneseMapleRTSummer  ],
+//        [ PagodaTreeRT1,
+//          PagodaTreeRT2          ],
+//        [ PagodaTreeRT1          ],
+//        [ AmericanBoxwoodRT,
+//          BananaTreeRT           ],
+//        [ WeepingWillowRT        ],
+        [ WeepingWillowRT,
+          BambooMD,
+          BambooRT,
+          JapaneseMapleRTSummer,
+          AmericanBoxwoodRT      ] //,
+//        [ WeepingWillowRT,
+//          BambooRT,
+//          JapaneseMapleRTSummer,
+//          AmericanBoxwoodRT      ]
+    ];
+
+  Component MissionAtmosphere = null;
+
+  CSTBaseForestC1(
+      Component _MissionAtmosphere
+    )
+  {
+    MissionAtmosphere = _MissionAtmosphere;
+  }
+}
+
+class CTreeMaterialSubstances
+{
+    Array Materials = [
+        new CSubstanceMaterial(
+            "bush",
+            CMaterialStructure::MSID_Bush
+          )
+      ];
+}
+
+class CSTBaseForestC1Skin
+{
+  // "DISABLE",      // вылезающий слой с альфой
+  // "NORMAL",       // невылезающий слой с альфой
+  // "ADDITIVE",     // невылезающий без альфы
+
+  Array Materials = [
+      new CForestPlaneMaterial(
+          "L1",
+          "Textures/Forest_1.tex",
+          "DISABLE"     // используется только для определения нижнего сло
+        ),
+
+      new CForestPlaneMaterial(
+          "L2",
+          "Textures/Forest_2.tex",
+          "NORMAL"
+        ),
+
+      new CForestPlaneMaterial(
+          "L3",
+          "Textures/Forest_3.tex",
+          "NORMAL"
+        ),
+
+      new CForestPlaneMaterial(
+          "L4",
+          "Textures/Forest_4.tex",
+          "NORMAL"
+        ),
+      new CForestPlaneMaterial(
+          "L5",
+          "Textures/Forest_5.tex",
+          "NORMAL"
+        ),
+      new CForestPlaneMaterial(
+          "L6",
+          "Textures/Forest_6.tex",
+          "NORMAL"
+        ),
+      new CForestPlaneMaterial(
+          "L7",
+          "Textures/Forest_7.tex",
+          "NORMAL"
+        ),
+      new CForestPlaneMaterial(
+          "L8",
+          "Textures/Forest_8.tex",
+          "NORMAL"
+        ),
+      new CForestPlaneMaterial(
+          "L9",
+          "Textures/Forest_9.tex",
+          "NORMAL"
+        )
+    ];
+}

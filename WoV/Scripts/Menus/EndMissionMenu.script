@@ -1,0 +1,318 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CEndMissionMenu
+  extends CBaseMenu, CEndMissionControls
+{
+  static String m_MenuClassName = "CEndMissionMenu";
+
+  final WString m_CustomText = getLocalized("Menu","str_OG_CUSTOM");
+
+  WString m_MissionText = getLocalized("Menu","str_CM_MISSION");
+  WString m_OFText       = getLocalized("Menu","str_CM_OF");
+
+  final Array m_DifficultyText = [ 
+                                   getLocalized("Menu","str_OG_EASY"),
+                                   getLocalized("Menu","str_OG_NORMAL"),
+                                   getLocalized("Menu","str_OG_HARD")
+                                 ];
+
+  final Array m_MissionStatusText = [ [getLocalized("Menu","str_EM_IN_PROGRESS"), new Color(0.784314, 0.760784, 0.619608)],
+                                      [getLocalized("Menu","str_EM_COMPLETED"), new Color(0.0,1.0,0.0)],
+                                      [getLocalized("Menu","str_EM_FAILED"), new Color(1.0,0.0,0.0)],
+                                      [getLocalized("Menu","str_EM_COMPLETED"), new Color(0.0,1.0,0.0)]
+                                    ];
+
+
+  static int     MissionStatus = CMission::MOSID_InProgress;
+
+  static int     BLDKilled = 0;
+  static int     VEHKilled  = 0;
+
+  static int     HitsCount    = 0;
+  static int     ShootsCount    = 0;
+
+  void OnInitMenu()
+  {
+    boolean complete = ((MissionStatus == CMission::MOSID_Completed) || (MissionStatus == CMission::MOSID_FullCompleted));
+    setVisibleState(GetObject("CompleteButton"), complete);
+    setVisibleState(GetObject("LeaveButton"), !complete);
+
+    if ((MissionStatus == CMission::MOSID_FullCompleted) || (MissionStatus == CMission::MOSID_Failed))
+    {
+      GetObject("BackButton").SetDisabled(true);
+      m_MenuController.SetDefaultCommands("", "");
+    }
+    else
+    {
+      m_MenuController.SetDefaultCommands("", "BackButton");
+    }
+
+    GetObject("Shoots").SetText(new WString(ShootsCount));
+    GetObject("Hits").SetText(new WString(HitsCount));
+
+    int Accuracy = 0;
+    if (ShootsCount > 0)
+      Accuracy = (HitsCount* 100)/ShootsCount;
+
+    GetObject("Accuracy").SetText(new WString(Accuracy) + L"%");
+
+    GetObject("KilledBuildings").SetText(new WString(BLDKilled/2));
+    GetObject("KilledAuto").SetText(new WString(VEHKilled/2));
+
+    Component GameSettings = new #GameSettings();
+    WString Player = GameSettings.GetUserValue(L"CurrentPlayer", L"");
+
+    WString CampaignName = GameSettings.LoadPlayerValue(Player, L"Name", L"");
+    WString PlayerName   = GameSettings.LoadPlayerValue(Player, L"IDName", L"");
+    int Status           = GameSettings.LoadPlayerValue(Player, L"Status", 1);
+    int MaxStatus        = GameSettings.LoadPlayerValue(Player, L"MaxStatus", 1);
+    int Difficulty       = GameSettings.LoadPlayerValue(Player, L"Difficulty", 0);
+    
+    GetObject("CampaignName").SetText(CampaignName);
+    GetObject("PlayerID").SetText(PlayerName);
+    GetObject("MissionNumber").SetText(
+                          m_MissionText + L" " + new WString(Status) + L" " + m_OFText + L" " + new WString(MaxStatus)
+                           );
+
+    if (Difficulty != -1)
+      GetObject("DifficultyText").SetText(m_DifficultyText[Difficulty]);
+    else
+      GetObject("DifficultyText").SetText(m_CustomText);
+
+    GetObject("BriefingText").SetSlaveScroller(GetObject("BriefingScroll"));
+    GetObject("ObjectivesList").SetSlaveScroller(GetObject("ObjectivesScroll"));
+    GetObject("ObjectivesList").SetListScrollStep(25.0 / 768.0);
+
+    FillObjectivesList(0.0);
+
+
+    // Setup timer
+    Component Timer = new #Timer();
+    Timer.SetEventHandler(this);
+    Timer.SetTickEvent("Update", 0.5);
+    Timer.Enable(true);
+    RegisterObject("EscTimer", Timer);
+
+    Component PlayerUnit = new #GameController().GetLoadedMission().GetObject("MainPlayerUnit");
+    PlayerUnit.ShowCursor(false, true);
+  }
+
+  void OnCloseMenu()
+  {
+  }
+
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    GetObject("BriefingText").Update();
+
+    if ("BackButton" == _ID)
+    {
+      m_MenuController.GetObject("Cursor").ShowCursor(false);
+
+      Component Game = new #GameController();
+      Game.EnableControl("GameMenu", false);
+      Game.RestoreCS();
+      Game.SwitchPause();
+      Component PlayerUnit = new #GameController().GetLoadedMission().GetObject("MainPlayerUnit");
+      PlayerUnit.ShowCursor(PlayerUnit.GetObject("TerrainMap").IsEnabled(),
+                            !PlayerUnit.GetObject("TerrainMap").IsEnabled());
+    }
+    else
+    if ("CompleteButton" == _ID)
+    {
+      Component Game = new #GameController();
+      Component MenuController = Game.CreateMenuController();
+      Game.RestoreCS();
+      Game.SwitchPause();
+//      Game.UnloadMission();
+//      Game.CreateMenuController();
+      sendEvent(0.0, SOID_GameController, "QuitMission", []);
+      Component GameSettings = new #GameSettings();
+      WString Player = GameSettings.GetUserValue(L"CurrentPlayer", L"");
+
+      final int iMission = GameSettings.LoadPlayerValue(Player, L"Status", 1);
+      final int iMaxMission = GameSettings.LoadPlayerValue(Player, L"MaxStatus", 1);
+
+      if (iMission < iMaxMission)
+      {
+        GameSettings.SavePlayerValue(Player, L"Status", iMission + 1);
+
+        new #GameController().m_StartMission = CCampaignMenu::Missions[iMission][0];
+        logMessage(new #GameController().m_StartMission);
+        Invoke("GameEnvironmentMenu");
+      }
+      else
+      {
+        GameSettings.SavePlayerValue(Player, L"Status", -1);
+        Invoke("CreditsMenu");
+      }
+      MenuController.GetObject("Cursor").ShowCursor(true);
+      MenuController.LockChangeInputMode(false);
+      Game.EnableControl("GameMenu", true);
+    }
+    else
+    if ("LeaveButton" == _ID)
+    {
+      Component Game = new #GameController();
+      Component MenuController = Game.CreateMenuController();
+      Game.RestoreCS();
+      Game.SwitchPause();
+//      Game.UnloadMission();
+//      Game.CreateMenuController();
+      sendEvent(0.0, SOID_GameController, "QuitToMainMenu", []);
+//      m_MenuController.GetObject("Cursor").ShowCursor(false);
+      MenuController.GetObject("Cursor").ShowCursor(true);
+      MenuController.LockChangeInputMode(false);
+      Game.EnableControl("GameMenu", true);
+
+    }
+    else
+    if ("RestartButton" == _ID)
+    {
+      Component Game = new #GameController();
+      Game.RestoreCS();
+      Game.SwitchPause();
+      Game.UnloadMission();
+      sendEvent(0.0, SOID_GameController, "BeginNewGame", []);
+    }
+    else
+    if ("BriefingScroll_Arrow1" == _ID)
+      GetObject("BriefingText").ScrollUp();
+    else
+    if ("BriefingScroll_Arrow2" == _ID)
+      GetObject("BriefingText").ScrollDown();
+    else
+    if ("ObjectivesScroll_Arrow1" == _ID)
+      GetObject("ObjectivesList").ScrollUp(25.0 / 768.0);
+    else
+    if ("ObjectivesScroll_Arrow2" == _ID)
+      GetObject("ObjectivesList").ScrollDown(25.0 / 768.0);
+
+  }
+
+  void FillObjectivesList(
+      float _Z
+    )
+  {
+    GetObject("ObjectivesList").ClearWithUnregister();
+    GetObject("ObjectivesList").SetListScrollStep(CUIObjectiveElement::GetElementHeight());
+
+    Component Mission = new #GameController().GetLoadedMission();
+
+    if (Mission == null) return;
+
+    Array Objectives = Mission.GetMissionObjectives();
+
+    String MissionClassName = new #GameController().GetLoadingMissionName();
+
+    GetObject("CampaignName").SetText(
+        getStaticClassMember(MissionClassName + "_Strings", "str_CampaignName")
+      );
+
+    GetObject("MissionName").SetText(
+        getStaticClassMember(MissionClassName + "_Strings", "str_MissionName")
+      );
+
+    GetObject("BriefingText").SetText(
+        getStaticClassMember(MissionClassName + "_Strings", "str_BriefingText")
+      );
+
+    GetObject("MissionNumber").SetText(
+        getStaticClassMember(MissionClassName + "_Strings", "str_MissionStatus")
+      );
+
+    GetObject("MissionStatus").SetText(m_MissionStatusText[MissionStatus][0]);
+    GetObject("MissionStatus").SetTextColor(m_MissionStatusText[MissionStatus][1]);
+
+    Component Position = new CUIPosition(0.0, 0.0, 0.29, 14.0 / 768.0);
+    Array Props = [
+                    ["TextColor", new Color(0.784314, 0.760784, 0.619608, 1.000000), false]
+                  ];
+
+    Array PriObjProps = [
+        ["Text", ["Menu", "str_EM_PRIM_OBJECTIVES"], false],
+        ["TextColor", new Color(0.784314, 0.756863, 0.619608, 1.000000), false],
+        ["Alignment", 0.000000000, false]
+       ];
+
+    Array SecObjProps = [
+        ["Text", ["Menu", "str_EM_SEC_OBJECTIVES"], false],
+        ["TextColor", new Color(0.784314, 0.756863, 0.619608, 1.000000), false],
+        ["Alignment", 0.000000000, false]
+       ];
+
+
+    String NewID = "PrimaryText";
+    CreateUIControl(NewID,
+                     "TextControl",
+                     "CUITextField",
+                     Position,
+                     PriObjProps);
+    GetObject("ObjectivesList").AddControl(NewID);
+
+    for (int Index = 0; Index < Objectives.size(); Index++)
+    {
+      if (Objectives[Index][3])
+      {
+        if (Objectives[Index][0] == CMission::MOTID_Primary)
+        {
+          String NewID = "PriObjectivesElement_" + new String(Index + 1);
+          CreateUIControl(NewID,
+                      "",
+                      "CUIObjectiveElement",
+                      Position,
+                      Props);
+
+          GetObject(NewID).SetObjectiveText(Objectives[Index][1]);
+          GetObject(NewID).SetObjectiveStatus(Objectives[Index][2]);
+          GetObject("ObjectivesList").AddControl(NewID);
+        }
+      }
+    }
+
+    NewID = "SecondaryText";
+    CreateUIControl(NewID,
+                     "TextControl",
+                     "CUITextField",
+                     Position,
+                     SecObjProps);
+    GetObject("ObjectivesList").AddControl(NewID);
+
+    for (int Index = 0; Index < Objectives.size(); Index++)
+    {
+      if (Objectives[Index][3])
+      {
+        if (Objectives[Index][0] == CMission::MOTID_Secondary)
+        {
+          NewID = "SecObjectivesElement_" + new String(Index + 1);
+          CreateUIControl(NewID,
+                      "",
+                      "CUIObjectiveElement",
+                      Position,
+                      Props);
+
+          GetObject(NewID).SetObjectiveText(Objectives[Index][1]);
+          GetObject(NewID).SetObjectiveStatus(Objectives[Index][2]);
+          GetObject("ObjectivesList").AddControl(NewID);
+        }
+      }
+    }
+
+  }
+
+  void Update(
+      float _DelatTime
+    )
+  {
+    GetObject("BriefingText").Update(); // render time update
+  }
+}

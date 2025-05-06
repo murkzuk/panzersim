@@ -1,0 +1,52 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+class Cfnt_BenchModel
+{
+  String MeshFile  = "Models/fnt_Bench.ms2";
+  String SkinClass = "Cfnt_BenchModelSkin";
+  Array  Animation = [];
+}
+
+class Cfnt_BenchModelSkin
+{
+  Array Materials = [
+      new CModelMaterial(
+        "0", // material id
+        "Textures/Barrel.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "DISABLE", // alpha mode
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        new Color(1.000000, 1.000000, 1.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        9.999999, // power
+        false // double sided
+      ),
+      new CModelMaterial(
+        "1", // material id
+        "Textures/Damaged_Building.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "DISABLE", // alpha mode
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        new Color(0.584314, 0.584314, 0.584314), // ambient
+        new Color(0.584314, 0.584314, 0.584314, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        9.999999, // power
+        false // double sided
+      )
+    ];
+}

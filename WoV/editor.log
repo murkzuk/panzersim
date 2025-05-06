@@ -1,0 +1,101 @@
+[Locale] There is no key str_C1M9_Breadshow_Reproof_016 in section [C1M9]
+[3DDriver] Adapter detected: NVIDIA GeForce RTX 4070
+[3DDriver]  ----- Identifier
+[3DDriver]   Driver version: 32.0.15.7628
+[3DDriver]   VendorID:       0x10de (NVIDIA)
+[3DDriver]   DeviceID:       0x2786
+[3DDriver]  ----- Caps
+[3DDriver]   Max texture width:     16384
+[3DDriver]   Max texture height:    16384
+[3DDriver]   Max texture repeat:    8192
+[3DDriver]   Tex repeat not scaled: 1
+[3DDriver]   Max primitive count:   ffffff
+[3DDriver]   Max vertex index:      ffffff
+[3DDriver]   Max active lights:     8
+[3DDriver]   Max texture stages:    8
+[3DDriver]   Max simultaneous tex:  8
+[3DDriver]   Max streams:           16
+[3DDriver]   Projective tex crd:    1
+[3DDriver]   Max anisotropy:        16
+[3DDriver]   Bump map:              1
+[3DDriver]   Volume map:            1
+[3DDriver]   Max volume extent:     2048
+[3DDriver]   Two sided stencil:     1
+[3DDriver]   N Patches:             0
+[3DDriver]   RT Patches:            0
+[3DDriver]   VS 2.0
+[3DDriver]     Dynamic FC Depth:  24
+[3DDriver]     Num Temps:         32
+[3DDriver]     Static FC Depth:   4
+[3DDriver]   PS 2.0
+[3DDriver]     Dynamic FC Depth:  24
+[3DDriver]     Temps Registers:   32
+[3DDriver]     Static FC Depth:   4
+[3DDriver]     Instruction Slots: 512
+[3DDriver] Adapter detected: NVIDIA GeForce RTX 4070
+[3DDriver]  ----- Identifier
+[3DDriver]   Driver version: 32.0.15.7628
+[3DDriver]   VendorID:       0x10de (NVIDIA)
+[3DDriver]   DeviceID:       0x2786
+[3DDriver]  ----- Caps
+[3DDriver]   Max texture width:     16384
+[3DDriver]   Max texture height:    16384
+[3DDriver]   Max texture repeat:    8192
+[3DDriver]   Tex repeat not scaled: 1
+[3DDriver]   Max primitive count:   ffffff
+[3DDriver]   Max vertex index:      ffffff
+[3DDriver]   Max active lights:     8
+[3DDriver]   Max texture stages:    8
+[3DDriver]   Max simultaneous tex:  8
+[3DDriver]   Max streams:           16
+[3DDriver]   Projective tex crd:    1
+[3DDriver]   Max anisotropy:        16
+[3DDriver]   Bump map:              1
+[3DDriver]   Volume map:            1
+[3DDriver]   Max volume extent:     2048
+[3DDriver]   Two sided stencil:     1
+[3DDriver]   N Patches:             0
+[3DDriver]   RT Patches:            0
+[3DDriver]   VS 2.0
+[3DDriver]     Dynamic FC Depth:  24
+[3DDriver]     Num Temps:         32
+[3DDriver]     Static FC Depth:   4
+[3DDriver]   PS 2.0
+[3DDriver]     Dynamic FC Depth:  24
+[3DDriver]     Temps Registers:   32
+[3DDriver]     Static FC Depth:   4
+[3DDriver]     Instruction Slots: 512
+[3DDriver] Creating 3D device (1045 x 611)
+[3DDriver] Z buffer format: 1920 x 1080, D24S8
+[3DDriver] Texture formats:
+[3DDriver]   R8G8B8:    false
+[3DDriver]   A8R8G8B8:  true
+[3DDriver]   X8R8G8B8:  true
+[3DDriver]   R5G6B5:    true
+[3DDriver]   A1R5G5B5:  true
+[3DDriver]   A4R4G4B4:  true
+[3DDriver]   L8:        true
+[3DDriver]   A8:        true
+[3DDriver]   L6V5U5:    false
+[3DDriver]   V8U8:      true
+[3DDriver]   Q8W8V8U8:  true
+[3DDriver]   DXT1:      true
+[3DDriver]   DXT2:      true
+[3DDriver]   DXT3:      true
+[3DDriver]   DXT4:      true
+[3DDriver]   DXT5:      true
+[3DDriver]   G8R8_G8B8: false
+[3DDriver]   R8G8_B8G8: false
+[3DDriver]   UYVY:      false
+[3DDriver]   YUY2:      false
+[3DDriver] 3DDriver: texture and render target format found: R32F
+[3DDriver] 3DDriver: texture and render target format found: R5G6B5
+[3DDriver] 3DDriver: texture and render target format found: A8R8G8B8
+[3DDriver] Create predefined texture: 512 x 512 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Create predefined texture: 256 x 256 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Create predefined texture: 1920 x 1080 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Create predefined texture: 480 x 270 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] Create predefined texture: 480 x 270 (1), format: A8R8G8B8, pool: DEFAULT
+[3DDriver] direct3d initialized successfully
+[3DDriver] surfaces restored successfully
+[SoundDriver] Unable to set wave format for primary sound buffer. Result code: 80070057

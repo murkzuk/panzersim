@@ -1,0 +1,140 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+class CM29MortarPointExplosion
+  extends CBuildingExplosion
+
+{
+  float  Damage   = 10.0;
+  float  Radius   = 5.0;
+  String    SoundId  = "M29MortarPointExplosionSound";
+}
+
+class CMortarPointGunBulletExplosion
+  extends CMortarBulletExplosion
+{
+}
+
+class CMortarPointGunBulletControl
+  extends CHeavyGunBulletControl
+{
+  Array     Classificator = [];
+  float     MaxDistance   = 100000.0;
+  Vector    GravityAccel  = CWorldPhysics::GravityVector;
+
+  String    ExplosionId  = "MortarPointGunBulletExplosion";
+  Component BulletRender = null;
+  //Component BulletRender = new #StaticEffect<CHeavyGunBulletEffect>();
+}
+
+class CMortarPointGun
+  extends CHeavyGun
+{
+  float  InitBulletSpeed = 214.0;
+  float  FireDeviation   = 0.3;
+  String BulletPatternId = "MortarPointGunBullet";
+  String FireEffectId    = "MortarGunFireEffect";
+  String CloudEffectId   = "";
+
+  String FireSoundId     = "MortarGunFireSound";
+
+  Vector GravityVector   = CWorldPhysics::GravityVector;
+
+  // *** Gun parameters for behavior
+  boolean SpecialWeapon  = true;
+
+  // *** Gun parameters for behavior
+  int  FirePeriod        = 7000;  // ms
+  int  FirePeriodRandAdd = 1000;   // ms
+
+  boolean BurstFire      = false;
+  int  BurstTime         = 2000; // ms
+  int  BurstTimeRandAdd  = 0; // ms
+
+  Array GunSpecificFireMask = [
+                                [["GROUND"],[]], // high priority mask: RestrictTo, Exclude
+                                [["NAVAL"],[]]   // low priority mask
+                              ];
+}
+
+// Behavior
+
+class CM29MortarPointUnitBehavior
+  extends CBaseGroundBehavior
+{
+  boolean  CanMove   = false;
+  boolean  HasRouter = false;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 1700; // m
+  float  MinRadarDistance = 5;    // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( 25, 0, 0);
+  float  MinRotateRadius = 0; // unit can turn when staying
+}
+
+class CM29MortarPointTargetingAnimatorA
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret_a";
+  String VerAnimName    = "gun_a";
+
+  float  LeftEndAngle   = -180.0;
+  float  RightEndAngle  =  180.0;
+  float  TopEndAngle    = -5.0;
+  float  BottomEndAngle =  60.0;
+}
+
+class CM29MortarPointUnit
+  extends CGroundBuilding
+{
+
+  final static float DefaultHitPoints = CHitPoints::M29MortarPointUnitHitPoints;
+
+  static String PrevExplosionID = "M29MortarPointExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CM29MortarPointUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_stat_M29MortarPointModel>(), [300, 150, 10]);
+
+    SetupWeapon("Weapon", new #Weapon<CMortarPointGun>(),
+      ["Fire_A"],
+      new #TargetingAnimator<CM29MortarPointTargetingAnimatorA>());
+
+
+    SetupBehavior( new #VehicleBehavior<CM29MortarPointUnitBehavior>());
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CGroundBuilding::Construct(_Mission, _PropMap);
+
+    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 0.00f);
+  }
+}

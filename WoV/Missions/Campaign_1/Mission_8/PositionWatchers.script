@@ -1,0 +1,285 @@
+class CC1M8WingmanGroupStartWatcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "NavPoint_MainPlayerUnitLandingBase";     // кто следит
+  final static Array  ControlPoints = ["MainPlayerUnit"];                       // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                               4269.593262,  // NavPoint_WayMainPlayerUnit_6
+                               4299.809082,  // NavPoint_WayMainPlayerUnit_1
+                               8100.048828,  // NavPoint_WayMainPlayerUnit_2
+                               8153.762695,  // NavPoint_WayMainPlayerUnit_5
+                              14458.955078,  // NavPoint_WayMainPlayerUnit_3
+                              15316.619141   // NavPoint_WayMainPlayerUnit_4
+
+                                  ];
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+  final static int ZoneMask2 = 4;
+  final static int ZoneMask3 = 8;
+  final static int ZoneMask4 = 16;
+  final static int ZoneMask5 = 32;
+
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  // service
+  boolean IsRing0()
+  {
+    return 0 != (m_RegionMask & ZoneMask0) ;
+  }
+
+  boolean IsRing1()
+  {
+    return 0 == (m_RegionMask & ZoneMask0) && 0 != (m_RegionMask & ZoneMask1) ;
+  }
+
+  boolean IsRing2()
+  {
+    return 0 == (m_RegionMask & ZoneMask1) && 0 != (m_RegionMask & ZoneMask2) ;
+  }
+  boolean IsRing3()
+  {
+    return 0 == (m_RegionMask & ZoneMask2) && 0 != (m_RegionMask & ZoneMask3) ;
+  }
+  boolean IsRing4()
+  {
+    return 0 == (m_RegionMask & ZoneMask3) && 0 != (m_RegionMask & ZoneMask4) ;
+  }
+   boolean IsRing5()
+  {
+    return 0 == (m_RegionMask & ZoneMask4) && 0 != (m_RegionMask & ZoneMask5) ;
+  }
+
+
+  boolean IsOut()
+  {
+    return 0 == m_RegionMask;
+  }
+
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M8WingmanGroup_WatcherBack::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logWarning( "distance(NavPoint_MainPlayerUnitLandingBase, MainPlayerUnit)=" + new String(GetMission().distance("NavPoint_MainPlayerUnitLandingBase", "MainPlayerUnit")));
+      logWarning("[AutoPilot path] PathID=" + new String(GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()));
+    }
+
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1")
+    {
+      if (_RegionMask == 62 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M8PlayerMovingTo"]);
+      if (_RegionMask == 56 )
+      {
+          if (GetMission().dialogPlayerMovingTo)
+            sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M8PlayerHalfMovingTo"]);
+          else
+            GetMission().pwatcher=true;
+
+      }
+    }
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayerAttack" ||
+        GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1")
+      if (_RegionMask == 32 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M8PreAttack"]);
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer2")
+    {
+      if (_RegionMask == 48 )
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M8PlayerMovingBack"]);
+
+      if (_RegionMask == 56)
+      {
+        if(GetMission().isDebug)
+        {
+          logWarning("      dialog_attack_end =" + new String(GetMission().dialog_attack_end));
+          logWarning("      dialog_player_start =" + new String(GetMission().dialog_player_start));
+        }
+
+        if(GetMission().dialog_attack_end)
+          GetMission().GunShipMoveBackAndTalk();
+        else
+          GetMission().dialog_player_start = true;
+
+        if(GetMission().isDebug)
+        {
+          logWarning("      dialog_attack_end =" + new String(GetMission().dialog_attack_end));
+          logWarning("      dialog_player_start =" + new String(GetMission().dialog_player_start));
+        }
+      }
+
+    }
+
+
+
+//      sendEvent(0.0, SOID_MissionController, "StartDialog", ["TargetKilled"]);
+     if (_RegionMask == 60 )
+     {
+          sendEvent(110.0, "GroupUnit_Gunship_gr", "Start_Gunship", []);
+      //  sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M8PlayerHalfMovingTo"]);
+     }
+  }
+}
+//NavPoint_WayMainPlayerUnit_1  4299.809082
+//NavPoint_WayMainPlayerUnit_2  8100.048828
+//NavPoint_WayMainPlayerUnit_3  15585.499023
+//NavPoint_WayMainPlayerUnit_4  16986.974609
+//NavPoint_WayMainPlayerUnit_5  8153.762695
+//NavPoint_WayMainPlayerUnit_6  4269.593262
+
+class CC1M8GunshipGroupSpeedWatcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "MainPlayerUnit_Gunship_1";                 // кто следит
+  final static Array  ControlPoints = ["MainPlayerUnit", "NavPoint_VK_Camp"];     // за кем следим
+  float dist;
+  final static Array RegionDefs = [1000];
+  final static int ZoneMask0 = 1;
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+    _Mission.GetObject(_Name).SetUpdatePeriod(20000);
+    //GetMission().GetObject("CC1M8GunshipGroupSpeedWatcher").SetUpdatePeriod(20000);
+    dist=GetMission().distance("MainPlayerUnit", "NavPoint_VK_Camp");
+  }
+  void PointRelativeSpeedChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      float     _RelativeSpeed
+    )
+  {
+    float _speed;
+    Array PosInfo = _PositionWatcher.GetPointInfo(0);
+    Array PositionInfo = _PositionWatcher.GetPositionInfo();
+    if(GetMission().isDebug)
+    {
+      logError( "distance(MainPlayerUnit_Gunship_1, MainPlayerUnit)=" + new String(GetMission().distance("MainPlayerUnit_Gunship_1", "MainPlayerUnit")));
+      logMessage("  RelSpeed = " + new String(PosInfo[INDEX_RelSpeed]));
+      logMessage("  Speed " + ControlPoints[_Point] + "  " + new String(PosInfo[INDEX_Speed]));
+      logMessage("  Speed " + Positionable+ "  " + new String(PositionInfo[INDEX_Speed]));
+    }
+     if(GetMission().distance("MainPlayerUnit", "NavPoint_VK_Camp") > dist)            //удаление from camp to MainPlayer
+    {
+      if(GetMission().isDebug)
+          logWarning( "MPU out from Camp; Enter change Speed; distance(MainPlayerUnit, NavPoint_VK_Camp)=" + new String(GetMission().distance("MainPlayerUnit", "NavPoint_VK_Camp")));
+      _speed = 5.0;
+      sendEvent(0.5, "GroupUnit_Gunship_gr", "ChangeMoveSpeed",[_speed]);   //сбрасываем скорость ганшипам
+      return;
+    }
+    else
+    {
+      dist=GetMission().distance("MainPlayerUnit", "NavPoint_VK_Camp");
+        if  (GetMission().distance("MainPlayerUnit_Gunship_1", "NavPoint_VK_Camp") > dist)
+        {
+          if(GetMission().isDebug)
+          {
+            logWarning( "GS long dist than MPU; Enter change Speed; distance(MainPlayerUnit_Gunship_1, NavPoint_VK_Camp)=" + new String(GetMission().distance("MainPlayerUnit_Gunship_1", "NavPoint_VK_Camp")));
+            logWarning("MPU to Camp DIST= " +  new String(dist));
+          }
+          _speed = PosInfo[INDEX_Speed];
+          sendEvent(0.5, "GroupUnit_Gunship_gr", "ChangeMoveSpeed",[_speed]);   // скорость ганшипам изменяем на скорость MainPlayer
+        }
+        else
+        {
+          if(GetMission().isDebug)
+            logWarning( "GS close than MPU to Camp; Enter change Speed; distance(MainPlayerUnit_Gunship_1, NavPoint_VK_Camp)=" + new String(GetMission().distance("MainPlayerUnit_Gunship_1", "NavPoint_VK_Camp")));
+
+          _speed = 5.0;
+          sendEvent(0.5, "GroupUnit_Gunship_gr", "ChangeMoveSpeed",[_speed]);   //сбрасываем скорость ганшипам
+        }
+    }
+
+
+
+
+  /*  if(GetMission().distance("MainPlayerUnit_Gunship_1", "MainPlayerUnit") < 2000)
+    {
+      logError( "Enter change Speed; distance(MainPlayerUnit_Gunship_1, MainPlayerUnit)=" + new String(GetMission().distance("MainPlayerUnit_Gunship_1", "MainPlayerUnit")));
+     _speed = PosInfo[INDEX_Speed];
+      sendEvent(0.5, "GroupUnit_Gunship_gr", "ChangeMoveSpeed",[_speed]);
+      logError(" _speed changed = " +  new String(_speed));
+
+    }
+    if(GetMission().distance("MainPlayerUnit", "NavPoint_VK_Camp") < dist)            //приближение from camp to MainPlayer
+    {
+      logError( "Enter change Speed; distance(MainPlayerUnit, NavPoint_VK_Camp)=" + new String(GetMission().distance("MainPlayerUnit", "NavPoint_VK_Camp")));
+     _speed = PosInfo[INDEX_Speed];
+      sendEvent(0.5, "GroupUnit_Gunship_gr", "ChangeMoveSpeed",[_speed]);   // скорость ганшипам изменяем на скорость MainPlayer
+      logError(" _speed changed = " +  new String(_speed));
+
+    } */
+
+
+
+    if(GetMission().isDebug)
+    {
+      logError( "distance(MainPlayerUnit_Gunship_1, MainPlayerUnit)=" + new String(GetMission().distance("MainPlayerUnit_Gunship_1", "MainPlayerUnit")));
+      logMessage("  RelSpeed = " + new String(PosInfo[INDEX_RelSpeed]));
+      logMessage("  Speed " + ControlPoints[_Point] + "  " + new String(PosInfo[INDEX_Speed]));
+      logMessage("  Speed " + Positionable+ "  " + new String(PositionInfo[INDEX_Speed]));
+    }
+  }
+
+
+
+
+
+  void Update(Component _Watcher)
+  {
+    // update для обоих точек
+    Array PosInfo = _Watcher.GetPointInfo(0);
+    Array PositionInfo = _Watcher.GetPositionInfo();
+    PointRelativeSpeedChanged(_Watcher, 0, PosInfo[INDEX_Speed]);
+  }
+}
+
+ class CC1M8GunshipCampWatcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "MainPlayerUnit_Gunship_1"; // кто следит
+  final static Array  ControlPoints = ["NavPoint_VK_Camp"];     // за кем следим
+  final static Array RegionDefs = [800];
+  final static int ZoneMask0 = 1;
+  int m_RegionMask = 0;
+
+
+   Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+
+   void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+
+   {
+      if(GetMission().isDebug)
+          logMessage("_RegionMask  = " +  new String(_RegionMask));
+      m_RegionMask = _RegionMask;
+      if (_RegionMask == 1 )
+          {
+             sendEvent(0.0, SOID_MissionController, "HideBarrel",[false]);
+             sendEvent(0.5, "GroupUnit_m8_cover_dshk", "dshk_hide",[]);   //Скрываем прикрывающие дшк
+          }
+   }
+
+}
+
+

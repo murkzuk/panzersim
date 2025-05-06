@@ -1,0 +1,841 @@
+//    This code is copyright 2001 by G5 Software.
+//    Any unauthorized usage, either in part or in whole of this code
+//    is strictly prohibited. Violators WILL be prosecuted to the
+//    maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class FalconHowitzerGroup extends CBaseUnitGroup
+{
+    String m_TargetNavPoint = "NavPoint_XRay_HowitzerFire";
+
+    void Init()
+    {
+      //disabling behavior
+      ForEachUnitTask("ActivateBehavior", [false]);
+
+//     —трел€ть по низкой траектории    setHighTrajectory(false);
+         for ( int i = 0; i < m_Units.size(); i++)
+         {
+             Component Behavior = GetUnitBehavior(m_Units[i]);
+             if ( Behavior != null)
+                 Behavior.setHighTrajectory(false);
+         }
+    }
+
+    event void FireToMotarPosition()
+    {
+        //activating behavior
+        ForEachUnitTask("ActivateBehavior", [true]);
+        clearEventsForObject(getIdentificator(this));
+
+         for ( int i = 0; i < m_Units.size(); i++)
+            sendEvent( rand(5.0), getIdentificator(this), "Shoot", [m_Units[i]]);
+
+        sendEvent( 10.0, getIdentificator(this), "FireToMotarPosition", []);
+    }
+
+    event void Shoot(String _UnitID)
+    {
+      InvokeUnitTaskFunction(_UnitID,"SetFireStyle_SpecialFire",[m_TargetNavPoint]);
+    }
+
+    event void StopFireToMotarPosition()
+    {
+      ForEachUnitTask("ActivateBehavior", [false]);
+    }
+}
+
+ class C1M1WingmanGroup extends CBaseUnitGroup
+ {
+
+    int countTakeOfHelic;
+
+    Component HelicCurrentOrder = new CGroupOrder();;
+
+    void Init()
+    {
+        SetImmortalMode(true);
+        SetEnemyReactionType(ERT_PASSIVE);
+        countTakeOfHelic = 0;
+    }
+
+    event void FlyTransport()
+    {
+        sendEvent( 0.0, getIdentificator(user), "StartPatrol", []);
+    }
+    event void Formation()
+    {
+      SetFormation("CMyFormation", 50, true, false);
+    }
+
+    event void StartPatrol()
+    {
+        //PopDelayedOrder();
+      for ( int i = 0; i < m_Units.size(); i++)
+      {
+        sendEvent(2*i, m_Units[i], "Vzlet", []);
+           //InvokeUnitTaskFunction( m_Units[i],"Vzlet",[]);
+      }
+
+        sendEvent( 30.0, getIdentificator(user), "PopDelayedOrder", []);
+        sendEvent( 30.0, SOID_MissionController, "CorrectionAutoPilot", []);
+
+        sendEvent( 30.0, "C1M1WingmanGroup", "GroupReachZAtEarlyPoint", [false]);
+        sendEvent( 41.0, SOID_MissionController, "SetFlyingHeightWingmanGroup", [ 400.0 , 500.0]);
+        sendEvent( 40.0, getIdentificator(user), "Formation", []);
+    }
+
+    void SaveCurrentOrder()
+    {
+        logError("SaveCurrentOrder");
+        logWarning("[SaveCurrentOrder] CurrentOrder " + new String(user.m_CurrentOrder) + "    Order " + new String(user.m_CurrentOrder.m_Order));
+        logWarning("[SaveCurrentOrder] m_NextPatrolPoint=" + new String(user.m_CurrentOrder.m_NextPatrolPoint));
+        logWarning("[SaveCurrentOrder] m_PatrolPath=" + new String(user.m_CurrentOrder.m_PatrolPath.size()));
+
+        HelicCurrentOrder = new CGroupOrder(user.m_CurrentOrder);
+        //logWarning("[SaveCurrentOrder] HelicCurrentOrder " + new String(HelicCurrentOrder) + "    Order " + new String(HelicCurrentOrder.m_Order));
+    }
+
+    void LoadCurrentOrder(Component _Order)
+    {
+        logError("BEFORE");
+        logWarning("[LoadCurrentOrder] HelicCurrentOrder " + new String(HelicCurrentOrder) + "    Order " + new String(HelicCurrentOrder.m_Order));
+        logWarning("  [LoadCurrentOrder]  CurrentOrder " + new String(HelicCurrentOrder) + "    Order " + new String(HelicCurrentOrder.m_Order));
+        logWarning("  [LoadCurrentOrder]  m_NextPatrolPoint=" + new String(HelicCurrentOrder.m_NextPatrolPoint));
+        logWarning("  [LoadCurrentOrder]  m_PatrolPath=" + new String(HelicCurrentOrder.m_PatrolPath.size()));
+        logWarning("  [LoadCurrentOrder]  Speed=" + new String(HelicCurrentOrder.m_MovingSpeed));
+        user.m_CurrentOrder = new CGroupOrder(HelicCurrentOrder);
+        logError("AFTER");
+        logWarning("[LoadCurrentOrder] CurrentOrder " + new String(user.m_CurrentOrder) + "    Order " + new String(user.m_CurrentOrder.m_Order));
+        logWarning("[LoadCurrentOrder] m_NextPatrolPoint=" + new String(user.m_CurrentOrder.m_NextPatrolPoint));
+        logWarning("[LoadCurrentOrder] m_PatrolPath=" + new String(user.m_CurrentOrder.m_PatrolPath.size()));
+        logWarning("[LoadCurrentOrder]  Speed=" + new String(user.m_CurrentOrder.m_MovingSpeed));
+        RepeatOrder();
+    }
+
+
+    event void CountUnloadHelicopter( String _HelicID)
+    {
+        countTakeOfHelic = countTakeOfHelic + 1;
+        logWarning("Helic ID=" + _HelicID + " Unload Count="+ new String(countTakeOfHelic));
+        if (countTakeOfHelic == 8)
+        {
+          GetMission().SetObjectiveVisible(1, true);
+
+          GetMission().SetObjectiveStatus(0, MOSID_Completed);
+          ForEachUnitTask("StartTransport", []);
+          sendEvent(20.0, "C1M1WingmanGroup", "WingmanContinuePatrol",  []);
+          sendEvent(10.0, SOID_MissionController, "StartDialog", ["HelicoptersTakeOff"]);
+        }
+    }
+
+    event void WingmanContinuePatrol()
+    {
+      logWarning("WingmanContinuePatrol");
+
+//        if (countTakeOfHelic == m_Units.size())
+//        {
+            removeClassificatorObject("C1M1WingmanGroup", GetMission().WingmanGroupLand);     // дл€ PositionWatcher
+            addClassificatorObject("C1M1WingmanGroup", GetMission().WingmanGroupToHome);   // дл€ PositionWatcher
+            HelicCurrentOrder.m_MovingSpeed = 50.0;
+            LoadCurrentOrder(HelicCurrentOrder);
+
+            sendEvent( 0.0, "C1M1WingmanGroup", "GroupReachZAtEarlyPoint", [false]);
+            sendEvent(   5.0, SOID_MissionController, "SetFlyingHeightWingmanGroup", [ 65.0 ,   50.0]);
+
+            sendEvent( 140.0, SOID_MissionController, "SetFlyingHeightWingmanGroup", [ 500.0 , 400.0]);
+            sendEvent( 140.0, SOID_MissionController, "SetFlyingHeightPlayer", [ 400.0]);
+            sendEvent( 140.0, SOID_MissionController, "StartDialog", ["BeforeXRays"]);
+
+            countTakeOfHelic = 0;
+//        }
+       sendEvent( 0.0, getIdentificator(user), "Formation", []);
+    }
+
+     event void OnGroupLoaded( String _GroupID)
+     {
+         logWarning("Group ID="+ getIdentificator(user) + " OnGroupLoaded");
+         logWarning("countTakeOfHelic=" + new String(countTakeOfHelic));
+         countTakeOfHelic = countTakeOfHelic + 1;
+         sendEvent( 0.0, _GroupID.GetPartPreceding("_DesantGroup"), "StartTransport",    [] );
+         if (countTakeOfHelic == m_Units.size()-2)
+         {
+             fireEvent( 5.0, [], "FlyTransport", []);
+             countTakeOfHelic = 0;
+             GetMission().StartWingman = true;
+         }
+     }
+
+     void OnPathEndReached()
+     {
+         //logWarning("OnPathEndReached for    WingmanGroup");
+         SetOrder_Recharge("NavPoint_Plei_Me_Base");
+     }
+ }
+
+ class C1M1WingmanGroup1 extends CBaseUnitGroup
+ {
+  // sendEvent(0.0, "WingmanGroup1", "TransportLastFly", []);
+   event void TransportLastFly()
+   {
+    logWarning("WingmanGroup1::TransportLastFly");
+    RefreshUnitsList();
+    ForEachUnitTask("StartTransport", []);
+    SetFormation("CWedgeFormation", 50, true, false);
+    PopDelayedOrder();
+   }
+ }
+ class C1M1WingmanGroup2 extends CBaseUnitGroup
+ {
+ }
+
+class CMyFormation extends CBaseFormation
+{
+  final static String DisplayName = "Formation";
+
+  Component GetUnitPosition(int _Rank)
+  {
+    final static Array VECTORS = [
+        new Vector( 0, 0, 0), new Vector( -100, -100, 0),
+        new Vector( 200, -200, 0), new Vector( 150, -250, 0), new Vector( 50, -300, 0), new Vector( 0, -350, 0),
+        new Vector(-100, -200, 0), new Vector(-150, -250, 0), new Vector(-220, -320, 20), new Vector(-270, -370, 20)
+        ]; //new Vector(-200, -300, 0), new Vector(-250, -350, 0)
+
+    return new CFormationVector(0., VECTORS[_Rank]);
+  }
+}
+
+
+ class C1M1TransportTask extends CTransportWingmanTask
+ {
+    void Init()
+    {
+      GetSelf().SetImmortalMode(true);
+    }
+    boolean TransportMoveToLand = false;
+
+    event void StartTransport()
+    {
+      logError("StartTransport for " + getIdentificator(user));
+      sendEvent(randnum(15), getIdentificator(user), "Wingman_TakeOff",    [] );
+    }
+
+    event void Vzlet()
+    {
+      Component Helic = GetSelf();
+      Matrix Position = getPosition(Helic);
+      Vector Dir = Position.xvec;
+      Dir.Normalize();
+      Vector PreloadedPosition = Position.origin - 900.0 * Dir;
+      PreloadedPosition.z = PreloadedPosition.z + rand(30.0, 200.0);
+      float _speed = 5.0 - 0.5*GetRank();
+      SetOrder_MoveTo(PreloadedPosition, _speed);
+    }
+
+    event void FlyingHeight(float _Height)
+    {
+      SetFlyingHeight(_Height);
+    }
+
+    event void MoveToPointLand(float _Height, float _Speed)
+    {
+        logWarning("[MoveToPointLand] event MoveToPointLand    HelicID=" + getIdentificator(user));
+        logWarning("[MoveToPointLand] _Height=" + new String(_Height) + "  _Speed=" + new String(_Speed));
+        TransportMoveToLand = true;
+        SetFlyingHeight(_Height);
+        SetOrder_MoveTo( GetNavPointBehPos("NavPoint_Landing_" + getIdentificator(user)), _Speed);
+        //logError("SetOrder_MoveTo NAVPOINT="+ "NavPoint_Landing_" + getIdentificator(user));
+    }
+
+     void OnStopped()
+     {
+         CTransportWingmanTask::OnStopped();
+         if ( TransportMoveToLand )
+         {
+            // диалог про посадку (точка посадки достигнута первым вертолетом)
+            if (getIdentificator(user) == "Plei_Me_Uh1d_1")
+            {
+              sendEvent( 0.0, SOID_MissionController, "StartDialog", ["BeginDebarkationDesant"]);
+              // диалог про посадку
+
+              sendEvent( 5.0, SOID_MissionController, "StartDialog", ["HelicoptersLandPlus10"]);
+            }
+
+             sendEvent(0.0, getIdentificator(user), "Landing", ["NavPoint_Landing_" + getIdentificator(user)]);
+             sendEvent(10.0, "XRay_" + getIdentificator(user).GetPartFollowing("Plei_Me_") + "_DesantGroup", "UnloadHelicopter", [
+                getIdentificator(user), "NavPoint_Landing_See_" + getIdentificator(user)]);
+         }
+     }
+
+     event void WingmanMidair()
+     {
+         logWarning("WingmanMidair for " + getIdentificator(user));
+         TransportMoveToLand = false;
+     }
+ }
+
+ //    sendEvent(0.0, "MainPlayerUnit_Wingman_1", "DisconnectWingman", []);
+ class C1M1WingmanTask extends CWingmanTask
+ {
+    final static Array FORMATION_VECTORS = [new Vector(-40, -40, -30), new Vector(-80, -80, 0), new Vector(-160, -160, 0)];
+
+    boolean WingmanMoveToLand = false;
+    boolean MoveToAttackRoof = false;
+
+    void Init()
+    {
+     GetSelf().GetStateControl().SetImmortalMode(true);
+    }
+
+
+    event void StartWingman()
+    {
+        sendEvent(0.0, getIdentificator(user), "TakeOff", []);
+    }
+
+    void OnStopped()
+    {
+      if (MoveToAttackRoof)
+      {
+        sendEvent( 0.0, SOID_MissionController, "DestroyXRayGroupObject", []);
+        MoveToAttackRoof = false;
+      }
+
+       CWingmanTask::OnStopped();
+    }
+
+    event void DisconnectWingman()
+    {
+        logWarning(" Wingman Disconnect");
+        WingmanDisconnect();
+        sendEvent(0.0, "MainPlayerUnit_Wingman_1", "MoveToAttackVietnamese", []);
+    }
+
+    event void ConnectWingman()
+    {
+      logWarning(" Wingman Connect");
+      WingmanConnect("MainPlayerUnit");
+    }
+
+    event void MoveToAttackVietnamese()
+    {
+      logWarning("[WingmanTask::MoveToAttackVietnamese]");
+
+      MoveToAttackRoof = true;
+      Wingman_TakeOff();
+      SetOrder_MoveTo(GetNavPointBehPos("NavPoint_MainPlayerUnit_OutputAttack_1"), 20.0);
+      //SetOrder_MoveTo(GetNavPointBehPos("NavPoint_XRay"), 60.0);
+    }
+
+    event void SetRadarUnit(Array _Mask)
+    {
+      Component Object = GetMission().GetObject(getIdentificator(user));
+
+      Component Behavior = GetBehavior();
+      if (null == Behavior)
+        return;
+
+      Component Content = GetMission().GetMission().GetContent();
+      if (null == Content)
+        return;
+
+      Array ObjRec = Content.FindObjectRecord(getIdentificator(user));
+      if (ObjRec.isEmpty())
+        return;
+
+      Component PropertiesMap = new CPropertiesMap(ObjRec[CBaseContent::INDEX_Properties]);
+
+      if (GetMission().isDebug)
+      {
+        logError(getIdentificator(user));
+        logWarning("       New Mask=" + new String(_Mask));
+        logWarning("    CurrentMask=" + new String(ObjRec[CBaseContent::INDEX_Properties]));
+        logWarning("    CurrentMask=" + new String(PropertiesMap.Get("BehRadarMask", _Mask)));
+      }
+
+      PropertiesMap.Set("BehRadarMask", _Mask);
+      Object.SetBehRadarMask(Behavior, PropertiesMap);
+
+      if (GetMission().isDebug)
+        logWarning( "   CurrentMask=" + new String(PropertiesMap.Get("BehRadarMask", _Mask)));
+    }
+ }
+
+ class C1M1WingmanGunShip extends CWingmanTask
+ {
+    event void StartWingman()
+    {
+        sendEvent(0.0, getIdentificator(user), "TakeOff", []);
+      Component Helic = GetSelf();
+      Matrix Position = getPosition(Helic);
+      Vector Dir = Position.xvec;
+      Dir.Normalize();
+      Vector PreloadedPosition = Position.origin + 600.0 * Dir;
+      PreloadedPosition.z = PreloadedPosition.z + rand(30.0, 200.0);
+      float _speed = 2.0 - 0.5*GetRank();
+      SetOrder_MoveTo(PreloadedPosition, _speed);
+    }
+
+    event void StartTransport()
+    {
+      logError("StartTransport for " + getIdentificator(user));
+    }
+ }
+
+
+ // DESANT
+ class C1M1DesantGroup extends CBaseUnitGroup
+ {
+    Array SoldierPosition = [];             // массив матриц позиций рождени€ юнитов
+    Array SoldierID       = [];             // массив ID солдат группы
+    String PersonalHelicID;
+    String PersonalNavPointLoad;
+
+
+    String NavPointTeleport;
+
+     void Init()
+     {
+        PersonalHelicID =  getIdentificator(user).GetPartPreceding("_DesantGroup");
+        PersonalNavPointLoad = "";
+
+        SetImmortalMode(true);
+        SavePosition();
+     }
+
+     event void TeleportSoldier()
+     {
+         logWarning("Teleport american soldier!!");
+         if (NavPointTeleport == "")
+            return;
+
+         Matrix NewPos = getPosition((new #GameController()).GetObject(NavPointTeleport));
+         for ( int i = 0; i < SoldierID.size(); i++)
+         {
+             Component Unit = new #GameController().GetObject(SoldierID[i]);
+             if (Unit != null && !checkMask(Unit, [CLASSIFICATOR_DEAD_OBJECT], []))
+             {
+                 Component Soldier = new #GameController().GetObject(SoldierID[i]);
+                 Component Behavior = GetUnitBehavior(SoldierID[i]);
+                 if ( Behavior != null)
+                 {
+                     Behavior.SetPosition( NewPos );
+                 }
+             }
+         }
+     }
+
+
+    // Save Position group unit
+    event void SavePosition()
+    {
+        logWarning("[SavePosition]    for group " + getIdentificator(user));
+
+        user.RefreshUnitsList();
+        Array _Units = user.m_Units;
+        if (0 == _Units.size())
+          {
+            logError("Unit group with identificator " + getIdentificator(user) + " contains 0 unit!!");
+                return;
+          }
+
+        for ( int i = 0; i < _Units.size(); i++)
+        {
+
+            Component Soldier = new #GameController().GetObject(_Units[i]);
+            if (null == Soldier)
+                    return;
+
+            Matrix _Pos = getPosition(Soldier);
+            SoldierPosition.add(_Pos);
+            //logError("[SavePosition] for unit ID=" + new String(_Units[i]));
+            //logWarning("    SoldierPosition["+new String(i)+"]="+new String(SoldierPosition[i].origin));
+            SoldierID.add(_Units[i]);
+            //logWarning("    SoldierID["+new String(i)+"]="+new String(SoldierID[i]));
+        }
+    }
+
+     event void UnloadHelicopter(String _Helic, String _NavPoint)
+     {
+         //logWarning("Group ID=" + getIdentificator(user) + " recived  event UnloadHelicopter");
+         SetOrder_Unload( _Helic, _NavPoint, 500, 40);
+
+     }
+
+     event void LoadDesant()
+     {
+        SetFormation("Independent", 2, false, false);
+        SetOrder_Load(PersonalHelicID, false, "LoadToTransportShortRunoffRight");
+        m_CurrentOrder.m_MovingSpeed = 2.5f;
+     }
+
+     event void OnUnloaded( String _TransportID)
+     {
+         CBaseUnitGroup::OnUnloaded(_TransportID);
+         //logWarning("Group ID="+ getIdentificator(user) +    "    OnGroupUnloaded. Leader group ID=" + GetLeaderId());
+         //SetImmortalMode(true);
+         GetMission().WingmanGroupRoost = false;
+         ForEachUnitTask("MoveToPosition", []);
+     }
+ }
+
+ class C1M1Plei_Me_Uh1d_1_DesantGroup extends C1M1DesantGroup
+ {
+    event void MoveToHelicopterAndLoad()
+    {
+        SetOrderName("");
+        SetFormation("Column", 2, true, true);
+        Array ApproachPoints = [GetNavPointBehPos("NavPoint_MoveToHelic1_1"),
+                                                        GetNavPointBehPos("NavPoint_MoveToHelic1_2"),
+                                                        GetNavPointBehPos("NavPoint_MoveToHelic1_3")
+                                                        ];
+
+        SetFirstQueueOrders([
+                              ["MoveToHelic", "SetOrder_MoveToEx", [ApproachPoints, 3.5f], ""],
+                              ["MoveToHelic", "LoadDesant", [], ""]
+                            ]);
+    }
+ }
+ class C1M1Plei_Me_Uh1d_2_DesantGroup extends C1M1DesantGroup
+ {
+    event void MoveToHelicopterAndLoad()
+    {
+        SetOrderName("");
+        SetFormation("Column", 2, true, true);
+        Array ApproachPoints = [GetNavPointBehPos("NavPoint_MoveToHelic2_1"),
+                                                        GetNavPointBehPos("NavPoint_MoveToHelic2_2"),
+                                                        GetNavPointBehPos("NavPoint_MoveToHelic2_3")
+                                                        ];
+
+        SetFirstQueueOrders([
+                             ["MoveToHelic", "SetOrder_MoveToEx", [ApproachPoints, 3.5f], ""],
+                             ["MoveToHelic", "LoadDesant", [], ""]
+                            ]);
+    }
+ }
+ class C1M1Plei_Me_Uh1d_3_DesantGroup extends C1M1DesantGroup
+ {
+    event void MoveToHelicopterAndLoad()
+    {
+        SetOrderName("");
+        SetFormation("Column", 2, true, true);
+        Array ApproachPoints = [GetNavPointBehPos("NavPoint_MoveToHelic3_1"),
+                                                        GetNavPointBehPos("NavPoint_MoveToHelic3_2"),
+                                                        GetNavPointBehPos("NavPoint_MoveToHelic3_3")
+                                                        ];
+
+        SetFirstQueueOrders([
+                             ["MoveToHelic", "SetOrder_MoveToEx", [ApproachPoints, 3.0f], ""],
+                             ["MoveToHelic", "LoadDesant", [], ""]
+                            ]);
+    }
+ }
+ class C1M1Plei_Me_Uh1d_4_DesantGroup extends C1M1DesantGroup
+ {
+    //String NavPointTeleport = "NavPoint_DesantGroup_4";
+
+    event void MoveToHelicopterAndLoad()
+    {
+        SetOrderName("");
+        SetFormation("Column", 2, true, true);
+        Array ApproachPoints = [GetNavPointBehPos("NavPoint_MoveToHelic4_1"),
+                                                        GetNavPointBehPos("NavPoint_MoveToHelic4_2"),
+                                                        GetNavPointBehPos("NavPoint_MoveToHelic4_3")
+                                                        ];
+
+        SetFirstQueueOrders([
+                             ["MoveToHelic", "SetOrder_MoveToEx", [ApproachPoints, 3.0f], ""],
+                             ["MoveToHelic", "LoadDesant", [], ""]
+                            ]);
+    }
+ }
+ class C1M1Plei_Me_Uh1d_5_DesantGroup extends C1M1DesantGroup
+ {
+    //String NavPointTeleport = "NavPoint_DesantGroup_5";
+    event void TeleportSoldier()
+    {
+       logWarning("Special Teleport american soldier!!");
+       RefreshUnitsList();
+       for ( int i = 0; i < m_Units.size(); i++)
+       {
+           Component Unit = new #GameController().GetObject(m_Units[i]);
+           if (Unit != null && !checkMask(Unit, [CLASSIFICATOR_DEAD_OBJECT], []))
+           {
+               Component Soldier = new #GameController().GetObject(m_Units[i]);
+               Component Behavior = GetUnitBehavior(m_Units[i]);
+               if ( Behavior != null)
+               {
+                  Matrix RootPos = getPosition(new #GameController().GetObject(PersonalHelicID));
+                  RootPos.xvec = - RootPos.xvec;
+                  RootPos.yvec = - RootPos.yvec;
+                  Behavior.SetPosition(RootPos);
+                  Unit.GetHumanAnimator().EnableControl(false);
+                  Unit.GetObject("HeliLoadAnimator").EnableControl(true);
+               }
+           }
+       }
+    }
+
+    event void MoveToHelicopterAndLoad()
+    {
+        //logWarning("[MoveToHelicopterAndLoad] for group ID=" + getIdentificator(user));
+        SetOrder_SpecLoad(PersonalHelicID);
+    }
+ }
+ class C1M1Plei_Me_Uh1d_6_DesantGroup extends C1M1DesantGroup
+ {
+    String NavPointTeleport = "NavPoint_DesantGroup_6";
+
+    event void TeleportSoldier()
+    {
+       logWarning("Special Teleport american soldier!!");
+       RefreshUnitsList();
+       for ( int i = 0; i < m_Units.size(); i++)
+       {
+           Component Unit = new #GameController().GetObject(m_Units[i]);
+           if (Unit != null && !checkMask(Unit, [CLASSIFICATOR_DEAD_OBJECT], []))
+           {
+               Component Soldier = new #GameController().GetObject(m_Units[i]);
+               Component Behavior = GetUnitBehavior(m_Units[i]);
+               if ( Behavior != null)
+               {
+                  Matrix RootPos = getPosition(new #GameController().GetObject(PersonalHelicID));
+                  RootPos.xvec = - RootPos.xvec;
+                  RootPos.yvec = - RootPos.yvec;
+                  Behavior.SetPosition(RootPos);
+                  Unit.GetHumanAnimator().EnableControl(false);
+                  Unit.GetObject("HeliLoadAnimator").EnableControl(true);
+               }
+           }
+       }
+    }
+
+    event void MoveToHelicopterAndLoad()
+    {
+        //logWarning("[MoveToHelicopterAndLoad] for group ID=" + getIdentificator(user));
+        SetOrder_SpecLoad(PersonalHelicID);
+    }
+ }
+ class C1M1Plei_Me_Uh1d_7_DesantGroup extends C1M1DesantGroup
+ {
+    //String NavPointTeleport = "NavPoint_DesantGroup_7";
+
+    event void MoveToHelicopterAndLoad()
+    {
+        //logWarning("[MoveToHelicopterAndLoad] for group ID=" + getIdentificator(user));
+        SetOrderName("");
+        SetFormation("Column", 2, true, true);
+        Array ApproachPoints = [GetNavPointBehPos("NavPoint_MoveToHelic7_1")
+                                                        ];
+
+        SetFirstQueueOrders([
+                             ["MoveToHelic", "SetOrder_MoveToEx", [ApproachPoints, 3.5f], ""],
+                             ["MoveToHelic", "LoadDesant", [], ""]
+                            ]);
+    }
+ }
+ class C1M1Plei_Me_Uh1d_8_DesantGroup extends C1M1DesantGroup
+ {
+    //String NavPointTeleport = "NavPoint_DesantGroup_8";
+
+    event void MoveToHelicopterAndLoad()
+    {
+        //logWarning("[MoveToHelicopterAndLoad] for group ID=" + getIdentificator(user));
+        SetOrderName("");
+        SetFormation("Column", 2, true, true);
+        Array ApproachPoints = [GetNavPointBehPos("NavPoint_MoveToHelic8_1")
+                                                        ];
+
+        SetFirstQueueOrders([
+                             ["MoveToHelic", "SetOrder_MoveToEx", [ApproachPoints, 3.5f], ""],
+                             ["MoveToHelic", "LoadDesant", [], ""]
+                            ]);
+    }
+ }
+
+ class PleiMeDesantTask extends CBaseAITask
+ {
+ }
+
+ //fireEvent( 5.0, [], "MoveToPosition", []);
+ class XRayDesantTask extends CBaseAITask
+ {
+   boolean MoveToPosition = false;
+
+   event void MoveToPosition()
+   {
+     Array _SoldierID = m_Group.SoldierID;
+     Matrix _Pos = m_Group.SoldierPosition[_SoldierID.find(getIdentificator(user))];
+     Vector _PosVector = _Pos.origin;
+     SetOrder_MoveTo( _PosVector, 4.0f);
+     MoveToPosition = true;
+    }
+
+   void OnStopped()
+   {
+     if (MoveToPosition)
+      {
+        MoveToPosition = false;
+        ActivateMovement(false);
+      }
+      CBaseAITask::OnStopped();
+   }
+ }
+
+ class C1M1XRay_Uh1d_1_DesantGroup extends C1M1DesantGroup
+ {
+  void Init()
+  {
+    C1M1DesantGroup::Init();
+    ActivateGroup(false);
+  }
+ }
+ class C1M1XRay_Uh1d_2_DesantGroup extends C1M1DesantGroup
+ {
+  void Init()
+  {
+    C1M1DesantGroup::Init();
+    ActivateGroup(false);
+  }
+ }
+ class C1M1XRay_Uh1d_3_DesantGroup extends C1M1DesantGroup
+ {
+  void Init()
+  {
+    C1M1DesantGroup::Init();
+    ActivateGroup(false);
+  }
+ }
+ class C1M1XRay_Uh1d_4_DesantGroup extends C1M1DesantGroup
+ {
+  void Init()
+  {
+    C1M1DesantGroup::Init();
+    ActivateGroup(false);
+  }
+ }
+ class C1M1XRay_Uh1d_5_DesantGroup extends C1M1DesantGroup
+ {
+  void Init()
+  {
+    C1M1DesantGroup::Init();
+    ActivateGroup(false);
+  }
+ }
+ class C1M1XRay_Uh1d_6_DesantGroup extends C1M1DesantGroup
+ {
+  void Init()
+  {
+    C1M1DesantGroup::Init();
+    ActivateGroup(false);
+  }
+ }
+ class C1M1XRay_Uh1d_7_DesantGroup extends C1M1DesantGroup
+ {
+  void Init()
+  {
+    C1M1DesantGroup::Init();
+    ActivateGroup(false);
+  }
+ }
+ class C1M1XRay_Uh1d_8_DesantGroup extends C1M1DesantGroup
+ {
+  void Init()
+  {
+    C1M1DesantGroup::Init();
+    ActivateGroup(false);
+  }
+ }
+
+ // fireEvent( 0.0, [], "VisibleChinuk", []);
+ // sendEvent( 0.0, "C1M1Ch47Group1", "StartChinuk", []);
+ class C1M1Ch47Group extends CBaseUnitGroup
+ {
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateGroup(false);
+  }
+
+  event void StartChinuk()
+  {
+    logWarning("Group  ID=" + getIdentificator(user) + "  Chinuk pop delayed order!!");
+    ForEachUnitTask("ActivateBehavior", [true]);
+    PopDelayedOrder();
+  }
+  event void VisibleChinuk()
+  {
+    logWarning("Group  ID=" + getIdentificator(user) + "  ShowGroup(true)");
+    ShowGroup(true);
+  }
+
+  void OnPathEndReached()
+  {
+    logWarning("OnPathEndReached for group " + getIdentificator(user));
+    ActivateGroup(false);
+  }
+
+  event void StartChinuk_tv()
+  {
+    logWarning("Group  ID=" + getIdentificator(user) + "  Chinuk_tv pop delayed order!!");
+    ActivateGroup(true);
+    PopDelayedOrder();
+    sendEvent( 15.0, getIdentificator(user), "StartCinema", []);
+    sendEvent( 15.0, getIdentificator(user), "InvisibleChinuk", []);
+  }
+
+  event void StartCinema()
+  {
+    logWarning("Start cinema!!");
+     Component _Game = new #GameController();
+     if ( null != _Game)
+        _Game.RunCinema("chinuk_tv");
+  }
+
+  event void InvisibleChinuk()
+  {
+    logWarning("Group  ID=" + getIdentificator(user) + "  ActivateGroup(false)");
+    ActivateGroup(false);
+  }
+ }
+
+ class XRay_VietnamesePeasantGroup extends CBaseUnitGroup
+ {
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    SetImmortalMode(true);
+    ForEachUnitTask("SetFrigidMode", [true]);
+    ForEachUnitTask("ActivateBehavior", [false]);
+  }
+
+  event void SetInvisibleGroup()
+  {
+    ActivateGroup(false);
+  }
+
+  event void SetVisible(boolean _on)
+  {
+    logWarning("Group  ID=" + getIdentificator(user) + "  ShowGroup " + new String(_on));
+    ShowGroup(_on);
+  }
+ }
+ // sendEvent(0.0, "WingmanGroup_GunShip", "AttackXRay", []);
+
+class WingmanGroup_GunShip extends CBaseUnitGroup
+{
+  event void AttackXRay()
+  {
+    RefreshUnitsList();
+    SetFormation("CWedgeFormation", 50, true, true);
+
+    SetFirstQueueOrders([
+                          ["AttackXray",  "setOrder_MoveTo", [GetNavPointBehPos("NavPoint_GroupGunShip"), 50.0f, true], "OnLeaderStopped"],
+                          ["AttackXray",  "setOrder_MoveTo", [GetNavPointBehPos("NavPoint_Retreat_GroupUnit_VietnameseSoldierGun_XRay_7"), 1.0f, true], "OnLeaderStopped"]
+                       ]);
+
+    //setOrder_MoveTo(GetNavPointBehPos("NavPoint_GroupGunShip"), m_CurrentOrder.m_MovingSpeed, true);
+    //PopDelayedOrder();
+  }
+}

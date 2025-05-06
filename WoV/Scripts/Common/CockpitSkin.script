@@ -1,0 +1,700 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+class CCockpitSkin
+{
+  final static boolean IsDisplayModeDep = true;
+
+  boolean EnableReload = true;
+
+  Array Materials = [];
+
+  Array CommonMaterials = [
+
+    new CUIMaterial(
+      "terrain map",                           // material id
+      "",                                      // texture name
+      0,                                       // u0
+      0,                                       // v0
+      512,                                     // du
+      512                                      // dv
+    ),
+/*
+    new CUIMaterial(
+      "map background",                        // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      148,                                     // u0
+      146,                                     // v0
+      107,                                     // du
+      109                                      // dv
+    ),
+*/
+    // "heli arrow"
+/*
+    new CAnimatedMaterial(
+        "heli arrow",
+        ["heli arrow0", "heli arrow1"],
+        [500,            500]
+      ),
+
+    new CUIMaterial(
+      "heli arrow0",                            // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      0,                                       // u0
+      0,                                       // v0
+      64,                                      // du
+      64                                       // dv
+    ),
+*/
+    new CUIMaterial(
+      "heli arrow",                            // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      0,                                       // u0
+      0,                                       // v0
+      32,                                      // du
+      64                                       // dv
+    ),
+
+    new CUIMaterial(
+      "airplane arrow",                        // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      0,                                       // u0
+      64,                                      // v0
+      64,                                      // du
+      64                                       // dv
+    ),
+
+    new CUIMaterial(
+      "truck arrow",                        // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      32,                                      // u0
+      0,                                       // v0
+      32,                                      // du
+      64                                       // dv
+    ),
+
+    new CUIMaterial(
+      "naval arrow",                        // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      64,                                      // u0
+      0,                                       // v0
+      32,                                      // du
+      64                                       // dv
+    ),
+
+    new CUIMaterial(
+      "firepoint arrow",                    // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      96,                                      // u0
+      0,                                       // v0
+      32,                                      // du
+      64                                       // dv
+    ),
+
+    new CUIMaterial(
+      "navpoint icon",                         // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      224,                                     // u0
+      0,                                       // v0
+      32,                                      // du
+      32                                       // dv
+    ),
+
+    new CUIMaterial(
+      "main navpoint icon",                    // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      192,                                     // u0
+      0,                                       // v0
+      32,                                      // du
+      32                                       // dv
+    ),
+
+    new CUIMaterial(
+      "compass navpoint icon",                 // material id
+      "Textures/Cockpit_1.tex",                // texture name
+      0,                                       // u0
+      192,                                     // v0
+      64,                                      // du
+      64                                       // dv
+    ),
+
+    // Cursor
+
+    new CUIMaterial(
+      "hand point cursor",
+      "Resources/cursor01.tex",
+      0,
+      64,
+      32,
+      32
+    ),
+
+    new CUIMaterial(
+      "hand cursor",
+      "Resources/cursor01.tex",
+      32,
+      64,
+      32,
+      32
+    ),
+
+    new CUIMaterial(
+      "hand grab cursor",
+      "Resources/cursor01.tex",
+      64,
+      64,
+      32,
+      32
+    ),
+
+    new CUIMaterial(
+      "arrow four cursor",
+      "Resources/cursor01.tex",
+      96,
+      32,
+      32,
+      32
+    ),
+
+    new CUIMaterial(
+      "cockpit cursor",
+      "Resources/cursor01.tex",
+      0,
+      32,
+      32,
+      32
+    ),
+
+    // Callsigns
+
+    new CUIMaterial(
+        "callsign 800",                          // material id
+        "Resources/VC_Callsign.tex",             // texture name
+        8,                                       // u0
+        12,                                      // v0
+        129,                                     // du
+        19                                       // dv
+      ),
+
+    new CUIMaterial(
+        "progress bar",                          // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        41,                                      // u0
+        149,                                     // v0
+        99,                                      // du
+        9                                        // dv
+      ),
+    new CUIMaterial(
+        "rocket",                                // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        43,                                      // u0
+        194,                                     // v0
+        15,                                      // du
+        15                                       // dv
+      )
+
+  ];
+
+  Array Materials_800_600 = [
+    new CUIMaterial(
+        "dummy",                                 // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        1,                                       // u0
+        1,                                       // v0
+        10,                                      // du
+        10                                       // dv
+      ),
+    new CUIMaterial(
+        "navpoint",                              // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        43,                                      // u0
+        150,                                     // v0
+        8,                                       // du
+        8                                        // dv
+      ),
+/*
+    new CUIMaterial(
+        "progress bar",                          // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        41,                                      // u0
+        149,                                     // v0
+        99,                                      // du
+        9                                        // dv
+      ),
+
+    new CUIMaterial(
+        "rocket",                                // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        43,                                      // u0
+        194,                                     // v0
+        15,                                      // du
+        15                                       // dv
+      ),
+*/
+    new CUIMaterial(
+        "m134 icon",                             // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        23,                                      // u0
+        24,                                      // v0
+        116,                                     // du
+        26                                       // dv
+      ),
+    new CUIMaterial(
+        "m60 icon",                              // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        28,                                      // u0
+        82,                                      // v0
+        121,                                     // du
+        33                                       // dv
+      ),
+
+    // Devices
+
+    new CUIMaterial(
+        "heli base",                             // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        190,                                     // u0
+        4,                                       // v0
+        319,                                     // du
+        110                                      // dv
+      ),
+    new CUIMaterial(
+        "pilot first",                           // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        205,                                     // u0
+        297,                                     // v0
+        25,                                      // du
+        32                                       // dv
+      ),
+    new CUIMaterial(
+        "pilot second",                          // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        243,                                     // u0
+        300,                                     // v0
+        25,                                      // du
+        32                                       // dv
+      ),
+    new CUIMaterial(
+        "gunner left",                           // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        244,                                     // u0
+        359,                                     // v0
+        33,                                      // du
+        29                                       // dv
+      ),
+    new CUIMaterial(
+        "gunner right",                          // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        206,                                     // u0
+        350,                                     // v0
+        25,                                      // du
+        32                                       // dv
+      ),
+    new CUIMaterial(
+        "engine",                                // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        203,                                     // u0
+        224,                                     // v0
+        74,                                      // du
+        34                                       // dv
+      ),
+    new CUIMaterial(
+        "transmission",                          // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        412,                                     // u0
+        286,                                     // v0
+        35,                                      // du
+        44                                       // dv
+      ),
+    new CUIMaterial(
+        "fuel tank",                             // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        398,                                     // u0
+        340,                                     // v0
+        30,                                      // du
+        26                                       // dv
+      ),
+    new CUIMaterial(
+        "rotor",                                 // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        196,                                     // u0
+        148,                                     // v0
+        255,                                     // du
+        23                                       // dv
+      ),
+    new CUIMaterial(
+        "tail rotor",                            // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        453,                                     // u0
+        176,                                     // v0
+        44,                                      // du
+        53                                       // dv
+      ),
+    new CUIMaterial(
+        "tail rotor transmission",               // material id
+        "Textures/VCockpit_800_600.tex",         // texture name
+        317,                                     // u0
+        205,                                     // v0
+        159,                                     // du
+        48                                       // dv
+      )
+    ];
+
+  Array Materials_1024_768 = [
+    new CUIMaterial(
+        "dummy",                                 // material id
+        "Textures/VCockpit_1024_768.tex",        // texture name
+        1,                                       // u0
+        1,                                       // v0
+        10,                                      // du
+        10                                       // dv
+      ),
+    new CUIMaterial(
+        "navpoint",                              // material id
+        "Textures/VCockpit_1024_768.tex",        // texture name
+        43,                                      // u0
+        150,                                     // v0
+        8,                                       // du
+        8                                        // dv
+      ),
+/*
+      new CUIMaterial(
+        "progress bar",
+        "Textures/VCockpit_1024_768.tex",
+        17,
+        479,
+        126,
+        11
+      ),
+
+      new CUIMaterial(
+        "rocket",
+        "Textures/VCockpit_1024_768.tex",
+        196,
+        475,
+        19,
+        19
+      ),
+*/
+      new CUIMaterial(
+        "m134 icon",
+        "Textures/VCockpit_1024_768.tex",
+        9,
+        165,
+        148,
+        33
+      ),
+      new CUIMaterial(
+        "m60 icon",
+        "Textures/VCockpit_1024_768.tex",
+        8,
+        220,
+        155,
+        42
+      ),
+
+    // Devices
+
+      new CUIMaterial(
+        "heli base",
+        "Textures/VCockpit_1024_768.tex",
+        95,
+        8,
+        408,
+        140
+      ),
+      new CUIMaterial(
+        "pilot first",
+        "Textures/VCockpit_1024_768.tex",
+        52,
+        315,
+        32,
+        41
+      ),
+      new CUIMaterial(
+        "pilot second",
+        "Textures/VCockpit_1024_768.tex",
+        21,
+        314,
+        32,
+        41
+      ),
+      new CUIMaterial(
+        "gunner left",
+        "Textures/VCockpit_1024_768.tex",
+        68,
+        389,
+        42,
+        37
+      ),
+      new CUIMaterial(
+        "gunner right",
+        "Textures/VCockpit_1024_768.tex",
+        21,
+        389,
+        32,
+        41
+      ),
+      new CUIMaterial(
+        "engine",
+        "Textures/VCockpit_1024_768.tex",
+        292,
+        213,
+        94,
+        43
+      ),
+      new CUIMaterial(
+        "transmission",
+        "Textures/VCockpit_1024_768.tex",
+        283,
+        267,
+        45,
+        56
+      ),
+      new CUIMaterial(
+        "fuel tank",
+        "Textures/VCockpit_1024_768.tex",
+        276,
+        333,
+        38,
+        33
+      ),
+      new CUIMaterial(
+        "rotor",
+        "Textures/VCockpit_1024_768.tex",
+        176,
+        167,
+        326,
+        29
+      ),
+      new CUIMaterial(
+        "tail rotor",
+        "Textures/VCockpit_1024_768.tex",
+        448,
+        401,
+        56,
+        67
+      ),
+    new CUIMaterial(
+        "tail rotor transmission",
+        "Textures/VCockpit_1024_768.tex",
+        274,
+        438,
+        203,
+        61
+      )
+    ];
+
+  Array Materials_1280_960 = [
+    new CUIMaterial(
+        "dummy",                                 // material id
+        "Textures/VCockpit_1280_960.tex",         // texture name
+        1,                                       // u0
+        1,                                       // v0
+        10,                                      // du
+        10                                       // dv
+      ),
+    new CUIMaterial(
+        "navpoint",                              // material id
+        "Textures/VCockpit_1280_960.tex",         // texture name
+        43,                                      // u0
+        150,                                     // v0
+        8,                                       // du
+        8                                        // dv
+      ),
+/*
+    new CUIMaterial(
+        "progress bar",
+        "Textures/VCockpit_1280_960.tex",
+        9,
+        486,
+        158,
+        15
+      ),
+
+    new CUIMaterial(
+        "rocket",
+        "Textures/VCockpit_1280_960.tex",
+        183,
+        482,
+        24,
+        24
+      ),
+*/
+    new CUIMaterial(
+        "m134 icon",
+        "Textures/VCockpit_1280_960.tex",
+        294,
+        240,
+        185,
+        41
+      ),
+    new CUIMaterial(
+        "m60 icon",
+        "Textures/VCockpit_1280_960.tex",
+        298,
+        305,
+        193,
+        53
+      ),
+
+    // Devices
+
+    new CUIMaterial(
+        "heli base",
+        "Textures/VCockpit_1280_960.tex",
+        1,
+        4,
+        510,
+        176
+      ),
+    new CUIMaterial(
+        "pilot first",
+        "Textures/VCockpit_1280_960.tex",
+        32,
+        229,
+        40,
+        51
+      ),
+    new CUIMaterial(
+        "pilot second",
+        "Textures/VCockpit_1280_960.tex",
+        92,
+        231,
+        40,
+        51
+      ),
+    new CUIMaterial(
+        "gunner left",
+        "Textures/VCockpit_1280_960.tex",
+        49,
+        363,
+        53,
+        46
+      ),
+    new CUIMaterial(
+        "gunner right",
+        "Textures/VCockpit_1280_960.tex",
+        23,
+        295,
+        40,
+        51
+      ),
+    new CUIMaterial(
+        "engine",
+        "Textures/VCockpit_1280_960.tex",
+        158,
+        231,
+        118,
+        54
+      ),
+    new CUIMaterial(
+        "transmission",
+        "Textures/VCockpit_1280_960.tex",
+        160,
+        288,
+        56,
+        70
+      ),
+      new CUIMaterial(
+        "fuel tank",
+        "Textures/VCockpit_1280_960.tex",
+        138,
+        355,
+        48,
+        41
+      ),
+    new CUIMaterial(
+        "rotor",
+        "Textures/VCockpit_1280_960.tex",
+        2,
+        180,
+        408,
+        37
+      ),
+    new CUIMaterial(
+        "tail rotor",
+        "Textures/VCockpit_1280_960.tex",
+        438,
+        389,
+        70,
+        85
+      ),
+    new CUIMaterial(
+        "tail rotor transmission",
+        "Textures/VCockpit_1280_960.tex",
+        221,
+        435,
+        254,
+        76
+      )      
+    ];
+
+  static String TerrainMapTextureName = "";
+
+  int CurrentMode = 0;
+
+  void CCockpitSkin(
+      int _Width,
+      int _Height
+    )
+  {
+    if (_Width <= 800)
+    {
+      CurrentMode = 800;
+      Materials   = Materials_800_600;
+    }
+    else
+    if (_Width <= 1024)
+    {
+      CurrentMode = 1024;
+      Materials = Materials_1024_768;
+    }
+    else
+    {
+      CurrentMode = 1280;
+      Materials = Materials_1280_960;
+    }
+
+
+    CommonMaterials[0].TextureName = TerrainMapTextureName;
+
+    Materials.append(CommonMaterials);
+  }
+
+  void CCockpitSkin()
+  {
+    CCockpitSkin(800, 600);
+  }
+
+  boolean IsShoulBeReloaded(
+      int _Width,
+      int _Height
+    )
+  {
+    if (!EnableReload)
+      return false;
+
+    if (_Width <= 800)
+    {
+      return (CurrentMode != 800);
+    }
+    else
+    if (_Width <= 1024)
+    {
+      return (CurrentMode != 1024);
+    }
+    else
+    {
+      return (CurrentMode != 1280);
+    }
+  }
+}
+

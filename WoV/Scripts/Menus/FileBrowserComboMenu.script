@@ -1,0 +1,212 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CFileBrowserComboMenu
+  extends CBaseWindow, CFileBrowserComboControls
+{
+  static String m_MenuClassName = "CFileBrowserComboMenu";
+
+  final static float HierarchyIndent = 0.01;
+  
+  Array     m_MenuCommands = [];
+  float     m_MenuX        = 0.0;
+  float     m_MenuY        = 0.0;
+  Component m_HandlerMenu  = null;
+  Component m_FileBrowser  = null;
+
+  void OpenMenu()
+  {
+    CBaseMenu::OpenMenu();
+  }
+
+  void OnInitMenu()
+  {
+    m_MenuCommands = BuildNamespaceList(m_FileBrowser);
+
+    float MenuWidth  = 0.0;
+    float MenuHeight = 0.0;
+    float LineHeight = 0.0;
+
+    // detect menu materials size
+/*
+    Component MaterialManager = m_MenuController.GetMaterialManager();
+    if (null != MaterialManager)
+*/
+    {
+      MenuWidth  = 200.0 / 1024.0;
+      LineHeight = 30.0 /  768.0;
+    }
+
+    // get dimensions of menu
+    MenuHeight = float(m_MenuCommands.size()) * LineHeight;
+
+    // check out of screen
+    if (m_MenuX + MenuWidth  > 1.0) m_MenuX -= MenuWidth;
+    if (m_MenuY + MenuHeight > 1.0) m_MenuY -= MenuHeight;
+
+    final Array BackProps = [
+        ["MaterialNormal",  "GridBackground", false],
+        ["MaterialHilited", "GridBackground", false],
+        ["Z",               0.1,                    false]
+      ];
+
+    for (int Index = 0; Index < m_MenuCommands.size(); Index++)
+    {
+      Component Position = new CUIPosition(
+          m_MenuX,  
+          m_MenuY + float(Index) * LineHeight,
+          MenuWidth,
+          LineHeight
+        );
+
+      CreateUIControl(
+          "Back_" + new String(Index),
+          "BitmapButton",
+          "CUIButton",
+          Position,
+          BackProps
+        ).SetText(L"");
+
+      float Indent = HierarchyIndent * m_MenuCommands[Index][1];
+      Component ElementPosition = new CUIPosition(
+          Position.X + Indent,
+          Position.Y,
+          Position.Width - Indent,
+          Position.Height
+        );
+
+      Component Element = CreateUIControl(
+          "Command_" + new String(Index),
+          "",
+          "CUIFilelistElement",
+          ElementPosition,
+          CAudioPlayerMenuBase::DefaultElementProps + [["Z", 0.2, false]]
+        );
+
+      Element.SetTitle(m_MenuCommands[Index][0]);
+      Element.SetType(m_MenuCommands[Index][2]);
+    }
+  }
+
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    CBaseMenu::OnControlActivated(_ID);
+
+    if (_ID.IsStartsWith("Command_"))
+    {
+      if (null != m_HandlerMenu)
+        m_HandlerMenu.OnDirSelected(m_MenuCommands[
+          _ID.GetPartFollowingExact("Command_").GetPartPreceding("_").ConvertToInt()][3]);
+    }
+
+    CloseWindow();
+  }
+
+  void SetFileBrowser(
+      Component _FileBrowser
+    )
+  {
+    m_FileBrowser = _FileBrowser;
+  }
+
+  void SetHandlerMenu(
+      Component _HandlerMenu
+    )
+  {
+    m_HandlerMenu = _HandlerMenu;
+  }
+
+  void SetMenuPosition(
+      float _MenuX,
+      float _MenuY
+    )
+  {
+    m_MenuX = _MenuX;
+    m_MenuY = _MenuY;
+  }
+
+  //
+  // Service
+  //
+
+  Array BuildNamespaceList(
+      Component _FileBrowser
+    )
+  {
+    Array Result = [];
+
+    // Add drives
+    final Array Drives = _FileBrowser.GetDrivesList();
+    for (int i = 0; i < Drives.size(); i++)
+      AddNamespaceItem(Result, Drives[i]);
+
+    // Add CurrentDir
+    AddNamespaceItem(Result, _FileBrowser.CurrentDir);
+
+    return Result;
+  }
+
+  void AddNamespaceItem(
+      Array   _Items,
+      WString _Item
+    )
+  {
+    WString Path = L"";
+
+    final Array Tokens = _Item.Tokenize(L"\\");
+
+    int iPrev = -1;
+    for (int i = 0; i < Tokens.size(); i++)    
+    {
+      Path += Tokens[i] + L"\\";
+
+      int Type;
+      if (i == 0)
+        Type = 3;
+      else
+      if (i == Tokens.size() - 1)
+        Type = 2;
+      else
+        Type = 1;
+
+      int iCurrent = FindNamespaceItem(_Items, Tokens[i]);
+      if (-1 == iCurrent)
+      {
+        if (-1 == iPrev)
+        {
+          _Items.add([Tokens[i], i, Type, clone(Path)]);
+          iCurrent = _Items.size() - 1;
+        }
+        else
+        {
+          iCurrent = iPrev + 1;
+          _Items.insert(iCurrent, [Tokens[i], i, Type, clone(Path)]);
+        }
+      }
+
+      iPrev = iCurrent;
+    }
+  }
+
+  int FindNamespaceItem(
+      Array   _Items,
+      WString _Item
+    )
+  {
+    int Result = -1;
+
+    for (int i = 0; i < _Items.size(); i++)
+      if (_Items[i][0] == _Item)
+        return i;
+  
+    return Result;
+  }
+}

@@ -1,0 +1,99 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CPlanarShadows
+{
+  static void InitializePlanarShadows()
+  {
+    Cbld_BarrackModel::PlanarShadow                          = true;
+    Cbld_BaseHangarModel::PlanarShadow                       = true;
+    Cbld_BridgeFootModel::PlanarShadow                       = true;
+    Cbld_BridgeWoodModel::PlanarShadow                       = true;
+    Cbld_BunkerAmmoModel::PlanarShadow                       = true;
+    Cbld_BunkerBaseModel::PlanarShadow                       = true;
+    Cbld_CheckPointModel::PlanarShadow                       = true;
+    Cbld_HeliPadModel::PlanarShadow                          = true;
+    Cbld_MarqueeModel::PlanarShadow                          = true;
+    Cbld_MedicalTentModel::PlanarShadow                      = true;
+    Cbld_RoofModel::PlanarShadow                             = true;
+    Cbld_TentModel::PlanarShadow                             = true;
+    Cbld_TentLongModel::PlanarShadow                         = true;
+    Cbld_TOCModel::PlanarShadow                              = true;
+    Cbld_VietnameseGranaryModel::PlanarShadow                = true;
+    Cbld_VietnameseGranaryPileModel::PlanarShadow            = true;
+    Cbld_VietnameseHouseBigModel::PlanarShadow               = true;
+    Cbld_VietnameseHouseBigPileModel::PlanarShadow           = true;
+    Cbld_VietnameseHouseSmallModel::PlanarShadow             = true;
+    Cbld_VietnameseHouseSmallPileModel::PlanarShadow         = true;
+    Cbld_VietnameseRoofModel::PlanarShadow                   = true;
+    Cbld_WellModel::PlanarShadow                             = true;
+
+    Cenv_AmmoBoxModel::PlanarShadow                          = true;
+    Cenv_AmmoBoxPackAModel::PlanarShadow                     = true;
+    Cenv_AmmoBoxPackBModel::PlanarShadow                     = true;
+    Cenv_BarrelModel::PlanarShadow                           = true;
+    Cenv_BarrelPackAModel::PlanarShadow                      = true;
+    Cenv_BarrelPackBModel::PlanarShadow                      = true;
+    Cenv_WeaponBoxBigModel::PlanarShadow                     = true;
+    Cenv_WeaponBoxBigPackAModel::PlanarShadow                = true;
+    Cenv_WeaponBoxBigPackBModel::PlanarShadow                = true;
+    Cenv_WeaponBoxSmallModel::PlanarShadow                   = true;
+    Cenv_WeaponBoxSmallPackAModel::PlanarShadow              = true;
+    Cenv_WeaponBoxSmallPackBModel::PlanarShadow              = true;
+
+//    Cfence_WickerModel::PlanarShadow                         = false;
+//    Cfence_WireModel::PlanarShadow                           = false;
+//    Cfence_WireSpiralModel::PlanarShadow                     = false;
+
+    Chum_AmericanFinisherModel::PlanarShadow                 = true;
+    Chum_AmericanMedicModel::PlanarShadow                    = true;
+//    Chum_AmericanPilotModel::PlanarShadow                    = false;
+    Chum_AmericanRadioModel::PlanarShadow                    = true;
+    Chum_AmericanSoldierGrenadeModel::PlanarShadow           = true;
+    Chum_AmericanSoldierGunModel::PlanarShadow               = true;
+    Chum_AmericanSoldierRifleModel::PlanarShadow             = true;
+    Chum_VietnamesePeasantModel::PlanarShadow                = true;
+    Chum_VietnameseSoldierGunModel::PlanarShadow             = true;
+    Chum_VietnameseSoldierRifleModel::PlanarShadow           = true;
+    Chum_VietnameseVolunteerGunModel::PlanarShadow           = true;
+    Chum_VietnameseVolunteerRifleModel::PlanarShadow         = true;
+
+//    Cnpc_JacksonModel::PlanarShadow                          = false;
+//    Cnpc_KingsleyModel::PlanarShadow                         = false;
+//    Cnpc_MooreModel::PlanarShadow                            = false;
+//    Cnpc_QuadeModel::PlanarShadow                            = false;
+
+//    Cu_air_AD4SkyriderModel::PlanarShadow                    = false;
+//    Cu_air_Uh1bModel::PlanarShadow                           = false;
+//    Cu_air_Uh1b_InsideModel::PlanarShadow                    = false;
+//    Cu_air_Uh1dModel::PlanarShadow                           = false;
+
+    Cu_nvl_JunkModel::PlanarShadow                           = true;
+    Cu_nvl_SampanModel::PlanarShadow                         = true;
+    Cu_nvl_PRBMk2Model::PlanarShadow                         = true;
+
+    Cu_stat_DShKModel::PlanarShadow                          = true;
+    Cu_stat_M29MortarModel::PlanarShadow                     = true;
+    Cu_stat_M29MortarPointModel::PlanarShadow                = true;
+    Cu_stat_M2A1HowitzerModel::PlanarShadow                  = true;
+    Cu_stat_M60CordonPointModel::PlanarShadow                = true;
+    Cu_stat_WatchTowerModel::PlanarShadow                    = true;
+
+    Cu_veh_M151JeepModel::PlanarShadow                       = true;
+    Cu_veh_M939TruckModel::PlanarShadow                      = true;
+    Cu_veh_Gaz51TruckModel::PlanarShadow                     = true;
+
+    Cwpn_Ak47Model::PlanarShadow                             = true;
+    Cwpn_FFARModel::PlanarShadow                             = true;
+    Cwpn_M60_InfModel::PlanarShadow                          = true;
+    Cwpn_M79Model::PlanarShadow                              = true;
+    Cwpn_NapalmModel::PlanarShadow                           = true;
+    Cwpn_SKS45Model::PlanarShadow                            = true;
+  }
+}

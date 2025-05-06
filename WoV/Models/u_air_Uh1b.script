@@ -1,0 +1,327 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class Cu_air_Uh1bModel extends CBaseModel
+{
+
+  static int     InstancesQty         = CBaseModel::DefaultInstancesQty;
+
+  static int     ShadowCheckMode      = CBaseModel::DefaultShadowCheckMode;
+
+  static boolean PlanarShadow         = CBaseModel::DefaultPlanarShadow;
+
+  static float   PlanarShadowLodShift = CBaseModel::DefaultPlanarShadowLodShift;
+
+  static boolean UseBoxForIsection    = CBaseModel::DefaultUseBoxForIsection;
+  String     MeshFile        = "Models/u_air_Uh1b.ms2";
+  String     SkinClass       = "Cu_air_Uh1bModelSkin";
+
+  String     RouterMapFile   = "Models/u_air_Uh1b.rmap";
+
+  Array  Animation = [
+      ["A1_gun_dn", ["Pylon2|Weapon_A1|Weapon_A1_gun", 4, 5]],
+      ["A1_gun_mdl", ["Pylon2|Weapon_A1|Weapon_A1_gun", 2, 3]],
+      ["A1_gun_up", ["Pylon2|Weapon_A1|Weapon_A1_gun", 0, 1]],
+      ["A1_turret", ["Pylon2|Weapon_A1", 0, 1]],
+      ["B1_fw", ["Weapon_B1", 0, 1], ["Weapon_B1_turret", 0, 1], ["joint10", 0, 1], ["joint7", 0, 1], ["joint8", 0, 1], ["joint9", 0, 1]],
+      ["B1_ltdn", ["Weapon_B1", 8, 9], ["Weapon_B1_turret", 8, 9], ["joint10", 8, 9], ["joint7", 8, 9], ["joint8", 8, 9], ["joint9", 8, 9]],
+      ["B1_ltup", ["Weapon_B1", 2, 3], ["Weapon_B1_turret", 2, 3], ["joint10", 2, 3], ["joint7", 2, 3], ["joint8", 2, 3], ["joint9", 2, 3]],
+      ["B1_minigun_dyn_rotate", ["Blade1", 0, 3], ["Blade1_LOD1", 0, 3], ["Blade1_LOD2", 0, 3], ["Blade1_LOD3", 0, 3], ["Blade1_LOD4", 0, 3], ["Blade1_crashed", 0, 3], ["Blade1_crashed_LOD1", 0, 3], ["Blade1_crashed_LOD2", 0, 3], ["Blade1_crashed_LOD3", 0, 3], ["Blade2", 0, 3], ["Blade2_LOD1", 0, 3], ["Blade2_LOD2", 0, 3], ["Blade2_LOD3", 0, 3], ["Blade2_LOD4", 0, 3], ["Blade2_crashed", 0, 3], ["Blade2_crashed_LOD1", 0, 3], ["Blade2_crashed_LOD2", 0, 3], ["Blade2_crashed_LOD3", 0, 3], ["Blades", 0, 3], ["Blades_LOD1", 0, 3], ["Blades_LOD2", 0, 3], ["Blades_LOD3", 0, 3], ["Blades_LOD4", 0, 3], ["Body", 0, 3], ["Body_Details", 0, 3], ["Body_Details1", 0, 3], ["Body_Details1|Body_Details_LOD1", 0, 3], ["Body_Details1|Body_Details_LOD2", 0, 3], ["Body_Details_LOD3", 0, 3], ["Body_Details_LOD4", 0, 3], ["Body_Details|Body_Details_LOD1", 0, 3], ["Body_Details|Body_Details_LOD2", 0, 3], ["Body_LOD1", 0, 3], ["Body_LOD2", 0, 3], ["Body_LOD3", 0, 3], ["Body_LOD4", 0, 3], ["Body_crashed", 0, 3], ["Body_crashed_LOD1", 0, 3], ["Body_crashed_LOD2", 0, 3], ["Body_crashed_LOD3", 0, 3], ["Body_crashed_LOD4", 0, 3], ["Body_rear", 0, 3], ["Body_rear_crashed", 0, 3], ["Body_rear_crashed_LOD1", 0, 3], ["Body_rear_crashed_LOD2", 0, 3], ["Body_rear_crashed_LOD3", 0, 3], ["Body_rear_crashed_LOD4", 0, 3], ["CockpitCameraCoPilot", 0, 3], ["CockpitCameraLeftGun", 0, 3], ["CockpitCameraLeftGunStatic", 0, 3], ["CockpitCameraPilot", 0, 3], ["CockpitCameraRightGun", 0, 3], ["CockpitCameraRightGunStatic", 0, 3], ["CockpitNearCameraLeftGun", 0, 3], ["CockpitNearCameraRightGun", 0, 3], ["Controls", 0, 3], ["Controls_LOD1", 0, 3], ["Cyclic_Left_Joint", 0, 3], ["Cyclic_Right_Joint", 0, 3], ["Dyn_mRotor", 0, 3], ["Dyn_mRotor_Blades", 0, 3], ["Dyn_mRotor_Blades5", 0, 3], ["Dyn_mRotor_Blades6", 0, 3], ["Dyn_mRotor_Blades7", 0, 3], ["Dyn_mRotor_Blades8", 0, 3], ["Dyn_mRotor_Blades_LOD1", 0, 3], ["Dyn_mRotor_Blades_LOD2", 0, 3], ["Dyn_mRotor_Blades_LOD3", 0, 3], ["Dyn_mRotor_LOD1", 0, 3], ["Dyn_mRotor_LOD2", 0, 3], ["Dyn_mRotor_LOD3", 0, 3], ["Dyn_mRotor_Pitch", 0, 3], ["Dyn_tRotor", 0, 3], ["Dyn_tRotor_LOD1", 0, 3], ["Dyn_tRotor_LOD2", 0, 3], ["Dyn_tRotor_LOD3", 0, 3], ["Dyn_tRotor_LOD4", 0, 3], ["Eject1_A1", 0, 3], ["Eject1_F1", 0, 3], ["Eject2_A1", 0, 3], ["Eject2_F1", 0, 3], ["Eject_B1", 0, 3], ["Eject_E1", 0, 3], ["FireHost_A1", 0, 3], ["FireHost_B1", 0, 3], ["FireHost_C1", 0, 3], ["FireHost_D1", 0, 3], ["FireHost_E1", 0, 3], ["FireHost_F1", 0, 3], ["Fire_A1", 0, 3], ["Fire_B1", 0, 3], ["Fire_C1_1", 0, 3], ["Fire_C1_2", 0, 3], ["Fire_C1_3", 0, 3], ["Fire_C1_4", 0, 3], ["Fire_C1_5", 0, 3], ["Fire_C1_6", 0, 3], ["Fire_C1_7", 0, 3], ["Fire_D1_1", 0, 3], ["Fire_D1_2", 0, 3], ["Fire_D1_3", 0, 3], ["Fire_D1_4", 0, 3], ["Fire_D1_5", 0, 3], ["Fire_D1_6", 0, 3], ["Fire_D1_7", 0, 3], ["Fire_E1", 0, 3], ["Fire_F1", 0, 3], ["Gear1", 0, 3], ["Gear2", 0, 3], ["Gear3", 0, 3], ["Gear4", 0, 3], ["L_Cabin_Door", 0, 3], ["L_Cabin_Door_Outside_LOD1", 0, 3], ["L_Cabin_Door_Outside_LOD2", 0, 3], ["L_Cabin_Door_Outside_LOD3", 0, 3], ["L_Cabin_Door_crashed", 0, 3], ["L_Cabin_Door_crashed1", 0, 3], ["L_Cabin_Door_crashed2", 0, 3], ["L_Cabin_Door_crashed3", 0, 3], ["L_Cabin_Door_crashed4", 0, 3], ["L_Cargo_Door", 0, 3], ["L_Cargo_Door_Outside_LOD1", 0, 3], ["L_Cargo_Door_Outside_LOD2", 0, 3], ["L_Cargo_Door_Outside_LOD3", 0, 3], ["L_Cargo_Door_crashed", 0, 3], ["L_Cargo_Door_crashed1", 0, 3], ["L_Cargo_Door_crashed2", 0, 3], ["L_Cargo_Door_crashed3", 0, 3], ["L_Cargo_Door_crashed4", 0, 3], ["Left_Gunner_Seat", 0, 3], ["Left_Pedal_Joint", 0, 3], ["M21_Camera", 0, 3], ["M21_Camera_Driver", 0, 3], ["M21_sight", 0, 3], ["M60Sight", 0, 3], ["M60_Camera", 0, 3], ["Main_Cocpit_Joint", 0, 3], ["Pilot_Seat", 0, 3], ["Pylon1", 0, 3], ["Pylon1_LOD1", 0, 3], ["Pylon1_LOD2", 0, 3], ["Pylon2", 0, 3], ["Pylon2_LOD1", 0, 3], ["Pylon2|Weapon_A1", 0, 3], ["Pylon2|Weapon_A1|Weapon_A1_gun", 0, 3], ["Pylon3", 0, 3], ["Pylon3|Weapon_A1", 0, 3], ["Pylon3|Weapon_A1|Weapon_A1_gun", 0, 3], ["ROOT", 0, 3], ["R_Cabin_Door", 0, 3], ["R_Cabin_Door_Outside_LOD1", 0, 3], ["R_Cabin_Door_Outside_LOD2", 0, 3], ["R_Cabin_Door_Outside_LOD3", 0, 3], ["R_Cargo_Door", 0, 3], ["R_Cargo_Door_Outside_LOD1", 0, 3], ["R_Cargo_Door_Outside_LOD2", 0, 3], ["R_Cargo_Door_Outside_LOD3", 0, 3], ["R_Cargo_Door_crashed", 0, 3], ["R_Cargo_Door_crashed_LOD1", 0, 3], ["R_Cargo_Door_crashed_LOD2", 0, 3], ["R_Cargo_Door_crashed_LOD3", 0, 3], ["R_Cargo_Door_crashed_LOD4", 0, 3], ["Right_Gunner_Seat", 0, 3], ["Right_Pedal_Joint", 0, 3], ["Rocket10", 0, 3], ["Rocket11", 0, 3], ["Rocket12", 0, 3], ["Rocket13", 0, 3], ["Rocket14", 0, 3], ["Rocket15", 0, 3], ["Rocket2", 0, 3], ["Rocket3", 0, 3], ["Rocket4", 0, 3], ["Rocket5", 0, 3], ["Rocket6", 0, 3], ["Rocket7", 0, 3], ["Rocket8", 0, 3], ["Rocket9", 0, 3], ["Skid_Left", 0, 3], ["Skid_Left_LOD1", 0, 3], ["Skid_Left_LOD2", 0, 3], ["Skid_Left_LOD3", 0, 3], ["Skid_Left_crashed", 0, 3], ["Skid_Left_crashed_LOD1", 0, 3], ["Skid_Left_crashed_LOD2", 0, 3], ["Skid_Left_crashed_LOD3", 0, 3], ["Skid_Right", 0, 3], ["Skid_Right_LOD1", 0, 3], ["Skid_Right_LOD2", 0, 3], ["Skid_Right_LOD3", 0, 3], ["Skid_Right_crashed", 0, 3], ["Skid_Right_crashed_LOD1", 0, 3], ["Skid_Right_crashed_LOD2", 0, 3], ["Skid_Right_crashed_LOD3", 0, 3], ["Stabilizer", 0, 3], ["Stabilizer_LOD1", 0, 3], ["Stabilizer_LOD2", 0, 3], ["Stabilizer_LOD3", 0, 3], ["Static_mRotor", 0, 3], ["Static_mRotor_Blade11", 0, 3], ["Static_mRotor_Blade12", 0, 3], ["Static_mRotor_Blades1", 0, 3], ["Static_mRotor_LOD1", 0, 3], ["Static_mRotor_LOD2", 0, 3], ["Static_mRotor_LOD3", 0, 3], ["Static_mRotor_Pitch", 0, 3], ["Static_mRotor_crashed", 0, 3], ["Static_mRotor_crashed_LOD1", 0, 3], ["Static_mRotor_crashed_LOD2", 0, 3], ["Static_mRotor_crashed_LOD3", 0, 3], ["Static_mRotor_crashed_LOD4", 0, 3], ["Static_tRotor", 0, 3], ["Static_tRotor_LOD1", 0, 3], ["Static_tRotor_LOD2", 0, 3], ["Static_tRotor_LOD3", 0, 3], ["Static_tRotor_crashed", 0, 3], ["Static_tRotor_crashed__LOD1", 0, 3], ["Static_tRotor_crashed__LOD2", 0, 3], ["Static_tRotor_crashed__LOD3", 0, 3], ["Static_tRotor_crashed__LOD4", 0, 3], ["Tape_L", 0, 3], ["Tape_L_LOD1", 0, 3], ["Tape_R", 0, 3], ["Tape_R_LOD1", 0, 3], ["Trottle_Joint", 0, 3], ["Weapon_A1_LOD1", 0, 3], ["Weapon_A1_gun_LOD1", 0, 3], ["Weapon_A1_gun_LOD2", 0, 3], ["Weapon_B1", 0, 3], ["Weapon_B1_LOD1", 0, 3], ["Weapon_B1_LOD2", 0, 3], ["Weapon_B1_LOD3", 0, 3], ["Weapon_B1_minigun", 0, 3], ["Weapon_B1_minigun_LOD1", 0, 3], ["Weapon_B1_turret", 0, 3], ["Weapon_B1_turret_LOD1", 0, 3], ["Weapon_B1_turret_LOD2", 0, 3], ["Weapon_B1_turret_LOD3", 0, 3], ["Weapon_C1", 0, 3], ["Weapon_C1_LOD1", 0, 3], ["Weapon_C1_LOD2", 0, 3], ["Weapon_C1_LOD3", 0, 3], ["Weapon_D1", 0, 3], ["Weapon_D1_LOD1", 0, 3], ["Weapon_D1_LOD2", 0, 3], ["Weapon_D1_LOD3", 0, 3], ["Weapon_E1", 0, 3], ["Weapon_E1_LOD1", 0, 3], ["Weapon_E1_LOD2", 0, 3], ["Weapon_E1_LOD3", 0, 3], ["Weapon_E1_minigun", 0, 3], ["Weapon_E1_minigun_LOD1", 0, 3], ["Weapon_E1_turret", 0, 3], ["Weapon_E1_turret_LOD1", 0, 3], ["Weapon_E1_turret_LOD2", 0, 3], ["Weapon_E1_turret_LOD3", 0, 3], ["Weapon_F1", 0, 3], ["Weapon_F1_LOD1", 0, 3], ["Weapon_F1_gun", 0, 3], ["Weapon_F1_gun_LOD1", 0, 3], ["Weapon_F1_gun_LOD2", 0, 3], ["coPilot_Seat", 0, 3], ["joint1", 0, 3], ["joint10", 0, 3], ["joint2", 0, 3], ["joint3", 0, 3], ["joint4", 0, 3], ["joint5", 0, 3], ["joint6", 0, 3], ["joint7", 0, 3], ["joint8", 0, 3], ["joint9", 0, 3], ["locator1", 0, 3], ["locator3", 0, 3], ["locator8", 0, 3], ["pCube1", 0, 3], ["pCube2", 0, 3], ["polySurface1436", 0, 3], ["polySurface1437", 0, 3], ["polySurface1438", 0, 3], ["polySurface1442", 0, 3], ["polySurface1446", 0, 3]],
+      ["B1_minigun_rotate", ["Weapon_B1_minigun", 0, 3]],
+      ["B1_rtdn", ["Weapon_B1", 6, 7], ["Weapon_B1_turret", 6, 7], ["joint10", 6, 7], ["joint7", 6, 7], ["joint8", 6, 7], ["joint9", 6, 7]],
+      ["B1_rtup", ["Weapon_B1", 4, 5], ["Weapon_B1_turret", 4, 5], ["joint10", 4, 5], ["joint7", 4, 5], ["joint8", 4, 5], ["joint9", 4, 5]],
+      ["E1_fw", ["Weapon_E1", 0, 1], ["Weapon_E1_turret", 0, 1], ["joint2", 0, 1], ["joint3", 0, 1], ["joint4", 0, 1], ["joint5", 0, 1]],
+      ["E1_ltdn", ["Weapon_E1", 8, 9], ["Weapon_E1_turret", 8, 9], ["joint2", 8, 9], ["joint3", 8, 9], ["joint4", 8, 9], ["joint5", 8, 9]],
+      ["E1_ltup", ["Weapon_E1", 2, 3], ["Weapon_E1_turret", 2, 3], ["joint2", 2, 3], ["joint3", 2, 3], ["joint4", 2, 3], ["joint5", 2, 3]],
+      ["E1_minigun_dyn_rotate", ["Blade1", 0, 3], ["Blade1_LOD1", 0, 3], ["Blade1_LOD2", 0, 3], ["Blade1_LOD3", 0, 3], ["Blade1_LOD4", 0, 3], ["Blade1_crashed", 0, 3], ["Blade1_crashed_LOD1", 0, 3], ["Blade1_crashed_LOD2", 0, 3], ["Blade1_crashed_LOD3", 0, 3], ["Blade2", 0, 3], ["Blade2_LOD1", 0, 3], ["Blade2_LOD2", 0, 3], ["Blade2_LOD3", 0, 3], ["Blade2_LOD4", 0, 3], ["Blade2_crashed", 0, 3], ["Blade2_crashed_LOD1", 0, 3], ["Blade2_crashed_LOD2", 0, 3], ["Blade2_crashed_LOD3", 0, 3], ["Blades", 0, 3], ["Blades_LOD1", 0, 3], ["Blades_LOD2", 0, 3], ["Blades_LOD3", 0, 3], ["Blades_LOD4", 0, 3], ["Body", 0, 3], ["Body_Details", 0, 3], ["Body_Details1", 0, 3], ["Body_Details1|Body_Details_LOD1", 0, 3], ["Body_Details1|Body_Details_LOD2", 0, 3], ["Body_Details_LOD3", 0, 3], ["Body_Details_LOD4", 0, 3], ["Body_Details|Body_Details_LOD1", 0, 3], ["Body_Details|Body_Details_LOD2", 0, 3], ["Body_LOD1", 0, 3], ["Body_LOD2", 0, 3], ["Body_LOD3", 0, 3], ["Body_LOD4", 0, 3], ["Body_crashed", 0, 3], ["Body_crashed_LOD1", 0, 3], ["Body_crashed_LOD2", 0, 3], ["Body_crashed_LOD3", 0, 3], ["Body_crashed_LOD4", 0, 3], ["Body_rear", 0, 3], ["Body_rear_crashed", 0, 3], ["Body_rear_crashed_LOD1", 0, 3], ["Body_rear_crashed_LOD2", 0, 3], ["Body_rear_crashed_LOD3", 0, 3], ["Body_rear_crashed_LOD4", 0, 3], ["CockpitCameraCoPilot", 0, 3], ["CockpitCameraLeftGun", 0, 3], ["CockpitCameraLeftGunStatic", 0, 3], ["CockpitCameraPilot", 0, 3], ["CockpitCameraRightGun", 0, 3], ["CockpitCameraRightGunStatic", 0, 3], ["CockpitNearCameraLeftGun", 0, 3], ["CockpitNearCameraRightGun", 0, 3], ["Controls", 0, 3], ["Controls_LOD1", 0, 3], ["Cyclic_Left_Joint", 0, 3], ["Cyclic_Right_Joint", 0, 3], ["Dyn_mRotor", 0, 3], ["Dyn_mRotor_Blades", 0, 3], ["Dyn_mRotor_Blades5", 0, 3], ["Dyn_mRotor_Blades6", 0, 3], ["Dyn_mRotor_Blades7", 0, 3], ["Dyn_mRotor_Blades8", 0, 3], ["Dyn_mRotor_Blades_LOD1", 0, 3], ["Dyn_mRotor_Blades_LOD2", 0, 3], ["Dyn_mRotor_Blades_LOD3", 0, 3], ["Dyn_mRotor_LOD1", 0, 3], ["Dyn_mRotor_LOD2", 0, 3], ["Dyn_mRotor_LOD3", 0, 3], ["Dyn_mRotor_Pitch", 0, 3], ["Dyn_tRotor", 0, 3], ["Dyn_tRotor_LOD1", 0, 3], ["Dyn_tRotor_LOD2", 0, 3], ["Dyn_tRotor_LOD3", 0, 3], ["Dyn_tRotor_LOD4", 0, 3], ["Eject1_A1", 0, 3], ["Eject1_F1", 0, 3], ["Eject2_A1", 0, 3], ["Eject2_F1", 0, 3], ["Eject_B1", 0, 3], ["Eject_E1", 0, 3], ["FireHost_A1", 0, 3], ["FireHost_B1", 0, 3], ["FireHost_C1", 0, 3], ["FireHost_D1", 0, 3], ["FireHost_E1", 0, 3], ["FireHost_F1", 0, 3], ["Fire_A1", 0, 3], ["Fire_B1", 0, 3], ["Fire_C1_1", 0, 3], ["Fire_C1_2", 0, 3], ["Fire_C1_3", 0, 3], ["Fire_C1_4", 0, 3], ["Fire_C1_5", 0, 3], ["Fire_C1_6", 0, 3], ["Fire_C1_7", 0, 3], ["Fire_D1_1", 0, 3], ["Fire_D1_2", 0, 3], ["Fire_D1_3", 0, 3], ["Fire_D1_4", 0, 3], ["Fire_D1_5", 0, 3], ["Fire_D1_6", 0, 3], ["Fire_D1_7", 0, 3], ["Fire_E1", 0, 3], ["Fire_F1", 0, 3], ["Gear1", 0, 3], ["Gear2", 0, 3], ["Gear3", 0, 3], ["Gear4", 0, 3], ["L_Cabin_Door", 0, 3], ["L_Cabin_Door_Outside_LOD1", 0, 3], ["L_Cabin_Door_Outside_LOD2", 0, 3], ["L_Cabin_Door_Outside_LOD3", 0, 3], ["L_Cabin_Door_crashed", 0, 3], ["L_Cabin_Door_crashed1", 0, 3], ["L_Cabin_Door_crashed2", 0, 3], ["L_Cabin_Door_crashed3", 0, 3], ["L_Cabin_Door_crashed4", 0, 3], ["L_Cargo_Door", 0, 3], ["L_Cargo_Door_Outside_LOD1", 0, 3], ["L_Cargo_Door_Outside_LOD2", 0, 3], ["L_Cargo_Door_Outside_LOD3", 0, 3], ["L_Cargo_Door_crashed", 0, 3], ["L_Cargo_Door_crashed1", 0, 3], ["L_Cargo_Door_crashed2", 0, 3], ["L_Cargo_Door_crashed3", 0, 3], ["L_Cargo_Door_crashed4", 0, 3], ["Left_Gunner_Seat", 0, 3], ["Left_Pedal_Joint", 0, 3], ["M21_Camera", 0, 3], ["M21_Camera_Driver", 0, 3], ["M21_sight", 0, 3], ["M60Sight", 0, 3], ["M60_Camera", 0, 3], ["Main_Cocpit_Joint", 0, 3], ["Pilot_Seat", 0, 3], ["Pylon1", 0, 3], ["Pylon1_LOD1", 0, 3], ["Pylon1_LOD2", 0, 3], ["Pylon2", 0, 3], ["Pylon2_LOD1", 0, 3], ["Pylon2|Weapon_A1", 0, 3], ["Pylon2|Weapon_A1|Weapon_A1_gun", 0, 3], ["Pylon3", 0, 3], ["Pylon3|Weapon_A1", 0, 3], ["Pylon3|Weapon_A1|Weapon_A1_gun", 0, 3], ["ROOT", 0, 3], ["R_Cabin_Door", 0, 3], ["R_Cabin_Door_Outside_LOD1", 0, 3], ["R_Cabin_Door_Outside_LOD2", 0, 3], ["R_Cabin_Door_Outside_LOD3", 0, 3], ["R_Cargo_Door", 0, 3], ["R_Cargo_Door_Outside_LOD1", 0, 3], ["R_Cargo_Door_Outside_LOD2", 0, 3], ["R_Cargo_Door_Outside_LOD3", 0, 3], ["R_Cargo_Door_crashed", 0, 3], ["R_Cargo_Door_crashed_LOD1", 0, 3], ["R_Cargo_Door_crashed_LOD2", 0, 3], ["R_Cargo_Door_crashed_LOD3", 0, 3], ["R_Cargo_Door_crashed_LOD4", 0, 3], ["Right_Gunner_Seat", 0, 3], ["Right_Pedal_Joint", 0, 3], ["Rocket10", 0, 3], ["Rocket11", 0, 3], ["Rocket12", 0, 3], ["Rocket13", 0, 3], ["Rocket14", 0, 3], ["Rocket15", 0, 3], ["Rocket2", 0, 3], ["Rocket3", 0, 3], ["Rocket4", 0, 3], ["Rocket5", 0, 3], ["Rocket6", 0, 3], ["Rocket7", 0, 3], ["Rocket8", 0, 3], ["Rocket9", 0, 3], ["Skid_Left", 0, 3], ["Skid_Left_LOD1", 0, 3], ["Skid_Left_LOD2", 0, 3], ["Skid_Left_LOD3", 0, 3], ["Skid_Left_crashed", 0, 3], ["Skid_Left_crashed_LOD1", 0, 3], ["Skid_Left_crashed_LOD2", 0, 3], ["Skid_Left_crashed_LOD3", 0, 3], ["Skid_Right", 0, 3], ["Skid_Right_LOD1", 0, 3], ["Skid_Right_LOD2", 0, 3], ["Skid_Right_LOD3", 0, 3], ["Skid_Right_crashed", 0, 3], ["Skid_Right_crashed_LOD1", 0, 3], ["Skid_Right_crashed_LOD2", 0, 3], ["Skid_Right_crashed_LOD3", 0, 3], ["Stabilizer", 0, 3], ["Stabilizer_LOD1", 0, 3], ["Stabilizer_LOD2", 0, 3], ["Stabilizer_LOD3", 0, 3], ["Static_mRotor", 0, 3], ["Static_mRotor_Blade11", 0, 3], ["Static_mRotor_Blade12", 0, 3], ["Static_mRotor_Blades1", 0, 3], ["Static_mRotor_LOD1", 0, 3], ["Static_mRotor_LOD2", 0, 3], ["Static_mRotor_LOD3", 0, 3], ["Static_mRotor_Pitch", 0, 3], ["Static_mRotor_crashed", 0, 3], ["Static_mRotor_crashed_LOD1", 0, 3], ["Static_mRotor_crashed_LOD2", 0, 3], ["Static_mRotor_crashed_LOD3", 0, 3], ["Static_mRotor_crashed_LOD4", 0, 3], ["Static_tRotor", 0, 3], ["Static_tRotor_LOD1", 0, 3], ["Static_tRotor_LOD2", 0, 3], ["Static_tRotor_LOD3", 0, 3], ["Static_tRotor_crashed", 0, 3], ["Static_tRotor_crashed__LOD1", 0, 3], ["Static_tRotor_crashed__LOD2", 0, 3], ["Static_tRotor_crashed__LOD3", 0, 3], ["Static_tRotor_crashed__LOD4", 0, 3], ["Tape_L", 0, 3], ["Tape_L_LOD1", 0, 3], ["Tape_R", 0, 3], ["Tape_R_LOD1", 0, 3], ["Trottle_Joint", 0, 3], ["Weapon_A1_LOD1", 0, 3], ["Weapon_A1_gun_LOD1", 0, 3], ["Weapon_A1_gun_LOD2", 0, 3], ["Weapon_B1", 0, 3], ["Weapon_B1_LOD1", 0, 3], ["Weapon_B1_LOD2", 0, 3], ["Weapon_B1_LOD3", 0, 3], ["Weapon_B1_minigun", 0, 3], ["Weapon_B1_minigun_LOD1", 0, 3], ["Weapon_B1_turret", 0, 3], ["Weapon_B1_turret_LOD1", 0, 3], ["Weapon_B1_turret_LOD2", 0, 3], ["Weapon_B1_turret_LOD3", 0, 3], ["Weapon_C1", 0, 3], ["Weapon_C1_LOD1", 0, 3], ["Weapon_C1_LOD2", 0, 3], ["Weapon_C1_LOD3", 0, 3], ["Weapon_D1", 0, 3], ["Weapon_D1_LOD1", 0, 3], ["Weapon_D1_LOD2", 0, 3], ["Weapon_D1_LOD3", 0, 3], ["Weapon_E1", 0, 3], ["Weapon_E1_LOD1", 0, 3], ["Weapon_E1_LOD2", 0, 3], ["Weapon_E1_LOD3", 0, 3], ["Weapon_E1_minigun", 0, 3], ["Weapon_E1_minigun_LOD1", 0, 3], ["Weapon_E1_turret", 0, 3], ["Weapon_E1_turret_LOD1", 0, 3], ["Weapon_E1_turret_LOD2", 0, 3], ["Weapon_E1_turret_LOD3", 0, 3], ["Weapon_F1", 0, 3], ["Weapon_F1_LOD1", 0, 3], ["Weapon_F1_gun", 0, 3], ["Weapon_F1_gun_LOD1", 0, 3], ["Weapon_F1_gun_LOD2", 0, 3], ["coPilot_Seat", 0, 3], ["joint1", 0, 3], ["joint10", 0, 3], ["joint2", 0, 3], ["joint3", 0, 3], ["joint4", 0, 3], ["joint5", 0, 3], ["joint6", 0, 3], ["joint7", 0, 3], ["joint8", 0, 3], ["joint9", 0, 3], ["locator1", 0, 3], ["locator3", 0, 3], ["locator8", 0, 3], ["pCube1", 0, 3], ["pCube2", 0, 3], ["polySurface1436", 0, 3], ["polySurface1437", 0, 3], ["polySurface1438", 0, 3], ["polySurface1442", 0, 3], ["polySurface1446", 0, 3]],
+      ["E1_minigun_rotate", ["Weapon_E1_minigun", 0, 3]],
+      ["E1_rtdn", ["Weapon_E1", 6, 7], ["Weapon_E1_turret", 6, 7], ["joint2", 6, 7], ["joint3", 6, 7], ["joint4", 6, 7], ["joint5", 6, 7]],
+      ["E1_rtup", ["Weapon_E1", 4, 5], ["Weapon_E1_turret", 4, 5], ["joint2", 4, 5], ["joint3", 4, 5], ["joint4", 4, 5], ["joint5", 4, 5]],
+      ["F1_gun_dn", ["Weapon_F1_gun", 4, 5]],
+      ["F1_gun_mdl", ["Weapon_F1_gun", 2, 3]],
+      ["F1_gun_up", ["Weapon_F1_gun", 0, 1]],
+      ["F1_turret", ["Weapon_F1", 0, 1]],
+      ["M21sight_fw", ["M21_Camera_Driver", 0, 1]],
+      ["M21sight_ltdn", ["M21_Camera_Driver", 8, 9]],
+      ["M21sight_ltup", ["M21_Camera_Driver", 2, 3]],
+      ["M21sight_open", ["pCube1", 0, 12], ["pCube2", 0, 12], ["polySurface1436", 0, 12], ["polySurface1437", 0, 12], ["polySurface1438", 0, 12], ["polySurface1442", 0, 12]],
+      ["M21sight_rtdn", ["M21_Camera_Driver", 6, 7]],
+      ["M21sight_rtup", ["M21_Camera_Driver", 4, 5]],
+      ["cyclic_bank", ["Cyclic_Left_Joint", 0, 1], ["Cyclic_Right_Joint", 0, 1]],
+      ["cyclic_tangage", ["Cyclic_Left_Joint", 2, 3], ["Cyclic_Right_Joint", 2, 3]],
+      ["dyn_mrotor_flip", ["Dyn_mRotor_Blades", 0, 1]],
+      ["dyn_mrotor_rotate", ["Dyn_mRotor", 0, 3]],
+      ["dyn_mrotor_stretch", ["Dyn_mRotor_Blades5", 0, 1], ["Dyn_mRotor_Blades6", 0, 1], ["Dyn_mRotor_Blades7", 0, 1], ["Dyn_mRotor_Blades8", 0, 1]],
+      ["dyn_trotor_rotate", ["Dyn_tRotor", 0, 3]],
+      ["l_cabin_door", ["L_Cabin_Door", 0, 1]],
+      ["l_cargo_door", ["L_Cargo_Door", 0, 1]],
+      ["m60_sight", ["polySurface1446", 0, 1]],
+      ["r_cabin_door", ["R_Cabin_Door", 0, 1]],
+      ["r_cargo_door", ["R_Cargo_Door", 0, 1]],
+      ["rudder", ["Left_Pedal_Joint", 0, 1], ["Right_Pedal_Joint", 0, 1]],
+      ["static_mrotor_bend", ["Static_mRotor_Blade11", 0, 1], ["Static_mRotor_Blade12", 0, 1], ["Static_mRotor_Blades1", 0, 1]],
+      ["static_mrotor_rotate", ["Static_mRotor", 0, 3]],
+      ["static_trotor_rotate", ["Static_tRotor", 0, 3]],
+      ["trottle", ["Trottle_Joint", 0, 1]]
+    ];
+
+  Map    ConfigSets = new Map([
+      [ "showSet", [ "Blade1", "Blade1_crashed", "Blade1_crashed_LOD1", "Blade1_crashed_LOD2", "Blade1_crashed_LOD3", "Blade2", "Blade2_crashed", "Blade2_crashed_LOD1", "Blade2_crashed_LOD2", "Blade2_crashed_LOD3", "Blades", "CockpitCameraCoPilot", "CockpitCameraPilot", "Dyn_mRotor", "Dyn_mRotor_Blades", "Dyn_mRotor_Pitch", "Dyn_tRotor", "FireHost_B1", "Fire_A1", "Fire_C1_1", "Fire_C1_2", "Fire_C1_3", "Fire_C1_4", "Fire_C1_5", "Fire_C1_6", "Fire_C1_7", "Fire_D1_1", "Fire_D1_2", "Fire_D1_3", "Fire_D1_4", "Fire_D1_5", "Fire_D1_6", "Fire_D1_7", "Fire_E1", "Fire_F1", "L_Cabin_Door", "L_Cabin_Door_crashed", "L_Cabin_Door_crashed1", "L_Cabin_Door_crashed2", "L_Cabin_Door_crashed3", "L_Cabin_Door_crashed4", "L_Cargo_Door", "L_Cargo_Door_crashed", "L_Cargo_Door_crashed1", "L_Cargo_Door_crashed2", "L_Cargo_Door_crashed3", "L_Cargo_Door_crashed4", "Pylon2", "Pylon2|Weapon_A1", "Pylon3", "Pylon3|Weapon_A1", "ROOT", "R_Cabin_Door", "R_Cargo_Door", "R_Cargo_Door_crashed", "R_Cargo_Door_crashed_LOD1", "R_Cargo_Door_crashed_LOD2", "R_Cargo_Door_crashed_LOD3", "R_Cargo_Door_crashed_LOD4", "Rocket10", "Rocket11", "Rocket12", "Rocket13", "Rocket14", "Rocket15", "Rocket2", "Rocket3", "Rocket4", "Rocket5", "Rocket6", "Rocket7", "Rocket8", "Rocket9", "Stabilizer", "Static_mRotor", "Static_mRotor_Pitch", "Static_mRotor_crashed", "Static_mRotor_crashed_LOD1", "Static_mRotor_crashed_LOD2", "Static_mRotor_crashed_LOD3", "Static_mRotor_crashed_LOD4", "Static_tRotor", "Weapon_B1", "Weapon_B1_minigun", "Weapon_B1_turret", "Weapon_C1", "Weapon_D1", "Weapon_E1", "Weapon_E1_minigun", "Weapon_E1_turret", "Weapon_F1", "locator1", "locator3" ] ]
+    ]);
+}
+
+class Cu_air_Uh1bModelSkin
+{
+  Array Materials = [
+      new CModelMaterial(
+        "0", // material id
+        "Textures/u_air_Uh1B.tex", // texture name
+        "Textures/u_air_Uh1B_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/u_air_Uh1B_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        150.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "1", // material id
+        "", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 0.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        50.000000, // power
+        false, // double sided
+        1.000000, // glossiness
+        0.300000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "Textures/EnvBox.tex" // envmap name
+      ),
+      new CModelMaterial(
+        "2", // material id
+        "Textures/u_air_Uh1B.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.400000, 0.400000, 0.400000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        10.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "3", // material id
+        "Textures/u_air_Uh1B_rotors.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "4", // material id
+        "Textures/u_air_Uh1B_rotors.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.400000, 0.400000, 0.400000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        10.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "5", // material id
+        "Textures/u_air_Uh1B_GlassGreen.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "MULTIPLICATIVE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        50.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        0.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "6", // material id
+        "Textures/wpn_M60.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "Textures/wpn_M60_s.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "7", // material id
+        "Textures/wpn_M60_Pritsel_small.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "NORMAL", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "8", // material id
+        "Textures/M21.tex", // texture name
+        "Textures/M21_b.tex", // bump tex name
+        "", // micro tex name
+        "Textures/M21_b.tex", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(1.000000, 1.000000, 1.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        30.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      )
+    ];
+}

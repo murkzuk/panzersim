@@ -1,0 +1,98 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+class CPlei_Kuenh_Ya_Tong_Group
+  extends CObjectsGroup 
+{
+  static Array DefaultContents = [ 
+      [
+        "VietnameseGranaryPile_1",
+        "InteriorObject",
+        "CVietnameseGranaryPileUnit",
+        new Matrix(
+            0.208572, 0.978007, 0.000000, 82.642578,
+            -0.978007, 0.208572, 0.000000, 99.226563,
+            0.000000, 0.000000, 1.000000, -9.130127,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+        ]
+      ],
+
+      [
+        "VietnameseGranaryPile_2",
+        "InteriorObject",
+        "CVietnameseGranaryPileUnit",
+        new Matrix(
+            0.208572, 0.978007, 0.000000, -80.070313,
+            -0.978007, 0.208572, 0.000000, -7.886719,
+            0.000000, 0.000000, 1.000000, -4.439819,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+        ]
+      ],
+
+      [
+        "VietnameseGranaryPile_3",
+        "InteriorObject",
+        "CVietnameseGranaryPileUnit",
+        new Matrix(
+            0.208572, 0.978007, 0.000000, -3.980469,
+            -0.978007, 0.208572, 0.000000, 59.835938,
+            0.000000, 0.000000, 1.000000, -4.770264,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+        ]
+      ],
+
+      [
+        "VietnameseHouseBigPile_1",
+        "InteriorObject",
+        "CVietnameseHouseBigPileUnit",
+        new Matrix(
+            0.208572, 0.978007, 0.000000, 16.351563,
+            -0.978007, 0.208572, 0.000000, -7.242188,
+            0.000000, 0.000000, 1.000000, 13.916687,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+        ]
+      ],
+
+      [
+        "VietnameseHouseBigPile_2",
+        "InteriorObject",
+        "CVietnameseHouseBigPileUnit",
+        new Matrix(
+            0.208572, 0.978007, 0.000000, -81.894531,
+            -0.978007, 0.208572, 0.000000, -84.570313,
+            0.000000, 0.000000, 1.000000, 9.808777,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+        ]
+      ],
+
+      [
+        "VietnameseHouseBigPile_3",
+        "InteriorObject",
+        "CVietnameseHouseBigPileUnit",
+        new Matrix(
+            0.208572, 0.978007, 0.000000, 77.832031,
+            -0.978007, 0.208572, 0.000000, 30.027344,
+            0.000000, 0.000000, 1.000000, 9.838928,
+            0.000000, 0.000000, 0.000000, 1.000000
+          ),
+        [
+        ]
+      ]
+    ];
+}

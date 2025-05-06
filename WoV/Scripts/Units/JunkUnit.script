@@ -1,0 +1,82 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CJunkExplosion
+  extends CLightNavalExplosion
+{
+  float  Damage   = 200.0;
+  float  Radius   = 20.0;
+  String SoundId  = "JunkExplosionSound";
+}
+
+class CJunkBehavior extends CBaseLightNavalBehavior
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+    float  MinRotateRadius = 20; // unit can turn when staying
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 500; // m
+  float  MinRadarDistance = 5;   // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( 10, 0, 0);
+}
+
+class CJunkUnit
+  extends CUnit
+{
+  final static WString CockpitTargetPointer        = getLocalized("Units", "str_JunkPointer");
+  final static float   DefaultHitPoints            = CHitPoints::JunkUnitHitPoints;
+  final static int     Targeting_MapUIElementIndex = 3;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+  static String        PrevExplosionID             = "JunkExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["NAVAL"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CJunkUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_nvl_JunkModel>(), [200, 100, 3]);
+
+    // Creates and register unit state component
+    // HitPoints, ExplosionID
+//    SetupStateControl(50.0, "JunkExplosion");
+
+    // BulletHitEffect, BulletHitSound, ExplosionEffect, ExplosionSound
+//    SetDamageEffects(
+//        "MetalBulletHitEffect", "MetalBulletHitSound",
+//        "MetalExplosionEffect", "MetalExplosionSound"
+//      );
+
+    SetMovementEffects(
+      null,
+      [
+        ["WaterLine", "WaterUnitTraceEffect"]
+      ]
+                      );
+
+    PutonWater(0.0f);
+
+    SetupBehavior( new #VehicleBehavior<CJunkBehavior>());
+  }
+}

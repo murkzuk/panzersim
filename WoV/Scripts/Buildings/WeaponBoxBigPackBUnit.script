@@ -1,0 +1,41 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+class CWeaponBoxBigPackBExplosion
+  extends CBuildingExplosion
+
+{
+  float  Damage   = 10.0;
+  float  Radius   = 5.0;
+  String SoundId  = "WeaponBoxBigPackBExplosionSound";
+  String EffectId = "AmmoBoxExplosionEffect";
+}
+
+class CWeaponBoxBigPackBUnit
+  extends CGroundBuilding
+{
+
+  final static float DefaultHitPoints = CHitPoints::WeaponBoxBigPackBUnitHitPoints;
+
+  static String PrevExplosionID = "WeaponBoxBigPackBExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE"];
+
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CWeaponBoxBigPackBUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cenv_WeaponBoxBigPackBModel>(), [120, 4]);
+  }
+}

@@ -1,0 +1,446 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+//
+// Common bullets classes
+//
+
+class CMachineGunBulletControl
+{
+  Array   Classificator   = [];
+  float   MaxDistance     = 1500.0;
+  boolean IsMotionBlur    = true;
+  int     CollisionMode = BCM_PIERCING;
+}
+// Fake bullets
+class CFakeMachineGunBulletControl
+{
+  Array   Classificator   = [];
+  float   MaxDistance     = 200.0;
+  boolean IsMotionBlur    = true;
+  int     CollisionMode = BCM_PIERCING;
+}
+
+class CLightGunBulletControl
+{
+  Array   Classificator   = [];
+  float   MaxDistance     = 2000.0;
+  boolean IsMotionBlur    = true;
+  int     CollisionMode   = BCM_PIERCING;
+}
+
+class CHeavyGunBulletControl
+{
+  Array   Classificator   = [];
+  float   MaxDistance     = 2000.0;
+  boolean IsMotionBlur    = true;
+  int     CollisionMode   = BCM_PIERCING;
+}
+
+class CBombControl
+{
+  Array    Classificator  = [];
+  float    MaxDistance    = 5000.0;
+  boolean  IsMotionBlur   = true;
+  Vector   GravityAccel   = CWorldPhysics::GravityVector;
+}
+
+// base class for all missile
+class CBaseMissileControl
+{
+  Array   Classificator    = [];
+
+  // laying method
+  int     TraceMethod      = BTM_PURSUIT;
+
+  // line trace accelerate
+  boolean IsLineAccelerate = true;
+  int     CollisionMode    = BCM_PIERCING;
+
+  // fuse settings
+  boolean IsProximityFuse  = false;
+  float   DetonateDistance = 10.0;
+
+  // distance altitude for cruising and surface-to-air missiles
+  float   ControlAltitude  = 300.0;
+  // Collision
+  int     CollisionMode   = BCM_PIERCING;
+
+}
+
+// Air to Air missile control
+class CATAMissileControl
+  extends CBaseMissileControl
+{
+  int     TraceMethod      = BTM_PURSUIT;
+  boolean IsProximityFuse  = true;
+  float   DetonateDistance = 10.0;
+}
+
+// Surface to Air missile control
+class CSTAMissileControl
+  extends CBaseMissileControl
+{
+  int     TraceMethod      = BTM_OUTCROP;
+  boolean IsLineAccelerate = false;
+  boolean IsProximityFuse  = true;
+  float   DetonateDistance = 15.0;
+  float   ControlAltitude  = 50.0;
+}
+
+// Air to Surface missile control
+class CATSMissileControl
+  extends CBaseMissileControl
+{
+  int     TraceMethod      = BTM_SHED;
+}
+
+// Surface to Surface missile control
+class CSTSMissileControl
+  extends CBaseMissileControl
+{
+  int TraceMethod          = BTM_CRUISING;
+  boolean IsLineAccelerate = false;
+}
+
+class CLightMissileControl
+{
+  float   Acceleration     = 190.0;
+  float   MaxMoveSpeed     = 270.0;
+  float   MaxDistance      = 3500.0;
+  float   MaxRotSpeed      = 70.0;
+
+  float   MaxLockAngle     = 90.0;
+
+  String  TraceEffectId    = "LightMissileTraceEffect";
+  String  FireEffectId     = "LightMissileFireEffect";
+}
+
+class CHeavyMissileControl
+{
+  float   Acceleration     = 150.0;
+  float   MaxMoveSpeed     = 200.0;
+  float   MaxDistance      = 3500.0;
+  float   MaxRotSpeed      = 70.0;
+
+  float   MaxLockAngle     = 90.0;
+
+  String  TraceEffectId    = "HeavyMissileTraceEffect";
+  String  FireEffectId     = "HeavyMissileFireEffect";
+}
+
+//
+// Special Missile classes
+//
+
+class CXM157MissileControl
+  extends CATSMissileControl, CLightMissileControl
+{
+  float   Acceleration    = 800.0;
+  float   MaxMoveSpeed    = 700.0;
+
+  // laying method
+  int     TraceMethod     = BTM_FREEFLY;
+}
+
+class CM3MissileControl
+  extends CATSMissileControl, CLightMissileControl
+{
+  float   Acceleration    = 800.0;
+  float   MaxMoveSpeed    = 700.0;
+
+  // laying method
+  int     TraceMethod     = BTM_FREEFLY;
+}
+
+class CM3FogMissileControl
+  extends CATSMissileControl, CLightMissileControl
+{
+  float   Acceleration    = 800.0;
+  float   MaxMoveSpeed    = 700.0;
+
+  // laying method
+  int     TraceMethod     = BTM_FREEFLY;
+}
+
+//
+// Debris
+//
+class CHowitzerSprayDebrisControl
+{
+  float     MaxDistance   = 8.0;
+  String    ExplosionId   = "";
+  String    TraceEffectId = "HowitzerDebrisTraceEffect";
+  float     Mass          = 3.0;
+  Vector    GravityAccel  = new Vector(0.0, 0.0, -90.0); //new Vector(0.0, 0.0, -25.0);
+}
+
+class CHowitzerSprayCloud
+{
+  int    DebrisQuantity   = 16;
+  String DebrisPatternID  = "HowitzerSprayDebris";
+  float  DebrisSpeed      = 120.0;
+  float  DebrisSpeedDev   = 0.0;
+  Vector DebrisDir        = new Vector(0.0, 0.0, 1.0);
+  float  DebrisMinAngle   = 10.0;
+  float  DebrisMaxAngle   = 50.0;
+}
+
+class CMortarSprayDebrisControl
+{
+  float     MaxDistance   = 8.0;
+  String    ExplosionId   = "";
+  String    TraceEffectId = "MortarDebrisTraceEffect";
+  float     Mass          = 3.0;
+  Vector    GravityAccel  = new Vector(0.0, 0.0, -60.0); //new Vector(0.0, 0.0, -25.0);
+}
+
+class CMortarSprayCloud
+{
+  int    DebrisQuantity   = 16;
+  String DebrisPatternID  = "MortarSprayDebris";
+  float  DebrisSpeed      = 55.0;
+  float  DebrisSpeedDev   = 0.0;
+  Vector DebrisDir        = new Vector(0.0, 0.0, 1.0);
+  float  DebrisMinAngle   = 35.0;
+  float  DebrisMaxAngle   = 75.0;
+}
+//
+//Shells and chains
+//
+class CBaseM134ShellControl
+{
+  float     MaxDistance   = 60.0;
+  //float     Mass          = 3.0;
+  Vector    GravityAccel  = new Vector(0.0, 0.0, -10.0);
+}
+
+class CBaseM60ShellControl
+{
+  float     MaxDistance   = 60.0;
+  //float     Mass          = 3.0;
+  Vector    GravityAccel  = new Vector(0.0, 0.0, -10.0);
+}
+
+class CBaseM60ChainControl
+{
+  float     MaxDistance   = 60.0;
+  //float     Mass          = 3.0;
+  Vector    GravityAccel  = new Vector(0.0, 0.0, -10.0);
+}
+
+class CM134ShellControl extends CBaseM134ShellControl
+{
+  Component BulletRender = new #AnimatedObject<Cwpn_ShellModel>();
+
+  CM134ShellControl()
+  {
+    BulletRender.SetLods([ 1 ]);
+  }
+}
+
+class CM60ShellControl extends CBaseM60ShellControl
+{
+  Component BulletRender = new #AnimatedObject<Cwpn_ShellModel>();
+
+  CM60ShellControl()
+  {
+    BulletRender.SetLods([ 1 ]);
+  }
+}
+
+class CM60ChainControl extends CBaseM60ChainControl
+{
+  Component BulletRender = new #AnimatedObject<Cwpn_ChainModel>();
+
+  CM60ChainControl()
+  {
+    BulletRender.SetLods([ 1 ]);
+  }
+}
+
+class CNearM134ShellControl extends CBaseM134ShellControl
+{
+  Component BulletRender = new #AnimatedObject<Cwpn_ShellNearModel>();
+
+  CNearM134ShellControl()
+  {
+    BulletRender.SetRenderLayer(PRIMLAYER_NEAR);
+  }
+}
+
+class CNearM60ShellControl extends CBaseM60ShellControl
+{
+  Component BulletRender = new #AnimatedObject<Cwpn_ShellNearModel>();
+
+  CNearM60ShellControl()
+  {
+    BulletRender.SetRenderLayer(PRIMLAYER_NEAR);
+  }
+}
+
+class CNearM60ChainControl extends CBaseM60ChainControl
+{
+  Component BulletRender = new #AnimatedObject<Cwpn_ChainNearModel>();
+
+  CNearM60ChainControl()
+  {
+    BulletRender.SetRenderLayer(PRIMLAYER_NEAR);
+  }
+}
+
+
+//
+// Bullets array
+//
+
+class CBulletsArray
+{
+  void CBulletsArray()
+  {
+    //
+    //Vehicles
+    //
+
+    //Uh1b
+    RegisterPattern("Uh1bM134Bullet",
+      new #BulletController<CUh1bM134GunBulletControl>());
+    RegisterPattern("Uh1bMA2Missile",
+      new #MissileController<CUh1bMA2Control>());
+    RegisterPattern("Uh1bDoorM60Bullet",
+      new #BulletController<CUh1bDoorM60GunBulletControl>());
+
+    //Uh1b
+    RegisterPattern("Uh1dDoorM60Bullet",
+      new #BulletController<CUh1dDoorM60GunBulletControl>());
+
+    //M2A1Howitzer
+    RegisterPattern("M2A1HowitzerGunBullet",
+      new #BulletController<CM2A1HowitzerGunBulletControl>());
+
+    //DShK
+    RegisterPattern("DShKGunBullet",
+      new #BulletController<CDShKGunBulletControl>());
+
+    //Mortar
+    RegisterPattern("MortarGunBullet",
+      new #BulletController<CMortarGunBulletControl>());
+
+    //MortarPoint
+    RegisterPattern("MortarPointGunBullet",
+      new #BulletController<CMortarPointGunBulletControl>());
+
+    //CordonPoint
+    RegisterPattern("CordonPointGunBullet",
+      new #BulletController<CCordonPointGunBulletControl>());
+
+    // AD4Skyrider
+
+    RegisterPattern("AD4Bomb",
+      new #BulletController<CAD4BombControl>());
+
+    //
+    //Units
+    //
+
+    //AmericanGunner
+    RegisterPattern("AmericanGunnerGunBullet",
+      new #BulletController<CAmericanGunnerGunBulletControl>());
+//    RegisterPattern("AmericanGunnerRifleBullet",
+//      new #BulletController<CAmericanGunnerRifleBulletControl>());
+//    RegisterPattern("AmericanGunnerGrenadeBullet",
+//      new #BulletController<CAmericanGunnerGrenadeBulletControl>());
+
+    //AmericanPilot
+    RegisterPattern("AmericanPilotGunBullet",
+      new #BulletController<CAmericanPilotGunBulletControl>());
+
+    //AmericanSoldier
+//    RegisterPattern("AmericanSoldierGunBullet",
+//      new #BulletController<CAmericanSoldierGunBulletControl>());
+//    RegisterPattern("AmericanSoldierRifleBullet",
+//      new #BulletController<CAmericanSoldierRifleBulletControl>());
+//    RegisterPattern("AmericanSoldierGrenadeBullet",
+//      new #BulletController<CAmericanSoldierGrenadeBulletControl>());
+
+    //AmericanRadio
+//    RegisterPattern("AmericanRadioGunBullet",
+//      new #BulletController<CAmericanRadioGunBulletControl>());
+//    RegisterPattern("AmericanRadioRifleBullet",
+//      new #BulletController<CAmericanRadioRifleBulletControl>());
+//    RegisterPattern("AmericanRadioGrenadeBullet",
+//      new #BulletController<CAmericanRadioGrenadeBulletControl>());
+
+    //VietnameseSoldier
+//    RegisterPattern("VietnameseSoldierGunBullet",
+//      new #BulletController<CVietnameseSoldierGunBulletControl>());
+//    RegisterPattern("VietnameseSoldierRifleBullet",
+//      new #BulletController<CVietnameseSoldierRifleBulletControl>());
+
+    //VietnameseVolunteer
+//    RegisterPattern("VietnameseVolunteerGunBullet",
+//      new #BulletController<CVietnameseVolunteerGunBulletControl>());
+//    RegisterPattern("VietnameseVolunteerRifleBullet",
+//      new #BulletController<CVietnameseVolunteerRifleBulletControl>());
+
+    /*RegisterPattern("TerroristEuropePARCBullet",
+      new #MissileController<CTerroristEuropePARCBulletControl>());
+    */
+
+    // NPC Moore
+    RegisterPattern("MooreRifleBullet",
+      new #BulletController<CMooreRifleBulletControl>());
+
+    //
+    // Debris
+    //
+    //Howitzer debris
+    RegisterPattern("HowitzerSprayDebris",
+      new #BulletController<CHowitzerSprayDebrisControl>());
+
+    //Mortar debris
+    RegisterPattern("MortarSprayDebris",
+      new #BulletController<CMortarSprayDebrisControl>());
+
+    // Fake weapons
+    RegisterPattern("AmericanSoldierGunFakeBullet",
+      new #BulletController<CAmericanSoldierGunFakeBulletControl>());
+    RegisterPattern("AmericanSoldierRifleFakeBullet",
+      new #BulletController<CAmericanSoldierRifleFakeBulletControl>());
+
+    RegisterPattern("VietnameseSoldierGunFakeBullet",
+      new #BulletController<CVietnameseSoldierGunFakeBulletControl>());
+    RegisterPattern("VietnameseSoldierRifleFakeBullet",
+      new #BulletController<CVietnameseSoldierRifleFakeBulletControl>());
+
+//    RegisterPattern("VietnameseVolunteerGunFakeBullet",
+//      new #BulletController<CVietnameseVolunteerGunFakeBulletControl>());
+//    RegisterPattern("VietnameseVolunteerRifleFakeBullet",
+//      new #BulletController<CVietnameseVolunteerRifleFakeBulletControl>());
+
+    //
+    //Shells and chains
+    //
+    RegisterPattern("M134Shell",
+      new #BulletController<CM134ShellControl>());
+    RegisterPattern("M60Shell",
+      new #BulletController<CM60ShellControl>());
+    RegisterPattern("M60Chain",
+      new #BulletController<CM60ChainControl>());
+
+    RegisterPattern("NearM134Shell",
+      new #BulletController<CNearM134ShellControl>());
+    RegisterPattern("NearM60Shell",
+      new #BulletController<CNearM60ShellControl>());
+    RegisterPattern("NearM60Chain",
+      new #BulletController<CNearM60ChainControl>());
+  }
+}
+

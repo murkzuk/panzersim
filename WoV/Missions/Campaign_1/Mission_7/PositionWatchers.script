@@ -1,0 +1,171 @@
+class CC1M7WingmanGroupStartWatcher extends CPositionWatcher, CBaseUtilities
+{
+  final static String Positionable  = "NavPoint_MainPlayerUnitLandingBase";     // кто следит
+  final static Array  ControlPoints = ["MainPlayerUnit"];                       // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                4027.990234,      //NavPoint_WayMainPlayerUnit_6
+                                4299.809082,      // NavPoint_WayMainPlayerUnit_1
+                                8210.070313,      //NavPoint_WayMainPlayerUnit_2
+                                8757.260742,      //NavPoint_WayMainPlayerUnit_5
+                               14641.419922,      // NavPoint_WayMainPlayerUnit_4
+                               15800.872070       //NavPoint_WayMainPlayerUnit_3
+                                    ];
+
+  final static int ZoneMask0 = 1;
+  final static int ZoneMask1 = 2;
+  final static int ZoneMask2 = 4;
+  final static int ZoneMask3 = 8;
+  final static int ZoneMask4 = 16;
+  final static int ZoneMask5 = 32;
+
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+  }
+
+  // service
+  boolean IsRing0()
+  {
+    return 0 != (m_RegionMask & ZoneMask0) ;
+  }
+
+  boolean IsRing1()
+  {
+    return 0 == (m_RegionMask & ZoneMask0) && 0 != (m_RegionMask & ZoneMask1) ;
+  }
+
+  boolean IsRing2()
+  {
+    return 0 == (m_RegionMask & ZoneMask1) && 0 != (m_RegionMask & ZoneMask2) ;
+  }
+  boolean IsRing3()
+  {
+    return 0 == (m_RegionMask & ZoneMask2) && 0 != (m_RegionMask & ZoneMask3) ;
+  }
+  boolean IsRing4()
+  {
+    return 0 == (m_RegionMask & ZoneMask3) && 0 != (m_RegionMask & ZoneMask4) ;
+  }
+   boolean IsRing5()
+  {
+    return 0 == (m_RegionMask & ZoneMask4) && 0 != (m_RegionMask & ZoneMask5) ;
+  }
+
+
+  boolean IsOut()
+  {
+    return 0 == m_RegionMask;
+  }
+
+
+  // events
+
+  void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M7WingmanGroup_WatcherBack::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logError( "distance(NavPoint_MainPlayerUnitLandingBase, MainPlayerUnit)=" + new String(GetMission().distance("NavPoint_MainPlayerUnitLandingBase", "MainPlayerUnit")));
+      logError("[AutoPilot path] PathID=" + new String(GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()));
+    }
+
+    if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer1")
+    {
+      if (_RegionMask == 60)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M7PlayerMovingTo"]);
+      else if (_RegionMask == 48)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M7PlayerHalfMovingTo"]);
+    }
+    else if (GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName() == "WayPointPlayer2")
+    {
+      if (_RegionMask == 48)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M7PlayerMovingBack"]);
+      else if (_RegionMask == 60)
+          sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M7PlayerHalfMovingBack"]);
+
+    }
+
+  }
+}
+
+class CC1M7ColumnGroupStartWatcher extends CPositionWatcher, CBaseUtilities
+{
+    Component Mission;
+    Component GazGroup;
+
+  final static String Positionable  = "MainPlayerUnit";     // кто следит
+  final static Array  ControlPoints = ["tgt_m7_Gaz_3"];                       // за кем следим
+
+  // количество зон
+  final static Array RegionDefs = [
+                                   4000.0       //NavPoint_WayMainPlayerUnit_3
+                                  ];
+
+  final static int ZoneMask0 = 1;
+
+
+  int m_RegionMask = 0;
+
+  Initialize(Component _Mission, String _Name)
+  {
+    CPositionWatcher::Initialize(_Mission, _Name);
+    Mission = GetMission();
+    GazGroup = Mission.GetObject("GroupUnit_tgt_m7_Gaz");
+  }
+
+   void PointRelativeSpeedChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      float     _RelativeSpeed
+    )
+  {
+ //   logWarning("PointRelativeSpeedChanged not implemented");
+  }
+
+
+   void PointRegionChanged(
+      Component _PositionWatcher,
+      int       _Point,
+      int       _RegionMask
+    )
+  {
+    m_RegionMask = _RegionMask;
+    if(GetMission().isDebug)
+    {
+      logError("[CC1M7ColumnGroupStartWatcher::PointRegionChanged] RegoinMask=" + new String(_RegionMask));
+      logError( "distance(tgt_m7_Gaz_3, MainPlayerUnit)=" + new String(GetMission().distance("tgt_m7_Gaz_3", "MainPlayerUnit")));
+      logError("[AutoPilot path] PathID=" + new String(GetMission().GetObject("MainPlayerUnit").GetSecondPilot().GetCurrentPathName()));
+    }
+
+     if (_RegionMask == 1 )
+          sendEvent( 0.0, "GroupUnit_tgt_m7_Gaz", "StartColumn", []);
+
+     if ( GetMission().distance("tgt_m7_Gaz_3", "MainPlayerUnit") > 2000.0 )
+           GazGroup.ActivateMovement(false);
+        else
+           GazGroup.ActivateMovement(true);
+                     // sendEvent( 0.0, "GroupUnit_tgt_m7_Gaz", "StopColumn", []);
+
+  }
+
+}
+
+/*
+ NavPoint_WayMainPlayerUnit_1  4299.809082
+NavPoint_WayMainPlayerUnit_2  8210.070313
+NavPoint_WayMainPlayerUnit_3  15849.872070
+NavPoint_WayMainPlayerUnit_4  14641.419922
+NavPoint_WayMainPlayerUnit_5  8757.260742
+NavPoint_WayMainPlayerUnit_6  4027.990234
+
+ */

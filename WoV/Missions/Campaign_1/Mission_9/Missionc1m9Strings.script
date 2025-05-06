@@ -1,0 +1,160 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+//
+//  Mission strings
+//
+
+class CC1M9Mission_Strings extends CCommonStrings
+{
+  // Helicopters 1 & 2 names and images (material name)
+  final static WString str_Heli1_Name                = getLocalized("Units", "str_UH1BMenuName");
+  final static String  str_Heli1_Image               ="UH1B_Picture";
+  final static WString str_Heli2_Name                = getLocalized("Units", "str_UH1BMenuName");
+  final static String  str_Heli2_Image               ="UH1B_Picture";
+
+  // Helicopter 1 weapons names and description
+  final static WString str_Heli1_Weapon1_Name        = getLocalized("Weapon", "str_M134_FullName");
+  final static String  str_Heli1_Weapon1_Image       ="M134Minigun_Picture";
+  final static WString str_Heli1_Weapon1_Description = getLocalized("Weapon", "str_M134_Description");
+  final static WString str_Heli1_Weapon2_Name        = getLocalized("Weapon", "str_MA2_FullName");
+  final static String  str_Heli1_Weapon2_Image       ="M158Launcher_Picture";
+  final static WString str_Heli1_Weapon2_Description = getLocalized("Weapon", "str_MA2_Description");
+
+  // Helicopter 2 weapons names and description
+  final static WString str_Heli2_Weapon1_Name        = getLocalized("Weapon", "str_M134_FullName");
+  final static String  str_Heli2_Weapon1_Image       ="M134Minigun_Picture";
+  final static WString str_Heli2_Weapon1_Description = getLocalized("Weapon", "str_M134_Description");
+  final static WString str_Heli2_Weapon2_Name        = getLocalized("Weapon", "str_MA2_FullName");
+  final static String  str_Heli2_Weapon2_Image       ="M158Launcher_Picture";
+  final static WString str_Heli2_Weapon2_Description = getLocalized("Weapon", "str_MA2_Description");
+
+  // Missions strings
+  final static WString str_CampaignName        = getLocalized("C1M9", "str_CampaignName");
+  final static WString str_MissionStatus       = getLocalized("C1M9", "str_MissionStatus");
+  final static WString str_MissionName         = getLocalized("C1M9", "str_MissionName");
+  final static WString str_BriefingText        = getLocalized("C1M9", "str_BriefingText");
+  final static WString str_Objective01         = getLocalized("C1M9", "str_Objective01");
+  final static WString str_Objective02         = getLocalized("C1M9", "str_Objective02");
+
+  // Radio  beacon
+  final static WString str_Beacon_Pley_Ku        = getLocalized("C1M9", "str_Beacon_Pley_Ku");
+  final static WString str_Beacon_XRAY           = getLocalized("C1M9", "str_Beacon_XRAY");
+  final static WString str_Beacon_Plei_Me        = getLocalized("C1M9", "str_Beacon_Plei_Me");
+  final static WString str_Beacon_LZ_Falcon      = getLocalized("C1M9", "str_Beacon_LZ_Falcon");
+  final static WString str_Beacon_DucCo          = getLocalized("C1M9", "str_Beacon_DucCo");
+  final static WString str_Beacon_YF830075       = getLocalized("C1M9", "str_Beacon_YF830075");
+
+  //NavPoints. Use with string CC1M2Mission_Strings::<Name of String variable>
+  // As example CC1M2Mission_Strings::str_NavPoint_Pier
+
+  final static WString str_NavPoint_Plei_Me     = getLocalized("C1M9", "str_NavPoint_Plei_Me");
+  final static WString str_NavPoint_LZ_Home     = getLocalized("C1M9", "str_NavPoint_LZ_Home");
+  final static WString str_NavPoint_LZ_Falcon   = getLocalized("C1M9", "str_NavPoint_LZ_Falcon");
+  final static WString str_NavPoint_LZ_Albany   = getLocalized("C1M9", "str_NavPoint_LZ_Albany"); //added
+  final static WString str_NavPoint_DucCo       = getLocalized("C1M9", "str_NavPoint_DucCo");
+  final static WString str_NavPoint_XRAY        = getLocalized("C1M9", "str_NavPoint_XRAY");
+  final static WString str_NavPoint_Yankee      = getLocalized("C1M9", "str_NavPoint_Yankee");
+  final static WString str_NavPoint_Victor      = getLocalized("C1M9", "str_NavPoint_Victor");
+  final static WString str_NavPoint_Tango       = getLocalized("C1M9", "str_NavPoint_Tango");
+  final static WString str_NavPoint_ChuPong     = getLocalized("C1M9", "str_NavPoint_ChuPong");
+  final static WString str_NavPoint_YF830075    = getLocalized("C1M9", "str_NavPoint_YF830075");
+
+  final static WString str_C1M9_Breadshow_Reproof_014      = getLocalized("C1M9", "str_C1M9_Breadshow_Reproof_014");
+  final static WString str_C1M9_Breadshow_Reproof_015      = getLocalized("C1M9", "str_C1M9_Breadshow_Reproof_015");
+  final static WString str_C1M9_Breadshow_Reproof_016      = getLocalized("C1M9", "str_C1M9_Breadshow_Reproof_016");
+
+    //Вертолет игрока сбит
+  final static WString str_c1m9_Jackson_PlayerDeath_01      = getLocalized("C1M9", "str_c1m9_Jackson_PlayerDeath_01");
+  //Загрузка миссии
+  final static WString str_c1m9_Jackson_Begin_01            = getLocalized("C1M9", "str_c1m9_Jackson_Begin_01");
+  final static WString str_c1m9_DucCoDispatcher_Begin_01    = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_Begin_01");
+  final static WString str_c1m9_Jackson_Begin_02            = getLocalized("C1M9", "str_c1m9_Jackson_Begin_02");
+  //Игрок запустил двигатель
+  final static WString str_c1m9_Jackson_TakeOff_01            = getLocalized("C1M9", "str_c1m9_Jackson_TakeOff_01");
+  final static WString str_c1m9_DucCoDispatcher_TakeOff_01    = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_TakeOff_01");
+  final static WString str_c1m9_Jackson_TakeOff_02            = getLocalized("C1M9", "str_c1m9_Jackson_TakeOff_02");
+  final static WString str_c1m9_DucCoDispatcher_TakeOff_02    = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_TakeOff_02");
+  //Игрок пролетел первую точку маршрута туда
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_01   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_01");
+  final static WString str_c1m9_Jackson_MoveTo_01           = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_01");
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_02   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_02");
+  final static WString str_c1m9_Jackson_MoveTo_02           = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_02");
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_03   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_03");
+  final static WString str_c1m9_Jackson_MoveTo_03           = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_03");
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_04   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_04");
+  final static WString str_c1m9_Jackson_MoveTo_04           = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_04");
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_05   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_05");
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_06   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_06");
+  final static WString str_c1m9_Jackson_MoveTo_05           = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_05");
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_07   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_07");
+  //Игрок пролетел середину маршрута туда
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_08 = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_08");
+  final static WString str_c1m9_PRBDispatcher_MoveTo_01   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveTo_01");
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_09 = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_09");
+  final static WString str_c1m9_PRBDispatcher_MoveTo_02   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveTo_02");
+  final static WString str_c1m9_DucCoDispatcher_MoveTo_10 = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveTo_10");
+  final static WString str_c1m9_PRBDispatcher_MoveTo_03   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveTo_03");
+  final static WString str_c1m9_PRBDispatcher_MoveTo_04   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveTo_04");
+  final static WString str_c1m9_Jackson_MoveTo_06         = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_06");
+  final static WString str_c1m9_PRBDispatcher_MoveTo_05   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveTo_05");
+  final static WString str_c1m9_Jackson_MoveTo_07         = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_07");
+  final static WString str_c1m9_PRBDispatcher_MoveTo_06   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveTo_06");
+  final static WString str_c1m9_Jackson_MoveTo_08         = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_08");
+  final static WString str_c1m9_PRBDispatcher_MoveTo_07   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveTo_07");
+  final static WString str_c1m9_Jackson_MoveTo_09         = getLocalized("C1M9", "str_c1m9_Jackson_MoveTo_09");
+  //Ведомый игрока заметил цели
+  final static WString str_c1m9_Jackson_Attack_01         = getLocalized("C1M9", "str_c1m9_Jackson_Attack_01");
+  final static WString str_c1m9_PRBDispatcher_Attack_01   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_Attack_01");
+  final static WString str_c1m9_Jackson_Attack_02         = getLocalized("C1M9", "str_c1m9_Jackson_Attack_02");
+  final static WString str_c1m9_Jackson_Attack_03         = getLocalized("C1M9", "str_c1m9_Jackson_Attack_03");
+  final static WString str_c1m9_PRBDispatcher_Attack_02   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_Attack_02");
+  final static WString str_c1m9_Jackson_Attack_04         = getLocalized("C1M9", "str_c1m9_Jackson_Attack_04");
+  final static WString str_c1m9_PRBDispatcher_Attack_03   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_Attack_03");
+  //Уничтожена первая лодка
+  final static WString str_c1m9_Jackson_Attack_05         = getLocalized("C1M9", "str_c1m9_Jackson_Attack_05");
+  final static WString str_c1m9_PRBDispatcher_Attack_04   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_Attack_04");
+  //Уничтожен первый пулемет
+  final static WString str_c1m9_Jackson_Attack_06         = getLocalized("C1M9", "str_c1m9_Jackson_Attack_06");
+  final static WString str_c1m9_PRBDispatcher_Attack_05   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_Attack_05");
+  //Уничтожены все лодки
+  final static WString str_c1m9_Jackson_PostAttack_01         = getLocalized("C1M9", "str_c1m9_Jackson_PostAttack_01");
+  final static WString str_c1m9_PRBDispatcher_PostAttack_01   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_PostAttack_01");
+  final static WString str_c1m9_Jackson_PostAttack_02         = getLocalized("C1M9", "str_c1m9_Jackson_PostAttack_02");
+  final static WString str_c1m9_PRBDispatcher_PostAttack_02   = getLocalized("C1M9", "str_c1m9_PRBDispatcher_PostAttack_02");
+  final static WString str_c1m9_Jackson_PostAttack_03         = getLocalized("C1M9", "str_c1m9_Jackson_PostAttack_03");
+  //Игрок пролетел первую точку маршрута обратно
+  final static WString str_c1m9_Jackson_MoveToBack_01           = getLocalized("C1M9", "str_c1m9_Jackson_MoveToBack_01");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_01   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_01");
+  final static WString str_c1m9_Jackson_MoveToBack_02           = getLocalized("C1M9", "str_c1m9_Jackson_MoveToBack_02");
+  final static WString str_c1m9_PRBDispatcher_MoveToBack_01     = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveToBack_01");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_02   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_02");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_03   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_03");
+  final static WString str_c1m9_Jackson_MoveToBack_03           = getLocalized("C1M9", "str_c1m9_Jackson_MoveToBack_03");
+  //Игрок пролетел середину маршрута обратно
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_04   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_04");
+  final static WString str_c1m9_PRBDispatcher_MoveToBack_02     = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveToBack_02");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_05   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_05");
+  final static WString str_c1m9_PRBDispatcher_MoveToBack_03     = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveToBack_03");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_06   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_06");
+  final static WString str_c1m9_PRBDispatcher_MoveToBack_04     = getLocalized("C1M9", "str_c1m9_PRBDispatcher_MoveToBack_04");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_07   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_07");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_08   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_08");
+  final static WString str_c1m9_Jackson_MoveToBack_04           = getLocalized("C1M9", "str_c1m9_Jackson_MoveToBack_04");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_09   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_09");
+  final static WString str_c1m9_Jackson_MoveToBack_05           = getLocalized("C1M9", "str_c1m9_Jackson_MoveToBack_05");
+  final static WString str_c1m9_DucCoDispatcher_MoveToBack_10   = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_MoveToBack_10");
+  //Вертолеты возле базы Дук Ко
+  final static WString str_c1m9_Jackson_Landing_01            = getLocalized("C1M9", "str_c1m9_Jackson_Landing_01");
+  final static WString str_c1m9_DucCoDispatcher_Landing_01    = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_Landing_01");
+  final static WString str_c1m9_Jackson_Landing_02            = getLocalized("C1M9", "str_c1m9_Jackson_Landing_02");
+  final static WString str_c1m9_DucCoDispatcher_Landing_02    = getLocalized("C1M9", "str_c1m9_DucCoDispatcher_Landing_02");
+  final static WString str_c1m9_Jackson_Landing_03            = getLocalized("C1M9", "str_c1m9_Jackson_Landing_03");
+
+}

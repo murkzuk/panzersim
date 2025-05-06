@@ -1,0 +1,315 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CBaseFenceObject
+  extends CObject
+{
+  static int     m_SectionNumber  = 10;
+
+  static String  m_SectionName    = "";
+  static String  m_StartSection   = "";
+  static String  m_EndSection     = "";
+
+  static Matrix  m_MatrixMod      = new Matrix(new Quaternion(0.0, new Vector(0.0, 0.0, 1.0)));
+  static int     m_LocalAxis      = AXIS_X;
+
+  Array   m_SectionArray   = [];
+
+  final static String DefaultSurfaceControl = "PutonGround";
+
+  // Automatic classificators of this object
+  static Array AutomaticClassificators     = [];
+
+  Array GetDefaultProperties()
+  {
+    return [
+             ["SurfaceControl", DefaultSurfaceControl],
+             ["SectionArray",   m_SectionArray]
+           ];
+  }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+    CObject::SetProperties(_PropMap);
+  }
+
+  void SetProperties(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+  }
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+  void CBaseFenceObject()
+  {
+    m_SectionArray.add([]);
+
+    m_SectionArray[m_SectionArray.size()-1].add(1);
+    m_SectionArray[m_SectionArray.size()-1].add(m_StartSection);
+    m_SectionArray[m_SectionArray.size()-1].add(m_MatrixMod);
+
+    m_SectionArray.add([]);
+
+    m_SectionArray[m_SectionArray.size()-1].add(m_SectionNumber);
+    m_SectionArray[m_SectionArray.size()-1].add(m_SectionName);
+    m_SectionArray[m_SectionArray.size()-1].add(m_MatrixMod);
+
+    m_SectionArray.add([]);
+
+    m_SectionArray[m_SectionArray.size()-1].add(1);
+    m_SectionArray[m_SectionArray.size()-1].add(m_EndSection);
+    m_SectionArray[m_SectionArray.size()-1].add(m_MatrixMod);
+
+    addClassificator(user, "FENCE");
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CObject::Construct(_Mission, _PropMap);
+    OnCreateShape(_PropMap);
+  }
+
+  void OnCreateShape(Component _PropMap)
+  {
+    Component Mesh = GetMeshComponent();
+    if (null != Mesh)
+    {
+      Array CompressedSectionArray = _PropMap.Get("SectionArray", m_SectionArray);
+      Array SectionArray = [];
+
+      for (int i = 0; i < CompressedSectionArray.size(); i++)
+      {
+        for (int j = 0; j < CompressedSectionArray[i][0]; j++)
+        {
+          SectionArray.add([]);
+
+          SectionArray[SectionArray.size()-1].add(CompressedSectionArray[i][1]);
+          SectionArray[SectionArray.size()-1].add(CompressedSectionArray[i][2]);
+          SectionArray[SectionArray.size()-1].add(m_LocalAxis);
+          SectionArray[SectionArray.size()-1].add("Section_");
+        }
+      }
+
+      Mesh.CreateShape(SectionArray);
+    }
+  }
+
+  // ====================================================
+  // Service
+  // ====================================================
+  void Finalize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+  }
+
+  void UpdateIngameState()
+  {
+  }
+
+  void Shutdown(
+      Component _Mission
+    )
+  {
+    CObject::Shutdown(_Mission);
+  }
+
+  // ====================================================
+  // Events
+  // ====================================================
+
+  event void OnAddJoint()
+  {
+    Component Mesh = GetMeshComponent();
+    if (null == Mesh)
+      return;
+
+    Component Mission = new #GameController().GetObject(SOID_MissionController);
+    if (null == Mission)
+      return;
+
+    Component Content = Mission.GetContent();
+    if (null == Content)
+      return;
+
+    Array ObjRec = Content.FindObjectRecord(getIdentificator(this));
+    if (ObjRec.isEmpty())
+      return;
+
+    Component PropertiesMap = new CPropertiesMap(ObjRec[CBaseContent::INDEX_Properties]);
+
+    PropertiesMap.DropDefault("SectionArray");
+    Array ContentSectionArray = PropertiesMap.Get("SectionArray", m_SectionArray);
+
+    if (ContentSectionArray.size() > 2)
+    {
+      if ((ContentSectionArray[ContentSectionArray.size()-2][1] == m_SectionName) &&
+          (ContentSectionArray[ContentSectionArray.size()-2][2] == m_MatrixMod))
+        ContentSectionArray[ContentSectionArray.size()-2][0] =
+          (ContentSectionArray[ContentSectionArray.size()-2][0] + 1);
+      else
+      {
+        ContentSectionArray.insert((ContentSectionArray.size()-1), []);
+
+        ContentSectionArray[ContentSectionArray.size()-2].add(1);
+        ContentSectionArray[ContentSectionArray.size()-2].add(m_SectionName);
+        ContentSectionArray[ContentSectionArray.size()-2].add(m_MatrixMod);
+      }
+    }
+    else
+    if (ContentSectionArray.size() == 2)
+    {
+      ContentSectionArray.insert((ContentSectionArray.size()-1), []);
+
+      ContentSectionArray[ContentSectionArray.size()-2].add(1);
+      ContentSectionArray[ContentSectionArray.size()-2].add(m_SectionName);
+      ContentSectionArray[ContentSectionArray.size()-2].add(m_MatrixMod);
+    }
+
+
+    PropertiesMap.Set("SectionArray", ContentSectionArray);
+
+    SetProperties(new #GameController().GetObject(SOID_MissionController), PropertiesMap);
+
+    OnCreateShape(PropertiesMap);
+  }
+
+  event void OnRemoveJoint()
+  {
+    Component Mesh = GetMeshComponent();
+    if (null == Mesh)
+      return;
+
+    Component Mission = new #GameController().GetObject(SOID_MissionController);
+    if (null == Mission)
+      return;
+
+    Component Content = Mission.GetContent();
+    if (null == Content)
+      return;
+
+    Array ObjRec = Content.FindObjectRecord(getIdentificator(this));
+    if (ObjRec.isEmpty())
+      return;
+
+    Component PropertiesMap = new CPropertiesMap(ObjRec[CBaseContent::INDEX_Properties]);
+
+    PropertiesMap.DropDefault("SectionArray");
+    Array ContentSectionArray = PropertiesMap.Get("SectionArray", m_SectionArray);
+
+    if (ContentSectionArray.size() < 3)
+      return;
+
+    if (ContentSectionArray[ContentSectionArray.size()-2][0] > 0)
+      ContentSectionArray[ContentSectionArray.size()-2][0] =
+        (ContentSectionArray[ContentSectionArray.size()-2][0] - 1);
+    if (ContentSectionArray[ContentSectionArray.size()-2][0] == 0)
+      ContentSectionArray.remove(ContentSectionArray.size()-2);
+
+    PropertiesMap.Set("SectionArray", ContentSectionArray);
+
+    SetProperties(new #GameController().GetObject(SOID_MissionController), PropertiesMap);
+
+    OnCreateShape(PropertiesMap);
+  }
+
+  event void OnPositionEdited()
+  {
+    Component Mission = new #GameController().GetObject(SOID_MissionController);
+    if (null == Mission)
+      return;
+
+    Component Content = Mission.GetContent();
+    if (null == Content)
+      return;
+
+    Array ObjRec = Content.FindObjectRecord(getIdentificator(this));
+    if (ObjRec.isEmpty())
+      return;
+
+    ObjRec[CMissionContent::INDEX_Position] = getPosition(this);
+
+    Component PropertiesMap = new CPropertiesMap(ObjRec[CBaseContent::INDEX_Properties]);
+
+    PropertiesMap.DropDefault("SectionArray");
+    Array ContentSectionArray = PropertiesMap.Get("SectionArray", m_SectionArray);
+
+    Component Mesh = GetMeshComponent();
+    if (null == Mesh)
+      return;
+
+    Array ObjectSectionArray = Mesh.GetAllSections();
+
+    if (ContentSectionArray.size() != 0 &&
+        ObjectSectionArray.size()  != 0)
+    {
+      Array ContentSectionArrayNew = [];
+      int JointIndex               = 1;
+
+      ContentSectionArrayNew.add([]);
+      ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(1);
+      ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(ContentSectionArray[0][1]);
+      ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(ObjectSectionArray[JointIndex]);
+      JointIndex++;
+
+      if (ContentSectionArray.size() > 2)
+      {
+        ContentSectionArrayNew.add([]);
+        ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(0);
+        ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(ContentSectionArray[1][1]);
+        ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(ObjectSectionArray[JointIndex]);
+
+
+        for (int i = 1; i < ContentSectionArray.size()-1; i++)
+        {
+          for (int j = 0; j < ContentSectionArray[i][0];)
+          {
+            if ((ContentSectionArrayNew[ContentSectionArrayNew.size()-1][1] != ContentSectionArray[i][1]) ||
+                (ContentSectionArrayNew[ContentSectionArrayNew.size()-1][2] != ObjectSectionArray[JointIndex]))
+            {
+              ContentSectionArrayNew.add([]);
+              ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(0);
+              ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(ContentSectionArray[i][1]);
+              ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(ObjectSectionArray[JointIndex]);
+            }
+            else
+            {
+              ContentSectionArrayNew[ContentSectionArrayNew.size()-1][0] =
+                (ContentSectionArrayNew[ContentSectionArrayNew.size()-1][0] + 1);
+
+              JointIndex++;
+              j++;
+            }
+          }
+        }
+      }
+
+      ContentSectionArrayNew.add([]);
+      ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(1);
+      ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(ContentSectionArray[ContentSectionArray.size()-1][1]);
+      ContentSectionArrayNew[ContentSectionArrayNew.size()-1].add(ObjectSectionArray[JointIndex]);
+
+      if (JointIndex != (ObjectSectionArray.size()-1))
+        logWarning("Invalid moving" + new String(JointIndex));
+
+      PropertiesMap.Set("SectionArray", ContentSectionArrayNew);
+
+      SetProperties(new #GameController().GetObject(SOID_MissionController), PropertiesMap);
+    }
+  }
+}

@@ -1,0 +1,527 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CGameOptionsMenu
+  extends CBaseMenu, CGameOptionsControls
+{
+
+//  final Array m_ONOFFText  = [getLocalized("Menu","str_OG_OFF"), getLocalized("Menu","str_OG_ON")];
+
+  final WString Diff = getLocalized("Menu","str_OG_DIFFICULTY");
+
+  final WString m_CustomText = Diff + L": " + getLocalized("Menu","str_OG_CUSTOM");
+  final Array m_DifficultyText = [
+                                   (Diff + L": " + getLocalized("Menu","str_OG_EASY")),
+                                   (Diff + L": " + getLocalized("Menu","str_OG_NORMAL")),
+                                   (Diff + L": " + getLocalized("Menu","str_OG_HARD"))
+                                 ];
+
+  final Array m_TargetingText = [getLocalized("Menu","str_OG_TARGET_ARCADE"), getLocalized("Menu","str_OG_TARGET_SIMULATOR")];
+  final Array m_DynamicLiftText = [getLocalized("Menu","str_OG_DYNAMICLIFT_OFF"), getLocalized("Menu","str_OG_DYNAMICLIFT_ON")];
+  final Array m_BladeStallText = [getLocalized("Menu","str_OG_BLADESTALL_OFF"), getLocalized("Menu","str_OG_BLADESTALL_ON")];
+  final Array m_AircushionText = [getLocalized("Menu","str_OG_AIRCUSHION_OFF"), getLocalized("Menu","str_OG_AIRCUSHION_ON")];
+  final Array m_VortexRingText = [getLocalized("Menu","str_OG_VORTEXRING_OFF"), getLocalized("Menu","str_OG_VORTEXRING_ON")];
+  final Array m_WindText = [getLocalized("Menu","str_OG_WIND_OFF"), getLocalized("Menu","str_OG_WIND_ON")];
+  final Array m_PayloadText = [getLocalized("Menu","str_OG_PAYLOAD_OFF"), getLocalized("Menu","str_OG_PAYLOAD_ON")];
+  final Array m_ShockwaveText = [getLocalized("Menu","str_OG_SHOCKWAVE_OFF"), getLocalized("Menu","str_OG_SHOCKWAVE_ON")];
+  final Array m_TargetsOnMapText = [getLocalized("Menu","str_OG_TARGETSONMAP_OFF"), getLocalized("Menu","str_OG_TARGETSONMAP_ON")];
+  final Array m_OrientationText = [getLocalized("Menu","str_OG_ORIENTATION_OFF"), getLocalized("Menu","str_OG_ORIENTATION_ON")];
+  final Array m_CompassText = [getLocalized("Menu","str_OG_COMPASS_OFF"), getLocalized("Menu","str_OG_COMPASS_ON")];
+
+  final Array m_UnlimAmmoText = [getLocalized("Menu","str_OG_UNLIM_AMMO_OFF"), getLocalized("Menu","str_OG_UNLIM_AMMO_ON")];
+  final Array m_UnlimFuelText = [getLocalized("Menu","str_OG_UNLIM_FUEL_OFF"), getLocalized("Menu","str_OG_UNLIM_FUEL_ON")];
+  final Array m_GodModeText = [getLocalized("Menu","str_OG_GODMODE_OFF"), getLocalized("Menu","str_OG_GODMODE_ON")];
+
+  static String m_MenuClassName = "CGameOptionsMenu";
+
+  int     m_CurrentDifficulty;
+  int     m_CurrentTargeting;
+  int     m_CurrentOrientation;
+  boolean m_CurrentDynamicLift;
+  boolean m_CurrentBladeStall;
+  boolean m_CurrentAircushion;
+  boolean m_CurrentVortexRing;
+  boolean m_CurrentWind;
+  boolean m_CurrentPayload;
+  boolean m_CurrentShockwave;
+  boolean m_CurrentTargetsOnMap;
+  boolean m_CurrentCompass;
+
+  boolean m_CurrentUnlimAmmo;
+  boolean m_CurrentUnlimFuel;
+  boolean m_CurrentGodMode;
+
+  final static Array m_DifficultySettings = [
+                                              [0,1,1,0,0,0,0,0,1,0,1,0,0,0], //easy
+                                              [1,1,1,1,1,1,1,1,1,0,0,0,0,0], //medium
+                                              [1,1,1,1,1,1,1,1,0,1,0,0,0,0]  //hard
+                                            ];
+
+  Array m_CurrentDifficultySettings = [1,1,1,1,1,1,1,1,1,0,0,0,0,0]; //default (current)
+
+  void OnInitMenu()
+  {
+    GetSettings();
+    ApplySettings();
+    CheckChanges();
+  }
+
+  void OnCloseMenu()
+  {
+//    CancelSettings();
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+    if (!_ID.IsStartsWith("Difficulty"))
+      GetObject("Difficulty").CloseList();
+    if (!_ID.IsStartsWith("Targeting"))
+      GetObject("Targeting").CloseList();
+    if (!_ID.IsStartsWith("DynamicLift"))
+      GetObject("DynamicLift").CloseList();
+    if (!_ID.IsStartsWith("BladeStall"))
+      GetObject("BladeStall").CloseList();
+    if (!_ID.IsStartsWith("AirCushion"))
+      GetObject("AirCushion").CloseList();
+    if (!_ID.IsStartsWith("VortexRing"))
+      GetObject("VortexRing").CloseList();
+    if (!_ID.IsStartsWith("Wind"))
+      GetObject("Wind").CloseList();
+    if (!_ID.IsStartsWith("Payload"))
+      GetObject("Payload").CloseList();
+    if (!_ID.IsStartsWith("Shockwave"))
+      GetObject("Shockwave").CloseList();
+    if (!_ID.IsStartsWith("TargetsOnMap"))
+      GetObject("TargetsOnMap").CloseList();
+    if (!_ID.IsStartsWith("Orientation"))
+      GetObject("Orientation").CloseList();
+    if (!_ID.IsStartsWith("Compass"))
+      GetObject("Compass").CloseList();
+    if (!_ID.IsStartsWith("UnlimAmmo"))
+      GetObject("UnlimAmmo").CloseList();
+    if (!_ID.IsStartsWith("UnlimFuel"))
+      GetObject("UnlimFuel").CloseList();
+    if (!_ID.IsStartsWith("Invulnerability"))
+      GetObject("Invulnerability").CloseList();
+
+
+    if ("DefaultButton" == _ID)
+      ResetSettings();
+    else
+    if ("BackButton" == _ID)
+      GoBack();
+    else
+    if ("ApplyButton"    == _ID)
+    {
+      ApplySettings();
+//      GoBack();
+    }
+    else
+    if ("Back" == _ID)
+      GoBack();
+    else 
+    if ("Difficulty_Button" == _ID)
+      GetObject("Difficulty").OpenList();
+    else
+    if (_ID.IsStartsWith("Difficulty_Item_"))
+    {
+      GetObject("Difficulty").SelectIDItem(_ID);
+      m_CurrentDifficulty = GetObject("Difficulty").GetCurrentItem();
+
+      m_CurrentDifficultySettings[0]  = m_CurrentTargeting    = m_DifficultySettings[m_CurrentDifficulty][0];
+      m_CurrentDifficultySettings[1]  = m_CurrentDynamicLift  = m_DifficultySettings[m_CurrentDifficulty][1];
+      m_CurrentDifficultySettings[2]  = m_CurrentBladeStall   = m_DifficultySettings[m_CurrentDifficulty][2];
+      m_CurrentDifficultySettings[3]  = m_CurrentVortexRing   = m_DifficultySettings[m_CurrentDifficulty][3];
+      m_CurrentDifficultySettings[4]  = m_CurrentAircushion   = m_DifficultySettings[m_CurrentDifficulty][4];
+      m_CurrentDifficultySettings[5]  = m_CurrentWind         = m_DifficultySettings[m_CurrentDifficulty][5];
+      m_CurrentDifficultySettings[6]  = m_CurrentPayload      = m_DifficultySettings[m_CurrentDifficulty][6];
+      m_CurrentDifficultySettings[7]  = m_CurrentShockwave    = m_DifficultySettings[m_CurrentDifficulty][7];
+      m_CurrentDifficultySettings[8]  = m_CurrentTargetsOnMap = m_DifficultySettings[m_CurrentDifficulty][8];
+      m_CurrentDifficultySettings[9]  = m_CurrentOrientation  = m_DifficultySettings[m_CurrentDifficulty][9];
+      m_CurrentDifficultySettings[10] = m_CurrentCompass      = m_DifficultySettings[m_CurrentDifficulty][10];
+      m_CurrentDifficultySettings[11] = m_CurrentUnlimAmmo    = m_DifficultySettings[m_CurrentDifficulty][11];
+      m_CurrentDifficultySettings[12] = m_CurrentUnlimFuel    = m_DifficultySettings[m_CurrentDifficulty][12];
+      m_CurrentDifficultySettings[13] = m_CurrentGodMode      = m_DifficultySettings[m_CurrentDifficulty][13];
+      SetSettings();
+    }
+    else
+    if ("Targeting_Button" == _ID)
+      GetObject("Targeting").OpenList();
+    else
+    if (_ID.IsStartsWith("Targeting_Item_"))
+    {
+      GetObject("Targeting").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[0] = m_CurrentTargeting = GetObject("Targeting").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("DynamicLift_Button" == _ID)
+      GetObject("DynamicLift").OpenList();
+    else
+    if (_ID.IsStartsWith("DynamicLift_Item_"))
+    {
+      GetObject("DynamicLift").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[1] = m_CurrentDynamicLift = GetObject("DynamicLift").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("BladeStall_Button" == _ID)
+      GetObject("BladeStall").OpenList();
+    else
+    if (_ID.IsStartsWith("BladeStall_Item_"))
+    {
+      GetObject("BladeStall").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[2] = m_CurrentBladeStall = GetObject("BladeStall").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("AirCushion_Button" == _ID)
+      GetObject("AirCushion").OpenList();
+    else
+    if (_ID.IsStartsWith("AirCushion_Item_"))
+    {
+      GetObject("AirCushion").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[4] = m_CurrentAircushion = GetObject("AirCushion").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("VortexRing_Button" == _ID)
+      GetObject("VortexRing").OpenList();
+    else
+    if (_ID.IsStartsWith("VortexRing_Item_"))
+    {
+      GetObject("VortexRing").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[3] = m_CurrentVortexRing = GetObject("VortexRing").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("Wind_Button" == _ID)
+      GetObject("Wind").OpenList();
+    else
+    if (_ID.IsStartsWith("Wind_Item_"))
+    {
+      GetObject("Wind").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[5] = m_CurrentWind = GetObject("Wind").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("Payload_Button" == _ID)
+      GetObject("Payload").OpenList();
+    else
+    if (_ID.IsStartsWith("Payload_Item_"))
+    {
+      GetObject("Payload").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[6] = m_CurrentPayload = GetObject("Payload").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("Shockwave_Button" == _ID)
+      GetObject("Shockwave").OpenList();
+    else
+    if (_ID.IsStartsWith("Shockwave_Item_"))
+    {
+      GetObject("Shockwave").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[7] = m_CurrentShockwave = GetObject("Shockwave").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("TargetsOnMap_Button" == _ID)
+      GetObject("TargetsOnMap").OpenList();
+    else
+    if (_ID.IsStartsWith("TargetsOnMap_Item_"))
+    {
+      GetObject("TargetsOnMap").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[8] = m_CurrentTargetsOnMap = GetObject("TargetsOnMap").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("Orientation_Button" == _ID)
+      GetObject("Orientation").OpenList();
+    else
+    if (_ID.IsStartsWith("Orientation_Item_"))
+    {
+      GetObject("Orientation").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[9] = m_CurrentOrientation = GetObject("Orientation").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("Compass_Button" == _ID)
+      GetObject("Compass").OpenList();
+    else
+    if (_ID.IsStartsWith("Compass_Item_"))
+    {
+      GetObject("Compass").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[10] = m_CurrentCompass = GetObject("Compass").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("UnlimAmmo_Button" == _ID)
+      GetObject("UnlimAmmo").OpenList();
+    else
+    if (_ID.IsStartsWith("UnlimAmmo_Item_"))
+    {
+      GetObject("UnlimAmmo").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[11] = m_CurrentUnlimAmmo = GetObject("UnlimAmmo").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("UnlimFuel_Button" == _ID)
+      GetObject("UnlimFuel").OpenList();
+    else
+    if (_ID.IsStartsWith("UnlimFuel_Item_"))
+    {
+      GetObject("UnlimFuel").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[12] = m_CurrentUnlimFuel = GetObject("UnlimFuel").GetCurrentItem();
+      SetSettings();
+    }
+    else
+    if ("Invulnerability_Button" == _ID)
+      GetObject("Invulnerability").OpenList();
+    else
+    if (_ID.IsStartsWith("Invulnerability_Item_"))
+    {
+      GetObject("Invulnerability").SelectIDItem(_ID);
+      m_CurrentDifficultySettings[13] = m_CurrentGodMode = GetObject("Invulnerability").GetCurrentItem();
+      SetSettings();
+    }
+
+    CheckChanges();
+  }
+
+  void GetSettings()
+  {
+
+    Component GameSettings = new #GameSettings();
+
+    m_CurrentDifficultySettings[0]  = m_CurrentTargeting    = GameSettings.GetTargetingMode();
+    m_CurrentDifficultySettings[1]  = m_CurrentDynamicLift  = GameSettings.GetDynamicLift(); 
+    m_CurrentDifficultySettings[2]  = m_CurrentBladeStall   = GameSettings.GetRetreatingBladeStallMode();
+    m_CurrentDifficultySettings[3]  = m_CurrentVortexRing   = GameSettings.GetVortexRingMode();
+    m_CurrentDifficultySettings[4]  = m_CurrentAircushion   = GameSettings.GetAircushionMode();
+    m_CurrentDifficultySettings[5]  = m_CurrentWind         = GameSettings.GetWindEffectMode();
+    m_CurrentDifficultySettings[6]  = m_CurrentPayload      = GameSettings.GetPayloadMode();
+    m_CurrentDifficultySettings[7]  = m_CurrentShockwave    = GameSettings.GetShockwaveMode();
+    m_CurrentDifficultySettings[8]  = m_CurrentTargetsOnMap = GameSettings.GetTargetsOnMap();
+    m_CurrentDifficultySettings[9]  = m_CurrentOrientation  = GameSettings.GetOrientationMode();
+    m_CurrentDifficultySettings[10] = m_CurrentCompass      = GameSettings.GetIntelligentCompass(); 
+    m_CurrentDifficultySettings[11] = m_CurrentUnlimAmmo    = GameSettings.GetUnlimAmmo();
+    m_CurrentDifficultySettings[12] = m_CurrentUnlimFuel    = GameSettings.GetUnlimitedFuel(); 
+    m_CurrentDifficultySettings[13] = m_CurrentGodMode      = GameSettings.GetGodMode();
+
+    SetSettings();
+  }
+
+
+  void ApplySettings()
+  {
+    Component GameSettings = new #GameSettings();
+
+    if (m_CurrentDifficulty != GameSettings.GetDifficultyLevel())
+      GameSettings.SetDifficultyLevel(m_CurrentDifficulty);
+
+    if (m_CurrentTargeting  != GameSettings.GetTargetingMode())
+      GameSettings.SetTargetingMode(m_CurrentTargeting);
+
+    if (m_CurrentOrientation != GameSettings.GetOrientationMode())
+      GameSettings.SetOrientationMode(m_CurrentOrientation);
+
+    if (m_CurrentTargetsOnMap != GameSettings.GetTargetsOnMap())
+      GameSettings.SetTargetsOnMap(m_CurrentTargetsOnMap);
+
+    if (m_CurrentBladeStall != GameSettings.GetRetreatingBladeStallMode())
+      GameSettings.SetRetreatingBladeStallMode(m_CurrentBladeStall);
+
+    if (m_CurrentAircushion != GameSettings.GetAircushionMode())
+      GameSettings.SetAircushionMode(m_CurrentAircushion);
+
+    if (m_CurrentVortexRing != GameSettings.GetVortexRingMode())
+      GameSettings.SetVortexRingMode(m_CurrentVortexRing);
+
+    if (m_CurrentWind != GameSettings.GetWindEffectMode())
+      GameSettings.SetWindEffectMode(m_CurrentWind);
+
+    if (m_CurrentPayload != GameSettings.GetPayloadMode())
+      GameSettings.SetPayloadMode(m_CurrentPayload);
+
+    if (m_CurrentShockwave != GameSettings.GetShockwaveMode())
+     GameSettings.SetShockwaveMode(m_CurrentShockwave);
+
+    if (m_CurrentUnlimAmmo != GameSettings.GetUnlimAmmo())
+      GameSettings.SetUnlimAmmo(m_CurrentUnlimAmmo);
+
+    if (m_CurrentGodMode != GameSettings.GetGodMode())
+      GameSettings.SetGodMode(m_CurrentGodMode);
+
+    if (m_CurrentUnlimFuel != GameSettings.GetUnlimitedFuel())
+      GameSettings.SetUnlimitedFuel(m_CurrentUnlimFuel);
+
+    if (m_CurrentDynamicLift != GameSettings.GetDynamicLift())
+      GameSettings.SetDynamicLift(m_CurrentDynamicLift);
+
+    if (m_CurrentCompass != GameSettings.GetIntelligentCompass())
+      GameSettings.SetIntelligentCompass(m_CurrentCompass);
+
+    WString Player = GameSettings.GetUserValue(L"CurrentPlayer", L"null");
+
+    if (Player != L"null")
+    {
+      GameSettings.SavePlayerValue(Player, L"Difficulty", GameSettings.GetDifficultyLevel());
+      GameSettings.SavePlayerValue(Player, L"TargetingMode", GameSettings.GetTargetingMode());
+      GameSettings.SavePlayerValue(Player, L"OrientationMode", GameSettings.GetOrientationMode());
+      GameSettings.SavePlayerValue(Player, L"TargetsOnMap", GameSettings.GetTargetsOnMap());
+      GameSettings.SavePlayerValue(Player, L"RetreatingBladeStallMode", GameSettings.GetRetreatingBladeStallMode());
+      GameSettings.SavePlayerValue(Player, L"AircushionMode", GameSettings.GetAircushionMode());
+      GameSettings.SavePlayerValue(Player, L"VortexRingMode", GameSettings.GetVortexRingMode());
+      GameSettings.SavePlayerValue(Player, L"WindEffectMode", GameSettings.GetWindEffectMode());
+      GameSettings.SavePlayerValue(Player, L"PayloadMode", GameSettings.GetPayloadMode());
+      GameSettings.SavePlayerValue(Player, L"ShockwaveMode", GameSettings.GetShockwaveMode());
+      GameSettings.SavePlayerValue(Player, L"UnlimAmmo", GameSettings.GetUnlimAmmo());
+      GameSettings.SavePlayerValue(Player, L"GodMode", GameSettings.GetGodMode());
+      GameSettings.SavePlayerValue(Player, L"UnlimFuel", GameSettings.GetUnlimitedFuel());
+      GameSettings.SavePlayerValue(Player, L"DynamicLift", GameSettings.GetDynamicLift());
+      GameSettings.SavePlayerValue(Player, L"Compass", GameSettings.GetIntelligentCompass());
+
+    }
+
+    GetSettings();
+  }
+
+  void SetSettings()
+  {
+
+    for (int iDiff = 0; iDiff < 3; iDiff++)
+    {
+      m_CurrentDifficulty = iDiff;
+      for (int i = 0; i < 14; i++)
+        if (m_CurrentDifficultySettings[i] != m_DifficultySettings[iDiff][i])
+          m_CurrentDifficulty = -1;
+
+      if (-1 != m_CurrentDifficulty)
+        break;
+    }
+
+    Component Difficulty = GetObject("Difficulty");
+    Difficulty.SetItems(m_DifficultyText);
+    if (m_CurrentDifficulty != -1)
+      Difficulty.SelectItem(m_CurrentDifficulty);
+    else
+      GetObject("Difficulty_Caption").SetText(m_CustomText);
+    Difficulty.CloseList();
+
+
+    Component Targeting = GetObject("Targeting");
+    Targeting.SetItems(m_TargetingText);
+    Targeting.SelectItem(m_CurrentTargeting);
+    Targeting.CloseList();
+
+    Component DynamicLift = GetObject("DynamicLift");
+    DynamicLift.SetItems(m_DynamicLiftText);
+    DynamicLift.SelectItem(m_CurrentDynamicLift);
+    DynamicLift.CloseList();
+
+    Component BladeStall = GetObject("BladeStall");
+    BladeStall.SetItems(m_BladeStallText);
+    BladeStall.SelectItem(m_CurrentBladeStall);
+    BladeStall.CloseList();
+
+    Component Aircushion = GetObject("AirCushion");
+    Aircushion.SetItems(m_AircushionText);
+    Aircushion.SelectItem(m_CurrentAircushion);
+    Aircushion.CloseList();
+
+    Component VortexRing = GetObject("VortexRing");
+    VortexRing.SetItems(m_VortexRingText);
+    VortexRing.SelectItem(m_CurrentVortexRing);
+    VortexRing.CloseList();
+
+    Component Wind = GetObject("Wind");
+    Wind.SetItems(m_WindText);
+    Wind.SelectItem(m_CurrentWind);
+    Wind.CloseList();
+
+    Component Payload = GetObject("Payload");
+    Payload.SetItems(m_PayloadText);
+    Payload.SelectItem(m_CurrentPayload);
+    Payload.CloseList();
+
+    Component Shockwave = GetObject("Shockwave");
+    Shockwave.SetItems(m_ShockwaveText);
+    Shockwave.SelectItem(m_CurrentShockwave);
+    Shockwave.CloseList();
+
+    Component TargetsOnMap = GetObject("TargetsOnMap");
+    TargetsOnMap.SetItems(m_TargetsOnMapText);
+    TargetsOnMap.SelectItem(m_CurrentTargetsOnMap);
+    TargetsOnMap.CloseList();
+
+    Component Orientation = GetObject("Orientation");
+    Orientation.SetItems(m_OrientationText);
+    Orientation.SelectItem(m_CurrentOrientation);
+    Orientation.CloseList();
+
+    Component Compass = GetObject("Compass");
+    Compass.SetItems(m_CompassText);
+    Compass.SelectItem(m_CurrentCompass);
+    Compass.CloseList();
+
+    Component UnlimAmmo = GetObject("UnlimAmmo");
+    UnlimAmmo.SetItems(m_UnlimAmmoText);
+    UnlimAmmo.SelectItem(m_CurrentUnlimAmmo);
+    UnlimAmmo.CloseList();
+
+    Component UnlimFuel = GetObject("UnlimFuel");
+    UnlimFuel.SetItems(m_UnlimFuelText);
+    UnlimFuel.SelectItem(m_CurrentUnlimFuel);
+    UnlimFuel.CloseList();
+
+    Component GodMode = GetObject("Invulnerability");
+    GodMode.SetItems(m_GodModeText);
+    GodMode.SelectItem(m_CurrentGodMode);
+    GodMode.CloseList();
+  }
+
+  void CheckChanges()
+  {
+    Component GameSettings = new #GameSettings();
+
+    boolean IsChanged =  (
+      m_CurrentTargeting  != GameSettings.GetTargetingMode() ||
+      m_CurrentOrientation != GameSettings.GetOrientationMode() ||
+      m_CurrentTargetsOnMap != GameSettings.GetTargetsOnMap() ||
+      m_CurrentBladeStall != GameSettings.GetRetreatingBladeStallMode() ||
+      m_CurrentAircushion != GameSettings.GetAircushionMode() ||
+      m_CurrentVortexRing != GameSettings.GetVortexRingMode() ||
+      m_CurrentWind       != GameSettings.GetWindEffectMode() ||
+      m_CurrentPayload    != GameSettings.GetPayloadMode() ||
+      m_CurrentShockwave  != GameSettings.GetShockwaveMode() ||
+      m_CurrentUnlimAmmo  != GameSettings.GetUnlimAmmo() ||
+      m_CurrentGodMode    != GameSettings.GetGodMode() ||
+      m_CurrentUnlimFuel  != GameSettings.GetUnlimitedFuel() ||
+      m_CurrentDynamicLift != GameSettings.GetDynamicLift() ||
+      m_CurrentCompass     != GameSettings.GetIntelligentCompass()
+    );
+
+    GetObject("ApplyButton").SetDisabled(!IsChanged);
+
+  }
+
+  void CancelSettings()
+  {
+    GetSettings();
+  }
+
+  void ResetSettings()
+  {
+/*    new #GameSettings().SetDefaultVideoSettings();
+    GetSettings();*/
+  }
+
+}

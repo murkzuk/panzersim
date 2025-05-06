@@ -1,0 +1,80 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+class CVietnameseHouseSmallPileExplosion
+  extends CBuildingExplosion
+
+{
+  float  Damage   = 10.0;
+  float  Radius   = 5.0;
+  String    SoundId  = "VietnameseHouseSmallPileExplosionSound";
+}
+
+class CVietnameseHouseSmallPileUnit
+  extends CUnit
+{
+
+  final static float DefaultHitPoints = CHitPoints::VietnameseHouseSmallPileUnitHitPoints;
+
+  static String PrevExplosionID = "VietnameseHouseSmallPileExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["STRUCTURE"];
+
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CVietnameseHouseSmallPileUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cbld_VietnameseHouseSmallPileModel>(), [350, 150, 4]);
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CUnit::Construct(_Mission, _PropMap);
+
+    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 0.00f);
+  }
+}
+
+class CVietnameseHouseSmallPileGameUnit extends CVietnameseHouseSmallPileUnit
+{
+  // Special for radar view
+  // This object GameObject
+
+  final static Array AutomaticClassificators  = ["STRUCTURE", "GROUND"];
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CUnit::Construct(_Mission, _PropMap);
+
+    GetObject("StateControl").SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET, 10.00f);
+  }
+
+  event void OnHitByEnemy(
+      String _EnemyID
+    )
+  {
+    CUnit::OnHitByEnemy(_EnemyID);
+    Component Mission = (new #GameController()).GetMission();
+    if (null == Mission)
+      return null;
+
+   Mission.OnHitByEnemyGameObject(getIdentificator(this), _EnemyID);
+  }
+}

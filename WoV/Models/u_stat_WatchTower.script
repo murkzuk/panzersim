@@ -1,0 +1,91 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+
+class Cu_stat_WatchTowerModel extends CBaseModel
+{
+  String     MeshFile        = "Models/u_stat_WatchTower.ms2";
+  String     SkinClass       = "Cu_stat_WatchTowerModelSkin";
+
+  String     RouterMapFile   = "Models/u_stat_WatchTower.rmap";
+
+  static int InstancesQty    = CBaseModel::DefaultInstancesQty;
+
+  static int ShadowCheckMode = CBaseModel::DefaultShadowCheckMode;
+
+  static boolean PlanarShadow = CBaseModel::DefaultPlanarShadow;
+
+  static float PlanarShadowLodShift = CBaseModel::DefaultPlanarShadowLodShift;
+
+  static boolean UseBoxForIsection = CBaseModel::DefaultUseBoxForIsection;
+
+  Array  Animation = [
+      ["do_crash", ["joint1", 0, 27], ["joint10", 0, 27], ["joint11", 0, 27], ["joint12", 0, 27], ["joint13", 0, 27], ["joint14", 0, 27], ["joint15", 0, 27], ["joint16", 0, 27], ["joint17", 0, 27], ["joint18", 0, 27], ["joint19", 0, 27], ["joint2", 0, 27], ["joint20", 0, 27], ["joint22", 0, 27], ["joint23", 0, 27], ["joint24", 0, 27], ["joint25", 0, 27], ["joint26", 0, 27], ["joint27", 0, 27], ["joint28", 0, 27], ["joint29", 0, 27], ["joint3", 0, 27], ["joint30", 0, 27], ["joint31", 0, 27], ["joint32", 0, 27], ["joint33", 0, 27], ["joint34", 0, 27], ["joint35", 0, 27], ["joint36", 0, 27], ["joint4", 0, 27], ["joint5", 0, 27], ["joint6", 0, 27], ["joint7", 0, 27], ["joint8", 0, 27], ["joint9", 0, 27]]
+    ];
+}
+
+class Cu_stat_WatchTowerModelSkin
+{
+  Array Materials = [
+      new CModelMaterial(
+        "0", // material id
+        "Textures/u_stat_WatchTower.tex", // texture name
+        "Textures/u_stat_WatchTower_b.tex", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        0.050000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "1", // material id
+        "Textures/u_stat_WatchTower_crashed.tex", // texture name
+        "Textures/u_stat_WatchTower_b.tex", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        0.050000, // parallax
+        CMaterialStructure::MSID_Default, // substance type
+        "" // envmap name
+      )
+    ];
+}

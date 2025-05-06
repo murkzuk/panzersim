@@ -1,0 +1,87 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CGaz51TruckExplosion
+  extends CTruckExplosion
+{
+  float  Damage   = 50.0;
+  float  Radius   = 10.0;
+}
+
+class CGaz51TruckMovementAnimator
+{
+  String LineSpeedAnim = "wheel_rotate";
+  String TurnSpeedAnim = "wheel_turn";
+
+  boolean RotateAnim = true;
+
+  float MaxLineSpeed = 3.0;            // speed when wheel make full animation per one sec == length of circle
+  float MaxTurnSpeed = Math_HALFPI / 16.0;    // max angle in rotation mode
+}
+
+// Behavior
+class CGaz51TruckBehavior extends CBaseGroundBehavior
+{
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 500; // m
+  float  MinRadarDistance = 5;    // m
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( 12, 0, 0);
+  float  MinRotateRadius = 15;
+  float  TurnHysteresisAngleCos = 0;
+
+  float HeightWeight        = 0.0;
+}
+
+class CGaz51TruckUnit
+  extends CUnit
+{
+  final static WString CockpitTargetPointer        = getLocalized("Units", "str_Gaz51TruckPointer");
+  final static float   DefaultHitPoints            = CHitPoints::Gaz51TruckUnitHitPoints;
+  final static int     Targeting_MapUIElementIndex = 2;    // See at: RadarView.script -> CBaseCockpitTerrainMap::ObjectsUIElements
+  static String        PrevExplosionID             = "M939TruckExplosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND"];
+  final static String DefaultSurfaceControl   = "PutonGroundLandingJoints";
+  static Array  LandingJoints                 = ["Corner_FL", "Corner_RL", "Corner_RR", "Corner_FR"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CGaz51TruckUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_veh_Gaz51TruckModel>(), [200, 150, 100, 15, 3]);
+
+    // Setup animations
+    SetupAnimator(
+        "MoveAnim", new #MovementAnimator<CGaz51TruckMovementAnimator>()
+      );
+
+    SetMovementEffects(
+        new #Emitter<CTruckMovementSound>(),
+        []
+//        [["", "GroundUnitTraceEffect"]]
+      );
+
+    SetupBehavior( new #VehicleBehavior<CGaz51TruckBehavior>());
+  }
+}

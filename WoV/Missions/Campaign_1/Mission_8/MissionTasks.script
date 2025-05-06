@@ -1,0 +1,205 @@
+
+
+ class C1M8WingmanTask extends CWingmanTask
+ {
+   event void ToHome()
+   {
+     //logError(m_LeaderID);
+     SetEnemyReactionType(ERT_FRIGID);
+     Wingman_Follow(m_LeaderID);
+   }
+   event void OnEnemyTargeted()
+   {
+      String TargetID = GetTargetedEnemy();
+
+      if(GetMission().isDebug)
+           logWarning("Wingman find Enemy with ID = " + TargetID  + "OnEnemyTargeted is ON");
+
+       //отработка OnEnemyTargeted
+      if(TargetID.IsStartsWith("tgt_m8") || TargetID.IsStartsWith("m8"))
+      {
+
+       sendEvent(10.0, SOID_MissionController, "StartDialog", ["C1M8AttackBeginning"]);
+       if(GetMission().isDebug)
+       {
+         logError("Dist Wingman2 vs TARG is " + new String(new #GameController().GetObject(SOID_MissionController).distance("MainPlayerUnit_Wingman", "tgt_m8_camp_gaz_1")));
+  //     logWarning("MOSID_Completed = " + new String(MOSID_Completed)  + "CC1M7Mission::MOSID_Completed is " + new String(CC1M7Mission::MOSID_Completed) );
+       }
+        sendEvent(0.0, "GroupUnit_Gunship_gr", "Stay_Camp",[]);
+        GetMission().GroupSpeedWatcher = null;
+        GetMission().GetObject("CC1M8GunshipGroupSpeedWatcher").SetUpdatePeriod(0);       //душим Update
+        GetMission().GetObject("CC1M8GunshipGroupSpeedWatcher").SetEventHandler(null);
+       GetMission().SetObjectiveStatus(0, CC1M8Mission::MOSID_Completed);
+       if(GetMission().isDebug)
+          logWarning("Wingman find Enemy with ID = " + TargetID  + " Complete task_0 vis_task_1");
+       //SetObjectiveStatus(1, MOSID_Completed);
+       GetMission().SetObjectiveVisible(1, true);
+      }
+   }
+
+ // sendEvent( 0.0, "GroupUnit_tgt_m7_Gaz", "StopColumn", []);
+ // sendEvent( 0.0, "GroupUnit_tgt_m7_Gaz", "StartColumn", []);
+ // sendEvent( 0.0, "GroupUnit_tgt_m7_Gaz", "ActivateMovement", [true]);
+
+
+ }
+
+
+ class C1M8Gunship_gr extends CBaseUnitGroup
+ {
+  boolean isGunshipStarted = false;
+  boolean home_gunships = false;
+
+  event void Stay_Camp()
+  {
+    if(GetMission().isDebug)
+        logWarning("Stay_Camp is entered");
+
+    sendEvent( 5.0, getIdentificator(user), "PopDelayedOrder", []);
+  }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    CBaseUnitGroup::OnEnemyTargeted(_UnitAlerted);
+    String TargetedUnit = _UnitAlerted.GetTargetedEnemy();
+
+    if(TargetedUnit.IsStartsWith("tgt_m8") || TargetedUnit.IsStartsWith("m8"))
+        sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M8GunspipAttack"]);
+  }
+ /*
+   void OnPathEndReached()
+  {
+   if(GetMission().isDebug)
+      logWarning("Group " + m_GroupID + " reached the end of the path");
+
+   SetOrder_MoveToEx( ["NavPoint_WayMainPlayerUnit_2", "NavPoint_WayMainPlayerUnit_1"], 10.0 );
+  }
+  */
+
+  event void Gunship_Home()
+  {
+    if (home_gunships == true )
+        return;
+     m_CurrentOrder.m_EnemyReactionType = ERT_FRIGID;
+     CancelAllOrders();
+     m_CurrentOrder.m_MovingSpeed = 30.0f;
+     SetOrder_Recharge("NavPoint_MainPlayerUnitLandingBase");
+     home_gunships = true;
+  }
+//      sendEvent(0.0, "GroupUnit_Gunship_gr", "Gunship_Home", []);
+
+  event void Start_Gunship()
+  {
+    if(isGunshipStarted)
+        return;
+     if(GetMission().isDebug)
+      logWarning("Gunships started");
+
+     ForEachUnitTask("Start", []);
+     Array ApproachPoints = [
+                            GetNavPointBehPos("NavPoint_WayGunship_3"),
+                            GetNavPointBehPos("NavPoint_WayGunship_2"),
+                            GetNavPointBehPos("NavPoint_WayGunship_1")
+                            ];
+
+    SetOrder_MoveToEx(ApproachPoints, 35.0f );
+    isGunshipStarted = true;
+  }
+ }
+ class C1M8GunShipTask extends CWingmanTask
+ {
+  void Init()
+  {
+    DisableLifeEffects(getIdentificator(user));
+  }
+
+  void Start()
+  {
+    EnableLifeEffects(getIdentificator(user));
+    sendEvent(10.0, getIdentificator(user), "Vzlet", []);
+  }
+
+  event void Vzlet()
+  {
+     if(GetMission().isDebug)
+      logWarning("Gunships TakeOFF");
+
+    GetSelf().TakeOff();
+  }
+
+
+
+  void OnEnemyTargeted()
+  {
+    m_Group.OnEnemyTargeted(this);
+  }
+ }
+
+class m8_cover_dshk  extends CBaseUnitGroup
+{
+    void Init()
+    {
+      if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " COVER DSHK INIT DEActivate ");
+
+      CBaseUnitGroup::Init();
+      ActivateGroup(false);
+      ActivateFire(false);
+    }
+
+   event void dshk_alert()
+   {
+     if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " COVER DSHK Activate ");
+     ActivateGroup(true);
+     ActivateFire(true);
+
+   }
+   event void dshk_hide()
+   {
+     if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " COVER DSHK DEactivate ");
+
+     ActivateGroup(false);
+     ActivateFire(false);
+
+   }
+
+}
+class m8_decor_vk  extends CBaseUnitGroup
+{
+   void Init()
+    {
+      if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " Decor VK INIT DEActivate ");
+
+      CBaseUnitGroup::Init();
+      ActivateGroup(false);
+      ActivateFire(false);
+    }
+  event void show_decor_vk()
+   {
+     if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " Decor VK Activate ");
+     ActivateGroup(true);
+     ActivateMovement(false);
+     SetImmortalMode(true);
+     ActivateFire(false);
+
+   }
+}
+
+class C1M8_Guardians  extends CBaseUnitGroup
+{
+    void Init()
+    {
+      if(GetMission().isDebug)
+        logWarning("Group  ID=" + getIdentificator(user) + " Guardians INIT ");
+
+      CBaseUnitGroup::Init();
+      ActivateMovement(false);
+      ActivateRadar(false);
+      ActivateFire(false);
+    }
+}
+

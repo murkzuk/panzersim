@@ -1,0 +1,138 @@
+class C1M9WingmanTask extends CWingmanTask
+{
+  boolean _DisWin=false;
+
+  void Init()
+  {
+    CWingmanTask::Init();
+    SetRadarDetailedEnemies(true);
+  }
+
+  void OnEnemyCame( String _EnemyID)
+  {
+    CWingmanTask::OnEnemyCame(_EnemyID);
+
+    if(GetMission().isDebug)
+      logWarning("Wingman find Enemy with ID = " + _EnemyID  + " OnEnemyCame is ON");
+
+    if(_EnemyID.IsStartsWith("Barrier_"))
+      sendEvent(0.0, SOID_MissionController, "StartDialog", ["C1M9AttackBeginning"]);
+
+    sendEvent(0.0, "MainPlayerUnit_Wingman_1", "DisconnectWingman", []);
+  }
+
+  //new #GameController().GetMission().GetObject("MainPlayerUnit_Wingman_1").WingmanDisconnect();
+  event void DisconnectWingman()
+  {
+    if ( _DisWin)
+      return;
+
+    for( int i = 0; i < GetMission().KillPrimaryList.size(); i++)                              //rand_kill
+      sendEvent( randnum(120), GetMission().KillPrimaryList[i], "DestroyObject", []);         //
+
+    if(GetMission().isDebug)
+      logWarning(" Wingman Disconnect");
+
+    WingmanDisconnect();
+    CWingmanTask::OnEnemyTargeted();
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    SetOrder_Attack("Barrier_Sampan_2", 15.0);
+
+    _DisWin=true;
+  }
+
+  event void ConnectWingman()
+  {
+    if(GetMission().isDebug)
+      logWarning(" Wingman Reconnect");
+
+    SetEnemyReactionType(ERT_FRIGID);
+
+    Wingman_Follow(m_LeaderID);
+  }
+}
+
+class C1M9BoatTask extends CBaseAITask
+{
+  void Init()
+  {
+    ActivateMovement(false);
+    ActivateFire(false);
+    ActivateRadar(false);
+    SetFrigidMode(true);
+  }
+}
+
+class StayWingmanTask extends CBaseAITask
+{
+  void Init()
+  {
+    sendEvent(5.0, getIdentificator(user), "OpenDoor", []);
+    DisableLifeEffects(getIdentificator(user));
+  }
+}
+
+ // fireEvent(0.0, [], "StartBoat", []);
+ // sendEvent(0.0, "American_PRBMK2", "StartBoat", []);
+class C1M9AmericanBoatTask extends CBaseAITask
+{
+  void Init()
+  {
+    ActivateMovement(false);
+    ActivateFire(false);
+    ActivateRadar(false);
+    m_EnemyReactionType == ERT_FRIGID;
+  }
+
+  event void StartBoat()
+  {
+    ActivateMovement(true);
+    ActivateFire(true);
+    ActivateRadar(true);
+    m_EnemyReactionType = ERT_PASSIVE;
+
+    Array ApproachPoints = [
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_0"),
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_1"),
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_2"),
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_3"),
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_4"),
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_5"),
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_6"),
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_7"),
+      GetNavPointBehPos("NavPoint_WayAmricanBoat_8")
+                           ];
+
+    SetOrder_MoveToEx(ApproachPoints, 10.0);
+  }
+}
+
+class C1M9PeasantTaskStay extends CBasePeasantTask
+{
+  void Init()
+  {
+     ActivateBehavior(false);
+  }
+}
+
+class C1M9RiverHiddenGroup extends CBaseUnitGroup
+{
+  void Init()
+  {
+     ActivateGroup(false);
+  }
+}
+
+class C1M9_Guardians  extends CBaseUnitGroup
+{
+  void Init()
+  {
+    if(GetMission().isDebug)
+      logWarning("Group  ID=" + getIdentificator(user) + " Guardians INIT ");
+
+    CBaseUnitGroup::Init();
+    ActivateMovement(false);
+    ActivateRadar(false);
+    ActivateFire(false);
+  }
+}
