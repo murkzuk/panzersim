@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TVT Mission Builder V3</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+    label { display: block; margin-top: 1em; margin-bottom: 0.25em; font-weight: bold; }
+    textarea, input[type="text"], input[type="checkbox"], select { 
+        width: 100%; 
+        padding: 8px;
+        margin-bottom: 1em; 
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    input[type="checkbox"] { width: auto; margin-right: 5px; vertical-align: middle;}
+    .button-group button { margin-right: 10px; } /* For spacing buttons */
+    button { /* General button style */
+        background-color: #5cb85c; /* A slightly different green */
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+    button:hover { opacity: 0.9; }
+    button.primary { background-color: #4CAF50; } /* Main action button */
+    button.secondary { background-color: #007bff; } /* Secondary action like load */
+
+    .message { padding: 10px; margin-top: 1em; border-radius: 4px; border: 1px solid transparent; }
+    .message.success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+    .message.error   { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+    .message.info    { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; } /* For info messages */
+    .form-section { border: 1px solid #eee; padding: 15px; margin-bottom:20px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>TVT Mission Builder V3</h1>
+  <p style="text-align: center; font-size: 1.1em; margin-top: -5px; margin-bottom: 25px;">Create a New T-34 vs Tiger Mission</p>
+
+  {% if message %}
+  <p class="message {% if message_is_error %}error{% elif 'ℹ️' in message %}info{% else %}success{% endif %}">
+    <strong>{{ message | e }}</strong>
+  </p>
+  {% endif %}
+
+  <form method="POST">
+    <div class="form-section">
+        <label for="install_path_input">TvT Installation Path</label>
+        <input type="text" name="install_path" id="install_path_input" 
+               value="{{ current_install_path | e }}" 
+               placeholder="e.g., M:\T34vsTiger or C:\Games\TvT" required>
+        <small>Enter the full path to your T-34 vs Tiger game directory.</small><br><br>
+        <button type="submit" name="load_templates_button" class="secondary">Load Templates from Path</button>
+        <p style="font-size:0.9em; margin-top:5px;"><em>After entering/changing path, click here to update template list below.</em></p>
+    </div>
+
+    <div class="form-section">
+        <label for="source_template_select">Base Mission to Clone</label>
+        <select name="source_template_path" id="source_template_select" required>
+          <option value="">-- Select a Template --</option>
+          {% for tpl in mission_templates %}
+          <option value="{{ tpl.value_path | e }}" 
+                  {% if form_data.source_template_path == tpl.value_path %}selected{% endif %}>
+                  {{ tpl.display_name | e }}
+          </option>
+          {% else %}
+            {% if current_install_path %}
+            <option value="" disabled>No templates found for the given path.</option>
+            {% else %}
+            <option value="" disabled>Enter TvT Install Path above and click "Load Templates".</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+
+        <label for="new_name_input">New Mission Folder Name (in TvT)</label>
+        <input type="text" name="new_name" id="new_name_input" value="{{ form_data.new_name | e }}" required pattern="^[a-zA-Z0-9_ .-]{1,50}$" title="Alphanumeric, underscore, space, dot, hyphen. Max 50 chars.">
+        <small>Allowed: letters, numbers, underscore, space, dot, hyphen. This will be sanitized for actual folder/class names (e.g., spaces removed).</small>
+
+        <label for="title_input">Mission Title (for in-game menu)</label>
+        <input type="text" name="title" id="title_input" value="{{ form_data.title | e }}" required maxlength="100">
+
+        <label for="briefing_ta">Briefing Overview (top text)</label>
+        <textarea name="briefing" id="briefing_ta" rows="4">{{ form_data.briefing | e }}</textarea>
+
+        <label for="orders_ta">Orders / Narrative (additional text)</label>
+        <textarea name="orders" id="orders_ta" rows="4">{{ form_data.orders | e }}</textarea>
+
+        <label>Objectives (up to 5)</label>
+        {% for i in range(1, 6) %}
+        <input type="text" name="obj{{ i }}" placeholder="Objective {{ i }}" value="{{ form_data['obj' ~ i] | e }}" maxlength="200">
+        {% endfor %}
+
+        <label for="campaign_select">Campaign</label>
+        <select name="campaign" id="campaign_select">
+          <option value="ussr" {% if form_data.campaign == 'ussr' or not form_data.campaign %}selected{% endif %}>USSR</option>
+          <option value="germany" {% if form_data.campaign == 'germany' %}selected{% endif %}>Germany</option>
+        </select>
+
+        <div>
+            <input type="checkbox" name="editor" id="editor_cb" {% if form_data.editor %}checked{% endif %}>
+            <label for="editor_cb" style="display: inline; font-weight: normal;">Editor Mode (future)</label>
+        </div>
+        <br>
+        <button type="submit" name="clone_mission_button" class="primary">Clone Mission</button>
+    </div>
+  </form>
+
+</body>
+</html>
