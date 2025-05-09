@@ -1,0 +1,304 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CLeningrad43M1Mission  extends CSPMission
+{
+  //-------------------------------
+  // Contruction and initialization
+  //-------------------------------
+
+
+
+  String m_LocalTime             = "6:20:00";
+  String m_TerrainMapTextureName = "Textures/Linengrad_M1_Map.tex";
+
+  static String m_MissionBriefingPicMaterial = "Linengrad_M1Pic";
+
+  static Array  m_MissionObjectives = [
+      [MOTID_Primary,   CLeningrad43M1Mission_Strings::Objective01, MOSID_InProgress, true],
+      [MOTID_Primary,   CLeningrad43M1Mission_Strings::Objective02, MOSID_InProgress, true]//,
+     // [MOTID_Primary,   CLeningrad43M1Mission_Strings::Objective03, MOSID_InProgress, true],
+     // [MOTID_Primary,   CLeningrad43M1Mission_Strings::Objective04, MOSID_InProgress, true]
+                               ];
+static WString ObjectivesText = CLeningrad43M1Mission_Strings::ObjectivesText;
+  boolean isDebug  = true;
+
+  boolean MainPlayerStart       = false; 
+//  boolean MainPlayerStartEgine = false;
+
+  boolean Retreat  = false;
+
+  Array m_NavpointsForPlayerMap = [
+      [
+        ["NavPointRedArmy"],
+        CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+        new Color(244.0/256.0, 10.0/120.0, 10.0/120.0)   // NavColor
+      ], /**/
+
+      [
+        ["NavPointGerman"],
+        CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+        new Color(30.0/256.0, 60.0/256.0, 245.0/256.0)   // NavColor
+      ]
+                                   ];
+
+  float  CockpitMapMinRange        = 1000.0;
+  float  CockpitMapMaxRange        = 4000.0;
+  float  CockpitMapNavNameMaxRange = 2000.0;
+  int    CockpitMapZoomSteps       = 4;
+  Vector MarksInitPoint            = new Vector(1000.0, 1000.0, 0.0);
+  Array  CockpitMapAccessBox       = [new Vector(0, 0.0, 0.0), new Vector(60000.0, 60000.0, 0.0)];
+
+
+  final static Array RouterWorkingZones = [
+    [60000.0 , 60000.0, 60000.0, 60000.0]
+                                          ];
+  final static Array DefaultMask = [["ENEMY", "MainMesh"], []];   //  "ENEMY", "CLASSIFICATOR_DEAD_OBJECT"
+  final static Array Mask        = [["ENEMY", "MainMesh"], []];
+
+  Array T34KillList1 =  ["CLM1_Ru_T34_76_01","CLM1_Ru_T34_76_02","CLM1_Ru_T34_76_03","CLM1_Ru_T34_76_04","CLM1_Ru_T34_76_05","CLM1_Ru_T34_76_06","CLM1_Ru_T34_76_07","CLM1_Ru_T34_76_08","CLM1_Ru_T34_76_09","CLM1_Ru_T34_76_Ten","CLM1_Ru_T34_76_011","CLM1_Ru_T34_76_012","CLM1_Ru_T34_76_013","CLM1_Ru_T34_76_014","CLM1_Ru_T34_76_015","CLM1_Ru_T34_76_016","CLM1_Ru_T34_76_017","CLM1_Ru_T34_76_018","CLM1_Ru_T34_76_019","CLM1_Ru_T34_76_020","CLM1_Ru_T34_76_021","CLM1_Ru_T34_76_022"];
+  Array KV1KillList2 =  ["CLM1_Ru_KV1_76mm42_01","CLM1_Ru_KV1_76mm42_02","CLM1_Ru_KV1_76mm42_03","CLM1_Ru_KV1_76mm42_04","CLM1_Ru_KV1_76mm42_05","CLM1_Ru_KV1_76mm42_06","CLM1_Ru_KV1_76mm42_07","CLM1_Ru_KV1_76mm42_08"];
+
+ // Array GermanKillList     =  [];
+
+//    Array GermanKillListCount = new Array(GermanKillList.size(), 0);
+//    Array KillListCount = new Array(KV1KillList2.size(), 0);
+
+  void CLeningrad43M1Mission()
+  {
+    // Construct mission
+    CSPMission("CLeningrad43M1Mission", "CLeningrad43M1Content");
+     // Set mission properties
+    SetMissionTerrain(new #ChunkedTerrain<CLeningrad43M1Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<CLeningrad43M1Atmosphere>());
+    SetMissionSky(new #SkyObject<CSky08Model>());
+
+    if (CDebugSettings::LoadForest)
+      SetMissionForest(new CSTBaseWinterForestC1(GetMissionAtmosphere()));    //  CSTBaseWinterForestC1
+
+    if (CDebugSettings::LoadRoads)
+      SetMissionRoadsParms(new CBaseRoadW1());
+
+    if (CDebugSettings::LoadGrass)
+      RegisterObject("Grass", new #Grass<CBaseWinterGrassC1>());
+
+    m_MissionLensFlare =  new #LensFlare<CLeningrad43M1LensFlare>();
+    SetMissionWorldMatrices(new #WorldMatrices<CLeningrad43M1WorldMatrices>(),
+      [
+        [ LAYER_TERRAIN_NAME,         "CLeningrad43M1LandscapeLayer"],
+        [ LAYER_TERRAIN_ZONE,         "CLeningrad43M1TerrainZoneLayer"],
+        [ LAYER_ROUTER_ZONE,          "CLeningrad43M1RouterZoneLayer" ],
+        [ LAYER_MICROTEXTURE_MAP1,    "CLeningrad43M1MicroTextures1"],
+        [ LAYER_TERRAIN_WATERHEIGHTS, "CLeningrad43M1WaterHeights"]
+
+      ]);
+
+    SetRouterPrecalculatedGraph(
+      new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CC1RouterMap>(), 64, RouterWorkingZones);
+  
+  }
+//   void Init()
+//   { }
+   
+   
+  void StartMission()
+  {
+    // call inherited
+    CSPMission::StartMission();
+  //  sendEvent(60.0, SOID_MissionController, "StartWithTimeOut", []);        
+    //sendEvent(1.0, "C502_M1_A1_TrooperGroup", "PopDelayedOrder", []);
+   // sendEvent(360.0, "C502_M1_CUSSRSoldier1Group", "AttackPosition",[]);
+   // sendEvent(380.0, "C502_M1_CUSSRSoldier2GroupB", "AttackPosition",[]);
+    //sendEvent(300.0, "StartAction1",[]); 
+    //  sendEvent(1.0, "CLM1_Tiger_03", "WMFollow", []);
+       sendEvent(12.0, "CLM1_Tiger_01", "WMFollow", []);  //
+     // sendEvent(9.0, "CLM1_Tiger_02", "WMFollow", []);
+
+        //
+  }
+ // PUT HERE======================================================================================================== DESTROY BRIDGE
+
+  event void OnMissionDialogEnd(String _DialogID)
+  {
+
+  }
+  /* 
+  event void StartWithTimeOut()
+  {
+    if(isDebug)                                       //
+      logError("[Ironweed]  StartWithTimeOut");   //
+
+   if (!MainPlayerStart)
+      OnEngineStateChanged(); 
+  }      
+     */
+  event void OnEngineStateChanged(boolean _IsWorkEngine)
+  {
+    if (!MainPlayerStart)
+    {
+        MainPlayerStart = true;
+        //sendEvent(1.0, "CLM1_Tiger_01", "WMFollow", []);
+    }
+  }
+
+  event void StartWingMen()
+   {
+      
+      
+    //  sendEvent(4.0, "CLM1_Tiger_03", "WMFollow", []);    
+   }
+
+  event void FailMissionMad()
+  {
+    FailMission(0.0);
+  }
+
+  event void OnObjectDestroyed( String _ObjectID)
+  {
+    CMission::OnObjectDestroyed(_ObjectID);
+    // TMP
+    Component DeadThing = GetObject(_ObjectID);
+    if (null == DeadThing)
+    {
+      //logError("Component 'DeadThing' == null");
+      return;
+    }
+
+    //if(isDebug)
+    // logWarning("Object destroyed: " + _ObjectID + " last damaged unit " + new String (DeadThing.GetLastDamager()));
+
+    String Affiliation  = DeadThing.GetAffiliation();
+    String Damager      = DeadThing.GetLastDamager();
+
+    if (Damager == "MainPlayerUnit")
+    {
+      //logWarning("CheckMadPlayer");
+      //logWarning("CheckMadPlayer. Affiliation is " + Affiliation);
+      //logWarning("CheckMadPlayer. Damager is " + Damager);
+
+      if (!checkMask(DeadThing, ["HUMAN"], []))
+      {
+        //logWarning("MadPlayer_kill_Non_Human");
+
+        if (Affiliation == "FRIEND")
+        {
+          //logWarning("MissionWillBeKilledByFriendlyFire");
+          Penalty_count = Penalty_count + 1;
+          SendCockpitMessage(CGameMessages::msg_FriendlyFireWarning, new Color(1.0, 1.0, 0.0));
+          // New report for Cocpit: "You kill friendly unit. Mission will be fail"
+          if (Penalty_count >= 2)
+          {
+            //logWarning("MissionKillingByFriendlyFire");
+            SendCockpitMessage(CGameMessages::msg_FriendlyFireFailed, new Color(1.0, 0.0, 0.0));
+            sendEvent(10.0, SOID_MissionController, "FailMissionMad", []);
+          }
+        }
+      }
+    }
+
+    if(_ObjectID.IsStartsWith("CLM1_Ru_T34"))
+    {
+      int _index = T34KillList1.find(_ObjectID);
+
+      if (_index != -1)
+       T34KillList1.remove(_index);
+
+      if(T34KillList1.size() <= 0)
+      {
+        CompleteObjective(0);
+        SetObjectiveVisible(0, MOSID_Completed);
+      }
+
+      else if(T34KillList1.size()<= 9)
+      {
+        if (!Retreat)
+        {
+          SendCockpitMessage(L"Kommander, enemy ready to retreat!", new Color(1.0, 0.6, 0.0));
+          Retreat = true;
+        }
+
+      }
+    }
+    if(_ObjectID.IsStartsWith("CLM1_Ru_KV1"))
+    {
+      int _index = KV1KillList2.find(_ObjectID);
+
+      if (_index != -1)
+        KV1KillList2.remove(_index);
+
+      if(KV1KillList2.size() <= 0)
+      {
+        CompleteObjective(1);
+        SetObjectiveVisible(1, MOSID_Completed); 
+        
+      }                   
+
+    }
+  }
+
+  // --------------------------------------------------------------------------
+
+  event void SetNavPointIdentifiersArray(String _NavPointID, Array _ID)
+  {
+    Component NavPoint = GetMission().GetObject(_NavPointID);
+
+    if (null != NavPoint)
+    {
+      NavPoint.SetIdentifiers(_ID);
+    }
+    else
+      logError("Component NavPoint with ID = " + _NavPointID + " - null!" );
+  }
+
+  void OnObjectEnterNavPoint( String _NavPointID, String _ObjectID)
+  {
+ 
+       if (((_NavPointID == "NAV_AreaTrigger_1")) && ((_ObjectID.IsStartsWith("CLM1_Tiger"))))
+         {
+          //CompleteObjective(0);
+          SetObjectiveStatus(0, MOSID_Completed);
+         }
+       if (((_NavPointID == "NAV_AreaTrigger_1")) && ((_ObjectID == "MainPlayerUnit")))
+         {
+          //CompleteObjective(0);
+          SetObjectiveStatus(1, MOSID_Completed);
+         } /*
+       if (((_NavPointID == "NAV_AreaTrigger_1")) && ((_ObjectID == "Panzer")))
+         {
+         // CompleteObjective(3); 
+          SetObjectiveStatus(3, MOSID_Completed);
+         }
+
+       if (((_NavPointID == "NavPointRedArmy")) && ((_ObjectID == "MainPlayerUnit")))
+         {
+           //SetObjectiveStatus(3, MOSID_Completed);      
+           sendEvent(0.0, SOID_MissionController, "Shutdown", []);
+         }
+       if (((_NavPointID == "NavPoint_C502_M1Patrol_1")) && ((_ObjectID == "Panzer_Faust_22")))
+       {
+
+           sendEvent(0.0, "C502_M1Panzer_Faust2ndGrp", "Attck2Position", []);
+
+       }  */
+  }
+
+  void OnObjectLeaveNavPoint( String _NavPointID, String _ObjectID)
+  {
+  // if(_NavPointID == "NavPnt8")
+       //Phase2 = true;
+  }
+
+  void Shutdown()
+  {
+    CSPMission::Shutdown();
+  }
+
+}

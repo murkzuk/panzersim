@@ -1,0 +1,424 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CC1M1Mission extends CSPMission
+{
+  //-------------------------------
+  // Contruction and initialization
+  //-------------------------------
+  String m_LocalTime             = "6:20:00";
+  String m_TerrainMapTextureName = "Textures/c1m1_Map.tex";
+
+  static String m_MissionBriefingPicMaterial = "C1M1BriefingPic";
+
+  static Array m_MissionObjectives = [
+                                       [MOTID_Primary, CC1M1Mission_Strings::Objective01, MOSID_InProgress, true],
+                                       [MOTID_Primary, CC1M1Mission_Strings::Objective02, MOSID_InProgress, true],
+                                       [MOTID_Primary, CC1M1Mission_Strings::Objective03, MOSID_InProgress, true]
+                                     ];
+
+  static WString ObjectivesText = CC1M1Mission_Strings::ObjectivesText;
+
+  boolean isDebug = true;
+  boolean isRadarUpdateDebug = false;
+  boolean Reinforce = false;
+
+  boolean isPhase1      = true;
+  boolean isPhase2      = false;
+  boolean isPhase2_AP   = false; // Active Part of Second Phase
+  boolean isPhase3      = false;
+  boolean GermanSupport = false;
+  boolean Action1 = false;
+  boolean Action2 = false;
+
+  int Penalty_count = 0;
+
+  Array m_NavpointsForPlayerMap = [
+      [
+        ["CompanyGrpFOUR_NP05"],
+        CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+        new Color(255.0/256.0, 10.0/120.0, 10.0/120.0)  // NavColor
+      ]
+
+
+      ];
+
+  float  CockpitMapMinRange        = 500.0;
+  float  CockpitMapMaxRange        = 4000.0;
+  float  CockpitMapNavNameMaxRange = 2000.0;
+  int    CockpitMapZoomSteps       = 4;
+  Vector MarksInitPoint            = new Vector(1600.0, 1600.0, 0.0);
+  Array  CockpitMapAccessBox       = [new Vector(402, 582.0, 0.0), new Vector(18000.0, 18000.0, 0.0)];
+
+  final static Array RouterWorkingZones = [
+                                           [1000.0 , 1000.0, 60000.0, 60000.0]
+                                          ];
+
+  Array KillList_Primary1 = ["Pnz_Tnk01", "Pnz_Tnk02", "Pnz_Tnk03", "Pnz_Tnk04"];
+  Array KillList_Primary2 = ["PnzVI_AA", "PnzIV_3", "PnzIV_4", "PnzIV_5", "PnzIV_6"];
+  Array KillList_Primary3 = ["A_WespeUnit_1", "A_WespeUnit_2", "PnzIV_1", "PnzIV_2"];
+  Array KillList = ["GCol3BTR1", "AmmoTruck_01", "AmmoTruck_02", "A_HummelUnit_1", "A_HummelUnit_2", "A_HummelUnit_3", "A_HummelUnit_4"];
+  Array SupplyLineList = [ "GCol2BTR1", "SupplyLine_1", "SupplyLine_2", "SupplyLine_3", "SupplyLine_4", "SupplyLine_5", "SupplyLine_6", "SupplyLine_7", "SupplyLine_8", "SupplyLine_9", "SupplyLine_10", "GCol2BTR2"];
+
+  Array KillList_USSR1 = ["CompanyGrpONE_1", "CompanyGrpONE_2", "CompanyGrpONE_3", "CompanyGrpONE_4", "CompanyGrpONE_5", "CompanyGrpONE_6","CompanyGrpTHREE_1", "CompanyGrpTHREE_2", "CompanyGrpTHREE_3", "CompanyGrpTHREE_4", "CompanyGrpTHREE_5", "CompanyGrpTHREE_6", "CompanyGrpTHREE_7", "CompanyGrpTHREE_8", "CompanyGrpFOUR_01", "CompanyGrpFOUR_02", "CompanyGrpFOUR_03", "CompanyGrpFOUR_04", "CompanyGrpFOUR_05", "CompanyGrpFOUR_06", "CompanyGrpFOUR_7", "CompanyGrpFOUR_8"];
+  Array KillList_USSR2 = ["CompanyGrpTWO_1SAU", "CompanyGrpTWO_2SAU", "CompanyGrpTWO_3SAU", "CompanyGrpTWO_4SAU", "CompanyGrpTWO_5SAU", "CompanyGrpTWO_6SAU", "CompanyGrpTWO_7SAU", "CompanyGrpTWO_8SAU"];
+  Array KillList_USSR3 = ["CompanyGrpTWO_1", "CompanyGrpTWO_2", "CompanyGrpTWO_3", "CompanyGrpTWO_4", "CompanyGrpTWO_5", "CompanyGrpTWO_6", "CompanyGrpTWO_7", "CompanyGrpTWO_8", "CompanyGrpTWO_9"];
+
+
+  boolean MainPlayerStart = false;
+
+  // Position Watchers
+  Component CC1M1PW_SwitchToPhase2; // следит за границей между фазами 1 и 2
+  Component CC1M1PW_SwitchToPhase3; // следит за границей между фазами 2_AP и 3
+//  Component CC1M1PW_PlayerTanks; // изменяет скорость CC1M1_EscortGrp2 до активной части второй фазы
+  Component CC1M1PW_76Tanks;     // изменяет скорость CC1M1Gr_76Tanks до второй фазы
+  Component CC1M1PW_AZLeftAntiTanks;  // cмотрит за зоной агрессии для CC1M1Gr_LeftAntiTanks
+  Component CC1M1PW_AZRightAntiTanks; // cмотрит за зоной агрессии для CC1M1Gr_RightAntiTanks
+  Component CC1M1PW_InfantryZone; // следит за зоной старта пехоты
+  // Position Watchers
+
+  String ScoutTank = ""; // Танк-разведчик
+
+//  String RadarHide = "INVISIBLE_ON_RADAR";
+
+//  Array m_Mask = [["ENEMY"], ["FRIEND", RadarHide]];
+
+  void CC1M1Mission()
+  {
+    // Construct mission
+    CSPMission("CC1M1Mission", "CC1M1Content");
+
+    // Set mission properties
+    SetMissionTerrain(new #ChunkedTerrain<CC1M1Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<CC1M1Atmosphere>());
+    SetMissionSky(new #SkyObject<CSky01Model>());
+
+    if (CDebugSettings::LoadForest)
+      SetMissionForest(new CSTBaseForestC1(GetMissionAtmosphere()));
+
+    if (CDebugSettings::LoadRoads)
+      SetMissionRoadsParms(new CBaseRoadC1());
+
+    if (CDebugSettings::LoadGrass)
+      RegisterObject("Grass", new #Grass<CBaseGrassC1>());
+
+    m_MissionLensFlare = new #LensFlare<CC1M1LensFlare>();
+
+    SetMissionWorldMatrices(new #WorldMatrices<CC1M1WorldMatrices>(),
+      [
+        [LAYER_TERRAIN_NAME,         "CC1M1LandscapeLayer"  ],
+        [LAYER_TERRAIN_ZONE,         "CC1M1TerrainZoneLayer"],
+        [LAYER_ROUTER_ZONE,          "CC1M1RouterZoneLayer" ],
+        [LAYER_MICROTEXTURE_MAP1,    "CC1M1MicroTextures1"  ],
+        [LAYER_TERRAIN_WATERHEIGHTS, "CC1M1WaterHeights"    ]
+      ]);
+
+    SetRouterPrecalculatedGraph(
+      new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CC1RouterMap>(), 64, RouterWorkingZones);
+  }
+
+  void StartMission()
+  {
+    // call inherited    //
+    CSPMission::StartMission();
+    
+
+   // sendEvent(180.0, "CC1M1Grp_Company2Platoon2", "MoveToAttackPosition", []);
+
+    sendEvent(33.0, "CC1M1PanzerGrupen2", "MoveToAttackPosition", []);      // PopDelayedOrder
+
+    sendEvent(26.0, "CC1M1PanzerGrupen1", "MoveToAttackPosition", []);
+
+   // sendEvent(160.0, "CC1M1Grp_MobilGuns_A", "MoveToAttackPosition", []);
+
+  //  sendEvent(141.0, "CC1M1Grp_Hummel_A", "MoveToAttackPosition", []);
+
+    sendEvent(30.0,  "C1M1SSTrooperGroup", "PopDelayedOrder", []);  //
+
+    sendEvent(260.0, "C1M1RussianSoldierGroup", "PopDelayedOrder", []);
+
+    sendEvent(240.0, "C1M1RussianSoldier2Group", "PopDelayedOrder", []);
+
+    sendEvent(126.0, "C1M1Gr_SupplyLine", "MoveToAttackPosition", []);
+
+    sendEvent(142.0, "C1M1Gr_SupplyEndLine", "MoveToAttackPosition", []);
+
+    sendEvent(40.0, "C1M1Grp_SU85_CompanyGrpTWO", "MoveToAttackPosition", []);
+
+    sendEvent(290.0, "C1M1Grp_CompanyGrpFOUR", "MoveToAttackPosition", []);
+
+    //Component console = new #GameController().GetObject(SOID_Console);
+    //console.disablebeh();
+    //console.showbehinf(true);
+  }
+
+  event void OnMissionDialogEnd(String _DialogID)
+  {
+  }
+
+  event void OnEngineStateChanged(boolean _IsWorkEngine)
+  {
+    if (!MainPlayerStart)
+    {
+      //logWarning("Start cinema!!");
+      MainPlayerStart = true;
+    //  Component _Game = new #GameController();
+      //if ( null != _Game)
+      //  _Game.RunCinema("EngineStart");
+    }
+  }
+
+   event void FailMissionMad()
+  {
+    FailMission(0.0);
+  }
+
+  event void OnMissionEnd()
+   {
+     if (Primary1Death)   // && Primary3
+     {
+      SetObjectiveStatus(2, MOSID_Completed);
+      sendEvent(0.0, SOID_MissionController, "Shutdown", []); //
+     }
+     else
+     return;
+
+
+
+   }
+
+  event void OnObjectDestroyed(String _ObjectID)
+  {
+    CMission::OnObjectDestroyed(_ObjectID);
+
+    // TMP
+    Component DeadThing = GetObject(_ObjectID);
+    if (null == DeadThing)
+    {
+      //logError("Component 'DeadThing' == null");
+      return;
+    }
+    // TMP
+
+    //logWarning("Object destroyed: " + _ObjectID + ", last damaged by unit: " + new String (DeadThing.GetLastDamager()));
+
+    String Affiliation  = DeadThing.GetAffiliation();
+    String Damager      = DeadThing.GetLastDamager();
+
+    if (Damager == "MainPlayerUnit")
+    {
+      //logWarning("CheckMadPlayer");
+      //logWarning("CheckMadPlayer. Affiliation is " + Affiliation);
+      //logWarning("CheckMadPlayer. Damager is " + Damager);
+
+      if (!checkMask(DeadThing, ["HUMAN"], []))
+      {
+        //logWarning("MadPlayer_kill_Non_Human");
+
+        if (Affiliation == "FRIEND")
+        {
+          //logWarning("MissionWillBeKilledByFriendlyFire");
+          Penalty_count = Penalty_count + 1;
+          SendCockpitMessage(CGameMessages::msg_FriendlyFireWarning, new Color(1.0, 1.0, 0.0));
+          // New report for Cocpit: "You kill friendly unit. Mission will be fail"
+          if (Penalty_count >= 2)
+          {
+            //logWarning("MissionKillingByFriendlyFire");
+            SendCockpitMessage(CGameMessages::msg_FriendlyFireFailed, new Color(1.0, 0.0, 0.0));
+            sendEvent(11.0, SOID_MissionController, "FailMissionMad", []);
+          }
+        }
+      }
+    }
+    
+    int _Index_Primary1   = KillList_Primary1.find(_ObjectID);
+    int _Index_Primary2  = KillList_Primary2.find(_ObjectID);
+    int _Index_Primary3  = KillList_Primary3.find(_ObjectID);
+    int _Index_SupplyLineList  = SupplyLineList.find(_ObjectID);
+    int _Index_KillL  = KillList.find(_ObjectID);
+
+    int _Index_USSR1   = KillList_USSR1.find(_ObjectID);
+    int _Index_USSR2   = KillList_USSR2.find(_ObjectID);
+    int _Index_USSR3   = KillList_USSR3.find(_ObjectID);
+
+     if(_Index_USSR1 != -1)
+    {
+      KillList_USSR1.remove(_Index_USSR1);
+    }
+    if(_Index_USSR2 != -1)
+    {
+      KillList_USSR2.remove(_Index_USSR2);
+    }
+
+    if(_Index_USSR3 != -1)
+    {
+      KillList_USSR3.remove(_Index_USSR3);//Primary3  = false;   
+    }
+
+    if(_Index_Primary1 != -1)
+    {
+      KillList_Primary1.remove(_Index_Primary1);
+    }
+    if(_Index_Primary2 != -1)
+    {
+      KillList_Primary2.remove(_Index_Primary2);
+    }
+
+    if(_Index_Primary3 != -1)
+    {
+      KillList_Primary3.remove(_Index_Primary3);//Primary3  = false;   
+    }
+
+    if(_Index_KillL != -1)
+    {
+
+      Killist.remove(_Index_KillL);
+      
+    }
+    
+   if(_Index_SupplyLineList != -1)
+    {
+       SupplyLineList.remove(_Index_SupplyLineList);
+
+     }
+
+    if((SupplyLineList.size() == 0) || (KillList_Primary1.size() == 0))
+
+    {
+
+      sendEvent(1.0, SOID_MissionController, "OnMissionEnd", []);
+
+    }
+
+
+   if((KillList_USSR1.size() == 0) && (KillList_USSR2.size() == 0))
+    {
+
+      sendEvent(2.0, "CC1M1PanzerGrupen1", "MoveToSafePosition", []);
+
+    }
+   if (KillList_USSR3.size() == 0)
+    {
+
+      sendEvent(1.0, "CC1M1PanzerGrupen1", "MoveToSafePosition", []);
+
+    }
+
+    if((KillList_Primary1.size() <= 1))
+    {
+      SetObjectiveStatus(0, MOSID_Completed);
+      Primary1Death  = true;
+
+    }
+   if ((KillList_Primary2.size() <= 1))
+    {
+      SetObjectiveStatus(1, MOSID_Completed);
+      Primary3  = true;
+
+    }
+
+
+ }
+
+  void OnObjectEnterNavPoint( String _NavPointID, String _ObjectID)
+  {
+
+     if ((_NavPointID == "NavAirAttack") && ((_ObjectID.IsStartsWith("RU_Bomber_"))))
+
+        {
+           logWarning("Enter NavAirAttack BomberGrp RadarFireOFF!!");  //
+          // SetObjectiveStatus(2, MOSID_Completed); 
+            sendEvent(0.0, "RU_BomberGrp_1_C1M1", "RadarFireOFF", []);
+        }
+        
+     if ((_NavPointID == "NavAirVector_01") && ((_ObjectID.IsStartsWith("RU_Bomber_"))))
+
+        {
+           logWarning("Enter NavAirAttack BomberGrp RadarFireOFF!!");  //
+          // SetObjectiveStatus(2, MOSID_Completed); 
+            sendEvent(0.0, "RU_BomberGrp_1_C1M1", "RadarFireOFF", []);
+        }
+
+     if ((_NavPointID == "NavPnt_END") && ((_ObjectID == "MainPlayerUnit")))
+
+        {
+           SetObjectiveStatus(2, MOSID_Completed); //
+           sendEvent(0.0, SOID_MissionController, "Shutdown", []);
+           
+        }
+
+
+     if ((_NavPointID == "RU_AttackZone_02") && ((_ObjectID == "MainPlayerUnit")))
+
+        {
+           
+           SetObjectiveStatus(2, MOSID_Completed); //
+           sendEvent(0.0, SOID_MissionController, "Shutdown", []);
+        }
+
+     if ((_NavPointID == "CompanyGrpFOUR_NP05") && ((_ObjectID == "MainPlayerUnit")))
+
+        {
+           
+           SetObjectiveStatus(2, MOSID_Completed);  //           
+           sendEvent(0.0, SOID_MissionController, "Shutdown", []);
+ 
+        }    
+
+       if (_ObjectID.IsStartsWith("A_WespeUnit_"))
+       {
+
+         if (_NavPointID == "NavPnt_FIRE" && !Action2 )
+         {
+          sendEvent(0.0, "CC1M1Grp_MobilGuns_A", "Take2Stand", []);
+          Action2 = true;
+         }
+       }
+
+       if (_ObjectID.IsStartsWith("SupplyLine_"))
+       {
+
+         if ((_NavPointID == "NavPnt_12") && Primary1Death)
+         {
+            Action1 = true;
+         }
+
+       }
+
+  
+   }
+
+  void OnObjectLeaveNavPoint( String _NavPointID, String _ObjectID)
+  {
+  // if(_NavPointID == "NavPnt8")
+       //Phase2 = true;
+  }
+
+
+  event void SetNavPointIdentifiersArray(String _NavPointID, Array _ID)
+  {
+    Component NavPoint = GetMission().GetObject(_NavPointID);
+
+    if (null != NavPoint)
+    {
+      NavPoint.SetIdentifiers(_ID);
+    }
+    else
+      logError("Component NavPoint with ID = " + _NavPointID + " - null!" );
+  }
+
+
+
+   void Shutdown()
+  {
+    CSPMission::Shutdown();
+  }
+}

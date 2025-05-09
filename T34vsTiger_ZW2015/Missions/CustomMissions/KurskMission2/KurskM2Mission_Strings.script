@@ -1,0 +1,20 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//-------------------------------------------------------------------
+
+//
+//  Mission strings
+//
+
+class KurskM2Mission_Strings extends CCommonStrings
+{
+  final static WString MissionName         = getLocalized("Kursk2Mission", "MissionName");
+  final static WString BriefingText        = getLocalized("Kursk2Mission", "BriefingText");
+  final static WString ObjectivesText      = getLocalized("Kursk2Mission", "ObjectivesText");
+  final static WString Objective01         = getLocalized("Kursk2Mission", "Objective01");
+
+  final static WString str_NavPoint_Village_C1  =  getLocalized("Kursk2Mission", "NavPoint_Village_C1");
+  final static WString str_NavPointPhase3 =  getLocalized("Kursk2Mission", "NavPointPhase3");
+
+}

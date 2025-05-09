@@ -1,0 +1,85 @@
+
+
+class CC2M1Terrain extends CBaseMegaTerrain, CBaseZoneMap
+{
+  CCM1Terrain()
+  {
+    if (!CDebugSettings::LoadWater)
+      WaterRegions = [];
+  }
+
+  void CreateForesRegions()
+  {
+    Component Materials = new #MaterialManager<CSTBaseForestC1Skin>();
+
+    RegisterForestRegion(
+      [ZMC_Forest01],
+	  //[ZMC_Forest01, ZMC_Forest02, ZMC_Forest03], // Adding more variety by specifying additional forest types
+      Materials,
+      "Missions\\Campaign_2\\Mission_1\\forest_c2m1.tex",
+      //["L2",   "L3",   "L4",  "L3"   ],  //   ***ORIG***
+      //[10.0,    13.0,    6.0,   6.0 ],
+      //[500.0,  1200.0, 2400.0, 3600.0], // min distance, start fade
+      //[1500.0, 2500.0, 3500.0, 8500.0]  // max distance, hide layer
+	  
+      ["L2", "L3", "L3", "L4"], // A small tweak to light levels for variety	***BEST**  
+      [12.0, 20.0, 15.0, 8.0, 10.0], // Adjusted density for varied light conditions
+      [300.0, 600.0, 1200.0, 1800.0, 2400.0], // Start fade distances for each light condition
+      [1500.0, 3000.0, 4500.0, 6000.0, 7500.0]  // Max distance, hide layer for each condition
+	
+	  //["L2", "L3", "L3", "L4"], // A small tweak to light levels for variety    ***LOW***
+      //[12.0, 15.0, 8.0, 8.0], // Slightly increased density for a richer environment
+      //[400.0, 1000.0, 2000.0, 3000.0], // Reduced start fade distance for earlier detail fade
+      //[1200.0, 2200.0, 3200.0, 7200.0]  // Reduced max distance to hide layers sooner
+	  
+	    //["L2", "L3", "L3", "L4"], // Adjusted light levels for variety   ***MID***
+        //[12.0, 15.0, 8.0, 8.0], // Slightly increased density
+        //[400.0, 1000.0, 2000.0, 3000.0], // Start fade distances adjusted for performance
+        //[1800.0, 2800.0, 3800.0, 7800.0]  // Increased max distance for better far distance appearance
+    );
+
+    RegisterVerticalForest(
+      [ZMC_Forest01],
+      "textures\\foreststripe.tex",
+      [0.8],                        // number of rings of vertical forest
+      18.0f
+                          );
+
+    CBaseMegaTerrain::CreateForesRegions();
+  }
+
+  // Terrain resources
+  String SkinClass  = "CC2M1TerrainSkin";
+
+  // Sea level for compute air density
+  float SeaLevel    = 450.0;
+  float BaseDensity = 0.125;
+
+  // Water regions description
+  Array  WaterRegions = [
+    new CWaterRegion(new Vector(23532.10, 29461.19, 1165.0), 1165.0)
+                        ];
+
+  Array WaterMirrorMasks = [
+    [[], [CLASSIFICATOR_SHADOW, CLASSIFICATOR_UI, CLASSIFICATOR_TERRAINPATCH]]
+                           ];
+
+  //float TerrainShadowPower = 10.0;
+  
+  float TerrainShadowPower = 5.0; // Decrease for softer shadows
+  float NormalNoise        = 0.1;
+  boolean IsAntiLighting = true;
+  boolean IsPlanarWater  = true;
+}
+
+class CC2M1TerrainSkin extends CBaseMegaTerrainSkin
+{
+  CC2M1TerrainSkin()
+  {
+    SetupTerrainMainMaterial("Missions/Campaign_2/Mission_1/lnd_c2m1.tex");   // lnd_c2m1.tex
+
+    AppendMaterials(MissionSpecificMaterials);
+  }
+
+  Array MissionSpecificMaterials = [];
+}

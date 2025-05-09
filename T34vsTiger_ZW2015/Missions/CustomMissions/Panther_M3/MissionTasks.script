@@ -1,0 +1,396 @@
+//-----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-----------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// // Base class for group unit (function SetActive remove ERT_FRIGID and set enemy reaction type ERT_AGGRESSIVE)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CC5M3_WingmanTask extends CWingmanTask,CBaseAITankTask
+{
+   boolean StartWM;
+
+  void Init()
+
+  {
+    CWingmanTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    StartWM = false;
+  }
+
+ event void WMFollow()
+  {
+
+    Wingman_SetOrder(0 /*Follow*/, m_LeaderID, "");
+
+    if(!StartWM)
+     {
+      StartWM = true;
+      ActivateFire(true);
+      ActivateRadar(true);
+      m_WingmanRank = 1;
+      logError(m_LeaderID);
+     }
+
+    sendEvent(33.5, getIdentificator(user), "WMRestartW", []);
+  }
+
+ event void WMRestart()
+  {
+   Wingman_SetOrder(0 /*Follow*/, m_LeaderID, "");
+
+   sendEvent(19.0, getIdentificator(user), "WMRestartW", []);
+  }
+
+}
+
+class CC5M3Sappers_Group  extends CBaseUnitGroup
+{
+  boolean SapperAlarm = false;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ForEachUnitTask("ActivateFire", [false]);
+    ForEachUnitTask("ActivateMovement", [false]);
+ //   SetEnemyReactionType(ERT_PASSIVE);
+  }
+
+  event void AwaySappers()
+  {
+    ForEachUnitTask("ActivateMovement", [true]);
+    PopDelayedOrder();
+    SetEnemyReactionType(ERT_FRIGID);
+    //SetFormation("CWedgeFormation", 12, true, true);
+    //if(GetMission().isDebug)
+    //  logWarning("SAPPERS AWAY!");
+  }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    GetMission().AwaySappaersOnSee();
+  }
+}
+
+class CC5M3TaskSappers  extends CBaseAITask
+{
+ event void OnExplosion(
+    float     _Damage,               // - force impact wave (not of used)
+    Matrix    _Position,             //  - source of the wave
+    float     _Radius,               // - radius of explosion (not used)
+    String    _OwnerID,              // - ID of [unit], which in the essence applied [povrezhdeni]
+    category  _DamageType,           // - the type of damage  - the type of projectile which fell
+    int       _SubstanceId,          // - material into which burn Array
+    Array     _ExtraAttribs,         // - additional parameters
+    float     _BulletDamageModifier, // - coefficient of damage transmitted by the projectile
+    Component _DamageJoint
+              )
+  {
+    if (!m_Group.SapperAlarm)
+    {
+      //if(GetMission().isDebug)
+      //  logError(" OnExplosion - for Sappers team");
+
+      GetMission().AwaySappaersOnHit();
+      m_Group.SapperAlarm = true;
+     }
+  }
+
+  void OnHitByEnemy(String _EnemyID)
+  {
+    if (!m_Group.SapperAlarm)
+    {
+      GetMission().AwaySappaersOnHit();
+      m_Group.SapperAlarm = true;
+     }
+  }
+}
+
+
+class CC5M3RepairZis_Group  extends CBaseUnitGroup
+{
+  boolean SapperAlarm = false;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ForEachUnitTask("ActivateFire", [false]);
+    ForEachUnitTask("ActivateMovement", [false]);
+  //  SetFormation("CWedgeFormation", 12, true, true);
+    SetEnemyReactionType(ERT_PASSIVE);
+
+   }
+
+  event void AwayRepair()
+  {
+    ForEachUnitTask("ActivateRadar", [true]);
+    ForEachUnitTask("ActivateMovement", [true]);
+    PopDelayedOrder();
+    SetEnemyReactionType(ERT_FRIGID);
+  //  SetFormation("CWedgeFormation", 12, true, true);
+
+    //if(GetMission().isDebug)
+    //  logWarning("REPAIR TEAM AWAY!");
+  }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    GetMission().AwaySappaersOnSee();
+  }
+}
+
+class CC5M3RepairZis_Group2  extends CBaseUnitGroup
+{
+  boolean SapperAlarm = false;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ForEachUnitTask("ActivateFire", [false]);
+    ForEachUnitTask("ActivateMovement", [false]);
+  //  SetFormation("CWedgeFormation", 12, true, true);
+    SetEnemyReactionType(ERT_PASSIVE);
+
+   }
+
+  event void AwayRepair()
+  {
+    ForEachUnitTask("ActivateRadar", [true]);
+    ForEachUnitTask("ActivateMovement", [true]);
+    PopDelayedOrder();
+    SetEnemyReactionType(ERT_FRIGID);
+  //  SetFormation("CWedgeFormation", 12, true, true);
+
+    //if(GetMission().isDebug)
+    //  logWarning("REPAIR TEAM AWAY!");
+  }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    GetMission().AwaySappaersOnSee();
+  }
+}
+
+class CC5M3RepairZis_Group3  extends CBaseUnitGroup
+{
+  boolean SapperAlarm = false;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ForEachUnitTask("ActivateFire", [false]);
+    ForEachUnitTask("ActivateMovement", [false]);
+  //  SetFormation("CWedgeFormation", 12, true, true);
+    SetEnemyReactionType(ERT_PASSIVE);
+
+   }
+
+  event void AwayRepair()
+  {
+    ForEachUnitTask("ActivateRadar", [true]);
+    ForEachUnitTask("ActivateMovement", [true]);
+    PopDelayedOrder();
+    SetEnemyReactionType(ERT_FRIGID);
+  //  SetFormation("CWedgeFormation", 12, true, true);
+
+    //if(GetMission().isDebug)
+    //  logWarning("REPAIR TEAM AWAY!");
+  }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    GetMission().AwaySappaersOnSee();
+  }
+}
+
+class CC5M3TaskRepairZiS  extends CBaseAITask
+{
+ event void OnExplosion(
+    float     _Damage,               // - force impact wave (not of used)
+    Matrix    _Position,             //  - source of the wave
+    float     _Radius,               // - radius of explosion (not used)
+    String    _OwnerID,              // - ID of [unit], which in the essence applied [povrezhdeni]
+    category  _DamageType,           // - the type of damage  - the type of projectile which fell
+    int       _SubstanceId,          // - material into which burn Array
+    Array     _ExtraAttribs,         // - additional parameters
+    float     _BulletDamageModifier, // - coefficient of damage transmitted by the projectile
+    Component _DamageJoint
+                        )
+  {
+    if (!m_Group.SapperAlarm)
+    {
+      //if(GetMission().isDebug)
+      //  logError(" OnExplosion - for Repair team");
+
+      GetMission().AwaySappaersOnHit();
+      m_Group.SapperAlarm = true;
+     }
+   }
+
+  void OnHitByEnemy(String _EnemyID)
+  {
+    if (!m_Group.SapperAlarm)
+    {
+      GetMission().AwaySappaersOnHit();
+      m_Group.SapperAlarm = true;
+    }
+  }
+ }
+
+class CC5M3Hanomag_Grp01 extends CC5M3HanomagBase
+{
+  Array NavPoints = [
+                    "Nav_De_Attack_01", "Nav_Ru_Retreat_00","Nav_Ru_Retreat_01","Nav_Ru_Retreat_02","Nav_Ru_Retreat_03"
+                    
+                    ];
+
+  float SpeedForVillage = 6.5f;
+  float SpeedForAttack   = 5.0f;
+
+  void Init()
+  {
+    CC5M3HanomagBase::Init();
+   // SetEnemyReactionType(ERT_FRIGID);
+    //ForEachUnitTask("ActivateRadar", [true]);
+  }
+
+  event void OnEnemyTargeted (Component _UnitAlerted)
+  {
+    String EnemyID = _UnitAlerted.GetTargetedEnemy();
+
+//    if (GetMission().isDebug)
+//      logWarning("[RussischPanzer_Group2::OnEnemyTargeted] EnemyID=" + EnemyID + "   UnitID=" + _UnitAlerted.GetIdentificator());
+
+    CBaseUnitGroup::OnEnemyTargeted(_UnitAlerted);
+  }
+
+  void OnPathEndReached()
+  {
+//    if (GetMission().isDebug)
+//      logWarning("[CBaseUnitGroup::CC1M3RussianPanzer_Group2]End Patrol");
+
+    MoveToAttackPosition();
+  }
+
+  void MoveToAttackPosition()
+  {
+//    if (GetMission().isDebug)
+//      logWarning("[CC1M3RussianPanzer_Group2::MoveToAttackPosition] MoveToAttackPosition");
+
+    CancelAllOrders();
+    user.m_CurrentOrder.m_MovingSpeed = SpeedForVillage; //for CC1M3OnUnreacheableUnitProcessingTask
+
+    for (int i = 0; i < m_Units.size(); i++)
+    {
+      Component _UnitTaks = GetUnitTask(m_Units[i]);
+
+      if (null != _UnitTaks)
+        _UnitTaks.SetOrder_MoveTo(GetNavPointBehPos(NavPoints[i + 2]), SpeedForVillage);
+    }
+  }
+
+  event void StopAttack()
+  {
+//    if (GetMission().isDebug)
+//      logWarning("[CC1M3RussianPanzer_Group2] Soviet stop attack");
+
+    CancelAllOrders();
+    SetEnemyReactionType(ERT_DEFENSIVE);
+    user.m_CurrentOrder.m_MovingSpeed = SpeedForVillage; //for CC1M3OnUnreacheableUnitProcessingTask
+
+    for (int i = 0; i < m_Units.size(); i++)
+    {
+      Component _UnitTaks = GetUnitTask(m_Units[i]);
+
+      if (null != _UnitTaks)
+        _UnitTaks.SetOrder_MoveTo(GetNavPointBehPos(NavPoints[i]), SpeedForVillage);
+    }
+  }
+}
+class CC5M3HanomagBase extends CBaseUnitGroup
+{
+  float Xfactor = 100.0f;    // Multipliers for variation of a reference square   множители для изменения эталонного квадрата
+  float Yfactor = 100.0f;    // Multiplication Dia projections of a reference square to a surface   умножение дла проекции эталонного квадрата на поверхность
+  float SpeedDeflect = 4.0;
+  Vector Vcenter = new Vector(0.0f, 0.0f, 0.0f);
+
+  final static Array Ethalon =
+     [
+       new Vector(0.1f, 0.9f, 0.0f), // 01
+       new Vector(0.3f, 0.7f, 0.0f), // 02
+       new Vector(0.5f, 0.5f, 0.0f), // 03
+       new Vector(0.7f, 0.3f, 0.0f), // 04
+       new Vector(0.9f, 0.1f, 0.0f), // 05
+       new Vector(0.2f, 0.2f, 0.0f), // 06
+       new Vector(0.4f, 0.4f, 0.0f), // 07
+       new Vector(0.6f, 0.7f, 0.0f), // 08
+       new Vector(0.8f, 0.8f, 0.0f), // 09
+       new Vector(0.9f, 0.6f, 0.0f), // 10
+       new Vector(0.0f, 0.1f, 0.0f), // 11
+       new Vector(0.1f, 0.7f, 0.0f), // 12
+       new Vector(0.5f, 0.9f, 0.0f), // 13
+       new Vector(0.2f, 0.5f, 0.0f), // 14
+       new Vector(1.0f, 0.3f, 0.0f), // 15
+       new Vector(1.0f, 0.9f, 0.0f)  // 16
+  ];
+
+  Array EthaIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  Vector Vcenter = new Vector(0.0f, 0.0f, 0.0f); //Actual square реального квадрата
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    Vcenter = GetNavPointPos("Nav_Ru_Retreat_01");
+  }
+
+  event void OnUnitDestroyed(String _UnitID)
+  {
+   CBaseUnitGroup::OnUnitDestroyed(_UnitID);
+   RefreshUnitsList();
+
+   Component mortal = GetMission().GetObject(_UnitID);
+   if ( checkMask(mortal, ["Defection"], []))
+    {
+     removeClassificatorObject(_UnitID, "Defection");
+     GetStepIndex(mortal.CurrentIndex);
+    }
+  }
+
+  //Calculation of coordinates for a dash вычисление координат для перебежки
+  Vector GetStepPosition(int _Index)
+  {
+    //logError("_Index = " + new String(_Index));
+    //logError("Ethalon[_Index] = " + new String(Ethalon[_Index]));
+    //logError("Ethalon[_Index].x = " + new String(Ethalon[_Index].x));
+    //logError("Ethalon[_Index].y = " + new String(Ethalon[_Index].y));
+    //logError("Ethalon[_Index].x * Xfactor = " + new String(Ethalon[_Index].x * Xfactor));
+    //logError("Ethalon[_Index].y * Yfactor = " + new String(Ethalon[_Index].y * Yfactor));
+
+    Vector Result;
+    Result.x = Ethalon[_Index].x * Xfactor;
+    Result.y = Ethalon[_Index].y * Yfactor;
+    Result.z = 0.0f;
+
+    //logError("Vcenter = " + new String(Vcenter));
+    //logError("Vcenter + Result = " + new String(Vcenter + Result));
+
+    return Vcenter + Result;
+  }
+
+  int GetStepIndex(int _PrevIndex)
+  {
+    int Ind = randnum(EthaIndices.size());
+    int Index = EthaIndices[Ind];
+    EthaIndices.remove(Ind);
+    if (_PrevIndex != -1)
+        EthaIndices.add(_PrevIndex);
+    return Index;
+  }
+}
+
+
+

@@ -1,0 +1,39 @@
+class CVorwardsTask extends  CBaseAITankTask //**, CBaseAITask    
+{
+
+  void Init()
+  {
+    //initialize base settings
+    CBaseAITankTask::Init();
+    CBaseAIBtrTask::Init();
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    ActivateFire(true);
+    ActivateRadar(true);
+    float Speed  = 5.5f;
+
+    sendEvent(60.0, getIdentificator(user), "moveToPlayer", []);
+   }
+
+
+  event void moveToPlayer()
+  {
+    Component mission = GetMission();
+
+     //check is tank seing an enemy and attacking it. If that he should not move      /* */
+    String TargetedEnemy = GetTargetedEnemy();
+     if(TargetedEnemy != "")
+     return;       
+    //get player tank position
+    Vector Xmov =  new Vector(-32.0, -1.2, 0.0);
+    Vector PlayerOrigin  = getPosition(mission.GetObject(mission.GetMainPlayerObjectID())).origin;
+    Vector Master = PlayerOrigin + Xmov ;
+        //move to player   * 0.9995
+    SetOrder_MoveTo((Master), 4.0f );
+    
+    //call this function again after 10 seconds
+    sendEvent(26.0, getIdentificator(user), "moveToPlayer", []);
+
+  }
+
+}
+

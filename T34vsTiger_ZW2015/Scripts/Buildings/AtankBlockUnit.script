@@ -1,0 +1,102 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+
+class CAntitankBlockUnit extends CGroundBuilding, CUnit
+{
+
+  final static float DefaultHitPoints = -1;
+
+  static Array PrevExplosionID = [
+                                    [ "", "USRShedWoodExplosion" ]
+                                 ];
+
+  static Array PrevDeathEffect = [
+                                    ["",  "ExplosionDustRingEffect"]
+                                 ];
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators = ["STRUCTURE"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CAntitankBlockUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cenv_Antitank_BlockModel>(), [0 ]);
+
+    Component Mesh = GetMeshComponent();
+    if (null == Mesh)
+    {
+      logMessage("Mesh not found in SetupDestroyPhysicsController function call");
+      return;
+    }
+    SetIdleEffects(
+        new #Emitter<CSireneSound>()
+    );
+   // m_DestroyEnergy = _DestroyEnergy;      
+
+    // Create physics controller
+    Component PhysicsController = new #ObjectPhysicsController();
+    loadFromScript(PhysicsController, "CGroundSubstance");
+
+    // Initialize controller
+    PhysicsController.SetEventHandler(this);
+    PhysicsController.SetMass(56000.0f);
+    setSlaveObject(PhysicsController, Mesh);
+
+    // Compute volume of object
+    Vector Sizes = getBoundingSize(Mesh);
+    PhysicsController.SetVolume(Sizes.x * Sizes.y * Sizes.z);
+
+    // Register object physics controller
+    RegisterObject("DestroyController", PhysicsController);
+
+    Array Shapes = Mesh.GetCollisionShapes(Mesh.GetRootJoint(), false);
+    if (Shapes.isEmpty())
+      logError("Empty shapes");
+
+    boolean IsValidBody = PhysicsController.CreateRigidBody("Antitank_Block", Mesh.GetRootJoint(), Shapes);
+     
+    addClassificator(user, CLASSIFICATOR_PHYSICS_CONTROLLABLE);
+    addClassificator(user, CLASSIFICATOR_WALK_SURFACE);
+    addClassificator(user, CLASSIFICATOR_COLLISION_SHAPES);
+
+    PhysicsController.SetIsectionModeAsGroupTriangles();  //# comment for vector solver # 
+    PhysicsController.CreateTouchTrigger(160000.0f);
+    PhysicsController.EnableControl(false);
+  }
+
+  event void OnPhysicsEnabled(
+      boolean _Enable
+    )
+  {
+    Component DestroyController = GetObject("DestroyController");
+    DestroyController.Activate(true);
+  }
+
+  event void OnSuccessTouchTrigger(
+    float _Energy
+    )
+  {
+    Component PhysicsController = GetObject("DestroyController");
+    if (null != PhysicsController)
+      PhysicsController.CreateTouchTrigger(160000.0f);
+
+    Component SurfaceControl = GetSurfaceControl();
+    if (null != SurfaceControl)
+      SurfaceControl.EnableSurfaceControl(false);
+
+    PhysicsController.EnableControl(true);
+    PhysicsController.Activate(true);
+  }
+}
+

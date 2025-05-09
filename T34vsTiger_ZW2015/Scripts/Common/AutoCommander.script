@@ -1,0 +1,26 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2006 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+// Author: Vladimir Ivchenkov (ivchenkov@g5software.com)
+//-------------------------------------------------------------------
+
+class CAutoCommander {
+  Array   PreferedTargets = [
+            // classificators allow, restict| [ distance m, weight ]
+              [ [ [ "TANK"        ], [] ],[   [       1000.0f,     100.0f ], [ 0.0f, 10000.0f ] ] ],   // some tank
+              [ [ [ "AIR"         ], [] ],[   [       1000.0f,       0.0f ], [ 0.0f,     0.0f ] ] ]   // air unit
+                            ];
+
+                          // угол   коэффициент опасности
+  Array   FrontDanger   = [ 130.0f, 1.0f ];    // For a forward part   для передней части
+  Array   BackDanger    = [ 120.0f, 2.0f  ];    // For a back part     для задней части
+
+  float   LastTargetDangerAdd = 30.0f;        //Additional priority for objective which already is considered the priority дополнительный приоритет для цели, которая уже считается наиболее приоритетной
+
+  float   RadarUpdateTime     = 3.0f;         // время обновления радара, в секундах
+  float   RadarMaxDistance    = 2700.0f;      // дальность зрения командира
+}

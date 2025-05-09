@@ -1,0 +1,94 @@
+// TargetPractice Mission - Main Logic Script
+
+// *** IMPORTANT: Rename class if mission name changes ***
+class CTargetPracticeMission extends CSPMission
+{
+  // --- Mission Setup ---
+  String m_LocalTime             = "12:00:00"; // Noon start time
+  String m_TerrainMapTextureName = "Textures/C1M3_Map.tex"; // Placeholder map texture
+  static String m_MissionBriefingPicMaterial = "C1M3BriefingPic"; // Placeholder briefing pic
+
+  // Define the single objective using the key from Strings.script
+  static Array  m_MissionObjectives = [
+      [MOTID_Primary, CTargetPracticeMission_Strings::Objective01, MOSID_InProgress, true] // Objective 0
+  ];
+  // Define the briefing text using the key from Strings.script
+  static WString ObjectivesText = CTargetPracticeMission_Strings::BriefingText;
+
+  boolean isDebug  = false; // Set to true for more logging if needed
+
+  // Kill list containing the internal names of the target tanks from content.script
+  Array TargetKillList = ["TargetTank1", "TargetTank2", "TargetTank3"];
+
+  // --- Constructor ---
+  void CTargetPracticeMission() // Constructor must match class name
+  {
+    // *** IMPORTANT: Update mission name string if class name changes ***
+    CSPMission("CTargetPracticeMission", "CTargetPracticeContent"); // Links to content script class
+
+    // Set mission properties using the classes defined in other scripts
+    // *** IMPORTANT: Ensure these class names match YOUR renamed classes ***
+    SetMissionTerrain(new #ChunkedTerrain<CTargetPracticeTerrain>());
+    SetMissionAtmosphere(new #Atmosphere<CTargetPracticeAtmosphere>());
+    SetMissionWorldMatrices(new #WorldMatrices<CTargetPracticeWorldMatrices>());
+
+    // Standard sky, roads, grass, router (can often be reused)
+    SetMissionSky(new #SkyObject<CSky01Model>());
+    if (CDebugSettings::LoadRoads) SetMissionRoadsParms(new CBaseRoadC1());
+    if (CDebugSettings::LoadGrass) RegisterObject("Grass", new #Grass<CBaseGrassC1>());
+    SetRouterPrecalculatedGraph(new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+    // Assuming RouterWorkingZones and RouterMap can be defaults for simple map
+    final static Array RouterWorkingZones = [ [100.0 , 100.0, 17900.0, 17900.0] ]; // Slightly smaller than map edge
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CC1RouterMap>(), 64, RouterWorkingZones);
+    // No custom forest needed here if Terrain.script handles it or it's omitted
+  }
+
+  // --- Mission Start ---
+  void StartMission()
+  {
+    CSPMission::StartMission();
+    // No initial AI events needed for these simple targets
+    // If you had patrolling AI, you'd start them here with sendEvent(...)
+  }
+
+  // --- Event Handlers ---
+
+  // Main logic: Check when something is destroyed
+  event void OnObjectDestroyed( String _ObjectID)
+  {
+    CMission::OnObjectDestroyed(_ObjectID); // Call base function
+
+    // Check if the destroyed object is one of our targets
+    int _index = TargetKillList.find(_ObjectID);
+
+    if (_index != -1) // If it was found in the list
+    {
+      TargetKillList.remove(_index); // Remove it
+
+      // Check if the list is now empty
+      if(TargetKillList.size() == 0)
+      {
+        // All targets destroyed, complete the objective!
+        CompleteObjective(0); // Complete the first (index 0) objective
+        // Mission success logic often implicitly handles ending the mission
+        // or you could use sendEvent(1.0, this, "CloseMission", [MOSID_Completed]);
+      }
+    }
+
+    // Add simple player death check
+    if (_ObjectID == "PlayerStartTank")
+    {
+         FailMission(0.0); // Fail immediately if player dies
+    }
+  }
+
+  // Other event handlers (not needed for this simple mission)
+  // void OnObjectEnterNavPoint( String _NavPointID, String _ObjectID) { }
+  // void OnObjectLeaveNavPoint( String _NavPointID, String _ObjectID) { }
+
+  // --- Mission End ---
+  void Shutdown()
+  {
+    CSPMission::Shutdown(); // Call base function
+  }
+}

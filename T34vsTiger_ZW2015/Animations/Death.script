@@ -1,0 +1,24 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class CDeathAnimation
+{
+  String AnimationFile = "Animations/Death.anim";
+  
+  Array  Animation = [
+                     ["death_stand_fr", ["l_Arm_Left", 0,  12], ["l_Arm_Right", 0,  12], ["l_Bedro_Left", 0,  12], ["l_Bedro_Right", 0,  12], ["l_Elbow_Left", 0,  12], ["l_Elbow_Right", 0,  12], ["l_Foot_Left", 0,  12], ["l_Foot_Right", 0,  12], ["l_Golen_Left", 0,  12], ["l_Golen_Right", 0,  12], ["l_Hand_Left", 0,  12], ["l_Hand_Right", 0,  12], ["l_Weapon", 0,  12], ["l_Head", 0,  12], ["l_Hips", 0,  12], ["l_Shoulder_Left", 0,  12], ["l_Shoulder_Right", 0,  12], ["l_Spine", 0,  12], ["l_Spine1", 0,  12], ["lo_Hips", 0,  12]],
+                     ["death_stand_fr_p", ["l_Arm_Left", 13,  14], ["l_Arm_Right", 13,  14], ["l_Bedro_Left", 13,  14], ["l_Bedro_Right", 13,  14], ["l_Elbow_Left", 13,  14], ["l_Elbow_Right", 13,  14], ["l_Foot_Left", 13,  14], ["l_Foot_Right", 13,  14], ["l_Golen_Left", 13,  14], ["l_Golen_Right", 13,  14], ["l_Hand_Left", 13,  14], ["l_Hand_Right", 13,  14], ["l_Weapon", 13,  14],["l_Head", 13,  14], ["l_Hips", 13,  14], ["l_Shoulder_Left", 13,  14], ["l_Shoulder_Right", 13,  14], ["l_Spine", 13,  14], ["l_Spine1", 13,  14], ["lo_Hips", 13]],
+                     ["death_run", ["l_Arm_Left", 16,  28], ["l_Arm_Right", 16,  28], ["l_Bedro_Left", 16,  28], ["l_Bedro_Right", 16,  28], ["l_Elbow_Left", 16,  28], ["l_Elbow_Right", 16,  28], ["l_Foot_Left", 16,  28], ["l_Foot_Right", 16,  28], ["l_Golen_Left", 16,  28], ["l_Golen_Right", 16,  28], ["l_Hand_Left", 16,  28], ["l_Hand_Right", 16,  28], ["l_Weapon", 16,  28], ["l_Head", 16,  28], ["l_Hips", 16,  28], ["l_Shoulder_Left", 16,  28], ["l_Shoulder_Right", 16,  28], ["l_Spine", 16,  28], ["l_Spine1", 16,  28], ["lo_Hips", 16,  28]],
+                     ["death_run_p", ["l_Arm_Left", 29,  30], ["l_Arm_Right", 29,  30], ["l_Bedro_Left", 29,  30], ["l_Bedro_Right", 29,  30], ["l_Elbow_Left", 29,  30], ["l_Elbow_Right", 29,  30], ["l_Foot_Left", 29,  30], ["l_Foot_Right", 29,  30], ["l_Golen_Left", 29,  30], ["l_Golen_Right", 29,  30], ["l_Hand_Left", 29,  30], ["l_Hand_Right", 29,  30], ["l_Weapon", 29,  30], ["l_Head", 29,  30], ["l_Hips", 29,  30], ["l_Shoulder_Left", 29,  30], ["l_Shoulder_Right", 29,  30], ["l_Spine", 29,  30], ["l_Spine1", 29,  30], ["lo_Hips", 29,  30]],
+                     ["death_sit_fr", ["l_Arm_Left", 32,  44], ["l_Arm_Right", 32,  44], ["l_Bedro_Left", 32,  44], ["l_Bedro_Right", 32,  44], ["l_Elbow_Left", 32,  44], ["l_Elbow_Right", 32,  44], ["l_Foot_Left", 32,  44], ["l_Foot_Right", 32,  44], ["l_Golen_Left", 32,  44], ["l_Golen_Right", 32,  44], ["l_Hand_Left", 32,  44], ["l_Hand_Right", 32,  44], ["l_Weapon", 32,  44], ["l_Head", 32,  44], ["l_Hips", 32,  44], ["l_Shoulder_Left", 32,  44], ["l_Shoulder_Right", 32,  44], ["l_Spine", 32,  44], ["l_Spine1", 32,  44], ["lo_Hips", 32,  44]],
+                     ["death_sit_fr_p", ["l_Arm_Left", 45,  46], ["l_Arm_Right", 45,  46], ["l_Bedro_Left", 45,  46], ["l_Bedro_Right", 45,  46], ["l_Elbow_Left", 45,  46], ["l_Elbow_Right", 45,  46], ["l_Foot_Left", 45,  46], ["l_Foot_Right", 45,  46], ["l_Golen_Left", 45,  46], ["l_Golen_Right", 45,  46], ["l_Hand_Left", 45,  46], ["l_Hand_Right", 45,  46], ["l_Weapon", 45,  46], ["l_Head", 45,  46], ["l_Hips", 45,  46], ["l_Shoulder_Left", 45,  46], ["l_Shoulder_Right", 45,  46], ["l_Spine", 45,  46], ["l_Spine1", 45,  46], ["lo_Hips", 45,  46]]
+                     ];
+}
+

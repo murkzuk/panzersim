@@ -1,0 +1,89 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+class CDotcha_2WoodUnitExplosion
+  extends CUSRHouseWoodExplosion
+{
+  float Damage = 100.0;
+  float Radius = 15.0;
+  String    SoundId  = "USRCorralWoodExplosionSound";  
+}
+
+class CDotcha_2WoodUnit extends CComplexDestructibleBuilding
+{
+
+   String m_NormalSetId  = "Normal_Set";    //
+   String m_CrashedSetId = "Crashed_Set"; //
+
+  final static String BodyJoint   = "Body";
+  final static String CrashedJoint   = "crashed";
+
+
+  final static String DefaultSurfaceControl = "PutonGroundLandingJoints";
+
+static Array LandingJoints = ["GroundLevel"];
+
+  final static float DefaultHitPoints = CHitPoints::USRHouseWoodUnitHitPoints; //CHitPoints::Dotcha_2WoodUnitHitPoints; BuildingExplosionEffect"BaseBuildingExplosionEffect""GenericSmallFireSmokeRefuseEffect"["GenericSmallFireSmokeRefuseEffect ",CGenericLargeFireEffect  BuildingSmokeRefuseEffect
+
+
+  static Array PrevExplosionID = [
+                                 [ "", "USRShedWoodExplosion" ]
+                                 ];
+  static Array PrevDeathEffect = [
+                                  // ["",  "GenericUnitExplosionEffect"],
+                                   ["",  "BaseBuildingExplosionEffect"],
+                                   ["",  "GenericLargeFirePostSmokeRefuseEffect"]
+                                      ];
+
+
+  //static category UnitType = CLASSIFICATOR_T34_UNIT;
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  =   ["GROUND", "BLD_CIV", "RU"];    //  ["STRUCTURE"];
+
+
+    // =======================================
+  // Contruction and initialization
+  // =======================================
+  void CDotcha_2WoodUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cbld_Dacha_2Model>(), [1]);
+
+  }
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CComplexDestructibleBuilding::Construct(_Mission, _PropMap);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET762792, 0.0);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET127,    0.0);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_SUBCALIBREBULLET7576, 0.1);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_SUBCALIBREBULLET85,   0.1);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_SUBCALIBREBULLET88,   0.1);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BUILDING, 0.0);
+
+    SetupDestroyController(
+      "CWoodSubstance",
+      2700.0,  // house mass
+      100,  // damage energy: more than - damage trigger
+      ComputeTouchParams(100.0, 45.0), // destroy energy: more than - destroy trigger
+      [
+        new CDestructibleBuildingItem("Base",           CDestructibleBuildingItem::NormalType),
+        new CDestructibleBuildingItem("crashed",           CDestructibleBuildingItem::DamageType)
+
+      ]
+    );
+    SetCrashAnimationTime(0.6);
+  }
+}
+

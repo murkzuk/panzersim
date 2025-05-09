@@ -1,0 +1,525 @@
+
+//
+//-------------------------------------------------------------------
+/// 
+
+//TIGER TASK
+class C2M1TIGERTigerTask extends CBaseAITankTask, CBaseUnitGroup //
+{
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    CBaseAITankTask::Init();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    //SetEnemyReactionType(ERT_AGGRESSIVE);   
+    sendEvent(60.0, getIdentificator(user), "AttackPosition", []);  //
+
+  }
+
+  event void AttackPosition()
+  {
+   SetOrder_MoveTo_Direct(GetNavPointBehPos("NavPoint_PZ6_MoveToBegin_1"), 4.5f );
+   sendEvent(180.0, getIdentificator(user), "AttackPosition1", []);
+  }
+
+  event void AttackPosition1()
+  {
+
+   SetOrder_MoveTo(GetNavPointBehPos("NavPoint_PZ6_MoveToBegin_2"), 4.5f );
+   sendEvent(180.0, getIdentificator(user), "AttackPosition2", []);
+  }
+
+  event void AttackPosition2()
+  {
+
+     SetOrder_MoveTo((GetNavPointBehPos("NavPoint_PZ6_MoveToBegin_3")), 4.5f );      //    _Direct
+     sendEvent(180.0, getIdentificator(user), "OderLast", []);
+
+  }
+
+  event void OderLast()
+  {
+
+   SetOrder_MoveTo(GetNavPointBehPos("NavPoint_PZ6_MoveToBegin_4"), 4.5f );
+
+  }
+}
+
+class C2M1_WingmanTask extends CBaseAITankTask, CWingmanTask
+{
+   boolean StartWM = false;
+
+  void Init()
+
+  {
+    CWingmanTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    StartWM = false;
+  }
+
+ event void WMFollow()
+  {
+
+    Wingman_SetOrder(0 /*Follow*/, m_LeaderID, "");
+
+    if(!StartWM)
+     {
+      StartWM = true;
+      SetEnemyReactionType(ERT_AGGRESSIVE); 
+      ActivateFire(true);
+      ActivateRadar(true);
+      //logError(m_LeaderID);
+     }
+
+    sendEvent(13.5, getIdentificator(user), "WMRestart", []);
+  }
+
+ event void WMRestart()
+  {
+   Wingman_SetOrder(0 /*Follow*/, m_LeaderID, "");
+   sendEvent(12.0, getIdentificator(user), "WMFollow", []);
+  }
+}
+
+class CC2M1T34Platoon_Task extends CBaseAITankTask //, CBaseAIBtrTask , CBaseAITask
+{
+      void Init()
+  {
+
+    sendEvent(60.0, getIdentificator(user), "AttackPosition", []);
+
+  }
+   event void AttackPosition()
+  {
+
+    CBaseAITankTask::Init();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);   //
+    float Speed  = 4.0f;
+    float CollisionRadius = 12.0;
+     Array ApproachPoints = [
+                    GetNavPointBehPos("NPRedArmy_A1"),
+                    GetNavPointBehPos("NPRedArmy_A2"),
+                    GetNavPointBehPos("NPRedArmy_A3"),
+                    GetNavPointBehPos("NPRedArmy_A4"),
+                    GetNavPointBehPos("NPRedArmy_A3"),
+                    GetNavPointBehPos("NPRedArmy_A2")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M1T34Platoon_Task", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M1T34Platoon_Task", "", [], ""]
+                      ]);
+}
+   event void OnUnreacheable(Vector _Destination)    // called when unit can not move any more to ordered position
+  {
+    CBaseUnitGroup::OnPathEndReached();
+    ActivateRadar(true);
+    SetOrder_Attack(GermanKillList, ERT_AGGRESSIVE);
+    ActivateFire(true);
+    RefreshUnitsList();
+  }
+}
+
+class CC2M1SAUPlatoon_Task extends CBaseAISAUTask //, CBaseAIBtrTask , CBaseAITask
+{
+      void Init()
+  {
+    
+    sendEvent(86.0, getIdentificator(user), "AttackPosition", []);
+
+  }
+   event void AttackPosition()
+  {
+
+    CBaseAISAUTask::Init();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);   //
+    float Speed  = 4.0f;
+    float CollisionRadius = 12.0;
+     Array ApproachPoints = [
+                    GetNavPointBehPos("NPRedArmy_A1"),
+                    GetNavPointBehPos("NPRedArmy_A2"),
+                    GetNavPointBehPos("NPRedArmy_A3"),
+                    GetNavPointBehPos("NPRedArmy_A4"),
+                    GetNavPointBehPos("NPRedArmy_A3"),
+                    GetNavPointBehPos("NPRedArmy_A2")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M1SAUPlatoon_Task", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M1SAUPlatoon_Task", "", [], ""]
+                      ]);
+}
+   event void OnUnreacheable(Vector _Destination)    // called when unit can not move any more to ordered position
+  {
+    CBaseUnitGroup::OnPathEndReached();
+    ActivateRadar(true);
+    SetOrder_Attack(GermanKillList, ERT_AGGRESSIVE);
+    ActivateFire(true);
+    RefreshUnitsList();
+  }
+}
+class CC2M1T34Platoon2_Task extends CBaseAITankTask //, CBaseAIBtrTask, CBaseAITask
+{
+      void Init()
+  {
+    
+    sendEvent(180.0, getIdentificator(user), "Attack2Position", []);
+
+  }
+   event void Attack2Position()
+  {
+
+    CBaseAITankTask::Init();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);   //
+    float Speed  = 6.0f;
+    float CollisionRadius = 12.0;
+     Array ApproachPoints = [
+                    GetNavPointBehPos("NPRedArmy_A1"),
+                    GetNavPointBehPos("NPRedArmy_A2"),
+                    GetNavPointBehPos("NPRedArmy_A3"),
+                    GetNavPointBehPos("NPRedArmy_A4")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M1T34Platoon2_Task", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M1T34Platoon2_Task", "", [], ""]
+                      ]);
+}
+   event void OnUnreacheable(Vector _Destination)    // called when unit can not move any more to ordered position
+  {
+    CBaseUnitGroup::OnPathEndReached();
+    ActivateRadar(true);
+    SetOrder_Attack(GermanKillList, ERT_AGGRESSIVE);
+    ActivateFire(true);
+    RefreshUnitsList();
+  }
+}
+
+class CC2M1RU_BTRTask extends CBaseAIBtrTask
+{
+      void Init()
+  {
+    
+    sendEvent(40.0, getIdentificator(user), "AttackBTRPosition", []);
+
+  }
+   event void AttackBTRPosition()
+  {
+
+    CBaseAIBtrTask::Init();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);   //
+    float Speed  = 6.0f;
+    float CollisionRadius = 12.0;
+     Array ApproachPoints = [
+                    GetNavPointBehPos("NPRedArmy_A1"),
+                    GetNavPointBehPos("NPRedArmy_A2"),
+                    GetNavPointBehPos("NPRedArmy_A3"),
+                    GetNavPointBehPos("NPRedArmy_A4")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M1RU_BTRTask", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M1RU_BTRTask", "", [], ""]
+                      ]);
+}
+
+}
+
+class CStaticGunsTask extends CBaseAITask
+{
+
+}
+class CBaseZisTask extends CBaseAITask
+{
+
+}
+
+/////////////////////////////////////////////////////////////////////
+
+class CC2M1CUSSRTask extends CBaseAITask
+{
+      void Init()
+  {
+    
+    CBaseAITask::Init();
+    SetEnemyReactionType(ERT_PASSIVE);
+
+  }
+   event void ArmyPosition()
+  {
+    CBaseAITask::Init();
+    float Speed  = 3.3f;
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NPRedArmy_A1"),
+                    GetNavPointBehPos("NPRedArmy_A2")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M1CUSSRTask", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M1CUSSRTask", "", [], ""]
+                      ]);
+}
+
+}
+
+class C2M1SovietZisGroup  extends  BaseZisGroup
+{
+
+}
+
+class SovietZis1HiddenGroup  extends  BaseZisGroup
+{
+  boolean active = false;
+
+  void Init()
+  {
+    BaseZisGroup::Init();
+    StopFightGroup();
+  //  ShowGroup(false);
+    for (int i = 0; i < m_Units.size(); i++)
+      addClassificatorObject(m_Units[i], "INVISIBLE_ON_RADAR");
+
+    //if (GetMission().isDebug)
+    //{
+    //  logWarning("[Init]  GroupID = " + getIdentificator(user));
+    //  for (int i = 0; i < m_Units.size(); i++)
+    //      (new #GameController().GetObject(SOID_Console)).logClassificatorsList(m_Units[i]);
+    //}
+  }
+
+  event void StartFightHiddenZis()
+  {
+
+     //logWarning("[Ironweed] StartFightHiddenZis ENTER");
+
+    if (!active)
+    {
+      //logWarning("[Ironweed] StartFightHiddenZis active is FALSE = " + new String(active));
+      GetMission().SetObjectiveVisible(1, true);
+    // ShowGroup(true);
+
+      //if(GetMission().isDebug)
+      //{
+      //  logWarning("[Ironweed] StartFightHiddenZis");
+      //  logWarning("[Ironweed]  group ID = " + getIdentificator(user));
+      //}
+
+      for (int i = 0; i < m_Units.size(); i++)
+      {
+        removeClassificatorObject(m_Units[i], "INVISIBLE_ON_RADAR");
+      }
+
+     // fireEvent(0.0, [], "SetRadarUnit", [GetMission().DefaultMask]);
+      StartFightGroup();
+      active = true;
+      //logWarning("[Ironweed] StartFightHiddenZis active is MUST BE TRUE = " + new String(active));
+    }
+  }
+}
+
+
+
+class T34Hidden_Group1 extends CBaseUnitGroup
+{
+  boolean AttackPlayer = false;
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+  }
+
+  event void AttackPlayer()
+  {
+    if(AttackPlayer)
+      return;
+
+    //if(GetMission().isDebug)
+    // logWarning("[Ironweed] T34Hidden_Group1 -> AttackPlayer");
+
+   PopDelayedOrder();
+   SetEnemyReactionType(ERT_AGGRESSIVE);
+   CancelAllOrders();
+   ActivateRadar(true);
+   SetOrder_Attack(GetMission().GermanKillList, m_EnemyReactionType);
+
+  }
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    AttackPlayer = true;
+  }
+}
+
+class Sappers_Group  extends CBaseUnitGroup
+{
+  boolean SapperAlarm = false;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ForEachUnitTask("ActivateFire", [false]);
+    ForEachUnitTask("ActivateMovement", [false]);
+    SetEnemyReactionType(ERT_PASSIVE);
+  }
+
+  event void AwaySappers()
+  {
+    ForEachUnitTask("ActivateMovement", [true]);
+    PopDelayedOrder();
+    SetEnemyReactionType(ERT_FRIGID);
+    SetFormation("CWedgeFormation", 12, true, true);
+    //if(GetMission().isDebug)
+    //  logWarning("SAPPERS AWAY!");
+  }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    GetMission().AwaySappaersOnSee();
+  }
+}
+
+class RepairZis_Group  extends CBaseUnitGroup
+{
+  boolean SapperAlarm = false;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ForEachUnitTask("ActivateFire", [false]);
+    ForEachUnitTask("ActivateMovement", [false]);
+    SetFormation("CWedgeFormation", 12, true, true);
+    SetEnemyReactionType(ERT_PASSIVE);
+
+   }
+
+  event void AwayRepair()
+  {
+    ForEachUnitTask("ActivateRadar", [true]);
+    ForEachUnitTask("ActivateMovement", [true]);
+    PopDelayedOrder();
+    SetEnemyReactionType(ERT_FRIGID);
+    SetFormation("CWedgeFormation", 12, true, true);
+
+    //if(GetMission().isDebug)
+    //  logWarning("REPAIR TEAM AWAY!");
+  }
+
+  void OnEnemyTargeted(Component _UnitAlerted)
+  {
+    GetMission().AwaySappaersOnSee();
+  }
+}
+
+class TaskSappers  extends CBaseAITask
+{
+ event void OnExplosion(
+    float     _Damage,               // - force impact wave (not of used)
+    Matrix    _Position,             //  - source of the wave
+    float     _Radius,               // - radius of explosion (not used)
+    String    _OwnerID,              // - ID of [unit], which in the essence applied [povrezhdeni]
+    category  _DamageType,           // - the type of damage  - the type of projectile which fell
+    int       _SubstanceId,          // - material into which burn Array
+    Array     _ExtraAttribs,         // - additional parameters
+    float     _BulletDamageModifier, // - coefficient of damage transmitted by the projectile
+    Component _DamageJoint
+              )
+  {
+    if (!m_Group.SapperAlarm)
+    {
+      //if(GetMission().isDebug)
+      //  logError(" OnExplosion - for Sappers team");
+
+      GetMission().AwaySappaersOnHit();
+      m_Group.SapperAlarm = true;
+     }
+  }
+
+  void OnHitByEnemy(String _EnemyID)
+  {
+    if (!m_Group.SapperAlarm)
+    {
+      GetMission().AwaySappaersOnHit();
+      m_Group.SapperAlarm = true;
+     }
+  }
+}
+
+class TaskRepairZiS  extends CBaseAITask
+{
+ event void OnExplosion(
+    float     _Damage,               // - force impact wave (not of used)
+    Matrix    _Position,             //  - source of the wave
+    float     _Radius,               // - radius of explosion (not used)
+    String    _OwnerID,              // - ID of [unit], which in the essence applied [povrezhdeni]
+    category  _DamageType,           // - the type of damage  - the type of projectile which fell
+    int       _SubstanceId,          // - material into which burn Array
+    Array     _ExtraAttribs,         // - additional parameters
+    float     _BulletDamageModifier, // - coefficient of damage transmitted by the projectile
+    Component _DamageJoint
+                        )
+  {
+    if (!m_Group.SapperAlarm)
+    {
+      //if(GetMission().isDebug)
+      //  logError(" OnExplosion - for Repair team");
+
+      GetMission().AwaySappaersOnHit();
+      m_Group.SapperAlarm = true;
+     }
+   }
+
+  void OnHitByEnemy(String _EnemyID)
+  {
+    if (!m_Group.SapperAlarm)
+    {
+      GetMission().AwaySappaersOnHit();
+      m_Group.SapperAlarm = true;
+    }
+  }
+ }
+ class CDE_SCOUT_Team_A1 extends CBaseAITask
+{
+
+}
+ class CC2M1_DE_SCOUT_Team extends CBaseUnitGroup
+{
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(true);
+   // Activatemovment (true);
+   // sendEvent(40.0, getIdentificator(user), "PopDelayedOrder", []);  //
+   // SetOrder_MoveTo(("Path"), 2.0f );
+  }
+}
+
+
+ class CC2M1_PlatoonGermanA1 extends CBaseUnitGroup
+{
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(true);
+   // Activatemovment (true);
+   // sendEvent(10.0, getIdentificator(user), "PopDelayedOrder", []);
+   // SetOrder_MoveTo(("Path"), 2.0f );
+  }
+}
+

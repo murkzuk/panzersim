@@ -1,0 +1,55 @@
+// TargetPractice Mission - World Matrices Configuration
+// Defines map data sources and dimensions
+
+class CTargetPracticeWorldMatrices extends CWorldMatrices
+{
+  // Match the dimensions of the map data being used (e.g., from Mission_1)
+  final static float MatrixWidth  = 18000.0;
+  final static float MatrixHeight = 18000.0;
+}
+
+class CTargetPracticeLandscapeLayer extends CLandscapeLayer
+{
+  final static int     ImageWidth              = 2049; // Matches hmap.raw dimensions
+  final static int     ImageHeight             = 2049;
+  // *** IMPORTANT: Ensure this path points to YOUR mission folder ***
+  final static String ImageFileName           = "Missions/MyMissions/TargetPractice/hmap.raw";
+  // Use the same scaling factor as the source map data
+  final static float  FloatValueFactor        = 0.070000*257.0;
+}
+
+class CTargetPracticeWaterHeights extends CBaseWaterHeightsLayer
+{
+  final static int     ImageWidth              = 2049; // Matches hwater.raw dimensions
+  final static int     ImageHeight             = 2049;
+  // *** IMPORTANT: Ensure this path points to YOUR mission folder ***
+  final static String ImageFileName           = "Missions/MyMissions/TargetPractice/hwater.raw";
+  final static float  FloatValueFactor        = 0.070000*257.0;
+}
+
+class CTargetPracticeTerrainZoneLayer extends CTerrainZoneLayer, CBaseZoneMap
+{
+  final static int    ImageWidth    = 2048; // Matches TerrainZone bitmap dimensions
+  final static int    ImageHeight   = 2048;
+  // *** IMPORTANT: Ensure this path points to YOUR mission folder ***
+  // Using Mission_1's zone map as template
+  final static String ImageFileName = "Missions/MyMissions/TargetPractice/TerrainZone_c2m1.bmp";
+}
+
+class CTargetPracticeRouterZoneLayer extends CTerrainZoneLayer, CBaseZoneMap
+{
+  final static int    ImageWidth    = 2048; // Matches RouterZone bitmap dimensions
+  final static int    ImageHeight   = 2048;
+  // *** IMPORTANT: Ensure this path points to YOUR mission folder ***
+  // Using Mission_1's router map as template
+  final static String ImageFileName = "Missions/MyMissions/TargetPractice/RouterZone_c2m1.bmp";
+}
+
+class CTargetPracticeMicroTextures1 extends CMicroTexLayer
+{
+  final static int    ImageWidth    = 2048; // Matches Microtexture bitmap dimensions
+  final static int    ImageHeight   = 2048;
+  // *** IMPORTANT: Ensure this path points to YOUR mission folder ***
+  // Using Mission_1's microtexture map as template
+  final static String ImageFileName = "Missions/MyMissions/TargetPractice/micro_c2m1.bmp";
+}

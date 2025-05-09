@@ -1,0 +1,109 @@
+
+class CT34PlatoonA1Task extends CBaseAITankTask, CBaseAITask, CBaseAIBtrTask
+{
+  void Init()
+  {
+
+    //initialize base settings
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    ActivateRadar(true);
+    ActivateFire(true);
+
+
+  }
+
+  Array BrokenPath(float _stepX, float _stepY, Vector _begin , Vector _end)
+  {
+    Array _ResultArray;
+    int  _counter = 0;
+
+    if (_stepX == 0)
+      _stepX = (_begin - _end).Magnitude()/10;
+
+    if (_stepY == 0)
+      _stepY = (_begin - _end).Magnitude()/10;
+
+    if (_begin == _end)
+    {
+      logError("Vectors _begin == _end");
+      return null;
+    }
+
+    /*if (GetMission().isDebug)
+    {
+      logError(" _stepY="+ new String(_stepY) + " _stepX="+ new String(_stepX));
+      logError(" _begin="+ new String(_begin) + " _end="+ new String(_end));
+    }*/
+
+    float y = _stepY;
+    for (float x = _stepX/2 ; x<(_begin - _end).Magnitude(); x+=_stepX)
+    {
+      _counter++;
+      if (_counter > 11)
+        break;
+
+      Vector dir = (_end - _begin);
+      dir.Normalize();
+      Vector Res = _begin + dir*rand(x-10.0, x+10.0) + new Vector(dir.y, dir.x, 0.0f)*rand(0.0, y);
+      y = -y;
+
+      _ResultArray.add(Res);
+    }
+
+    _ResultArray.add(_end);
+
+    //if (GetMission().isDebug)
+    //  logError(" _ResultArray=" + new String(_ResultArray));
+
+    return  _ResultArray;
+  }
+
+
+                                   //------------------------------------------------
+                                   //----------------   BASE TASKS   ----------------
+                                   //------------------------------------------------
+
+
+  Array SplitPath(Vector _begin , Vector _end)
+  {
+    int   _counter = 0;
+    float _stepX   = (_begin - _end).Magnitude()/5;
+    Array _ResultArray;
+
+    if (_begin == _end)
+    {
+      logError("Vectors _begin == _end");
+      return null;
+    }
+
+    if (GetMission().isDebug)
+    {
+      logError("SplitPath for unit " + getIdentificator(user));
+      logError(" _stepX="+ new String(_stepX));
+      logError(" _begin="+ new String(_begin) + " _end="+ new String(_end));
+    }
+
+    for (float x = _stepX/2 ; x<(_begin - _end).Magnitude(); x+=_stepX)
+    {
+      _counter++;
+      if (_counter > 10)
+        break;
+
+      Vector dir = (_end - _begin);
+      dir.Normalize();
+      Vector Res = _begin + dir*x;
+
+      _ResultArray.add(Res);
+    }
+
+    _ResultArray.add(_end);
+
+    if (GetMission().isDebug)
+      logError(" _ResultArray=" + new String(_ResultArray));
+
+    return  _ResultArray;
+  }
+
+
+}

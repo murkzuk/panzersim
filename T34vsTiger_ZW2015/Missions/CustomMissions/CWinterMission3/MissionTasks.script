@@ -1,0 +1,687 @@
+//-----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-----------------------------------------------------------------
+
+                                   //------------------------------------------------
+                                   //----------------   USSR UNITS   ----------------
+                                   //------------------------------------------------
+//-----------------------------
+//------   TANKS & ZIS   ------
+//-----------------------------
+
+class CCWM3Gr_NUSSR_T34s extends CBaseUnitGroup
+{ 
+
+  boolean isActive;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+
+    sendEvent(40.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);   //
+    isActive = true;
+    sendEvent(0.0, getIdentificator(user), "PopDelayedOrder", []);
+    //PopDelayedOrder();
+  }
+}
+class CCWM3Tsk_EUSSR_Tank extends CBaseAITankTask
+{
+  String m_NorthPoint = "NP_EUSSR_Tanks_NorthPoint";
+  String m_EastPoint  = "NP_EUSSR_Tanks_EastPoint";
+  Vector m_NorthVector;
+  Vector m_EastVector;
+
+  String m_MoveToNorthPosition = "MOVE_TO_NORTH_POSITION";
+  String m_MoveToEastPosition  = "MOVE_TO_EAST_POSITION";
+
+  int ERT_SAVED;
+
+  boolean MoveDirNow = false;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+
+    ERT_SAVED = m_EnemyReactionType;
+    m_NorthVector = GetNavPointPos(m_NorthPoint);
+    m_EastVector  = GetNavPointPos(m_EastPoint);
+
+  }
+
+  event void InitPhase3()
+  {
+//    if (GetMission().isDebug)
+//      logWarning("[" + getIdentificator(user) + "] initialization 3-rd phase");
+
+    if (GetMission().KillList_Primary1.size() == 0)
+      MoveToAttackDirection("East");
+  }
+
+  event void MoveToAttackDirection(String _Direction)
+  {
+    if (MoveDirNow)
+      return;
+
+    MoveDirNow = true;
+    //if (GetMission().isDebug)
+   //  logWarning("[" + getIdentificator(user) + "] MoveToAttackDirection: " + _Direction);
+
+    String ClassificatorAttack;
+    Vector VectorAttack;
+
+    if (_Direction == "North")
+    {
+      ClassificatorAttack = m_MoveToNorthPosition;
+      VectorAttack = m_NorthVector;
+    }
+    else if (_Direction == "East")
+    {
+      ClassificatorAttack = m_MoveToEastPosition;
+      VectorAttack = m_EastVector;
+    }
+    else
+    {
+//      logError("Incorrect parametr: " + _Direction + " for MoveToAttackDirection");
+      return;
+    }
+
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    ActivateRadar(true);
+    if (checkMask(user, [], [ClassificatorAttack]))
+    {
+      addClassificator(user, ClassificatorAttack);
+
+      float radius = 10.0;
+      Vector AddVector = new Vector(rand(radius), rand(radius), 0.0);
+
+      SetOrder_MoveTo(VectorAttack + AddVector, 5.5);
+    }
+    else
+      logError(getIdentificator(user) + " somehow already has " + ClassificatorAttack + " classificator");
+  }
+
+  void OnStopped()
+  {
+    /*if (GetMission().isDebug)
+    {
+      logWarning("[" + getIdentificator(user) + "] OnStopped");
+      (new #GameController().GetObject(SOID_Console)).logClassificatorsList(getIdentificator(user));
+    }*/
+
+    if (checkMask(user, [m_MoveToNorthPosition], []))
+    {
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+      removeClassificator(user, m_MoveToNorthPosition);
+    }
+    else if (checkMask(user, [m_MoveToEastPosition], []))
+    {
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+      removeClassificator(user, m_MoveToEastPosition);
+    }
+
+    CBaseAITankTask::OnStopped();
+  }
+
+  event void OnExplosion(
+    float     _Damage,               // - сила ударной волны (not used)
+    Matrix    _Position,             // - источник волны
+    float     _Radius,               // - радиус взрыва (not used)
+    String    _OwnerID,              // - ID юнита, который по сути нанёс повреждени
+    category  _DamageType,           // - тип повреждения - тип снаряда который попал
+    int       _SubstanceId,          // - материал в который попали
+    Array     _ExtraAttribs,         // - дополнительные параметры
+    float     _BulletDamageModifier, // - коэффициент повреждения переданный снарядом
+    Component _DamageJoint
+                        )
+  {
+    CBaseAITankTask::OnExplosion(_Damage, _Position, _Radius, _OwnerID, _DamageType, _SubstanceId, _ExtraAttribs, _BulletDamageModifier, _DamageJoint);
+
+    /*if (GetMission().isDebug)
+    {
+      logWarning("[" + getIdentificator(user) + "] OnExplosion");
+      (new #GameController().GetObject(SOID_Console)).logClassificatorsList(getIdentificator(user));
+    }*/
+
+    if (checkMask(user, [m_MoveToNorthPosition, m_MoveToEastPosition], []))
+    {
+      StopNow();
+      OnStopped();
+    }
+  }
+
+  event void ActivateRadarEUSSR(boolean _On)
+  {
+    ActivateRadar(_On);
+ //   logWarning("RadarReadyforCombat");
+  }
+}
+
+class CCWM3Zis_GUN_1 extends BaseZisGroup
+{
+}
+//------------------------------
+//--------   INFANTRY   --------
+//------------------------------
+class CCWM3Gr_NUSSR_BaseInfantry extends CBaseUnitGroup
+{
+  String m_TGPoint;
+  String m_RetreatPoint;
+
+  float m_TGRadius;
+  float m_RetreatRadius;
+  float m_InfantrySpeed = 3.50;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    //SetEnemyReactionType(ERT_PASSIVE);
+  }
+
+  event void InitPhase2()
+  {
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+  }
+
+  void MoveToInRadius(String _PoinDestination, float _Radius)
+  {
+    Vector VectorDestination = GetNavPointPos(_PoinDestination);
+
+    for (int i = 0; i < m_Units.size(); i++)
+    {
+      Component UnitTask = GetUnitTask(m_Units[i]);
+      Vector RandomVector;
+
+      RandomVector = new Vector(rand(_Radius), rand(_Radius), 0.0);
+      UnitTask.SetOrder_MoveTo(VectorDestination + RandomVector, m_InfantrySpeed);
+    }
+  }
+
+  event void TakeGround()
+  {
+    MoveToInRadius(m_TGPoint, m_TGRadius);
+  }
+
+  event void AttackGermanInfantry2(Array _KillList)
+  {
+    SetOrder_Attack(_KillList, m_EnemyReactionType);
+  }
+
+  event void RetreatToBase()
+  {
+    MoveToInRadius(m_RetreatPoint, m_RetreatRadius);
+  }
+}
+
+class CCWM3Gr_NUSSR_Infantry1 extends CCWM3Gr_NUSSR_BaseInfantry
+{
+  String m_TGPoint      = "NP_NUSSR_Infantry1_TakeGround";
+  String m_RetreatPoint = "NP_NUSSR_Infantry1_Retreat";
+
+  float m_TGRadius = 6.0;
+  float m_RetreatRadius = 6.0;
+}
+
+class CCWM3Gr_NUSSR_Infantry2 extends CCWM3Gr_NUSSR_BaseInfantry
+{
+  String m_TGPoint      = "NP_NUSSR_Infantry2_TakeGround";
+  String m_RetreatPoint = "NP_NUSSR_Infantry2_Retreat";
+
+  float m_TGRadius = 16.0;
+  float m_RetreatRadius = 10.0;
+}
+
+class CCWM3_RU_AmmoTruck extends CBaseUnitGroup 
+{
+  boolean isActive;
+  float _Radius = 25.00;
+  float m_TruckSpeed = 8.50;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+
+    sendEvent(170.0, getIdentificator(user), "SetActiveGroup", []);
+    sendEvent(180.0, getIdentificator(user), "AmmoTruckRetreat", []);
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_FRIGID);   //
+    
+    isActive = true;
+    sendEvent(0.0, getIdentificator(user), "PopDelayedOrder", []);
+  }
+
+  event void AmmoTruckRetreat()
+  {
+   if(isActive == true)
+   {
+     Vector VectorDestination = GetNavPointPos("NP_NUSSR_Infantry2_Retreat");
+
+     for (int i = 0; i < m_Units.size(); i++)
+      {
+       Component UnitTask = GetUnitTask(m_Units[i]);
+       Vector RandomVector;
+
+       RandomVector = new Vector(rand(_Radius), rand(_Radius), 0.0);
+       UnitTask.SetOrder_MoveTo(VectorDestination + RandomVector, m_TruckSpeed);
+     // sendEvent(18.0, getIdentificator(user), "AmmoTruckRetreat", []);
+      }
+    }
+  }
+}
+                                   //-------------------------------------------------
+                                   //------------   GERMAN UNITS: NORTH   ------------
+                                   //-------------------------------------------------
+
+//-----------------------------
+//------   TANKS & BTR   ------
+//-----------------------------
+class CCWM3Gr_NGerman_Tanks1 extends CBaseUnitGroup
+{
+     boolean isActive;
+  Array KillList = [
+                    "NUSSR_ZISGun_1", "NUSSR_ZISGun_2", "NUSSR_ZISGun_3", "NUSSR_ZISGun_4", 
+                    "NUSSR_ZISGun_5", "NUSSR_ZIS_5","NUSSR_ZIS_6", "NUSSR_ZIS_7"
+                   ];
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+
+   // sendEvent(70.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);   //
+    
+    isActive = true;
+    sendEvent(0.0, getIdentificator(user), "PopDelayedOrder", []);
+    SetOrder_Attack(KillList, m_EnemyReactionType);
+
+  }
+}
+
+class CCWM3Gr_NGerman_Tanks2 extends CBaseUnitGroup
+{
+  boolean isActive;
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateMovement(false);
+    ActivateRadar(false);
+    isActive = false;
+    sendEvent(35.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    sendEvent(0.0, getIdentificator(user), "PopDelayedOrder", []);
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    isActive = true;
+   // SetOrder_Attack(KillList, m_EnemyReactionType);
+  }
+
+}
+
+class CCWM3Tsk_NGerman_TankBase extends CBaseAITankTask
+{
+  String m_PointPhase3 = "NP_NGerman_Tanks_AttackVillage";
+
+  int Sign;
+
+  void OnNoEnemy()
+  {
+    CBaseAITankTask::OnNoEnemy();
+
+    if (GetMission().isPhase3)
+    {
+//      if (GetMission().isDebug)
+//        logWarning(getIdentificator(user) + " no enemy on radar and current phase = 3");
+
+      if (m_Group.m_Active == false)
+      {
+ //       if (GetMission().isDebug)
+//          logWarning(getIdentificator(user) + " has no active radar!");
+
+        m_Group.ActivateRadar(true);
+        m_Group.m_Active = true;
+      }
+
+      float Index = m_Group.m_Units.find(getIdentificator(user));
+
+      Vector VectorDestination = GetNavPointPos(m_PointPhase3) + new Vector(m_Sign * Index + 1.0, m_Sign * Index, 0.0);
+      SetOrder_MoveTo(VectorDestination, 5.5);
+    }
+  }
+}
+
+class CCWM3Tsk_NGerman_Tank1 extends CCWM3Tsk_NGerman_TankBase
+{
+  int m_Sign = 1;
+}
+
+class CCWM3Tsk_NGerman_Tank2 extends CCWM3Tsk_NGerman_TankBase
+{
+  int m_Sign = -1;
+}
+
+class CCWM3Tsk_EGerman_BTR extends CBaseAIBtrTask
+{
+  String m_NavPoint = "NavPointKrin";              // NP_E_German_BTR_PP
+  Vector m_Vector;
+
+  String MovePatrolBTR = "MOVE_PATROL_BTR";
+
+  float m_AttackSpeed = 4.8;
+
+  void Init()
+  {
+    CBaseAIBtrTask::Init();
+    ActivateRadar(false);
+
+    m_Vector = GetNavPointPos(m_NavPoint);
+  }
+
+  event void InitPhase2()
+  {
+    if (checkMask(user, [], [MovePatrolBTR]))
+    {
+      addClassificator(user, MovePatrolBTR);
+      SetOrder_MoveTo(m_Vector, m_AttackSpeed);
+    }
+  }
+
+  void OnStopped()
+  {
+    if (checkMask(user, [MovePatrolBTR], []))
+    {
+      removeClassificator(user, MovePatrolBTR);
+      GetMission().ActivateNUSSR(true);
+      ActivateRadar(true);
+    }
+
+    CBaseAIBtrTask::OnStopped();
+  }
+}
+
+//------------------------------
+//--------   INFANTRY   --------
+//------------------------------
+class CCWM3Gr_NGerman_Infantry1 extends CBaseUnitGroup
+{
+  String m_PointVillage = "NP_NGerman_Tanks_AttackVillage";
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(false);
+  }
+
+  void OnPathEndReached()
+  {
+    CBaseUnitGroup::OnPathEndReached();
+    ActivateRadar(true);
+  }
+
+  event void AttackVillage()
+  {
+    ActivateRadar(true);
+    SetOrder_MoveTo(GetNavPointPos(m_PointVillage), 4.00, false);
+  }
+
+  boolean Funss2 = false;
+  void OnStopped(Component _UnitTask)
+  {
+    CBaseUnitGroup::OnStopped(_UnitTask);
+    if (!Funss2)
+    {
+      SetFormation("CFrontFormation", 20.0, false, false);
+      Funss2 = true;
+    }
+  }
+
+}
+
+class CCWM3Gr_NGerman_Infantry2 extends CBaseUnitGroup
+{
+  Array KillList = [
+                     "NUSSR_Infantryman1_1", "NUSSR_Infantryman1_2", "NUSSR_Infantryman1_3",
+                     "NUSSR_Infantryman1_4", "NUSSR_Infantryman1_5", "NUSSR_Infantryman1_6",
+                     "NUSSR_Infantryman2_1", "NUSSR_Infantryman2_2", "NUSSR_Infantryman2_3",
+                     "NUSSR_Infantryman2_4", "NUSSR_Infantryman2_5", "NUSSR_Infantryman2_6",
+                     "NUSSR_Infantryman2_7", "NUSSR_Infantryman2_8", "NUSSR_Infantryman2_9"
+                   ];
+  boolean Funss = false;
+  void OnStopped(Component _UnitTask)
+  {
+    CBaseUnitGroup::OnStopped(_UnitTask);
+    if (!Funss)
+    {
+      SetFormation("CFrontFormation", 20.0, false, false);
+      Funss = true;
+    }
+  }
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(false);
+  }
+
+  void OnPathEndReached()
+  {
+    CBaseUnitGroup::OnPathEndReached();
+    ActivateRadar(true);
+    SetOrder_Attack(KillList, ERT_AGGRESSIVE);
+    ActivateFire(true);
+    RefreshUnitsList();
+    fireEvent(0.0,  [], "AttackGermanInfantry2", [m_Units]);
+  }
+
+  event void OnUnitDestroyed(String _UnitID)
+  {
+    CBaseUnitGroup::OnUnitDestroyed(_UnitID);
+
+    if (m_Units.size() == 0)
+    {
+      fireEvent(0.0,  [], "RetreatToBase", []);
+      sendEvent(7.0,  "CCWM3Gr_NGerman_Infantry1", "AttackVillage", []);
+    }
+  }
+}
+
+                                   //------------------------------------------------
+                                   //------------   GERMAN UNITS: EAST   ------------
+                                   //------------------------------------------------
+
+//----------------------------
+//--------   TANKS    --------
+//----------------------------
+class CCWM3Gr_EGerman_Tanks1 extends CBaseUnitGroup
+{
+     boolean isActive;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+
+    sendEvent(12.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);   //
+    
+    isActive = true;
+    sendEvent(20.0, getIdentificator(user), "PopDelayedOrder", []);
+  }
+}
+
+class CCWM3Gr_EGerman_Tanks2 extends CBaseUnitGroup
+{
+   boolean isActive;
+ 
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+    
+    sendEvent(11.0, getIdentificator(user), "StartPatrol", []);
+  }
+  event void StartPatrol()
+  {
+   if (!isActive)
+   {
+    CBaseAITankTask::Init();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);  //
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    isActive = true;
+    }
+  }
+}
+class CWM3_TIGERA1Task extends CBaseAITankTask
+{
+   boolean isPointVec;
+
+  void Init()
+  {
+    sendEvent(70.0, getIdentificator(user), "TIGERA1Task", []);
+    isPointVec = true;
+  }
+
+  event void TIGERA1Task()
+  {
+    isPointVec = false;
+    sendEvent(0.0, getIdentificator(user), "PointVecB", []);
+  }
+
+  event void PointVecB()
+  {
+    if(!isPointVec)
+   {
+    float Radius = randnum(99.99);
+    Vector RandomVector = new Vector(rand(Radius), rand(Radius), 0.0);
+    Vector  PreDestinationEnd1Vec =  GetNavPointBehPos("NP_EGerman_Tigers_PP_2");
+    Vector  DestinationTDVec = PreDestinationEnd1Vec + RandomVector;
+    SetOrder_MoveTo_Direct((DestinationTDVec), 4.500f );
+    sendEvent(21.0, getIdentificator(user), "PointVecB", []);
+
+   }
+   else return;
+ }
+}
+class CCWM3Tsk_EGerman_Tank extends CBaseAITankTask
+{
+  event void OnExplosion(
+    float     _Damage,               // - сила ударной волны (not used)
+    Matrix    _Position,             // - источник волны
+    float     _Radius,               // - радиус взрыва (not used)
+    String    _OwnerID,              // - ID юнита, который по сути нанёс повреждени
+    category  _DamageType,           // - тип повреждения - тип снаряда который попал
+    int       _SubstanceId,          // - материал в который попали
+    Array     _ExtraAttribs,         // - дополнительные параметры
+    float     _BulletDamageModifier, // - коэффициент повреждения переданный снарядом
+    Component _DamageJoint
+    )
+  {
+    CBaseAITankTask::OnExplosion(_Damage, _Position, _Radius, _OwnerID, _DamageType, _SubstanceId, _ExtraAttribs, _BulletDamageModifier, _DamageJoint);
+    if (GetMission().AggrStateEastGtanks == false && GetMission().isPhase3)
+      GetMission().AggrEastGTanks();
+  }/* */
+}
+
+//---------------------------
+//--------   BTRS    --------
+//---------------------------
+class CCWM3Gr_German_BTRs extends CBaseUnitGroup
+{
+/*    Array KillList = [
+                     "NUSSR_Infantryman1_1", "NUSSR_Infantryman1_2", "NUSSR_Infantryman1_3",
+                     "NUSSR_Infantryman1_4", "NUSSR_Infantryman1_5", "NUSSR_Infantryman1_6",
+                     "NUSSR_Infantryman2_1", "NUSSR_Infantryman2_2", "NUSSR_Infantryman2_3",
+                     "NUSSR_Infantryman2_4", "NUSSR_Infantryman2_5", "NUSSR_Infantryman2_6",
+                     "NUSSR_Infantryman2_7", "NUSSR_Infantryman2_8", "NUSSR_Infantryman2_9"
+                   ]; */
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+     ActivateFire(false);
+     ActivateRadar(false);
+   //  sendEvent(40.0, getIdentificator(user), "StartBTRs", []);
+  }
+
+  event void StartBTRs()
+  {
+     ActivateFire(true);
+     ActivateRadar(true);
+    // SetFormation("CFrontFormation", 40.0, true, true);
+     sendEvent(0.0, getIdentificator(user),   "PopDelayedOrder", []);
+    // SetOrder_Attack(KillList, m_EnemyReactionType);
+  }
+
+
+}
+

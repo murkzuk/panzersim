@@ -1,0 +1,569 @@
+//-----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-----------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC2M2_WingmanTask extends CBaseAITankTask, CWingmanTask
+{
+   boolean StartWM = false;
+
+  void Init()
+
+  {
+    CWingmanTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    StartWM = false;
+    sendEvent(46.5, getIdentificator(user), "WMFollow", []);
+  }
+
+ event void WMFollow()
+  {
+
+    Wingman_SetOrder(0 /*Follow*/, m_LeaderID, "");
+
+    if(!StartWM)
+     {
+      StartWM = true;
+      ActivateFire(true);
+      ActivateRadar(true);
+      //logError(m_LeaderID);
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+     }
+
+    sendEvent(14.0, getIdentificator(user), "WMRestart", []); //
+  }
+
+ event void WMRestart()
+  {
+   Wingman_SetOrder(0 /*Follow*/, m_LeaderID, "");
+   sendEvent(16.5, getIdentificator(user), "WMFollow", []);
+  }
+}
+
+class CC2M2BaseUnitGroup extends CBaseUnitGroup
+{
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+  }
+
+  event void SetActive()
+  {
+    //if (GetMission().isDebug)
+    //    logWarning("CC2M2BaseUnitGroup  call SetActive for Group with ID=" + getIdentificator(user));
+
+    ActivateFire(true);
+    ActivateRadar(true);
+  }
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+// GerTankGroup
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+/*
+class C2M2Waspe_Battery1 extends CC2M2BaseUnitGroup
+{
+  void Init()
+  {
+    CBaseAISAUTask::Init();
+    ActivateMovement(false);
+    ActivateFire(false);
+    ActivateRadar(false);
+   sendEvent(96.0, getIdentificator(user), "StartC2M2Waspe_Battery1", []);
+   }
+  event void StartC2M2Waspe_Battery1()
+    {
+      SetActive();
+    }
+} */
+
+class CC2M2GerMPU_GroupAll extends CBaseUnitGroup
+{
+
+   void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+  }
+
+   event void StartGermanGroupAll()
+  { 
+    //SetActive(); 
+    PopDelayedOrder();
+    ActivateFire(true);  //
+    ActivateRadar(true); //
+    ActivateMovement(true);
+
+   }
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC2M2GerGroupHanomag extends CBaseUnitGroup   
+{
+
+
+     void Init()
+  {
+    CBaseAIBtrTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    sendEvent(120.0, getIdentificator(user), "StartPatrol", []);
+  }
+
+  event void StartPatrol()
+  {
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    PopDelayedOrder();
+  }
+}
+
+class CC2M2GerHanomagTask extends CBaseAIBtrTask
+{
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC2M2GerReinforcementGroup extends CC2M2BaseUnitGroup
+{
+  void Init()           //"GermanPath2_2", "GermanPath2_3", "GermanPath2_4", "GermanPath2_4_5", "GermanPath2_5"
+  {
+    CC2M2BaseUnitGroup::Init();
+    ActivateMovement(false);
+    sendEvent(20.0, getIdentificator(user), "StartGerReinforcement", []);
+  }
+  event void StartGerReinforcement()
+  {
+    SetActive();
+    PopDelayedOrder();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    float Speed  = 4.0;
+    SetFormation("CNarrowWedgeFormation", 30, true, false);
+    Array ApproachPoints = [
+                   // GetNavPointBehPos("GermanPath2_1"),
+                    GetNavPointBehPos("GermanPath2_2"),
+                    GetNavPointBehPos("GermanPath2_3"),
+                    GetNavPointBehPos("GermanPath2_4_5")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M2GerReinforcementGroup", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M2GerReinforcementGroup", "", [], ""]
+                      ]);
+  }
+}
+
+class CC2M2GerReinforcementTask extends CBaseAITankTask, CBaseAISAUTask, CBaseAIBtrTask
+{
+
+}
+/*
+class CC2M2German_Platoon1 extends CBaseUnitGroup
+{
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ShowGroup(false);
+    //for (int i = 0; i < m_Units.size(); i++)
+    //  addClassificatorObject(m_Units[i], Classificators[i]);
+     sendEvent(90.0, getIdentificator(user), "StartGerman_Platoon1", []);
+  }
+  event void StartGerman_Platoon1()
+  {
+    ShowGroup(true);
+    SetActive();
+    RefreshUnitsList();
+    PopDelayedOrder();
+  }
+
+}
+
+class CC2M2German_Platoon2 extends CC2M2BaseUnitGroup
+{
+  void Init()
+  {
+    CC2M2BaseUnitGroup::Init();
+   // for (int i = 0; i < m_Units.size(); i++)
+   //   addClassificatorObject(m_Units[i], Classificators[i]);
+      sendEvent(100.0, getIdentificator(user), "StartGerman_Platoon2", []);
+  }
+  event void StartGerman_Platoon2()
+  {
+    SetActive();
+    RefreshUnitsList();
+    PopDelayedOrder();
+  }
+
+}
+
+class CC2M2German_Platoon3 extends CC2M2BaseUnitGroup
+{
+  void Init()
+  {
+    CC2M2BaseUnitGroup::Init();
+   // for (int i = 0; i < m_Units.size(); i++)
+   //   addClassificatorObject(m_Units[i], Classificators[i]);
+      sendEvent(140.0, getIdentificator(user), "StartGerman_Platoon3", []);
+  }
+  event void StartGerman_Platoon3()
+  {
+    SetActive();
+    RefreshUnitsList();
+    PopDelayedOrder();
+  }
+
+}
+*/
+class CRedArmy_Platoon1 extends CBaseUnitGroup
+{
+  void Init()
+  {
+    CC2M2BaseUnitGroup::Init();
+   // ShowGroup(false);
+   // for (int i = 0; i < m_Units.size(); i++)
+   //   addClassificatorObject(m_Units[i], Classificators[i]);
+      sendEvent(380.0, getIdentificator(user), "StartRedArmy_Platoon1", []);
+  }
+  event void StartRedArmy_Platoon1()
+  {
+   // ShowGroup(true);
+    SetActive();
+    RefreshUnitsList();
+    PopDelayedOrder();
+  }
+
+}
+
+class CRedArmy_Platoon2 extends CBaseUnitGroup
+{
+  void Init()
+  {
+    CC2M2BaseUnitGroup::Init();
+    ShowGroup(false);
+    sendEvent(488.0, getIdentificator(user), "StartRedArmy_Platoon2", []);
+  }
+  event void StartRedArmy_Platoon2()
+  {
+    ShowGroup(true);
+    SetActive();
+    RefreshUnitsList();
+    PopDelayedOrder();
+  }
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////  RedArmy_Platoon
+//////////////////////////////////////////////////////////////////////////////////////////
+// RusTankGroup
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC2M2RusGroup1_76Tank extends CC2M2BaseUnitGroup
+{
+  boolean m_bRetreatTank = false;
+
+  Array Classificators = ["SUICIDE_UNIT","STRANGE_UNIT", "COURIER_UNIT"];
+
+  void Init()
+  {
+    CC2M2BaseUnitGroup::Init();
+    for (int i = 0; i < m_Units.size(); i++)
+      addClassificatorObject(m_Units[i], Classificators[i]);
+  }
+
+  event void StartRussian76TankGroup1()
+  {
+    //if(GetMission().isDebug)
+    //  logWarning(" CC2M2RusGroup1_76Tank  -  StartRussian76TankGroup1");
+
+    RefreshUnitsList();
+    PopDelayedOrder();
+  }
+
+  void OnUnitExplosion(String _UnitID, String _OwnerID) // calles when unit (member of the group) receive event OnExplosion
+  {
+    //if(GetMission().isDebug)
+    //  logWarning("[CC2M2RusGroup1_76Tank] OnUnitExplosion  unit ID = " + _UnitID + " owner ID = " + _OwnerID );
+
+    Component Owner = GetMission().GetObject(_OwnerID);
+    if (checkMask(Owner, ["FRIEND"], []))
+      GetMission().StartFightPatrol();
+  }
+
+  event void RetreatRusTank()
+  {
+    if (m_bRetreatTank)
+      return;
+
+    //if(GetMission().isDebug)
+    //  logWarning("[CC2M2RusGroup1_76Tank] RetreatRusTank");
+
+
+    m_bRetreatTank = true;
+
+    RefreshUnitsList();
+    CancelAllOrders();
+
+    ForEachUnitTask("RussianRetreat", []);
+    if (m_Units.size() != 0)
+    {
+      RemoveUnit(m_Units[0]);
+      m_Units.remove(0);
+      RefreshUnitsList();
+    }
+  }
+
+  event void StartFight()
+  {
+    //if (GetMission().isDebug)
+    //  logWarning(" CC2M2RusGroup1_76Tank  -  StartFight");
+
+    SetFormation("CFrontFormation", 20.0, true, true);
+    sendEvent(10.0, getIdentificator(user), "SetActive", []);
+    sendEvent(15.0, getIdentificator(user), "RetreatRusTank", []);
+  }
+}
+
+class CC2M2RusTank76Task extends  CBaseAITankTask   // CBaseAITankTask
+{
+  //  "RusianTankRetreat_Suicide"
+  //  "RusianTankRetreat_Courier"
+  //  "RusianTankRetreat_Strange"
+
+  String classificator1 = "SUICIDE_UNIT";
+  String classificator2 = "COURIER_UNIT";
+  String classificator3 = "STRANGE_UNIT";
+  float AttackSpeed  = 4.0f;
+  float CourierSpeed = 6.0f;
+  float StrangeSpeed = 5.0f;
+
+  void RussianRetreat()
+  {
+    clearEventsForObject(getIdentificator(user));
+    if (checkMask(user, [classificator1], []))
+    {
+      String TargetedEnemy = GetTargetedEnemy();
+      SetOrder_Attack(TargetedEnemy, AttackSpeed);
+    }
+    else if (checkMask(user, [classificator2], []))
+    {
+      ActivateFire(false);
+      SetOrder_MoveTo(GetNavPointBehPos("RusianTankRetreat_Courier"), CourierSpeed);
+    }
+    else if (checkMask(user, [classificator3], []))
+    {
+      ActivateFire(false);
+
+      SetFirstQueueOrders([
+                          ["MoveToPointRetreat", "SetOrder_MoveTo", [GetNavPointBehPos("RusianTankRetreat_Strange_4"), StrangeSpeed], "OnStopped"],
+                          ["MoveToPointRetreat", "SetOrder_MoveTo", [GetNavPointBehPos("RusianTankRetreat_Strange_3"), StrangeSpeed], "OnStopped"],
+                          ["MoveToPointRetreat", "SetOrder_MoveTo", [GetNavPointBehPos("RusianTankRetreat_Strange_2"), StrangeSpeed], "OnStopped"],
+                          ["MoveToPointRetreat", "SetOrder_MoveTo", [GetNavPointBehPos("RusianTankRetreat_Strange_1"), StrangeSpeed], "OnStopped"],
+                          ["MoveToPointRetreat", "StopRetreat", [], ""]
+                        ]);
+
+      //SetOrder_MoveTo(GetNavPointBehPos("RusianTankRetreat_Strange_1"), StrangeSpeed);
+    }
+  }
+
+  event void OnObjectDestroyed(String _ObjectID)
+  {
+    if (checkMask(user, [classificator1], []))
+    {
+      // не фиг по полю за русскими гоняться ... сделаем пару выстрелов и будет
+      logWarning("ALL Tanks destroyed");
+     // sendEvent(30.0,  "CC2M2GerMPU_GroupAll",   "StopFight", []);
+    }
+  }
+
+  void StopRetreat ()
+  {
+    //if(GetMission().isDebug)
+    //  logWarning("StopRetreat CALLED ");
+
+
+    if (checkMask(user, [classificator3], []))
+    {
+         if(GetMission().isDebug)
+      //logWarning("StrangeUnitReachedPoint");
+      //logWarning("StopRetreat ENTER ");
+
+      GetMission().StrangeUnitReachedPoint = true;
+      ActivateFire(true);
+      clearEventsForObject(getIdentificator(user));
+      CBaseAITankTask::OnStopped();
+    }
+  }
+
+  void OnStopped()
+  {
+    //if (GetMission().isDebug)
+    //  logWarning(" CC2M2RusTank76Task  -  OnStopped   Unit with classificators " );
+    //  (new #GameController().GetObject(SOID_Console)).logClassificatorsList(getIdentificator(user));
+
+    if (checkMask(user, [classificator2], []))
+    {
+      ActivateFire(true);
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+
+      GetMission().CourierUnitReachedPoint = true;
+      clearEventsForObject(getIdentificator(user));
+    }
+
+    CBaseAITankTask::OnStopped();
+  }
+
+  void OnHitByEnemy(String _EnemyID)
+  {
+//    if (GetMission().isDebug)
+//      logWarning(" CC2M2RusTank76Task  -  OnHitByEnemy   Unit with classificators  ->");
+//      (new #GameController().GetObject(SOID_Console)).logClassificatorsList(getIdentificator(user));
+
+    if (checkMask(user, [classificator2], []) || checkMask(user, [classificator3], []))
+    {
+      Component Behavior = GetBehavior();
+      int TimeStop = Behavior.GetNoMoveTime();
+
+      if(TimeStop == -1)
+      {
+        //if (GetMission().isDebug)
+        //  logWarning("Tank can`t move -> ActivateFire(true)");
+        SetEnemyReactionType(ERT_AGGRESSIVE);
+        ActivateFire(true);
+      }
+    }
+
+    CBaseAITankTask::OnHitByEnemy(_EnemyID);
+  }
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC2M2RusGroupReinforcement76Tank extends CBaseUnitGroup
+{
+  
+     void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    sendEvent(30.0, getIdentificator(user), "StartPatrol", []);
+  }
+
+  event void StartPatrol()
+  {
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    PopDelayedOrder();
+  }
+}
+/*
+class CC2M2RusTank76ReinforcementTask extends CBaseAITankTask
+{
+}   
+// Group task for forced tanks
+class CC2M2RusGroupForcedTank extends BaseUnitGroup
+{
+   void Init()
+  {
+    CBaseAITankTask::Init();
+    //PopDelayedOrder();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+   }
+}*/
+// Task for forcedt russian tank without moving
+class CC2M2RusTank76ForcedTask extends CBaseAITankTask
+{
+   void Init()
+  {
+    CBaseAITankTask::Init();
+    PopDelayedOrder();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true); 
+   }
+
+  event void OnExplosion(
+    float     _Damage,               // - сила ударной волны (not used)
+    Matrix    _Position,             // - источник волны
+    float     _Radius,               // - радиус взрыва (not used)
+    String    _OwnerID,              // - ID юнита, который по сути нанёс повреждени
+    category  _DamageType,           // - тип повреждения - тип снаряда который попал
+    int       _SubstanceId,          // - материал в который попали
+    Array     _ExtraAttribs,         // - дополнительные параметры
+    float     _BulletDamageModifier, // - коэффициент повреждения переданный снарядом
+    Component _DamageJoint
+    )
+  {
+    CBaseAITankTask::OnExplosion(
+      _Damage,               // - сила ударной волны (not used)
+      _Position,             // - источник волны
+      _Radius,               // - радиус взрыва (not used)
+      _OwnerID,              // - ID юнита, который по сути нанёс повреждени
+      _DamageType,           // - тип повреждения - тип снаряда который попал
+      _SubstanceId,          // - материал в который попали
+      _ExtraAttribs,         // - дополнительные параметры
+      _BulletDamageModifier, // - коэффициент повреждения переданный снарядом
+      _DamageJoint
+    );
+    ActivateMovement(true);
+  }
+
+  void OnHitByEnemy(
+      String _EnemyID
+   )
+  {
+    CBaseAITankTask::OnHitByEnemy(_EnemyID);
+    ActivateMovement(true);
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+/*class CC2M2RusGroupSau extends BaseUnitGroup
+{
+   void Init()
+  {
+    CBaseUnitGroup::Init();
+    sendEvent(100.0, getIdentificator(user), "BeginSAU", []);
+ 
+   }
+ event void BeginSAU()
+ {
+  PopDelayedOrder();
+  ActivateFire(true);
+  ActivateRadar(true);
+  ActivateMovement(true);
+ }
+
+} */
+class CC2M2RusSuTask extends CBaseAISAUTask
+{
+}
+////////////////////////////////////////////////////////////////////////////////////////// BaseZisGroup
+class CC2M2RusGroupZis extends CC2M2BaseUnitGroup
+{
+   void Init()
+  {
+    CBaseAITask::Init();
+    SetActive();
+    PopDelayedOrder();
+    ActivateFire(true);
+    ActivateRadar(true);
+
+   }
+}
+

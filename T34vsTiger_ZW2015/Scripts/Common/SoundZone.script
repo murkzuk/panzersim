@@ -1,0 +1,318 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2002 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CBaseSoundZone 
+  extends CBaseSysObject//, CSoundEmitter  , CSoundsArray
+{
+  final static String  SPEC_CLASS = "Sound zones";
+  // ======================================
+  // Default sound zone properties              Selection
+  // ======================================
+  final static String  DefaultSelection   = "None";
+  final static float   DefaultRadius      = 5.0;
+  Vector               DefaultDimensions  = new Vector(10.0, 10.0, 10.0);
+  //final static boolean AutoStart          = true;
+    final static boolean OneStart          = false;
+    final static boolean TwoStart          = false;
+    final static boolean ThreeStart        = false;
+    final static boolean ForeStart         = false;
+    final static boolean FiveStart         = false;
+    final static boolean SixStart          = false;
+    final static boolean SevenStart        = false;
+    final static boolean EightStart        = false;
+    final static boolean NineStart         = false;
+    final static boolean TenStart          = false;
+  // ======================================
+  // CBaseSoundZone properties
+  // ======================================
+
+  // Initialization
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    String Selection = _PropMap.Get("Selection", DefaultSelection);
+    SetSelection(_PropMap.Get("Selection", DefaultSelection));
+  }
+
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+    CEditable::SetProperties(_PropMap);
+
+   // UpdateEffects();
+
+    if (SHAPE_SPHERE == GetShape())
+      SetRadius(_PropMap.Get("Radius", DefaultRadius));
+    else
+    if (SHAPE_BOX == GetShape())
+      SetDimensions(_PropMap.Get("Dimensions", DefaultDimensions));
+    else 
+      logWarning("CBaseSoundZone::SetProperties() : not implemented sound zone shape type..");
+
+
+    ClearEffects();
+
+
+    UpdateVisualEffects();
+    // register zone in sound driver
+    Register();
+  }
+
+  void Initialize(
+      Component _Level,
+      Component _PropMap
+    )
+  {
+   // _Level.RegisterObject("LightEclair",  new #LightEmitter<CLightEclair>());
+  // SetProperties(_PropMap);
+
+/*   */
+    if(OneStart == true)
+      _Level.RegisterObject("BattleFeldSound",    new #Emitter<CBattleFeldSound>());
+
+    if(TwoStart == true)
+      _Level.RegisterObject("BattleFeld2Sound",    new #Emitter<CBattleFeld2Sound>());
+
+    if (ThreeStart == true)
+      _Level.RegisterObject("SirenSound",    new #Emitter<CSirenSound>());
+
+    if (CSpecialSettings::IsSpecObjectsVisible(SPEC_CLASS))
+      Show();
+
+   // if (m_AutoStart)
+   //   SetActive(1);
+
+  }
+
+   Array GetPropStrings()
+  {
+    return [
+        [ "Selection", ["None", "BattleFeldSound","BattleFeld2Sound", "SirenSound"] ]
+      ];
+  }
+
+  void Shutdown(
+      Component _Level
+    )
+  {
+    if (CSpecialSettings::IsSpecObjectsVisible(SPEC_CLASS))
+      Hide();
+  }
+
+  Array GetDefaultProperties()
+  {
+    Array Default = CEditable::GetDefaultProperties();
+
+    if (SHAPE_SPHERE == GetShape())
+      Default.append([
+          [ "Radius", DefaultRadius]
+        ]);
+    else 
+    if (SHAPE_BOX == GetShape())
+      Default.append([
+          [ "Dimensions", DefaultDimensions]
+        ]);
+
+    Default.append([
+        [ "Selection", DefaultSelection]
+      ]);
+
+    return Default;
+  }
+
+  void Finalize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    //place here course need initialized positionable object
+    SetProperties(_PropMap);    
+
+    OnSpecObjectVisibleStateChanged();
+  }
+
+  Component GetSelection()
+  {
+    return GetObject("Selection");
+  }
+
+  void SetSelection(
+      String _Selection
+    )
+  {
+    if ("None" == _Selection)
+    {
+    }
+    else
+    if ("BattleFeldSound" == _Selection)
+    {
+       return OneStart = true;
+    }
+    else
+    if ("BattleFeld2Sound" == _Selection)
+    {
+       return twoStart = true;
+    }
+    else
+    if ("SirenSound" == _Selection)
+    {
+      return ThreeStart = true;
+    }
+
+  }
+  // ======================================
+  // Service functions
+  // ======================================
+
+  void UpdateVisualEffects()
+  {
+    if (NPDM_Box == GetShape())
+      m_Boundings[1] = GetDimensions();
+    else
+      m_Boundings[1] = new Vector(GetRadius(), GetRadius(), GetRadius());
+
+    CBaseSysObject::UpdateEffects();
+  }
+
+  void SetSize(
+      Vector _Size
+    )
+  {
+    Component Content = new #GameController().GetLoadedMission().GetContent();
+    if (null == Content)
+      return;
+
+    Array ObjRec = Content.FindObjectRecord(getIdentificator(this));
+    if (ObjRec.isEmpty())
+      return;
+
+    Component PropertiesMap = new CPropertiesMap(ObjRec[CMissionContent::INDEX_Properties]);
+
+    if (SHAPE_BOX == GetShape())
+    {
+      Vector Dim = PropertiesMap.Get("Dimensions", DefaultDimensions);
+
+      if (0.0f != _Size.x)
+        Dim.x = _Size.x;
+
+      if (0.0f != _Size.y)
+        Dim.y = _Size.y;
+
+      if (0.0f != _Size.z)
+        Dim.z = _Size.z;
+
+      PropertiesMap.Set("Dimensions", Dim);
+    }
+
+    else if (SHAPE_SPHERE == GetShape())
+      PropertiesMap.Set("Radius", max(max(_Size.x, _Size.y), _Size.z));
+
+    else 
+      logWarning("CBaseSoundZone::SetSize() : not implemented sound zone shape type..");
+
+    SetProperties(PropertiesMap);
+  }
+
+}
+
+class CBoxSoundZone 
+  extends CBaseSoundZone
+{
+  final static Array  SysEffects = [ 
+                                     "SoundZoneCenter", 
+                                     "BoxSoundZoneBounds"
+                                   ];
+
+  final static Array  EffectsSrc = [ 
+                                     "CSoundZoneCenterEffect", 
+                                     "CBoxSoundZoneBoundsEffect"
+                                   ];
+
+  void CBoxSoundZone()
+  {
+    SetShape(SHAPE_BOX);
+  }
+}
+
+class CSphereSoundZone 
+  extends CBaseSoundZone
+{
+  final static Array  SysEffects = [ 
+                                     "SoundZoneCenter", 
+                                     "SphereSoundZoneBounds"
+                                   ];
+
+  final static Array  EffectsSrc = [ 
+                                     "CSoundZoneCenterEffect", 
+                                     "CSphereSoundZoneBoundsEffect"
+                                   ];
+
+  void CSphereSoundZone()
+  {
+    SetShape(SHAPE_SPHERE);
+  }
+}
+class CBattleFeldSound
+  extends CBaseSND
+{
+  String  SoundFile = "Sounds/ambience1.wav";
+
+  void CBattleFeldSound()
+
+  {
+   LoadSoundFile(SoundFile);
+   PlaySoundBuffer(true);
+  }
+}
+class CBattleFeld2Sound
+  extends CBaseSND
+{
+  String  SoundFile = "Sounds/ambience2.wav";
+
+  void CBattleFeld2Sound()
+
+  {
+   LoadSoundFile(SoundFile);
+   PlaySoundBuffer(true);
+  }
+}
+class CSirenSound
+  extends CBaseSND
+{
+  String  SoundFile = "Sounds/Sirene.wav";
+
+  void CSirenSound()
+
+  {
+   LoadSoundFile(SoundFile);
+   PlaySoundBuffer(true);
+  }
+
+}
+class CBaseSND
+//   extends CEngineSound
+{
+  String  SoundFile = "";
+
+  float   MinDistance      = 0.0;
+  float   MaxDistance      = INT_MAX;
+  int     MinMaxType       = SD_MAX;
+  int Priority             = DEFAULT_SOUND_PRIORITY;     // ѕриоритет звука (min..max)= (0..0xFFFFFFFF)
+  int MaxPlayingSameSounds = 1;         // Max number of simultaneously playing the same sounds Max  оличество одновременно играющих одинаковых звуков
+  float   FadeTime       = 1.2f;
+  int     TimeLoop         = 0;//ms   If the value is nonzero - playing in a loop within the specified time   // ≈сли значение ненулевое - проигрывание в цикле в течение указанного времени
+  boolean PlayOnMove     = false;
+  boolean PlayOnce       = false;
+  Vector  SpeedThreshold = new Vector(0.0, 0.0, 0.0);
+  float InitialRandomFrequencyVariation = 0.0;
+}

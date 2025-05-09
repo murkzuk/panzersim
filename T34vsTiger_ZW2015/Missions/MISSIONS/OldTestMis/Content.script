@@ -1,0 +1,924 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+//                                                                   
+//  Automatically-generated mission script file                      
+//  DO NOT EDIT!                                                     
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class CMtContent
+{
+  static String m_ObjectListClassFile = "Missions/MISSIONS/OldTestMis/Content.script";
+  static String m_ObjectListClassName = "CMtContent";
+
+  static Array  m_MissionObjectList   = [
+    [
+      "Atmosphere",
+      "",
+      "",
+      new Matrix(
+          1.000000, 0.000000, 0.000000, 0.000000,
+          0.000000, 1.000000, 0.000000, 0.000000,
+          0.000000, 0.000000, 1.000000, 0.000000,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["FogColorXPos", new Color(0.815686, 0.850980, 0.882353, 1.000000)],
+        ["FogColorXNeg", new Color(0.815686, 0.850980, 0.882353, 1.000000)],
+        ["FogColorYPos", new Color(0.815686, 0.850980, 0.882353, 1.000000)],
+        ["FogColorYNeg", new Color(0.815686, 0.850980, 0.882353, 1.000000)],
+        ["FogNear", 10.000000],
+        ["FogFar", 800.000000],
+        ["FogFarMax", 3500.000000],
+        ["EnableHorizontAdjustment", true],
+        ["SunColor", new Color(0.937255, 0.925490, 0.905882, 1.000000)],
+        ["SunIntensity", 1.000000],
+        ["AntiSunColor", new Color(0.811765, 0.819608, 0.854902, 1.000000)],
+        ["AntiSunIntensity", 0.300000],
+        ["AntiSunAngle", 10.000000],
+        ["SunDirection", new Vector(-0.505952, -0.555542, -0.305348)],
+        ["AmbientLight", new Color(0.200000, 0.200000, 0.200000, 1.000000)],
+        ["ShadowColor", new Color(0.400000, 0.400000, 0.400000, 1.000000)],
+        ["FogMode", "Exp"],
+        ["FogDensity", 0.000300],
+        ["TreeLightKoef", 0.000000],
+        ["TreeNormalRelax", 0.000000]
+      ]
+    ],
+
+    [
+      "MainPlayerUnit",
+      "GameObject",
+      "CTankT34_85_44Unit",
+      new Matrix(
+          -0.293436, -0.955977, -0.001794, 5190.949219,
+          0.955978, -0.293433, -0.001647, 2672.598877,
+          0.001048, -0.002198, 0.999997, 618.787415,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["IsPlayer", true],
+        ["IsManual", true],
+        ["Affiliation", "FRIEND"],
+        ["Number", "22_18"],
+        ["HitPoints", -1],
+        ["SurfaceControl", "None"]
+      ]
+    ],
+
+    [
+      "Terrain",
+      "",
+      "",
+      new Matrix(
+          1.000000, 0.000000, 0.000000, 0.000000,
+          0.000000, 1.000000, 0.000000, 0.000000,
+          0.000000, 0.000000, 1.000000, 0.000000,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["ForestTextureScale", 0.500000],
+        ["ForestShadowBorderScale", 0.400000],
+        ["ForestShadowAlphaScale", 0.500000],
+        ["ForestBeginFadeDist", [250.000000, 480.000000]],
+        ["VertForestDistMin", 800.000000],
+        ["VertForestDistMax", 8000.000000],
+        ["VertForestAngleMin", 0.000000],
+        ["VertForestAngleMax", 45.000000],
+        ["VertForestBeginFadeDist", [250.000000, 410.000000]],
+        ["TerrainShadowPower", 1.000000],
+        ["IsAntiLighting", true],
+        ["WaterFresnelPower", 2.000000]
+      ]
+    ],
+
+    [
+      "Care_01",
+      "ObjectsGroup",
+      "CObjectsGroup",
+      new Matrix(
+          0.732319, 0.680962, 0.000000, 2483.069336,
+          -0.680962, 0.732319, 0.000000, 1541.988037,
+          0.000000, 0.000000, 1.000000, 293.099121,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Contents", ["CareUnit_01_T34_76_1", "CareUnit_02_T34_85_1", "CareUnit_03_PzIV_1", "CareUnit_04_PzVI_1", "CareUnit_05_SU85_1", "CareUnit_06_StuG40_1", "CareUnit_07_HalfTruck_1", "CareUnit_08_Hanomag_1", "CareUnit_09_Zis3_1", "CareUnit_10_Pak40_1", "CareUnit_11_Zis5_1", "CareUnit_12_Opel_1"]]
+      ]
+    ],
+
+    [
+      "CareUnit_01_T34_76_1",
+      "GameObject",
+      "CTankT34_76_42Unit",
+      new Matrix(
+          0.955712, -0.294304, -0.000202, 4942.683594,
+          0.292937, 0.951340, -0.095607, 3101.059082,
+          0.028330, 0.091313, 0.995419, 584.860229,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Number", "22_18"],
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_02_T34_85_1",
+      "GameObject",
+      "CTankT34_85_44Unit",
+      new Matrix(
+          0.998187, -0.056340, -0.021178, 4942.820313,
+          0.055843, 0.998166, -0.023362, 3086.829590,
+          0.022455, 0.022137, 0.999503, 584.107056,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["IsPlayer", false],
+        ["Number", "22_18"]
+      ]
+    ],
+
+    [
+      "CareUnit_03_PzIV_1",
+      "GameObject",
+      "CTankPzIVGUnit",
+      new Matrix(
+          0.995988, 0.085046, -0.027848, 4942.904297,
+          -0.085502, 0.996216, -0.015610, 3074.676758,
+          0.026415, 0.017928, 0.999490, 583.907104,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Number", "22_18"],
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_04_PzVI_1",
+      "GameObject",
+      "CTankPzVIAusfEUnit",
+      new Matrix(
+          0.813778, -0.580877, -0.018653, 4942.224609,
+          0.580750, 0.813991, -0.012186, 3062.085938,
+          0.022262, -0.000916, 0.999752, 583.943237,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Number", "22_18"],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_05_SU85_1",
+      "GameObject",
+      "CSAUSU85Unit",
+      new Matrix(
+          0.999932, -0.011395, 0.002330, 4926.163086,
+          0.011535, 0.997233, -0.073433, 3101.098633,
+          -0.001486, 0.073455, 0.997297, 584.668457,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Number", "22_18"],
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_06_StuG40_1",
+      "GameObject",
+      "CSAUStuG40Unit",
+      new Matrix(
+          0.991787, 0.127374, -0.011589, 4926.547852,
+          -0.127811, 0.990400, -0.052656, 3086.609863,
+          0.004770, 0.053705, 0.998545, 583.594299,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Number", "22_18"],
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_07_HalfTruck_1",
+      "GameObject",
+      "CBtrM3A1HalftruckUnit",
+      new Matrix(
+          0.999751, 0.000585, -0.022284, 4926.477051,
+          -0.000824, 0.999942, -0.010699, 3074.060059,
+          0.022277, 0.010714, 0.999694, 583.633789,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_08_Hanomag_1",
+      "GameObject",
+      "CBtrHanomag251AusfCUnit",
+      new Matrix(
+          0.998065, 0.058493, -0.021105, 4926.368164,
+          -0.058675, 0.998244, -0.008118, 3061.842285,
+          0.020593, 0.009340, 0.999744, 583.448059,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_09_Zis3_1",
+      "GameObject",
+      "CGunZis3Unit",
+      new Matrix(
+          0.999167, 0.011547, 0.039139, 4910.188477,
+          -0.008770, 0.997479, -0.070416, 3100.906738,
+          -0.039853, 0.070014, 0.996750, 584.125427,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_10_Pak40_1",
+      "GameObject",
+      "CGunPak40Unit",
+      new Matrix(
+          0.997970, -0.011731, 0.062603, 4909.503906,
+          0.017389, 0.995733, -0.090624, 3086.043213,
+          -0.061273, 0.091528, 0.993916, 583.588562,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_11_Zis5_1",
+      "GameObject",
+      "CTruckZis5Unit",
+      new Matrix(
+          0.999902, -0.007394, 0.011851, 4910.253418,
+          0.008042, 0.998422, -0.055583, 3073.667236,
+          -0.011422, 0.055673, 0.998384, 583.024353,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "CareUnit_12_Opel_1",
+      "GameObject",
+      "CTruckOpelBlitzUnit",
+      new Matrix(
+          0.816274, -0.577251, -0.021855, 4910.972656,
+          0.577261, 0.816534, -0.006486, 3061.281250,
+          0.021589, -0.007321, 0.999740, 582.956665,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["IsManual", false],
+        ["IsPlayer", false]
+      ]
+    ],
+
+    [
+      "Tigers",
+      "UnitGroup",
+      "CBaseUnitGroup",
+      new Matrix(
+          -0.965122, 0.261802, -0.000031, 5252.529297,
+          -0.261802, -0.965122, 0.000000, 2635.922363,
+          -0.000030, 0.000008, 1.000000, 618.899170,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Units", ["SAU_3", "SAU_2", "SAU_1"]],
+        ["GroupEnemyReaction", "ERT_FRIGID"],
+        ["Path", ["NP_Tigers_PP_1", "NP_Tigers_PP_2", "NP_Tigers_PP_3"]],
+        ["Formation", "Column"],
+        ["FormationDistance", 20],
+        ["MovingSpeed", 2.500000],
+        ["FirstOrder", "Patrol"],
+        ["CyclePath", true]
+      ]
+    ],
+
+    [
+      "NP_Tigers_PP_1",
+      "NavPoint",
+      "CZAxisCylNavPoint",
+      new Matrix(
+          -0.293430, -0.955980, 0.000000, 5243.949707,
+          0.955980, -0.293430, 0.000000, 2746.419434,
+          0.000000, 0.000000, 1.000000, 618.576294,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Range", 7.000000]
+      ]
+    ],
+
+    [
+      "NP_Tigers_PP_2",
+      "NavPoint",
+      "CZAxisCylNavPoint",
+      new Matrix(
+          -0.293430, -0.955980, 0.000000, 5385.117188,
+          0.955980, -0.293430, 0.000000, 2632.140381,
+          0.000000, 0.000000, 1.000000, 618.576233,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Range", 7.000000]
+      ]
+    ],
+
+    [
+      "NP_Tigers_PP_3",
+      "NavPoint",
+      "CZAxisCylNavPoint",
+      new Matrix(
+          -0.293430, -0.955980, 0.000000, 5157.028320,
+          0.955980, -0.293430, 0.000000, 2645.779053,
+          0.000000, 0.000000, 1.000000, 618.576355,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Range", 7.000000]
+      ]
+    ],
+
+    [
+      "TSoviets",
+      "UnitGroup",
+      "CBaseUnitGroup",
+      new Matrix(
+          -0.614570, 0.788862, 0.000000, 223.473175,
+          -0.788862, -0.614570, 0.000000, 2038.674683,
+          0.000000, 0.000000, 1.000000, 589.887695,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Units", ["_1"]],
+        ["GroupEnemyReaction", "ERT_FRIGID"],
+        ["Path", ["_3", "_4"]],
+        ["MovingSpeed", 1.000000],
+        ["FirstOrder", "Patrol"],
+        ["CyclePath", true]
+      ]
+    ],
+
+    [
+      "TGermans",
+      "UnitGroup",
+      "CTestGermanGroupTask",
+      new Matrix(
+          0.127158, 0.991882, 0.000000, 631.731689,
+          -0.991882, 0.127158, 0.000000, 2281.805420,
+          0.000000, 0.000000, 1.000000, 601.485046,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Units", ["_2", "_6", "_7", "_8", "_9"]],
+        ["GroupEnemyReaction", "ERT_FRIGID"]
+      ]
+    ],
+
+    [
+      "_1",
+      "GameObject",
+      "CSovietSoldierRifleUnit",
+      new Matrix(
+          -0.614570, 0.788862, 0.000000, 223.473175,
+          -0.788862, -0.614570, 0.000000, 2038.674683,
+          0.000000, 0.000000, 1.000000, 589.037537,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["HitPoints", 1000.000000],
+        ["Affiliation", "FRIEND"],
+        ["Task", "CTestSovietHumanTask"]
+      ]
+    ],
+
+    [
+      "_2",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          0.127158, 0.991882, 0.000000, 631.731689,
+          -0.991882, 0.127158, 0.000000, 2281.805420,
+          0.000000, 0.000000, 1.000000, 601.485046,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["HitPoints", 20.000000],
+        ["Affiliation", "ENEMY"],
+        ["Task", "CTestGermanHumanTask"],
+        ["SurfaceControl", "PutonGroundUpright"],
+        ["Route", []],
+        ["ShadowPlaneOffset", 0.050000]
+      ]
+    ],
+
+    [
+      "_3",
+      "NavPoint",
+      "CSphereNavPoint",
+      new Matrix(
+          -0.614570, 0.788862, 0.000000, 230.315643,
+          -0.788862, -0.614570, 0.000000, 2036.379883,
+          0.000000, 0.000000, 1.000000, 589.041504,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+      ]
+    ],
+
+    [
+      "_4",
+      "NavPoint",
+      "CSphereNavPoint",
+      new Matrix(
+          -0.614570, 0.788862, 0.000000, 214.075058,
+          -0.788862, -0.614570, 0.000000, 2046.123169,
+          0.000000, 0.000000, 1.000000, 587.905396,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+      ]
+    ],
+
+    [
+      "_5",
+      "NavPoint",
+      "CSphereNavPoint",
+      new Matrix(
+          -0.592788, 0.805358, 0.000000, 237.982864,
+          -0.805358, -0.592788, 0.000000, 2059.558350,
+          0.000000, 0.000000, 1.000000, 585.970459,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+      ]
+    ],
+
+    [
+      "_6",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          -0.614570, 0.788862, 0.000000, 627.497681,
+          -0.788862, -0.614570, 0.000000, 2291.965332,
+          0.000000, 0.000000, 1.000000, 601.633911,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["HitPoints", 20.000000],
+        ["Affiliation", "ENEMY"],
+        ["Task", "CTestGermanHumanTask"]
+      ]
+    ],
+
+    [
+      "_7",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          -0.614570, 0.788862, 0.000000, 623.336975,
+          -0.788862, -0.614570, 0.000000, 2302.853516,
+          0.000000, 0.000000, 1.000000, 601.618652,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["HitPoints", 20.000000],
+        ["Affiliation", "ENEMY"],
+        ["Task", "CTestGermanHumanTask"]
+      ]
+    ],
+
+    [
+      "_8",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          -0.614570, 0.788862, 0.000000, 617.979553,
+          -0.788862, -0.614570, 0.000000, 2317.506592,
+          0.000000, 0.000000, 1.000000, 600.596130,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["HitPoints", 20.000000],
+        ["Affiliation", "ENEMY"],
+        ["Task", "CTestGermanHumanTask"]
+      ]
+    ],
+
+    [
+      "_9",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          -0.614570, 0.788862, 0.000000, 612.202637,
+          -0.788862, -0.614570, 0.000000, 2331.312012,
+          0.000000, 0.000000, 1.000000, 598.397766,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["HitPoints", 20.000000],
+        ["Affiliation", "ENEMY"],
+        ["Task", "CTestGermanHumanTask"]
+      ]
+    ],
+
+    [
+      "_10",
+      "NavPoint",
+      "CSphereNavPoint",
+      new Matrix(
+          0.574673, -0.818383, 0.000000, 229.545197,
+          0.818383, 0.574673, 0.000000, 2047.398926,
+          0.000000, 0.000000, 1.000000, 586.650391,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+      ]
+    ],
+
+    [
+      "_11",
+      "GameObject",
+      "CGunZis3Unit",
+      new Matrix(
+          0.813064, -0.582174, -0.000021, 5241.306641,
+          0.582174, 0.813064, 0.000000, 2687.896240,
+          0.000017, -0.000012, 1.000000, 617.930054,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["HitPoints", 120.000000],
+        ["SurfaceControl", "PutonGroundLandingJoints"],
+        ["Route", []],
+        ["ShadowPlaneOffset", 0.050000],
+        ["Task", "CBaseAITask"]
+      ]
+    ],
+
+    [
+      "_12",
+      "GameObject",
+      "CGunPak40Unit",
+      new Matrix(
+          0.813064, -0.582174, 0.000000, 5250.336914,
+          0.582174, 0.813064, 0.000000, 2683.226318,
+          0.000000, 0.000000, 1.000000, 617.399841,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["HitPoints", 120.000000],
+        ["SurfaceControl", "PutonGroundLandingJoints"],
+        ["Route", []],
+        ["ShadowPlaneOffset", 0.050000],
+        ["Task", "CBaseAITask"]
+      ]
+    ],
+
+    [
+      "_13",
+      "GameObject",
+      "CTankPzIVGUnit",
+      new Matrix(
+          0.928971, -0.338561, -0.149631, 5180.354980,
+          0.368592, 0.883178, 0.290062, 2846.526367,
+          0.033948, -0.324612, 0.945238, 597.893005,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "ENEMY"],
+        ["Task", "CBaseAITankTask"]
+      ]
+    ],
+
+    [
+      "SAU_3",
+      "GameObject",
+      "CTankPzIVGUnit",
+      new Matrix(
+          -0.965122, 0.261802, -0.000031, 5252.529297,
+          -0.261802, -0.965122, 0.000000, 2635.922363,
+          -0.000030, 0.000008, 1.000000, 618.899231,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "ENEMY"],
+        ["Task", "CBaseAITankTask"]
+      ]
+    ],
+
+    [
+      "SAU_2",
+      "GameObject",
+      "CTankPzIVGUnit",
+      new Matrix(
+          0.496909, 0.867803, -0.000015, 5246.187012,
+          -0.867803, 0.496909, 0.000000, 2639.270996,
+          0.000007, 0.000013, 1.000000, 618.899170,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "ENEMY"],
+        ["Task", "CBaseAITankTask"]
+      ]
+    ],
+
+    [
+      "_14",
+      "GameObject",
+      "CBtrHanomag251AusfCUnit",
+      new Matrix(
+          0.243200, 0.969976, -0.000013, 5226.163086,
+          -0.969976, 0.243200, 0.000000, 2671.024170,
+          0.000003, 0.000013, 1.000000, 619.000000,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "Friend"],
+        ["Task", "CBaseAIBtrTask"]
+      ]
+    ],
+
+    [
+      "_15",
+      "GameObject",
+      "CSAUSU85Unit",
+      new Matrix(
+          0.642241, 0.766503, -0.000013, 5263.645508,
+          -0.766503, 0.642241, 0.000000, 2684.313721,
+          0.000008, 0.000010, 1.000000, 618.747498,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "FRIEND"],
+        ["Task", "CBaseAITankTask"]
+      ]
+    ],
+
+    [
+      "_16",
+      "GameObject",
+      "CTruckOpelBlitzUnit",
+      new Matrix(
+          0.290359, 0.956914, -0.002608, 5186.725098,
+          -0.956872, 0.290371, 0.008955, 2705.976074,
+          0.009327, -0.000105, 0.999956, 618.733765,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "ENEMY"],
+        ["Task", "CBaseAITask"],
+        ["HitPoints", 220000.000000],
+        ["SurfaceControl", "PutonGroundLandingJoints"],
+        ["Route", []],
+        ["ShadowPlaneOffset", 0.050000],
+        ["FakeShadowOffset", 0.090000]
+      ]
+    ],
+
+    [
+      "_17",
+      "GameObject",
+      "CTruckZis5Unit",
+      new Matrix(
+          0.290370, 0.956914, 0.000000, 5187.712402,
+          -0.956914, 0.290370, 0.000000, 2692.236084,
+          0.000000, 0.000000, 1.000000, 617.355530,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "ENEMY"],
+        ["Task", "CBaseAITask"],
+        ["HitPoints", 220000.000000],
+        ["SurfaceControl", "PutonGroundLandingJoints"],
+        ["Route", []],
+        ["ShadowPlaneOffset", 0.050000],
+        ["FakeShadowOffset", 0.090000]
+      ]
+    ],
+
+    [
+      "_18",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          0.608999, 0.793171, 0.000000, 5262.597656,
+          -0.793171, 0.608999, 0.000000, 2534.660156,
+          0.000000, 0.000000, 1.000000, 618.249939,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["Task", "CBaseAITask"]
+      ]
+    ],
+
+    [
+      "_19",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          0.608999, 0.793171, 0.000000, 5259.451172,
+          -0.793171, 0.608999, 0.000000, 2533.774658,
+          0.000000, 0.000000, 1.000000, 617.399841,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["Task", "CBaseAITask"]
+      ]
+    ],
+
+    [
+      "_20",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          0.608999, 0.793171, 0.000000, 5266.600098,
+          -0.793171, 0.608999, 0.000000, 2535.655762,
+          0.000000, 0.000000, 1.000000, 617.399841,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["Task", "CBaseAITask"]
+      ]
+    ],
+
+    [
+      "_21",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          0.608999, 0.793171, 0.000000, 5265.359863,
+          -0.793171, 0.608999, 0.000000, 2540.343506,
+          0.000000, 0.000000, 1.000000, 617.399841,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["Task", "CBaseAITask"]
+      ]
+    ],
+
+    [
+      "_22",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          0.608999, 0.793171, 0.000000, 5258.948730,
+          -0.793171, 0.608999, 0.000000, 2538.652832,
+          0.000000, 0.000000, 1.000000, 617.399841,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["Task", "CBaseAITask"]
+      ]
+    ],
+
+    [
+      "_23",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          0.608999, 0.793171, 0.000000, 5289.335449,
+          -0.793171, 0.608999, 0.000000, 2546.577637,
+          0.000000, 0.000000, 1.000000, 618.249939,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["Task", "CBaseAITask"],
+        ["Guncrew", true]
+      ]
+    ],
+
+    [
+      "_24",
+      "GameObject",
+      "CGermanSoldierRifleUnit",
+      new Matrix(
+          0.608999, 0.793171, 0.000000, 5291.438477,
+          -0.793171, 0.608999, 0.000000, 2547.198486,
+          0.000000, 0.000000, 1.000000, 617.399841,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "NEUTRAL"],
+        ["Task", "CBaseAITask"],
+        ["Guncrew", true]
+      ]
+    ],
+
+    [
+      "SAU_1",
+      "GameObject",
+      "CTankPzIVGUnit",
+      new Matrix(
+          0.537781, -0.843085, -0.000034, 5246.499512,
+          0.843085, 0.537781, 0.000000, 2632.178955,
+          0.000018, -0.000028, 1.000000, 618.899231,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "ENEMY"],
+        ["Task", "CBaseAITankTask"]
+      ]
+    ],
+
+    [
+      "_34",
+      "GameObject",
+      "CBtrM3A1HalftruckUnit",
+      new Matrix(
+          0.243029, 0.970019, 0.000000, 5223.084961,
+          -0.970019, 0.243029, 0.000000, 2646.509033,
+          0.000000, 0.000000, 1.000000, 617.399841,
+          0.000000, 0.000000, 0.000000, 1.000000
+        ),
+      [
+        ["Affiliation", "Friend"],
+        ["Task", "CBaseAIBtrTask"]
+      ]
+    ]
+  ];
+
+  static Array  m_MissionCameraScriptList  = [
+    [
+      0.000000,
+      "KEY_START",
+      [
+        ["CinemaID", "Default"],
+        []
+      ]
+    ]
+  ];
+
+  static Array  m_TriggersList = [
+  ];
+
+  Array GetMissionObjectList()
+  {
+    return m_MissionObjectList;
+  }
+
+  Array GetMissionCameraScriptList()
+  {
+    return m_MissionCameraScriptList;
+  }
+
+  Array GetTriggersList()
+  {
+    return m_TriggersList;
+  }
+
+  String GetObjectListClassFile()
+  {
+    return m_ObjectListClassFile;
+  }
+
+  String GetObjectListClassName()
+  {
+    return m_ObjectListClassName;
+  }
+}

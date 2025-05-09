@@ -1,0 +1,178 @@
+
+
+// Unit Explosion
+class CLandMINE_ATExplosion
+  extends CBuildingExplosion
+ {
+  float  Damage   = 200.0;
+  float  Radius   = 20.0;
+
+  String EffectId = "HE7576_85_88BulletExplosionEffect";
+  String SoundId  = "HE85HitExplosionSound";
+}
+
+class CLandMINE_ATUnit
+  extends CUnit, CPushObject              //CGroundBuilding
+{
+
+  final static float DefaultHitPoints = 100;
+  
+  boolean   m_PassiveUnit           = true;
+  boolean m_Objectdestroyed = false;
+  boolean m_Live = true;
+
+  final static String DefaultSurfaceControl = "PutonGroundLandingJoints";
+
+   static Array LandingJoints = ["GroundLevel"];  
+
+
+  static String PrevDeathEffect = "";  //"BarrelFireEffect";  BuildingExplosionEffect CLandMINE_ATGunHEBulletExplosion 
+
+  static String PrevDeathSound  = "HE85HitExplosionSound";
+  final static int  DeathEffectDelay = 1.0;
+
+  static String PostExplosionID = "GenericUnitExplosionEffect";
+
+  // Automatic classificators of this object     
+  final static Array AutomaticClassificators  = ["STRUCTURE"];
+
+
+  event void OnSuccessTouchTrigger(
+    float _Energy
+    )
+  {
+    // create new trigger
+    logWarning("Anti-Tank MINE damaged with Energy = "+new String(_Energy));
+   
+    Component PhysicsController = GetPhysicsController();
+    //Component PhysicsController = GetObject("DestroyController");
+    if (null != PhysicsController)
+      PhysicsController.CreateTouchTrigger(0.0);
+
+    Component StateControl = GetStateControl();
+    if (null != StateControl)
+    {
+      float HitPoints = StateControl.GetHitPoints() - _Energy*EnergyToHP;
+      logWarning("AT-MINE sucsess touch _Energy = "+new String(_Energy)+" EnergytoHP = "+new String(EnergyToHP)+" and AT-MINE have now HP = "+new String(HitPoints)+" and AT-MINE has HP = " +new String(StateControl.GetHitPoints()) );           //
+      StateControl.SetHitPoints(HitPoints);
+
+    if (_Energy > 100)
+    {
+      if (!m_Objectdestroyed)
+      {
+      sendEvent(0.0f, getIdentificator(this), "DestroyObject", []);
+     // StateControl.SetHitPoints(0.0);
+        m_Objectdestroyed = true;
+      }
+    }
+   
+     if ((HitPoints <= 0.0) && (!m_Objectdestroyed))
+      {
+        sendEvent(0.0f, getIdentificator(this), "DestroyObject", []);
+        m_Objectdestroyed = true;
+        //logWarning("GunZis3Unit destroyed");
+      }
+
+  /* Component SurfaceControl = GetSurfaceControl();
+    if (null != SurfaceControl)
+      SurfaceControl.EnableSurfaceControl(false);
+
+    PhysicsController.EnableControl(true);
+    PhysicsController.Activate(true);     */
+
+
+    }
+  }
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CLandMINE_ATUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cwpn_LandMINE_ATModel>(), [150, 50, 25]);
+
+    Component Mesh = GetMeshComponent();
+    if (null == Mesh)
+    {
+      logMessage("Mesh not found in SetupDestroyPhysicsController function call");
+      return;
+    }
+
+    // Create physics controller
+    Component PhysicsController = new #ObjectPhysicsController();
+    loadFromScript(PhysicsController, "CMetalSubstance");
+
+    // Initialize controller
+    PhysicsController.SetEventHandler(this);
+    PhysicsController.SetMass(2000.0f);
+    setSlaveObject(PhysicsController, Mesh);
+
+    // Compute volume of object
+    Vector Sizes = getBoundingSize(Mesh);
+    PhysicsController.SetVolume(Sizes.x * Sizes.y * Sizes.z);
+
+    // Register object physics controller
+    RegisterObject("DestroyController", PhysicsController);
+
+    Array Shapes = Mesh.GetCollisionShapes(Mesh.GetRootJoint(), false);
+    if (Shapes.isEmpty())
+      logError("Empty shapes");
+
+    boolean IsValidBody = PhysicsController.CreateRigidBody("Root1", Mesh.GetRootJoint(), Shapes);
+
+    addClassificator(user, CLASSIFICATOR_PHYSICS_CONTROLLABLE);
+    addClassificator(user, CLASSIFICATOR_WALK_SURFACE);
+    addClassificator(user, CLASSIFICATOR_COLLISION_SHAPES);
+                           
+    PhysicsController.CreateTouchTrigger(0.0f);
+    PhysicsController.EnableControl(false);
+  }
+
+event void OnCollision()
+{
+  Component CollisionObject  = new #GameController().GetObject(_ObjectID);
+   if(CollisinObject == "MainPlayerUnit")
+   {
+      sendEvent(0.0f, getIdentificator(this), "DestroyObject", []);
+
+   }
+}
+  event void OnPhysicsEnabled(
+      boolean _Enable
+    )
+  {
+    Component DestroyController = GetObject("DestroyController");
+    DestroyController.Activate(true);
+  }
+
+
+
+  event void DestroyObject()
+  {
+    logMessage(getIdentificator(this) + ": DestroyObject");
+
+    if(checkMask(this, [], [CLASSIFICATOR_DEAD_OBJECT]))
+    {
+      Component RootJoint = GetMeshComponent().GetRootJoint();
+      Component EffectsArray = new #EffectsArray();
+      EffectsArray.CreateEffect(PostExplosionID, getPosition(RootJoint), this);
+      (new #GameController()).GetObject("ExplosionsArray").
+      CreateExplosion("CAntiTank_LandMINE_Explosion", getPosition(RootJoint), null, getIdentificator(this));
+
+      if ("" != PrevDeathSound)
+        (new #SoundsArray()).CreateSound(PrevDeathSound, getPosition(RootJoint));
+
+      setVisibleState(RootJoint, false);
+
+          Component StateControl = GetObject("StateControl");
+      if (StateControl != null)
+        {
+          StateControl.SetHitPoints(0.0);
+        }
+      addClassificator(this, CLASSIFICATOR_DEAD_OBJECT);
+      sendEvent(0.0, getIdentificator(GetMission()), "OnObjectDestroyed", [getIdentificator(this)]);
+    }
+  }
+
+}

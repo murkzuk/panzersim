@@ -1,0 +1,600 @@
+//-----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-----------------------------------------------------------------
+
+class CC2M4Gr_SupplyLine extends CBaseUnitGroup //, CBaseAITankTask
+{
+
+    void Init()
+  {
+    SetEnemyReactionType(ERT_FRIGID);   
+  //  sendEvent(70.0, getIdentificator(user), "MoveToAttackPosition", []);
+  }
+
+   event void MoveToAttackPosition()
+   {
+    CBaseAITask::Init();
+    ActivateMovement(true);
+    ActivateRadar(true);
+    float Speed  = 5.500000f;
+    SetFormation("Column", 44.0, true, true);
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPnt5"),
+                    GetNavPointBehPos("NavPnt51"),
+                    GetNavPointBehPos("NavPnt6"),
+                    GetNavPointBehPos("NavPnt7"),
+                    GetNavPointBehPos("NavPnt8"),
+                    //GetNavPointBehPos("NavPnt9"),
+                    GetNavPointBehPos("NavPnt91"),
+                    GetNavPointBehPos("NavPntTen"),
+                    GetNavPointBehPos("NavPnt_11"),
+                    GetNavPointBehPos("NavPnt_12"),
+                    GetNavPointBehPos("NavPnt_13")
+                    ];                            // "NavPnt5", "NavPnt51","NavPnt6","NavPnt7","NavPnt8","NavPnt9","NavPnt91","NavPntTen","NavPnt_11", "NavPnt_12", "NavPnt_13"
+
+    SetFirstQueueOrders([
+                        ["CC2M4Gr_SupplyLine", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M4Gr_SupplyLine", "", [], ""]
+                      ]);
+
+    }
+  void OnPathEndReached()
+  {
+    SetEnemyReactionType(ERT_FRIGID);
+    ShowOpel(true);
+  }
+}
+
+class CC2M4Gr_SupplyEndLine extends CBaseUnitGroup //, CBaseAITankTask
+{
+
+    void Init()
+  {
+    SetEnemyReactionType(ERT_FRIGID);
+  //  sendEvent(70.0, getIdentificator(user), "MoveToAttackPosition", []);
+  }
+
+   event void MoveToAttackPosition()
+   {
+    CBaseAITask::Init();
+    ActivateMovement(true);
+    ActivateRadar(true);
+    float Speed  = 6.500000f;
+    SetFormation("Column", 44.0, true, false);
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPnt5"),
+                    GetNavPointBehPos("NavPnt51"),
+                    GetNavPointBehPos("NavPnt6"),
+                    GetNavPointBehPos("NavPnt7"),
+                    GetNavPointBehPos("NavPnt8"),
+                    //GetNavPointBehPos("NavPnt9"),
+                    GetNavPointBehPos("NavPnt91"),
+                    GetNavPointBehPos("NavPntTen"),
+                    GetNavPointBehPos("NavPnt_11"),
+                    GetNavPointBehPos("NavPnt_12"),
+                    GetNavPointBehPos("NavPnt_13")
+                    ];                            // "NavPnt5", "NavPnt51","NavPnt6","NavPnt7","NavPnt8","NavPnt9","NavPnt91","NavPntTen","NavPnt_11", "NavPnt_12", "NavPnt_13"
+
+    SetFirstQueueOrders([
+                        ["CC2M4Gr_SupplyLine", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M4Gr_SupplyLine", "", [], ""]
+                      ]);
+
+    }
+  void OnPathEndReached()
+  {
+    SetEnemyReactionType(ERT_FRIGID);
+
+  }
+}
+
+class CC2M4PanzerGrupen1 extends CBaseUnitGroup, CBaseAITankTask//, CC2M4PanzerGrupen2
+{
+   boolean Onetime = false;
+
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(false);
+    ActivateFire(false);
+    ActivateMovement(false);
+    sendEvent(100.0, getIdentificator(user), "ChangeCall", []);  //
+  }
+
+   event void MoveToAttackPosition()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(true);
+    ActivateFire(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    SetFormation("CWedgeFormation", 40.0, false, true);
+    float AttackSpeed  = 4.000000f;
+    Array ApproachPoints = [
+                    //GetNavPointBehPos("NavPnt6"),
+                    GetNavPointBehPos("NavPnt7"),
+                    GetNavPointBehPos("NavPnt8"),
+                    GetNavPointBehPos("NavPnt9")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M4PanzerGrupen1", "SetOrder_MoveToEx", [ApproachPoints, AttackSpeed], ""],
+                        ["CC2M4PanzerGrupen1", "", [], ""]
+                      ]);
+
+  }
+event void ChangeCall()
+{
+  sendEvent(10.0, getIdentificator(user), "Call2ndPosition", []);
+}
+
+   event void Call2ndPosition()
+  {
+     if(!Onetime)
+      {
+      logWarning("Call2ndPosition called");
+      sendEvent(0.0, getIdentificator(user), "FallBackPosition", []);
+      Onetime = true;
+      return Onetime;
+      }
+
+    sendEvent(10.0, getIdentificator(user), "ChangeCall", []);
+  }
+
+   event void FallBackPosition()
+  {
+
+   // CancelAllOrders();
+    CBaseUnitGroup::Init();
+   // ActivateMovement(true);
+   // SetEnemyReactionType(ERT_PASSIVE);
+    SetFormation("CNarrowWedgeFormation", 30.0, false, true); //
+    float AttackSpeed  = 4.000000f;
+
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPnt9"),
+                    GetNavPointBehPos("NavPnt_12")
+                    
+                    ];
+    
+    ExtendQueueOrder([
+                        ["CC2M4PanzerGrupen1", "SetOrder_MoveToEx", [ApproachPoints, AttackSpeed], ""],
+                        ["CC2M4PanzerGrupen1", "", [], ""]
+                      ]);
+    
+  }
+}
+class CC2M4PanzerGrupen2Task extends CBaseAITankTask//, CBaseAITask   this is the flanking panzers
+{
+
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+//    sendEvent(223.0, getIdentificator(user), "MoveTo2ndPosition", []);
+  }
+
+}
+class CC2M4PanzerGrupen2 extends CBaseUnitGroup //, CBaseAITask, CBaseAITankTask
+{
+    boolean isAGGRESSIVE;
+
+
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(false);
+    ActivateFire(false);
+    ActivateMovement(false);
+    isAGGRESSIVE = false;
+   // sendEvent(10.0, getIdentificator(user), "MoveToAttackPosition", []);  // replaced 6-22-09
+  }
+
+   event void MoveToAttackPosition()
+   {
+    CBaseUnitGroup::Init();
+    ActivateRadar(true);
+    ActivateFire(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE); //
+    SetFormation("CWedgeFormation", 40.0, false, false);
+    float AttackSpeed  = 4.000000f;
+    Array ApproachPoints = [
+                   // GetNavPointBehPos("NavPnt6"),
+                    GetNavPointBehPos("NavPnt7"),
+                    GetNavPointBehPos("NavPnt8"),
+                    GetNavPointBehPos("NavPnt9")
+                    ];                         //"NavPnt5_6","NavPnt6","NavPnt7","NavPnt8","NavPnt9","NavPnt91", "NavPntTen","NavPnt_11" ,"NavPnt_12", "NavPnt_13"
+
+    SetFirstQueueOrders([
+                        ["C2M4PanzerGrupen2", "SetOrder_MoveToEx", [ApproachPoints, AttackSpeed], ""],
+                        ["C2M4PanzerGrupen2", "", [], ""]
+                      ]);
+
+    }
+
+
+ event void FallBackPosition()
+  {
+    if(!isAGGRESSIVE)
+    {
+//    CancelAllOrders();
+    CBaseUnitGroup::Init();
+ //   ActivateMovement(true);
+//    SetEnemyReactionType(ERT_PASSIVE);
+    SetFormation("Colomn", 40.0, false, false);
+    isAGGRESSIVE = true;
+    float Speed  = 4.000000f;
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPnt9"),
+                    GetNavPointBehPos("NavPnt_12")
+                          
+                    ];
+
+    ExtendQueueOrder([
+                        ["CC2M4PanzerGrupen2", "SetOrder_MoveToEx", [ApproachPoints, Speed], ""],
+                        ["CC2M4PanzerGrupen2", "", [], ""]
+                      ]);
+
+    }
+  }
+}
+
+
+class C2M4C2M4Artillery_DE_Hvy extends CBaseUnitGroup, CFieldGunTask_G
+{
+
+}
+class C2M4NebalTask extends CBaseAITask, CReFillTask
+{
+
+}
+
+ class C2M4TrooperGroupA extends CBaseUnitGroup, CBaseAITask      //
+{
+
+    void Init()
+  {
+    ShowGroup(false);  //
+    ForEachUnitTask("ActivateMovement", [false]);
+    CBaseUnitGroup::Init();
+   }
+   event void C2M4TroopersMarchA()
+    {
+     PopDelayedOrder();   //
+     ForEachUnitTask("ActivateMovement", [true]);
+     ShowGroup(true);     //
+  //   SetOrder_MoveTo(GetNavPointBehPos("Path"), 3.0, true);
+    }
+
+}
+
+ class C2M4TrooperGroup1 extends CBaseUnitGroup, CBaseAITask      //
+{
+
+    void Init()
+  {
+    ShowGroup(false);  //
+    ForEachUnitTask("ActivateMovement", [false]);
+    CBaseUnitGroup::Init();
+    sendEvent(124.0, getIdentificator(user), "C2M4TroopersMarch1", []);
+   }
+   event void C2M4TroopersMarch1()
+    {
+     PopDelayedOrder();   //
+     ForEachUnitTask("ActivateMovement", [true]);
+     ShowGroup(true);     //
+  //   SetOrder_MoveTo(GetNavPointBehPos("Path"), 3.0, true);
+    }
+
+}
+
+ class C2M4TrooperGroup2 extends CBaseUnitGroup, CBaseAITask      //
+{
+
+    void Init()
+  {
+    ShowGroup(false);  //
+    ForEachUnitTask("ActivateMovement", [false]);
+    CBaseUnitGroup::Init();
+    sendEvent(128.0, getIdentificator(user), "C2M4TroopersMarch2", []);
+   }
+   event void C2M4TroopersMarch2()
+    {
+     PopDelayedOrder();   //
+     ForEachUnitTask("ActivateMovement", [true]);
+     ShowGroup(true);     //
+  //   SetOrder_MoveTo(GetNavPointBehPos("Path"), 3.0, true);
+    }
+
+}
+
+ class C2M4TrooperGroup3 extends CBaseUnitGroup, CBaseAITask      //
+{
+
+    void Init()
+  {
+    ShowGroup(false);  //
+    ForEachUnitTask("ActivateMovement", [false]);
+    CBaseUnitGroup::Init();
+    sendEvent(132.0, getIdentificator(user), "C2M4TroopersMarch3", []);
+   }
+   event void C2M4TroopersMarch3()
+    {
+     PopDelayedOrder();   //
+     ForEachUnitTask("ActivateMovement", [true]);
+     ShowGroup(true);     //
+  //   SetOrder_MoveTo(GetNavPointBehPos("Path"), 3.0, true);
+    }
+
+}
+//-------------
+//  Russian Troops classes 
+//-------------
+class CC2M4RussianSoldierGroup extends CBaseUnitGroup, CBaseAITask
+{
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+   }
+   event void InitPhase3()
+    {
+     Activatemovment (true);
+     PopDelayedOrder();
+    SetOrder_MoveTo(GetNavPointBehPos(""), 2.2, true);
+    }
+
+}   
+ class CC2M4RussianSoldierGroup2 extends CBaseUnitGroup, CBaseAITask
+{
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+   }
+   event void InitPhase3()
+    {
+    Activatemovment (true);
+    PopDelayedOrder();
+    SetOrder_MoveTo(GetNavPointBehPos(""), 2.4, true);
+    }
+
+}
+
+                                  //------------------------------------------------
+                                   //----------------   USSR UNITS   ----------------
+                                   //------------------------------------------------
+
+class CC2M4Grp_CompanyGrpONE extends CBaseUnitGroup, CBaseAITankTask
+{
+    boolean isAGGRESSIVE;
+
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+  //  SetEnemyReactionType(ERT_FRIGID);
+    ActivateRadar(false);
+    ActivateFire(false);
+    ActivateMovement(false);
+    isAGGRESSIVE = false;
+
+  }
+  
+
+    event void MoveToAttackPosition()
+    {
+    CBaseAITankTask::Init();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    float AttackSpeed  = 5.00000f;
+    SetFormation("CFrontFormation", 70.0, true, false);
+     Array ApproachPoints = [
+                     GetNavPointBehPos("RU_AttackZone_01"),   //
+                     GetNavPointBehPos("RU_AttackZone_02"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP05")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M4Grp_CompanyGrpONE", "SetOrder_MoveToEx", [ApproachPoints, AttackSpeed], ""],
+                        ["CC2M4Grp_CompanyGrpONE", "", [], ""]
+                      ]);
+    }
+
+  event void GoAGGRESSIVE()
+  {
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+
+    isAGGRESSIVE = true;
+
+  }
+
+  void OnUnitHitByEnemy(String _UnitID, String _EnemyID)  // calles when unit (member of the group) hit by enemy
+  {
+  if (!isAGGRESSIVE)
+   {
+
+   sendEvent(0.0, getIdentificator(user), "GoAGGRESSIVE", []);
+   }
+  }
+}
+
+
+class CC2M4Grp_CompanyGrpTWO extends CBaseUnitGroup, CBaseAITankTask
+{
+
+   boolean isAGGRESSIVE;
+
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(false);
+    ActivateFire(false);
+    ActivateMovement(false);
+  }
+  
+
+   event void MoveToAttackPosition()
+   {
+    CBaseUnitGroup::Init();
+    ActivateRadar(true);
+    ActivateFire(true);
+    ActivateMovement(true);
+    float AttackSpeed  = 4.00000f;
+    SetFormation("CWedgeFormation", 40.0, true, false);
+    Array ApproachPoints = [
+                     GetNavPointBehPos("CompanyGrpFOUR_NP03"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP04"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP05")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M4Grp_CompanyGrpTWO", "SetOrder_MoveToEx", [ApproachPoints,AttackSpeed], ""],
+                        ["CC2M4Grp_CompanyGrpTWO", "", [], ""]
+                      ]);
+
+  }
+
+
+}
+
+class CC2M4Grp_CompanyGrpSAU extends CBaseUnitGroup, CBaseAISAUTask
+{
+
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    //SetEnemyReactionType(ERT_FRIGID);
+    ActivateRadar(false);
+    ActivateFire(false);
+    ActivateMovement(false);
+  }
+
+   event void MoveToAttackPosition()
+   {
+    CBaseUnitGroup::Init();
+    ActivateRadar(true);
+    ActivateFire(true);
+    ActivateMovement(true);
+    float AttackSpeed  = 4.00000f;
+    SetFormation("CFrontFormation", 80.0, false, false);       //  CWideWedgeFormation
+    Array ApproachPoints = [
+                     GetNavPointBehPos("CompanyGrpFOUR_NP03"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP04"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP05")
+                     ];
+
+    SetFirstQueueOrders([
+                        ["CC2M4Grp_CompanyGrpSAU", "SetOrder_MoveToEx", [ApproachPoints, AttackSpeed], ""],
+                        ["CC2M4Grp_CompanyGrpSAU", "", [], ""]
+                      ]);
+  }
+
+
+
+
+}
+
+
+class CC2M4Grp_CompanyGrpTHREE extends CBaseUnitGroup, CBaseAITankTask
+{
+
+
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(false);
+    ActivateFire(false);
+    ActivateMovement(false);
+
+  }
+   event void MoveToAttackPosition()
+   {
+    //ShowGroup(true);
+    ActivateMovement(true);
+    ActivateFire(true);
+    ActivateRadar(true);
+    float AttackSpeed  = 3.50000f;
+    SetFormation("CWideWedgeFormation", 60.0, false,false ); //      Column
+    Array ApproachPoints = [
+                     GetNavPointBehPos("CompanyGrpFOUR_NP03"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP04"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP05")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M4Grp_CompanyGrpTHREE", "SetOrder_MoveToEx", [ApproachPoints, AttackSpeed], ""],
+                        ["CC2M4Grp_CompanyGrpTHREE", "", [], ""]
+                      ]);
+
+  }
+
+
+
+}
+
+class CC2M4Grp_CompanyGrpFOUR extends CBaseUnitGroup, CBaseAITankTask
+{
+
+
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(false);
+    ActivateFire(false);
+    ActivateMovement(false);
+
+  }
+
+   event void MoveToAttackPosition()
+   {
+    CBaseUnitGroup::Init();
+    ActivateMovement(true);
+    ActivateFire(true);
+    ActivateRadar(true);
+    float AttackSpeed  = 4.50000f;
+    SetFormation("CWideWedgeFormation", 60.0, false, true);
+    Array ApproachPoints = [
+                    // GetNavPointBehPos("RU_AttackZone_01"), 
+                     GetNavPointBehPos("CompanyGrpFOUR_NP02"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP03"),
+                     GetNavPointBehPos("CompanyGrpFOUR_NP05")
+                    ];
+
+    SetFirstQueueOrders([
+                        ["CC2M4Grp_CompanyGrpFOUR", "SetOrder_MoveToEx", [ApproachPoints, AttackSpeed], ""],
+                        ["CC2M4Grp_CompanyGrpFOUR", "", [], ""]
+                      ]);
+
+  }
+
+}
+
+class C2M4_SU_Group extends CBaseUnitGroup //, CBaseAISAUTask
+{
+    void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateRadar(false);
+    ActivateFire(false);
+    ActivateMovement(false);
+    sendEvent(220.0, getIdentificator(user), "AttackPosition", []);
+  }
+   event void AttackPosition()
+   {
+    PopDelayedOrder();
+    CBaseAISAUTask::Init();
+    ActivateRadar(true);
+    ActivateFire(true);
+    ActivateMovement(true);
+  //  SetFormation("CFrontFormation", 80.0, true, true);
+    SetEnemyReactionType(ERT_AGGRESSIVE); //
+  }
+
+
+
+}

@@ -1,0 +1,52 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+
+class C4MeterBoxUnit
+  extends CObject
+{
+
+  final static float DefaultHitPoints = -1;
+
+ // static category UnitType = CLASSIFICATOR_T34_Unit;     
+
+
+ //  final static int    UnitMenacePower        =MENACE_GODZILLA;  Heavy weapon
+
+  final static String DefaultSurfaceControl = "None";
+
+  boolean m_Objectdestroyed = false;
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND","RUS"];      //
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void C4MeterBoxUnit()
+  {
+    SetupMesh(new #AnimatedObject<C4MeterBoxModel>(), [1]);
+  }
+
+
+  void Construct(
+    Component _Mission,
+    Component _PropMap
+    )
+  {
+
+    CUnit::Construct(_Mission, _PropMap);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET762792, 0.1);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET127,    0.1);
+
+  }
+
+}

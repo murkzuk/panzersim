@@ -1,0 +1,286 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CC5M3Mission extends CSPMission
+{
+  //-------------------------------
+  // Contruction and initialization
+  //-------------------------------
+  String m_LocalTime             = "14:20:00";
+  String m_TerrainMapTextureName = "Missions/CustomMissions/Panther_M3/c5m3_Map.tex";
+
+  static String m_MissionBriefingPicMaterial = "C5M3BriefingPic";
+
+  static Array m_MissionObjectives = [
+                                       [MOTID_Primary,   CC5M3Mission_Strings::Objective01, MOSID_InProgress, true]
+
+                                     ];
+
+  static WString ObjectivesText = CC5M3Mission_Strings::ObjectivesText;
+
+  boolean isDebug = true;
+  boolean isRadarUpdateDebug = true;
+  boolean MainPlayerStartEgine = false;
+
+  Array m_NavpointsForPlayerMap = [
+                                     [
+                                      ["Vil_7_NavPointVis"],
+                                      CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+                                      new Color(30.0/256.0, 60.0/256.0, 245.0/256.0)   // NavColor
+                                      ]/*,
+
+                                     [
+                                      ["NavPointBer"],
+                                      CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+                                      new Color(244.0/256.0, 10.0/256.0, 10.0/256.0)   // NavColor
+                                      ],
+                                      [
+                                       ["NavPointHQ_1"],
+                                       CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+                                       new Color(30.0/256.0, 60.0/256.0, 245.0/256.0)   // NavColor
+                                      ]  */
+                                    ];
+
+  float  CockpitMapMinRange        = 1000.0;
+  float  CockpitMapMaxRange        = 3000.0;
+  float  CockpitMapNavNameMaxRange = 2000.0;
+  int    CockpitMapZoomSteps       = 4;
+  Vector MarksInitPoint            = new Vector(1000.0, 1000.0, 0.0);
+  //Array  CockpitMapAccessBox       = [new Vector(2399, 1608.0, 0.0), new Vector(6890.0, 6099.0, 0.0)];
+  Array  CockpitMapAccessBox       = [new Vector(2399, 1632.0, 0.0), new Vector(12000.0, 12000.0, 0.0)];
+
+  final static Array RouterWorkingZones = [
+                                           [40000.0 , 40000.0, 60000.0, 60000.0]
+                                          ];
+
+
+  Array KillList_Primary1   = ["CC5M3_Truck_01", "CC5M3_Truck_02", "CC5M3_Truck_03", "CC5M3_Truck_04", "CC5M3_Truck_05", "CC5M3_Truck_06", "CC5M3_Truck_07", "CC5M3_Truck_08", "CC5M3_Truck_09", "CC5M3_Truck_Ten","CC5M3_Truck_011", "CC5M3_Truck_012", "CC5M3_Truck_013", "CC5M3_Truck_014", "CC5M3_Truck_015", "CC5M3_Truck_016", "CC5M3_Truck_017", "CC5M3_Truck_018", "CC5M3_Truck_019", "CC5M3_Truck_Twenty"];
+
+  Array KillList_t34        = ["CC5M3_T34-76mm_01","CC5M3_T34-76mm_02"];
+
+  boolean KP1_Destroy = false;
+
+
+  int Penalty_count = 0;
+
+  void CC5M3Mission()
+  {
+    // Construct mission
+    CSPMission("CC5M3Mission", "CC5M3Content");
+
+    // Set mission properties
+    SetMissionTerrain(new #ChunkedTerrain<CC5M3Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<CC5M3Atmosphere>());
+    SetMissionSky(new #SkyObject<CSky05Model>());
+
+    if (CDebugSettings::LoadForest)
+      SetMissionForest(new CSTBaseForestC1(GetMissionAtmosphere()));
+
+    if (CDebugSettings::LoadRoads)
+      SetMissionRoadsParms(new CBaseRoadC1());
+
+    if (CDebugSettings::LoadGrass)
+      RegisterObject("Grass", new #Grass<CBaseGrassC1>());
+
+    SetMissionWorldMatrices(new #WorldMatrices<CC5M3WorldMatrices>(),
+      [
+        [LAYER_TERRAIN_NAME, "CC5M3LandscapeLayer"      ],
+        [LAYER_TERRAIN_ZONE, "CC5M3TerrainZoneLayer"    ],
+        [LAYER_ROUTER_ZONE,  "CC5M3RouterZoneLayer"     ],
+        [LAYER_MICROTEXTURE_MAP1, "CC5M3MicroTextures1" ],
+        //["Landing Zone Texture",  "CM6LZTexture"      ],
+        [LAYER_TERRAIN_WATERHEIGHTS, "CC5M3WaterHeights"]
+      ]);
+
+    SetRouterPrecalculatedGraph(
+      new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CC1RouterMap>(), 64, RouterWorkingZones);
+  }
+
+  void StartMission()
+  {
+    // call inherited
+    CSPMission::StartMission();
+   //sendEvent(20.0, SOID_MissionController, "StartPhase3", []);
+   sendEvent(30.0, SOID_MissionController, "AwaySappaersOnHit", []);
+   sendEvent(60.0, SOID_MissionController, "AwaySappaersOnSee", []);
+    //Component console = new #GameController().GetObject(SOID_Console);
+    //console.disablebeh();
+    //console.showbehinf(true);
+  }
+
+  event void OnMissionDialogEnd(String _DialogID)
+  {
+  }
+
+//  fireEvent(0.0, [], "OnEngineStateChanged", [true]);    
+  event void OnEngineStateChanged(boolean _IsWorkEngine)
+  {
+    if (!MainPlayerStartEgine)
+    {
+      MainPlayerStartEgine = true;
+      sendEvent(3.0, getIdentificator(user) ,"MainPlayerUnitMessage", []);
+      sendEvent(5.0, "Panther_D_714", "WMFollow", []);
+      //sendEvent(44.0, "CC5M3Hanomag_Grp01", "PopDelayedOrder", []);
+    }
+  }
+  event void MainPlayerUnitMessage()
+  {
+    SendCockpitMessage(L"Enemy Supply Units are fleeing Village" , new Color(1.0, 1.0, 0.0));
+  }
+
+  void OnObjectEnterNavPoint( String _NavPointID, String _ObjectID)
+  {
+  }
+
+  void OnObjectLeaveNavPoint( String _NavPointID, String _ObjectID)
+  {
+    // logWarning("Object: " + _ObjectID + " leave NavPoint: " +  _NavPointID);
+  }
+
+  event void FailMissionMad()
+  {
+    FailMission(0.0);
+  }
+
+  event void OnObjectDestroyed(String _ObjectID)
+  {
+    CMission::OnObjectDestroyed(_ObjectID);
+
+    // TMP
+    Component DeadThing = GetObject(_ObjectID);
+    if (null == DeadThing)
+    {
+   //   logError("Component 'DeadThing' == null");
+      return;
+    }
+    // TMP
+
+//    logWarning("Object destroyed: " + _ObjectID + ", last damaged by unit: " + new String (DeadThing.GetLastDamager()));
+
+    String Affiliation  = DeadThing.GetAffiliation();
+    String Damager      = DeadThing.GetLastDamager();
+
+    if (Damager == "MainPlayerUnit")
+    {
+ //     logWarning("CheckMadPlayer");
+ //     logWarning("CheckMadPlayer. Affiliation is " + Affiliation);
+ //     logWarning("CheckMadPlayer. Damager is " + Damager);
+
+      if (!checkMask(DeadThing, ["HUMAN"], []))
+      {
+ //       logWarning("MadPlayer_kill_Non_Human");
+
+        if (Affiliation == "FRIEND")
+        {
+ //         logWarning("MissionWillBeKilledByFriendlyFire");
+          Penalty_count = Penalty_count + 1;
+          SendCockpitMessage(CGameMessages::msg_FriendlyFireWarning, new Color(1.0, 1.0, 0.0));
+          // New report for Cocpit: "You kill friendly unit. Mission will be fail"
+          if (Penalty_count >= 2)
+          {
+ //           logWarning("MissionKillingByFriendlyFire");
+            SendCockpitMessage(CGameMessages::msg_FriendlyFireFailed, new Color(1.0, 0.0, 0.0));
+            sendEvent(11.0, SOID_MissionController, "FailMissionMad", []);
+          }
+        }
+      }
+    }
+
+    int IndexPr1  = KillList_Primary1.find(_ObjectID);
+
+    int IndexT34  = KillList_t34.find(_ObjectID);
+
+    if(IndexT34 != -1)
+       KillList_t34.remove(IndexT34);
+
+    if(KillList_t34.size() <= 0) //  && !KP1_Destroy
+      sendEvent(0.0, "CC5M3Hanomag_Grp01", "PopDelayedOrder", []);
+
+    if(IndexPr1 != -1)
+       KillList_Primary1.remove(IndexPr1);
+
+    if(KillList_Primary1.size() <= 1) //  && !KP1_Destroy
+      SetObjectiveStatus(0, MOSID_Completed);
+
+  }
+
+  event void SetNavPointIdentifiersArray(String _NavPointID, Array _ID)
+  {
+    Component NavPoint = GetMission().GetObject(_NavPointID);
+
+    if (null != NavPoint)
+    {
+      NavPoint.SetIdentifiers(_ID);
+    }
+    else
+      logError("Component NavPoint with ID = " + _NavPointID + " - null!" );
+  }
+
+  void ShutdownWatcher(String _Watcher)
+  {
+    Component watcher =  GetObject(_Watcher);
+    if(watcher == null)
+    {
+   //   logError("Watcher with name=" + _Watcher + "  doees not exist!");
+      return;
+    }
+    watcher.SetEventHandler(null);
+    watcher = null;
+  }
+//  sendEvent(0.0, SOID_MissionController, "StartPhase3", []);
+  event void StartPhase3()
+  {
+    AwaySappaersOnSee();
+  }
+
+//  fireEvent(0.0, [], "AwaySappaersOnHit", []);
+//  fireEvent(0.0, [], "AwaySappaersOnSee", []);
+  event void AwaySappaersOnHit()
+  {
+    fireEvent(0.0, [], "AwaySappers", []);
+    fireEvent(0.0, [], "AwayRepair", []);
+ //   fireEvent(0.0, [], "ArmyPosition", []);
+  }
+
+  event void AwaySappaersOnSee()
+  {
+    fireEvent(20.0, [], "AwaySappers", []);
+    fireEvent(30.0, [], "AwayRepair", []);
+  //  fireEvent(0.0, [], "ArmyPosition", []);
+  }
+
+  void Shutdown()
+  {
+    CSPMission::Shutdown();
+  }
+
+  float Distance(String _BetweenID_1, String _BetweenID_2)
+  {
+    float m_CurrentDistance;
+    Component Between_1 = new #GameController().GetObject(_BetweenID_1);
+    Component Between_2 = new #GameController().GetObject(_BetweenID_2);
+
+    if (null == Between_1 && null == Between_2)
+    {
+   //   logError("Component - null!");
+      return;
+    }
+
+    Vector m_Pos_1 = getPosition(Between_1).origin;
+    Vector m_Pos_2 = getPosition(Between_2).origin;
+
+    m_CurrentDistance = (m_Pos_1 - m_Pos_2).Magnitude();
+
+    //logWarning("[Distance] Unit`s " + _BetweenID_1 + " and " + _BetweenID_2 + " distance = " + new String(m_CurrentDistance));
+    return m_CurrentDistance;
+  }
+
+}

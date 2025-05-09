@@ -1,0 +1,56 @@
+
+
+class CInstances
+{
+  static void InitializeInstances()
+  {
+//    Cbld_BarrackModel::InstancesQty                          = 1;
+    Cfence_WickerModel::InstancesQty                         = 9;
+    Cfence_PalisadeModel::InstancesQty                       = 9;
+    Cfence_PoleModel::InstancesQty                           = 9;
+    Cbld_PostElectricModel::InstancesQty                     = 8;
+    Cbld_USRCorralWoodModel::InstancesQty                    = 9;
+    Cbld_USRHouseWoodModel::InstancesQty                     = 9;
+    Cbld_USRShedWoodModel::InstancesQty                      = 9;
+    Cbld_USRShedWood02Model::InstancesQty                    = 9;
+    Cbld_BridgeWoodModel::InstancesQty                       = 9;
+    Cu_veh_SU85Model::InstancesQty                           = 1;
+    Cu_veh_t34_85_44Model::InstancesQty                      = 1;
+    Cu_veh_PzVI_MAINModel::InstancesQty                      = 1;
+    Cu_veh_PzIVGModel::InstancesQty                          = 1;
+    Cu_veh_t34_76_42Model::InstancesQty                      = 1;
+    Cu_veh_SdKfz121_PNZ_IIModel::InstancesQty                = 1;
+    Cu_veh_PzIII_J_L60Model::InstancesQty                    = 1;
+    Cu_veh_TIGER_E1_AIModel::InstancesQty                    = 1;
+    Cu_veh_TIGER_E1_Mid1Model::InstancesQty                  = 1;
+    Cu_veh_TIGER_E1_Mid_AIModel::InstancesQty                = 1;
+    Cu_veh_PzIII_J_L24Model::InstancesQty                    = 1;
+    Cu_veh_KV85HvyModel::InstancesQty                        = 1;
+    Cu_veh_KV1_Zis5HvyModel::InstancesQty                    = 1;
+    Cu_veh_KV1_S_HvyModel::InstancesQty                      = 1;
+    Cu_veh_T34_Turret41_CModel::InstancesQty                 = 1;
+    Cu_veh_T34_HardEdge_43Model::InstancesQty                = 1;
+    Cu_veh_t34_ChTz_42Model::InstancesQty                    = 1;
+    Cu_veh_NasHornModel::InstancesQty                        = 1;
+    Cu_veh_HummelModel::InstancesQty                         = 1;
+    Cu_veh_SdKfz124_WespeModel::InstancesQty                 = 1;
+    Cu_veh_SU122_42Model::InstancesQty                       = 1;
+    Cu_veh_STURM_HaubitzModel::InstancesQty                  = 1;
+    Cu_veh_StuG_F8Model::InstancesQty                        = 1;
+    Cu_veh_StuG_75L24Model::InstancesQty                     = 1;
+    Chum_SSTankmanModel::InstancesQty                        = 4;
+    Cenv_Antitank_singleModel::InstancesQty                  = 9;
+    Cbld_DzotWoodModel::InstancesQty                         = 4;
+    Cbld_SandBagWallModel::InstancesQty                      = 9;
+    Cbld_WaterWell_1Model::InstancesQty                      = 9;
+    Cbld_WaterWell_2Model::InstancesQty                      = 9;
+    Cbld_BarricadeModel::InstancesQty                        = 9;
+    Cu_stat_ML20_152mmModel::InstancesQty                    = 9;
+    Cu_stat_GunLeFh18_105mmModel::InstancesQty               = 9;
+    Cbld_Barricade_PakModel::InstancesQty                    = 3;
+    Chum_GermanSoldierRifleModel::InstancesQty               = 9;
+    Chum_GermanSoldierRifle_WModel::InstancesQty             = 9;
+    Chum_SovietSoldierRifleModel::InstancesQty               = 9;
+    Chum_SovietSoldierRifle_WModel::InstancesQty             = 9;
+  }
+}

@@ -1,0 +1,251 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+class CFW190Explosion
+  extends CAirVehicleExplosion
+{
+  float  Damage   = 50.0;
+  float  Radius   = 10.0;
+}
+
+ 
+class CFW190MachineGunBulletExplosion
+  extends CMachineGun127BulletExplosion
+{
+  float  Damage   = CPiercing::BtrM3A1HalftruckMachineGunDamage;
+}
+class CFW190MachineGunBulletControl
+  extends CMachineGunBulletControl
+{
+  String ExplosionId  = "BtrM3A1HalftruckMachineGunBulletExplosion";
+  Vector GravityAccel = CPiercing::BulletGravityVector;
+  float  BulletSpeed  = 850.0;
+  float MaxDistance = 2000;
+  float  Mass         = 0.09;
+}
+/*class CFW190MachineGun
+  extends CMachineGun    //   CLightFlakGun, CWeaponFireRecoil, CPlayerWeapon ,
+{
+  float  InitBulletSpeed = CPiercing::BtrM3A1HalftruckMachineGunBulletSpeed;
+
+  final static String BulletPatternId = "BtrM3A1HalftruckMachineGunBullet";
+
+  final static Vector GravityVector   = CWorldPhysics::GravityVector;
+  final static boolean HighTrajectory  = false;
+
+  Component BurstFireSound  = new #Emitter<C50calMachineGunFireSound>();
+
+  final static float    LockAngleHMin     = -0.0;
+  final static float    LockAngleHMax     =  0.0;
+  final static float    LockAngleVMin     = -0.0;
+  final static float    LockAngleVMax     =  0.0;
+  final static float    BlockedLockAngle  =  0.0;
+
+  final static boolean  IsManualTargetable = false;
+  final static boolean  CheckObstacles     = false;
+  final static boolean  SelfTargeting      = true;
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod        = 200; // ms
+  final static int  FirePeriodRandAdd = 0;   // ms
+
+  final static boolean BurstFire      = true;
+  final static int  BurstTime         = 2400; // ms
+  final static int  BurstTimeRandAdd  = 0; // ms
+
+  final static int  BurstDelay        = 3000; // ms
+  final static int  BurstDelayRandAdd = 2000; // ms
+  // gun specific fire mask with priorities
+  final static Array GunSpecificFireMask = [
+                                [["HUMAN"],[]], // low priority mask: RestrictTo, Exclude
+                                [["AIR"],[]]
+                              ];
+}  */
+
+class CFW190AirBombControl
+     extends CBombControl
+{
+  String    ExplosionId  = "Pe8_Hvy_BomberAirBombExplosion";
+  Component BulletRender = new #AnimatedObject<Cwpn_BombModel>(); //$TMP should be changed to correct model when it'll be done
+  String  TraceEffectId    = "";
+ // float     PenetrationPower      = CPiercing::GunFH18_150mmHEPenetrationPower;
+
+
+  boolean OnDetonate(
+      Matrix _Position,
+      Vector _Direction,
+      Component _TargetObject,
+      Component _TargetObjectPart,
+      float     _Penetration,
+      String    _OwnerID,
+      int       _InstanceID,
+      int       _SubstanceID
+    )
+  {
+    sendEvent(0.0, _OwnerID, "OnBombDetonate", [_Position]);
+    return true;
+  }
+}
+
+class CFW190BombDropper
+  extends CLightGun  // CHeavyGun
+{
+  final static float  InitBulletSpeed = 0.0;
+  final static float  FireDeviation   = 0.30;
+
+  //final static Vector GravityVector   = CWorldPhysics::GravityVector;
+
+  final static String  BulletPatternId  = "CFW190AirBombControl";
+
+  //$tmp - keep fire effects for debug propose
+  //String    FireEffectId    = "";
+  //String    CloudEffectId   = "";
+  final static String    FireSoundId     = "";
+
+  final static int     Ammunition       = 1;
+ // final static int     TargetCameraFilter = ETC_FILTER_TV;
+
+  final static float   AmmoMass = 500.0;
+
+  final static float    LockAngleHMin     = 0.0;
+  final static float    LockAngleHMax     = 0.0;
+  final static float    LockAngleVMin     = 0.0;
+  final static float    LockAngleVMax     = 0.0;
+  final static float    BlockedLockAngle  =  0.0;
+
+  final static boolean  IsManualTargetable = false;
+  final static boolean  CheckObstacles     = false;
+  final static boolean  SelfTargeting      = true;
+
+  Component BurstFireSound  = null;
+
+  final static boolean SpecialWeapon  = false;
+
+  // *** Gun parameters for behavior
+  final static int  FirePeriod        = 200; // ms
+  final static int  FirePeriodRandAdd = 0;   // ms
+
+  final static boolean BurstFire      = true;
+  final static int  BurstTime         = 2000; // ms
+  final static int  BurstTimeRandAdd  = 0; // ms
+
+  final static int  BurstDelay        = 0; // ms
+  final static int  BurstDelayRandAdd = 0; // ms
+
+  final static Array GunSpecificFireMask = [
+                                [["Ground"], []]
+                              ];
+
+  final static boolean ResetLockOnFire  = false;
+  final float          TargetingRange   = 1650;     //1
+  final static int     AutoRepeatDelay  = 200;
+} 
+
+class CFW190AirBehavior extends CBaseAirCraftBehavior
+{
+
+  int      AttackStyle        = AttackStyle_NonStop;
+  boolean  CanMove            = true;
+  boolean  HasRouter          = true;
+  boolean  HasRadar           = true;
+  boolean CanFireInMove       = true;
+
+  // *** radar parameters
+
+  float MaxRadarDistance = 2500.0; // m
+  float MinRadarDistance = 60.0;    // m
+  float MaxRadarAngle    = 180.0;
+
+  int    UpdateRadarPeriod        = 500; // ms
+  int    UpdateRadarPeriodRandAdd = 0; // ms
+
+  float   AttackDistanceMin = 20.0;
+  float   AttackDistanceMax = 2500.0;
+  float   FlyingHeight = 1686.0;
+  float   StealthHeight = 426.0;
+  float   FlyingHeightMin = 256.0;
+  // *** movement physical parameters
+
+  // physical limitations
+  float  MinRotateRadius = 160;
+  float  CeilingByZ = 3000.0;    // max flying height
+  float  MinSpeed   = 129.99;       // min flying speed
+  // physical limitations
+  Vector  MaxSpeed                      = new Vector( 299.99, 0, 0);   // m/s
+
+}
+class CFW190Unit
+  extends CUnit
+{
+
+  final static float DefaultHitPoints = CHitPoints::FW190UnitHitPoints;
+  
+  static category UnitType = CLASSIFICATOR_T34_AIR;
+
+  final static String DefaultSurfaceControl = "None";
+  static Array  LandingJoints = [""];
+
+
+ // static String PrevExplosionID = "FW190Explosion";
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["AIR", "AIRPLANE", "GER"];
+  final static int    UnitMenacePower        = MENACE_GODZILLA;  // Heavy weapon
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CFW190Unit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_air_FW_190ZModel>(), [0]); //  500, 200, 100, 50, 7
+
+    SetMovementEffects(
+        new #Emitter<CPlaneMovementSound>(),
+        []
+      );
+
+    //$TMP WEAPON   //
+
+    // init and register weapon
+ /*    Component Weapon =  new #Weapon<CFW190BombDropper>();
+    Component Mesh = GetMeshComponent();
+    Weapon.AttachToModel(Mesh, [Mesh]);
+
+    m_WeaponNames.add("WeaponID");
+    m_WeaponList.add(Weapon);
+    RegisterObject("WeaponID",Weapon);
+                                                              */
+   SetupWeapon("Weapon_A", new #Weapon<CFW190BombDropper>(),["Bomb1"],null);
+
+
+
+    SetupBehavior(new #VehicleBehavior<CFW190AirBehavior>());
+  }
+  void Construct(
+    Component _Mission,
+    Component _PropMap
+    )
+  {
+
+    CUnit::Construct(_Mission, _PropMap);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET762792, 0.1);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET127,    0.1);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_CALIBREBULLET7576,    1.3);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_CALIBREBULLET85,    1.3);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_CALIBREBULLET88,    1.3);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_HEBULLET7576,    1.4);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_HEBULLET85,    1.4);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_HEBULLET88,    1.6);
+  }
+
+}
+
+

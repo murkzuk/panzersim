@@ -1,0 +1,61 @@
+// TargetPractice Mission - Terrain Configuration
+
+class CTargetPracticeTerrain extends CBaseMegaTerrain, CBaseZoneMap
+{
+  CTargetPracticeTerrain() // Constructor should match class name
+  {
+    if (!CDebugSettings::LoadWater)
+      WaterRegions = [];
+  }
+
+  // Simplified forest settings for target practice
+  void CreateForesRegions()
+  {
+    // Only register forests if forest_c2m1.tex and TerrainZone_c2m1.bmp are present
+    // and if the zone map actually defines ZMC_Forest01 where you want trees.
+    // You can comment this section out if no forests are needed.
+    Component Materials = new #MaterialManager<CSTBaseForestC1Skin>();
+    RegisterForestRegion(
+      [ZMC_Forest01], // Assumes this zone exists in the copied TerrainZone bitmap
+      Materials,
+      // *** IMPORTANT: Ensure this path points to YOUR mission folder ***
+      "Missions/MyMissions/TargetPractice/forest_c2m1.tex", // Using M1's forest texture
+      // Simplified LOD: Fewer layers, less density variation
+      ["L2", "L3"],
+      [8.0, 6.0],       // Density
+      [500.0, 1500.0],  // Start Fade Distance
+      [2500.0, 5000.0]  // Max Distance / Hide Layer
+    );
+    // Not registering vertical forest for simplicity
+    CBaseMegaTerrain::CreateForesRegions();
+  }
+
+  // Terrain resources
+  String SkinClass  = "CTargetPracticeTerrainSkin";
+
+  // Inherit SeaLevel etc from the source map data context
+  float SeaLevel    = 450.0;
+  float BaseDensity = 0.125;
+
+  // Use water regions from the source map data context
+  Array  WaterRegions = [
+    new CWaterRegion(new Vector(23532.10, 29461.19, 1165.0), 1165.0)
+  ];
+  Array WaterMirrorMasks = [ [ [], [CLASSIFICATOR_SHADOW, CLASSIFICATOR_UI, CLASSIFICATOR_TERRAINPATCH] ] ];
+
+  float TerrainShadowPower = 1.0; // Soft terrain shadows
+  float NormalNoise        = 0.1;
+  boolean IsAntiLighting = true;
+  boolean IsPlanarWater  = true;
+}
+
+class CTargetPracticeTerrainSkin extends CBaseMegaTerrainSkin
+{
+  CTargetPracticeTerrainSkin() // Constructor should match class name
+  {
+    // *** IMPORTANT: Ensure this path points to YOUR mission folder ***
+    SetupTerrainMainMaterial("Missions/MyMissions/TargetPractice/lnd_c2m1.tex"); // Using M1's landscape texture
+    // AppendMaterials(MissionSpecificMaterials); // Not needed for this simple mission
+  }
+  // Array MissionSpecificMaterials = []; // Not needed
+}

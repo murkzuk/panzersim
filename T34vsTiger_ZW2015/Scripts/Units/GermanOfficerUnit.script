@@ -1,0 +1,149 @@
+//-------------------------------------------------------------------
+/*
+  Array  Animation = ["Auchtung", [ "l_Arm_Left",1, 5], [ "l_Arm_Right",1, 5], [ "l_Bedro_Left",1, 5], [ "l_Bedro_Right",1, 5], [ "l_Elbow_Left",1, 5], [ "l_Elbow_Right",1, 5], [ "l_Foot_Left",1, 5],
+                      ["l_Foot_Right",1, 5], [ "l_Golen_Left",1, 5], [ "l_Golen_Right",1, 5], [ "l_Hand_Left",1, 5], [ "l_Hand_Right",1, 5], [ "l_Head", "l_Hips",1, 5], [ "l_Shoulder_Left",1, 5], [ "l_Shoulder_Right",1, 5], [ "l_Spine",1, 5], [ "l_Spine1",1, 5] ];
+
+
+*/
+//-------------------------------------------------------------------
+class CGermanOfficerLoadTransportAnim
+{
+  final static String  AnimationName     = "load";
+  final static float   AnimationTime     = 1.0;
+}
+
+class CGermanOfficerUnloadTransportAnim
+{
+  final static String  AnimationName     = "unload";
+  final static float   AnimationTime     = 1.0;
+}
+
+//Rifle
+class CGermanOfficerBulletExplosion
+  extends CRifleBulletExplosion
+{
+  float  Damage   = 5.0;
+}
+
+class CGermanOfficerFakeBulletControl
+  extends CFakeRifleBulletControl
+{
+  String    ExplosionId  = "GermanOfficerBulletExplosion";
+  Component BulletRender = null; //new #StaticEffect<CRifleBulletEffect>();
+}
+
+class CGermanOfficer
+  extends CRifle
+{
+  final static String BulletPatternId = "GermanOfficerFakeBullet";
+  final static String FireSoundId     = "98kRifleFireSound";
+
+  Component BurstFireSound  = null; //new #Emitter<CM60RifleFireSound>();
+
+  final static float LockAngleHMin = - 46;
+  final static float LockAngleHMax =   46;
+  final static float LockAngleVMin = - 46;
+  final static float LockAngleVMax =   46;
+
+  // *** Rifle parameters for behavior
+  final static int  FirePeriod        = 3200; // ms
+  final static int  FirePeriodRandAdd = 500;  // ms
+
+  final static float MinDistance      = 1;
+  final static float MaxDistance      = 250;
+
+  final static boolean BurstFire      = false;
+  final static int  BurstTime         = 2000; // ms
+  final static int  BurstTimeRandAdd  = 0;    // ms
+
+  final static int  BurstDelay        = 3000; // ms
+  final static int  BurstDelayRandAdd = 2000; // ms
+
+  final static int     AutoRepeatDelay  = 110;
+
+  // gun specific fire mask with priorities
+  final static Array GunSpecificFireMask = [
+                                [["HUMAN"],[]],  // high priority mask
+                                [["AIR"],  []],  // low priority mask
+                                [[],       []]   // low priority mask: RestrictTo, Exclude
+                              ];
+}
+
+class CGermanOfficerBehaviorParams extends CBaseBehaviorParams
+{
+  float MaxAttackSpeed    = 2.5;
+}
+
+class CGermanOfficerBehavior
+  extends CHumanBehavior
+{
+  final static Component SpecParams = new CGermanOfficerBehaviorParams();
+
+  boolean  CanMove   = true;
+  boolean  HasRouter = true;
+  boolean  HasRadar  = true;
+
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 500; // m
+  float  MinRadarDistance = 1;    // m
+
+  float   AttackDistanceMin           =  1.0;
+  float   AttackDistanceMax           = 500.0;
+
+  int    UpdateRadarPeriod        = 7000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+}
+
+
+class CGermanOfficerUnit
+  extends CHumanUnit
+{
+  final static float DefaultHitPoints = CHitPoints::GermanTrooperUnitHitPoints;
+  
+  static category UnitType = CLASSIFICATOR_T34_SOLDER;
+
+//  final static boolean CanStayAttack = false;
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND", "HUMAN"];
+
+  final static String DefaultSurfaceControl = "PutonGroundLandingJoints";
+
+  static Array  LandingJoints = ["WalkPoint"];
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CGermanOfficerUnit()
+  {
+    SetupMesh(new #AnimatedObject<Chum_OfficerModel>(), [0]);
+
+    // Setup default substance id
+    SetupObjectSubstance(CSubstances::Body);
+
+    //$TODO animator
+    //GetObject("AnimWeapon").EnableAnimator(false);  
+    SetupWeapon("Weapon", new #Weapon<CGermanOfficer>(), ["Fire_A"], null);        //
+    SetupBehavior(new #HumanBehavior<CGermanOfficerBehavior>());
+
+  //    Load additionals animations
+   LoadAnimations("ChumansAnimation");
+   LoadAnimations("CDeathAnimation");
+
+    //SetupLoadTransportAnimation(new #LineAnimator<CGermanOfficerLoadTransportAnim>(),
+    //                            new #LineAnimator<CGermanOfficerUnloadTransportAnim>()
+    //                            );
+
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CHumanUnit::Construct(_Mission, _PropMap);
+  }
+}

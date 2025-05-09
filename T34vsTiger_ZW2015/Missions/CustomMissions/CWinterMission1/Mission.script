@@ -1,0 +1,327 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CWinterM1Mission  extends CSPMission
+{
+  //-------------------------------
+  // Contruction and initialization
+  //-------------------------------
+
+
+
+  String m_LocalTime             = "6:20:00";
+  String m_TerrainMapTextureName = "Textures/Winter_CWM1_Map.tex";
+
+  static String m_MissionBriefingPicMaterial = "WinterM1BriefingPic";
+
+  static Array  m_MissionObjectives = [
+      [MOTID_Primary,   CWinterM1Mission_Strings::Objective01, MOSID_InProgress, true],
+      [MOTID_Primary,   CWinterM1Mission_Strings::Objective02, MOSID_InProgress, true],
+      [MOTID_Primary,   CWinterM1Mission_Strings::Objective03, MOSID_InProgress, true]
+                               ];
+static WString ObjectivesText = CWinterM1Mission_Strings::ObjectivesText;
+  boolean isDebug = true;
+  boolean isRadarUpdateDebug = false;
+  boolean MainPlayerStartEgine = false;
+  boolean OpenFire        = false;
+  boolean HaltFire        = false;
+
+  Array m_TargetHowitzerNavPoint1_1 = ["NP_Fire_1_1A"];
+  Array m_TargetHowitzerNavPoint1_2 = ["NP_Fire_2_1B"];
+  Array m_TargetHowitzerNavPoint2_1 = ["NP_Fire_1_1A"];
+  Array m_TargetHowitzerNavPoint2_2 = ["NP_Fire_2_1B"];
+  Array m_TargetHowitzerNavPoint3_1 = ["NP_Fire_1_1A"];
+  Array m_TargetHowitzerNavPoint3_2 = ["NP_Fire_2_1B"];
+  int m_TargetHowitzerPlace = 1;
+
+  Array m_NavpointsForPlayerMap = [
+      [
+        ["NavPointRedArmy"],
+        CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+        new Color(244.0/256.0, 10.0/120.0, 10.0/120.0)   // NavColor
+      ],
+      [
+        ["NavPointGerman"],
+        CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+        new Color(30.0/256.0, 60.0/256.0, 245.0/256.0)   // NavColor
+      ]
+                                   ];
+
+  float  CockpitMapMinRange        = 500.0;
+  float  CockpitMapMaxRange        = 3200.0;
+  float  CockpitMapNavNameMaxRange = 2000.0;
+  int    CockpitMapZoomSteps       = 5;
+  Vector MarksInitPoint            = new Vector(1000.0, 1000.0, 0.0);
+  Array  CockpitMapAccessBox       = [new Vector(2, 2.0, 0.0), new Vector(18000.0, 18000.0, 0.0)];
+
+
+  final static Array RouterWorkingZones = [
+    [-1000.0 , -1000.0, 20000.0, 20000.0]
+                                          ];
+  Array KillListZis1 =  ["SovietHidden_GunZis1","SovietHidden_GunZis2"];
+  Array KillListZis2 =  ["RU_Mortar1", "RU_Mortar2","RU_Mortar3","RU_Mortar4","RU_Mortar5","RU_Mortar6"];
+  Array KillListT34  =  ["T34PlatoonA3_T34_01", "T34PlatoonA3_T34_02", "T34PlatoonA3_T34_03", "T34PlatoonA3_T34_04", "T34PlatoonA2_SHOCK_01", "T34PlatoonA2_SHOCK_02", "T34PlatoonA2_SHOCK_03", "T34PlatoonA2_SHOCK_04", "T34PlatoonA2_SHOCK_05","T34PlatoonA1_T34_01", "T34PlatoonA1_T34_02", "T34PlatoonA1_T34_03", "T34PlatoonA1_T34_04", "T34PlatoonA1_T34_05", "T34Platoon_KV1_01", "T34Platoon_KV1_02", "T34Platoon_KV1_03", "T34Platoon_KV1_04", "T34Platoon_KV1_05"];
+  Array GermanKillList = ["Bridge_RU-Infantry_1","Bridge_RU-Infantry_2","SCOUT_HANOMAG251AusfC", "Panzer_Faust_231", "A_Tiger_111", "A_Tiger_112","Panzer_Faust_211", "Panzer_Faust_212", "Panzer_Faust_213","Panzer_Faust_214","Panzer_Faust_221", "Panzer_Faust_222", "Panzer_Faust_223", "Panzer_Faust_224", "Panzer_Faust_232", "Panzer_Faust_233", "Panzer_Faust_234","MainPlayerUnit"];
+
+  void CWinterM1Mission()
+  {
+    // Construct mission
+    CSPMission("CWinterM1Mission", "CWinterM1Content");
+     // Set mission properties
+    SetMissionTerrain(new #ChunkedTerrain<CWinterM1Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<CWinterM1Atmosphere>());
+    SetMissionSky(new #SkyObject<CSky01Model>());
+
+    if (CDebugSettings::LoadForest)
+      SetMissionForest(new CSTBaseWinterLowLandForestC1(GetMissionAtmosphere()));    // CSTBaseWinterForestC1    
+
+    if (CDebugSettings::LoadRoads)
+      SetMissionRoadsParms(new CBaseRoadW1());
+
+    if (CDebugSettings::LoadGrass)
+      RegisterObject("Grass", new #Grass<CBaseWinterGrassC1>());
+
+    m_MissionLensFlare =  new #LensFlare<CWinterM1LensFlare>();
+    SetMissionWorldMatrices(new #WorldMatrices<CWinterM1WorldMatrices>(),
+      [
+        [ LAYER_TERRAIN_NAME,         "CWinterM1LandscapeLayer"],
+        [ LAYER_TERRAIN_ZONE,         "CWinterM1TerrainZoneLayer"],
+        [ LAYER_ROUTER_ZONE,          "CWinterM1RouterZoneLayer" ],
+        [ LAYER_MICROTEXTURE_MAP1,    "CWinterM1MicroTextures1"],
+        [ LAYER_TERRAIN_WATERHEIGHTS, "CWinterM1WaterHeights"]
+
+      ]);
+
+    SetRouterPrecalculatedGraph(
+      new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CC1RouterMap>(), 64, RouterWorkingZones);
+  
+  }
+//   void Init()
+//   { }
+   
+   
+  void StartMission()
+  {
+    // call inherited
+    CSPMission::StartMission();
+
+   // sendEvent(20.0, SOID_MissionController, "StartWithTimeOut", []);    
+  //  sendEvent(140.0, SOID_MissionController, "OpenFakeFire", []);
+  //  sendEvent(290.0, SOID_MissionController, "HaltFakeFire", []);  //
+  }
+
+  event void OnEngineStateChanged(boolean _IsWorkEngine)
+  {
+     MainPlayerStartEgine = true;
+  }
+
+
+  event void FailMissionMad()
+  {
+    FailMission(0.0);
+  }
+   event void HaltFakeFire()
+  {
+    StartPhase1();
+    HaltFire = true;
+    return HaltFire;  //
+  }
+
+  event void OpenFakeFire()
+  {
+
+    OpenFire = true;
+    sendEvent( 0.0, SOID_MissionController, "StartFakeHowitzerFire", []);  //
+    return OpenFire;
+  }
+
+ //////  startfire begin   ************************************************* 
+
+    event void StartFakeHowitzerFire()                                
+
+  {
+    Array ArrayID_1;
+    Array ArrayID_2;
+
+    if (m_TargetHowitzerPlace == 4)
+      m_TargetHowitzerPlace = 1;
+
+    if (m_TargetHowitzerPlace == 1)
+    {
+      ArrayID_1 = m_TargetHowitzerNavPoint1_1;
+      ArrayID_2 = m_TargetHowitzerNavPoint1_2;
+    }
+    else if (m_TargetHowitzerPlace == 2)  /**/
+    {
+      ArrayID_1 = m_TargetHowitzerNavPoint2_1;
+      ArrayID_2 = m_TargetHowitzerNavPoint2_2;
+    }
+    else if (m_TargetHowitzerPlace == 3)
+    {
+      ArrayID_1 = m_TargetHowitzerNavPoint3_1;
+      ArrayID_2 = m_TargetHowitzerNavPoint3_2;
+    } 
+
+    for ( int i = 0; i < ArrayID_1.size(); i++)
+      sendEvent(float(randnum(5)), SOID_MissionController, "FakeHowitzerDetonate", [ArrayID_1[i]]);
+
+    for ( int i = 0; i < ArrayID_2.size(); i++)
+      sendEvent(float(randnum(3)), SOID_MissionController, "FakeHowitzerDetonate", [ArrayID_2[i]]);
+
+   if (OpenFire && !HaltFire)
+   {
+    sendEvent( 4.0, SOID_MissionController, "StartFakeHowitzerFire", []);
+    m_TargetHowitzerPlace = m_TargetHowitzerPlace + 1;
+   }
+  }
+
+  event void FakeHowitzerDetonate(String _ObjectID)
+  {
+    int radius = 90;
+
+    Component Object = GetObject(_ObjectID);
+    if (null != Object)
+    {
+       Array Isection = GetIsectionWithAxis( DF_POINT|DF_SURFTYPE, [CLASSIFICATOR_TERRAIN], [], getPosition(Object).origin, AXIS_Z );
+       String SurfaceType = CLASSIFICATOR_GROUND;
+       Matrix Position = getPosition(Object);
+       Position.origin = Position.origin + new Vector(rand(-radius, radius), rand(-radius, radius), 0.0);
+
+      (new #ExplosionsArray()).CreateExplosion("GunML20_152mmGunHEBulletExplosion", Position, null, "GOD");
+    }
+  }
+
+// //****************************************************************************************************************************************
+
+
+  void OnObjectEnterNavPoint( String _NavPointID, String _ObjectID)
+  {
+  }
+  void OnObjectLeaveNavPoint( String _NavPointID, String _ObjectID)
+  {
+  }
+  event void OnObjectDestroyed( String _ObjectID)
+  {
+    CMission::OnObjectDestroyed(_ObjectID);
+    // TMP
+    Component DeadThing = GetObject(_ObjectID);
+    if (null == DeadThing)
+    {
+      //logError("Component 'DeadThing' == null");
+      return;
+    }
+
+    //if(isDebug)
+    // logWarning("Object destroyed: " + _ObjectID + " last damaged unit " + new String (DeadThing.GetLastDamager()));
+
+    String Affiliation  = DeadThing.GetAffiliation();
+    String Damager      = DeadThing.GetLastDamager();
+
+    if (Damager == "MainPlayerUnit")
+    {
+      //logWarning("CheckMadPlayer");
+      //logWarning("CheckMadPlayer. Affiliation is " + Affiliation);
+      //logWarning("CheckMadPlayer. Damager is " + Damager);
+
+      if (!checkMask(DeadThing, ["HUMAN"], []))
+      {
+        //logWarning("MadPlayer_kill_Non_Human");
+
+        if (Affiliation == "FRIEND")
+        {
+          //logWarning("MissionWillBeKilledByFriendlyFire");
+          Penalty_count = Penalty_count + 1;
+          SendCockpitMessage(CGameMessages::msg_FriendlyFireWarning, new Color(1.0, 1.0, 0.0));
+          // New report for Cocpit: "You kill friendly unit. Mission fail"  
+          if (Penalty_count >= 2)
+          {
+            //logWarning("MissionKillingByFriendlyFire");
+            SendCockpitMessage(CGameMessages::msg_FriendlyFireFailed, new Color(1.0, 0.0, 0.0));
+            sendEvent(0.0, SOID_MissionController, "FailMissionMad", []);
+          }
+        }
+      }
+    }
+
+    if(_ObjectID.IsStartsWith("SovietHidden_GunZis"))
+    {
+      int _index = KillListZis1.find(_ObjectID);
+
+      if (_index != -1)
+        KillListZis1.remove(_index);
+
+    //SetObjectiveVisible(1, true);
+      if(KillListZis1.size() == 0)
+      {
+        CompleteObjective(1);
+      }
+    }
+    else if(_ObjectID.IsStartsWith("RU_Mortar"))
+    {
+      int _index = KillListZis2.find(_ObjectID);
+
+      if (_index != -1)
+        KillListZis2.remove(_index);
+
+      if(KillListZis2.size() == 0)
+      {
+        CompleteObjective(2);
+      }
+    }
+    else if(_ObjectID.IsStartsWith("T34Platoon"))
+    {
+      int _index = KillListT34.find(_ObjectID);
+
+      if (_index != -1)
+        KillListT34.remove(_index);
+
+      if(KillListT34.size() == 0)
+      {
+        CompleteObjective(0);
+      }
+    }
+  }
+  event void AwaySappaersOnHit()
+  {
+    fireEvent(0.0, [], "AwaySappers", []);
+    fireEvent(0.0, [], "AwayRepair", []);
+  }
+
+  event void AwaySappaersOnSee()
+  {
+    fireEvent(10.0, [], "AwaySappers", []);
+    fireEvent(15.0, [], "AwayRepair", []);
+  }
+
+  void Shutdown()
+  {
+    CSPMission::Shutdown();
+    ClearObjectives();
+    if (null == m_MissionContentClass)
+      return;
+
+    // Shutdown mission content
+    for (int Index = 0; Index < m_MissionContentClass.GetObjectRecordsQty(); Index++)
+    {
+      Array Record = m_MissionContentClass.GetObjectRecord(Index);
+      Component Object = GetObject(Record[CMissionContent::INDEX_ObjectID]);
+      if (null != Object)
+      {
+        if (isFunctionExist(Object, "Shutdown", 1))
+          Object.Shutdown(this);
+        shutdownComponent(Object);
+        DeleteObject(Record[CMissionContent::INDEX_ObjectID]);
+       }
+      m_MissionContentClass.DeleteObjectRecord(Record[CMissionContent::INDEX_ObjectID]);
+    }
+    shutdownComponent(m_MissionContentClass); 
+  }
+}

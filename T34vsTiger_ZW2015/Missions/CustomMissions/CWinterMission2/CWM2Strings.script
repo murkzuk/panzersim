@@ -1,0 +1,26 @@
+//-----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-----------------------------------------------------------------
+
+//-----------------
+//  Mission strings
+//-----------------
+class CWinterM2Mission_Strings extends CCommonStrings
+{
+  final static WString MissionName         = getLocalized("CWinterM2Mission", "MissionName");
+  final static WString BriefingText        = getLocalized("CWinterM2Mission", "BriefingText");
+  final static WString ObjectivesText      = getLocalized("CWinterM2Mission", "ObjectivesText");
+  final static WString Objective01         = getLocalized("CWinterM2Mission", "Objective01");
+  final static WString Objective02         = getLocalized("CWinterM2Mission", "Objective02");
+  final static WString Objective03         = getLocalized("CWinterM2Mission", "Objective03");
+  final static WString Objective04         = getLocalized("CWinterM2Mission", "Objective04");
+
+  final static WString str_NavPointGerman =  getLocalized("CWinterM2Mission", "NavPointGerman");
+  final static WString str_NavPointRedArmy =  getLocalized("CWinterM2Mission", "NavPointRedArmy");
+  final static WString str_Hill_Nr_210 =  getLocalized("CWinterM2Mission", "Hill_Nr_210");
+}

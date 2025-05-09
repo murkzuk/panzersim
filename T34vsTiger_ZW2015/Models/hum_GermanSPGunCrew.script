@@ -1,0 +1,109 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class Chum_GermanSPGunCrewModel extends CBaseModel
+{
+
+  static int     InstancesQty          = CBaseModel::DefaultInstancesQty;
+
+  static int     ShadowCheckMode       = CBaseModel::DefaultShadowCheckMode;
+
+  static boolean PlanarShadow          = CBaseModel::DefaultPlanarShadow;
+
+  static float   PlanarShadowLodShift  = CBaseModel::DefaultPlanarShadowLodShift;
+
+  static boolean UseBoxForIsection     = CBaseModel::DefaultUseBoxForIsection;
+
+  static boolean UseShapesAsWalkedMesh = CBaseModel::DefaultUseShapesAsWalkedMesh;
+
+  static boolean FakeShadow            = CBaseModel::DefaultFakeShadow;
+
+  static float   FakeShadowScale       = CBaseModel::DefaultFakeShadowScale;
+
+  static float   LodForShadowChange    = CBaseModel::DefaultLodForShadowChange;
+
+  static float   LodForShadowHide      = CBaseModel::DefaultLodForShadowHide;
+  String     MeshFile        = "Models/hum_GermanSPGunCrew.ms2";
+  String     SkinClass       = "Chum_GermanSPGunCrewModelSkin";
+
+  String     RouterMapFile   = "Models/hum_GermanSPGunCrew.rmap";
+
+  Array  Animation = [
+                     ["sit", ["h_Arm_Left", 0,  20], ["h_Arm_Right", 0,  20], ["h_Arm_Roll_Left", 0,  20], ["h_Arm_Roll_Right", 0,  20], ["h_Bedro_Left", 0,  20], ["h_Bedro_Right", 0,  20], ["h_Belly", 0,  20], ["h_Chest", 0,  20], ["h_Elbow_Left", 0,  20], ["h_Elbow_Right", 0,  20], ["h_Elbow_Roll_Left", 0,  20], ["h_Elbow_Roll_Right", 0,  20], ["h_Foot_Left", 0,  20], ["h_Foot_Right", 0,  20], ["h_Golen_Left", 0,  20], ["h_Golen_Right", 0,  20], ["h_Hand_Left", 0,  20], ["h_Hand_Right", 0,  20], ["h_Head", 0,  20], ["h_Hips", 0,  20], ["h_Neck", 0,  20], ["h_Pack", 0,  20], ["h_Shoulder_Left", 0,  20], ["h_Shoulder_Right", 0,  20], ["h_Spine", 0,  20], ["h_Spine1", 0,  20], ["h_Toys_Left", 0,  20], ["h_Toys_Right", 0,  20], ["l_Arm_Left", 0,  20], ["l_Arm_Right", 0,  20], ["l_Bedro_Left", 0,  20], ["l_Bedro_Right", 0,  20], ["l_Elbow_Left", 0,  20], ["l_Elbow_Right", 0,  20], ["l_Foot_Left", 0,  20], ["l_Foot_Right", 0,  20], ["l_Golen_Left", 0,  20], ["l_Golen_Right", 0,  20], ["l_Hand_Left", 0,  20], ["l_Hand_Right", 0,  20], ["l_Head", 0,  20], ["l_Hips", 0,  20], ["l_Shoulder_Left", 0,  20], ["l_Shoulder_Right", 0,  20], ["l_Spine", 0,  20], ["l_Spine1", 0,  20], ["lo_Hips", 0,  20], ["m_Arm_Left", 0,  20], ["m_Arm_Right", 0,  20], ["m_Arm_Roll_Left", 0,  20], ["m_Arm_Roll_Right", 0,  20], ["m_Bedro_Left", 0,  20], ["m_Bedro_Right", 0,  20], ["m_Elbow_Left", 0,  20], ["m_Elbow_Right", 0,  20], ["m_Elbow_Roll_Left", 0,  20], ["m_Elbow_Roll_Right", 0,  20], ["m_Foot_Left", 0,  20], ["m_Foot_Right", 0,  20], ["m_Golen_Left", 0,  20], ["m_Golen_Right", 0,  20], ["m_Hand_Left", 0,  20], ["m_Hand_Right", 0,  20], ["m_Head", 0,  20], ["m_Hips", 0,  20], ["m_Neck", 0,  20], ["m_Pack", 0,  20], ["m_Shoulder_Left", 0,  20], ["m_Shoulder_Right", 0,  20], ["m_Spine", 0,  20], ["m_Spine1", 0,  20], ["m_Toys_Left", 0,  20], ["m_Toys_Right", 0,  20]],
+                     ["stand", ["h_Arm_Left", 20,  50], ["h_Arm_Right", 20,  50], ["h_Arm_Roll_Left", 20,  50], ["h_Arm_Roll_Right", 20,  50], ["h_Bedro_Left", 20,  50], ["h_Bedro_Right", 20,  50], ["h_Belly", 20,  50], ["h_Chest", 20,  50], ["h_Elbow_Left", 20,  50], ["h_Elbow_Right", 20,  50], ["h_Elbow_Roll_Left", 20,  50], ["h_Elbow_Roll_Right", 20,  50], ["h_Foot_Left", 20,  50], ["h_Foot_Right", 20,  50], ["h_Golen_Left", 20,  50], ["h_Golen_Right", 20,  50], ["h_Hand_Left", 20,  50], ["h_Hand_Right", 20,  50], ["h_Head", 20,  50], ["h_Hips", 20,  50], ["h_Neck", 20,  50], ["h_Pack", 20,  50], ["h_Shoulder_Left", 20,  50], ["h_Shoulder_Right", 20,  50], ["h_Spine", 20,  50], ["h_Spine1", 20,  50], ["h_Toys_Left", 20,  50], ["h_Toys_Right", 20,  50], ["l_Arm_Left", 20,  50], ["l_Arm_Right", 20,  50], ["l_Bedro_Left", 20,  50], ["l_Bedro_Right", 20,  50], ["l_Elbow_Left", 20,  50], ["l_Elbow_Right", 20,  50], ["l_Foot_Left", 20,  50], ["l_Foot_Right", 20,  50], ["l_Golen_Left", 20,  50], ["l_Golen_Right", 20,  50], ["l_Hand_Left", 20,  50], ["l_Hand_Right", 20,  50], ["l_Head", 20,  50], ["l_Hips", 20,  50], ["l_Shoulder_Left", 20,  50], ["l_Shoulder_Right", 20,  50], ["l_Spine", 20,  50], ["l_Spine1", 20,  50], ["lo_Hips", 20,  50], ["m_Arm_Left", 20,  50], ["m_Arm_Right", 20,  50], ["m_Arm_Roll_Left", 20,  50], ["m_Arm_Roll_Right", 20,  50], ["m_Bedro_Left", 20,  50], ["m_Bedro_Right", 20,  50], ["m_Elbow_Left", 20,  50], ["m_Elbow_Right", 20,  50], ["m_Elbow_Roll_Left", 20,  50], ["m_Elbow_Roll_Right", 20,  50], ["m_Foot_Left", 20,  50], ["m_Foot_Right", 20,  50], ["m_Golen_Left", 20,  50], ["m_Golen_Right", 20,  50], ["m_Hand_Left", 20,  50], ["m_Hand_Right", 20,  50], ["m_Head", 20,  50], ["m_Hips", 20,  50], ["m_Neck", 20,  50], ["m_Pack", 20,  50], ["m_Shoulder_Left", 20,  50], ["m_Shoulder_Right", 20,  50], ["m_Spine", 20,  50], ["m_Spine1", 20,  50], ["m_Toys_Left", 20,  50], ["m_Toys_Right", 20,  50]]
+                     ];
+
+  Map    ConfigSets = new Map([]);
+
+  Map    MaterialsNameId = new Map([
+      [ "GerSoldier", "0"],
+      [ "M35Helmet", "1"]
+    ]);
+}
+
+class Chum_GermanSPGunCrewModelSkin
+{
+  Array Materials = [
+      new CModelMaterial(
+        "0", // material id
+        "Textures/hum_German_Soldier.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Body, // substance type
+        "" // envmap name
+      ),
+      new CModelMaterial(
+        "1", // material id
+        "Textures/M35_color1.tex", // texture name
+        "", // bump tex name
+        "", // micro tex name
+        "", // specular tex name
+        "", // emissive tex name
+        "", // light tex name
+        "", // height tex name
+        "DISABLE", // alpha mode
+        LMDL_Default, // lighting model
+        1.000000, // micro tex tiling U
+        1.000000, // micro tex tiling V
+        1.000000, // bump tex tiling U
+        1.000000, // bump tex tiling V
+        new Color(0.000000, 0.000000, 0.000000), // ambient
+        new Color(1.000000, 1.000000, 1.000000, 1.000000), // diffuse
+        new Color(0.000000, 0.000000, 0.000000), // specular
+        new Color(0.000000, 0.000000, 0.000000), // emissive
+        0.000000, // power
+        false, // double sided
+        0.000000, // glossiness
+        1.000000, // fresnel
+        1.000000, // parallax
+        CMaterialStructure::MSID_Body, // substance type
+        "" // envmap name
+      )
+    ];
+}

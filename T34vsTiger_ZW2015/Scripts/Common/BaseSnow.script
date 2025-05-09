@@ -1,0 +1,335 @@
+//Snow Mod 1.1
+
+//auteur : republicthunderbolt9@gmail.com
+
+class CSnowManager extends CBaseUtilities, CEditable, CNatureElements
+{
+ static Component SnowSkin                     = null;
+ static boolean   isSnow                       = true;
+ static float     AngleWind                    = 0.25;
+ static float     AngleWindCrecsendo           = 0.00001; //pour eviter le blocage dès le début 
+ static float 	  NbEtapeWind                  = 20.0; //depand de la vitesse de la pluie
+ static boolean   AugmentationAngle            = true;
+ static boolean   Wind                         = false;
+ static Array     DisplayEffectList            = [];
+ static String    DefaultEffectMode              = "Normal";
+ static float     DefaultWindAngle             = 30.0;
+ static float     DefaultWindOrientation       = 30.0;
+ static float     DefaultWindEtape             = 20.0;
+ static float     DefaultWindOrientationEtape      = 20.0;
+ static float     DefaultWindOrientationTolerance  = 0.0;
+ static float     Orientation		       = 0.0;
+ static String    PrefixeEffectDefault         = "Snow1";
+ static String    PrefixeEffectOnBinocular     = "Snow2";
+ static String    Effect                       = "Snow1";
+
+ static float     WindEtape;
+ static float     WindOrientationEtape;
+ static float     WindOrientationTolerance;
+ static float     WindAngle;
+ static float     WindOrientation;
+ static int       DisplayEffectId;
+ static String    EffectMode;
+ static float     WindDefaultAngle;
+
+ Component EffectArray = new #EffectsArray();
+ Component SoundsArray = new #SoundsArray();
+
+ Array GetDefaultProperties()
+  {
+    return [
+        [ "EffectMode",           	  DefaultEffectMode             ],
+        [ "WindAngle",                    DefaultWindAngle      ],
+        [ "WindOrientation",              DefaultWindOrientation],
+        [ "WindOrientationTolerance",     DefaultWindOrientationTolerance ],
+        [ "WindOrientationEtape",     	  DefaultWindOrientationEtape     ],
+        [ "WindEtape",          	  DefaultWindEtape            ],
+        [ "WindDefaultAngle",          	  0.1           ]
+      ];
+  }
+
+  Array GetPropStrings()
+  {
+    return [
+        [ "EffectMode",            Mode             ]
+      ];
+  }
+
+  void CSnowManager()
+  {
+        SnowSkin			 = new #MaterialManager<CSnowEffectSkin>();
+    	EffectArray.RegisterPattern("Snow1Light", 	new #DynamicEffect<CSnow1Light>());
+    	EffectArray.RegisterPattern("Snow1Normal", 	new #DynamicEffect<CSnow1Normal>());
+    	EffectArray.RegisterPattern("Snow1Hard", 	new #DynamicEffect<CSnow1Hard>());
+    	EffectArray.RegisterPattern("Snow2Light", 	new #DynamicEffect<CSnow2Light>());
+    	EffectArray.RegisterPattern("Snow2Normal", 	new #DynamicEffect<CSnow2Normal>());
+    	EffectArray.RegisterPattern("Snow2Hard", 	new #DynamicEffect<CSnow2Hard>());
+        deleteFile("Snow.html");
+  }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+  	EffectMode              = _PropMap.Get("EffectMode",              DefaultEffectMode);
+        WindAngle             = _PropMap.Get("WindAngle",             WindAngle);
+        WindOrientation       = _PropMap.Get("WindOrientation",       DefaultWindOrientation);
+        WindOrientationEtape  = _PropMap.Get("WindOrientationEtape",     	  DefaultWindOrientationEtape    );
+        WindOrientationTolerance  = _PropMap.Get("WindOrientationTolerance",     DefaultWindOrientationTolerance);
+  	WindEtape             = _PropMap.Get("WindEtape",             DefaultWindEtape);
+        WindDefaultAngle      = _PropMap.Get("WindDefaultAngle",             0.1);
+  }
+
+  void Initialize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CNatureElements::Initialize(_Mission, _PropMap);
+    SetProperties(_PropMap);
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {  
+    SetProperties(_PropMap);
+  }
+
+  void Finalize(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+        sendEvent(0.0, getIdentificator(user), "SetSnowGeneric", []);
+        sendEvent(0.0, getIdentificator(user), "SetWindSequence", []); 
+  }
+ 
+ event void SetSnowGeneric()
+ {
+    Array WEM = Mission().GetObjects(["WEM"], []);
+  logMessage(new String(WEM));
+  String name = "Matrix";
+  float Alpha = 0.0;
+  float Beta = degreeToRadian(WindDefaultAngle) + WindAngle();
+  float Y = degreeToRadian(WindOrientation) + WindOrientation();
+  Vector Origin = getPosition(Object()).origin;
+
+   // WriteLog(name, "Beta = " + new String(Beta) + " Y = " + new String(Y), 0);
+
+//orientation des vecteurs unitaires
+//Rotation Z>Y>X
+
+  Vector Xvec = new Vector(cos(Y) * cos(Beta),
+                           sin(Y) * cos(Beta),
+                           -sin(Beta));
+
+  Vector Yvec = new Vector(cos(Y) * sin(Beta) * sin(Alpha) - sin(Y) * cos(Alpha),
+                           sin(Y) * sin(Beta) * sin(Alpha) + cos(Y) * cos(Alpha),
+ 			   cos(Beta) * sin(Alpha) );
+
+  Vector Zvec = new Vector(cos(Y) * sin(Beta) * cos(Alpha) + sin(Y) * sin(Alpha),
+                           sin(Y) * sin(Beta) * cos(Alpha) - cos(Y) * sin(Alpha),
+                           cos(Beta) * cos(Alpha));
+
+  Matrix AngleMatrix = new Matrix(
+         Xvec.x, Yvec.x, Zvec.x, Origin.x ,
+         Xvec.y, Yvec.y, Zvec.y, Origin.y,
+         Xvec.z, Yvec.z, Zvec.z, Origin.z + 10.0,   //aucun calcul de deplacement du a l'angle actuellement 
+         0.0, 0.0, 0.0, 1.0
+                                     );
+
+     SetEffect(AngleMatrix, Effect + EffectMode);
+     float Time = (GetStaticEffectVariable("MaxAndMinRand") * 2 - 0.2) / (-GetStaticEffectVariable("HeightFinal") / GetStaticEffectVariable("Speed"));
+     sendEvent(Time, getIdentificator(user), "SetSnowGeneric", []);
+  }
+}
+  
+//////////////////////////////////////////////////////EFFECTS/////////////////////////////////////////////////////////////////////////////////////////
+
+class CSnow1 
+  extends CBaseEffect
+{
+
+  static float MaxAndMinRand = 2.0;
+  static float HeightStart   = 0.0;
+  static float HeightFinal   = -20.0;
+  static float RadianPas     = 0.5;
+  static float Speed         = 5.0;   
+  static float BillBoardSize = 0.05;
+  static float BillBoardlenght = 0.05;
+  static float StartRadius   = 1.0;
+  static float RadiusPas     = 0.5;
+  static float MaxRadius     = 25.0;
+  static Color EffectColor   = new Color(0.5, 0.5, 0.5, 1.0);
+  static String Material     = "0";
+
+   void CSnow1()
+   {
+  
+    for(float Radius = StartRadius; Radius < MaxRadius; Radius+= RadiusPas)
+    {
+    float Alpha = RadianPas / Radius;
+    for(float radian = 0.0; radian < Math_PI * 2; radian+= Alpha)
+    {
+    SetAnimationTime(Speed);
+    SetEffectTime(Speed);
+    ExpandFramesTable(5);
+    SetSkinClass(CSnowManager::SnowSkin);
+
+    int Goutte = CreateParticle(
+        EPPID_BILLBOARD_PLANE,
+        new Vector(0.0, 0.0, 0.0),
+        new Vector(0.0, 0.0, 0.035),
+        Material,
+        new Color(1.0, 1.0, 1.0, 1.0)
+      ); 
+
+    
+
+   float CordX = (Radius + rand(-0.5, 0.5)) * cos(radian);
+   float CordY = (Radius + rand(-0.5, 0.5)) * sin(radian);
+
+    Vector Start = new Vector(CordX + rand(-MaxAndMinRand, MaxAndMinRand), CordY + rand(-MaxAndMinRand, MaxAndMinRand),
+       HeightStart + rand(-MaxAndMinRand, MaxAndMinRand));
+    Vector Size = new Vector(BillBoardSize, BillBoardSize, BillBoardlenght + rand(-0.001, 0.001));
+
+    for (int Frame = 0; Frame < GetFramesQuantity(); Frame++)
+    {
+      float Phase  = float(Frame) / float(GetFramesQuantity());
+
+       SetPosition(Goutte, Frame, 
+       Start + ((new Vector(0.0, 0.0, HeightFinal) + Start) - Start) * Phase);    
+
+       SetSizeFactor(Goutte, Frame,
+        Size + (Size - Size) * Phase);
+
+       SetColor(Goutte, Frame, EffectColor);
+
+       Start = Start + new Vector(rand(-MaxAndMinRand, MaxAndMinRand), rand(-MaxAndMinRand, MaxAndMinRand), rand(-MaxAndMinRand, MaxAndMinRand));    
+       Size = new Vector(BillBoardSize, BillBoardSize, BillBoardlenght);  
+    }
+   }
+  }
+ }
+}
+
+class CSnow1Light 
+  extends CSnow1
+{
+
+  static float RadianPas     = 2.0;
+  static float RadiusPas     = 2.0;
+  static float BillBoardSize = 0.01;
+  static float BillBoardlenght = 0.01;
+  static float MaxAndMinRand = 1.5;
+  static float Speed         = 9.0;   
+
+   void CSnow1Normal()
+   {
+    CSnow1::CSnow1();
+   }
+}
+
+class CSnow1Normal 
+  extends CSnow1
+{
+
+  static float RadianPas     = 1.5;
+  static float RadiusPas     = 1.5;
+  static float BillBoardSize = 0.012;
+  static float BillBoardlenght = 0.012;
+  static float MaxAndMinRand = 2.;
+  static float Speed         = 8.5;   
+
+   void CSnow1Normal()
+   {
+    CSnow1::CSnow1();
+   }
+}
+
+class CSnow1Hard 
+  extends CSnow1
+{
+
+  static float RadianPas     = 1.;
+  static float RadiusPas     = 1.;
+  static float BillBoardSize = 0.014;
+  static float BillBoardlenght = 0.014;
+  static float MaxAndMinRand = 2.5;
+  static float Speed         = 8.;   
+
+   void CSnow1Hard()
+   {
+    CSnow1::CSnow1();
+   }
+}
+
+class CSnow2Light 
+  extends CSnow1
+{
+
+  static float RadianPas     = 2.0;
+  static float RadiusPas     = 2.0;
+  static float BillBoardSize = 0.005;
+  static float BillBoardlenght = 0.005;
+  static float MaxAndMinRand = 1.5;
+  static float Speed         = 9.;   
+
+   void CSnow2Normal()
+
+
+   {
+    CSnow1::CSnow1();
+   }
+}
+
+class CSnow2Normal 
+  extends CSnow1
+{
+
+  static float RadianPas     = 1.5;
+  static float RadiusPas     = 1.5;
+  static float BillBoardSize = 0.007;
+  static float BillBoardlenght = 0.007;
+  static float MaxAndMinRand = 2.;
+  static float Speed         = 8.5;   
+
+   void CSnow2Normal()
+   {
+    CSnow1::CSnow1();
+   }
+}
+
+class CSnow2Hard 
+  extends CSnow1
+{
+
+  static float RadianPas     = 1.;
+  static float RadiusPas     = 1.;
+  static float BillBoardSize = 0.009;
+  static float BillBoardlenght = 0.009;
+  static float MaxAndMinRand = 2.5;
+  static float Speed         = 8.;   
+
+   void CSnow2Hard()
+   {
+    CSnow1::CSnow1();
+   }
+}
+
+///////////////////////////////////////////////////////////////SKINS//////////////////////////////////////////////////////////////////////
+
+class CSnowEffectSkin
+  extends CAnimatedEffectSkin
+{
+   Array Materials = [
+      new CEffectMaterial(
+          "0",                      // material id
+          "Textures/SnowBase.tex          ", // texture name
+          "ADDITIVE",               // transparency  ADDITIVE  MULTIPLICATE    COLOREDALPHA   KEYCOLOR
+          0, 0, 12, 12            // texture page
+        )
+      ];
+}

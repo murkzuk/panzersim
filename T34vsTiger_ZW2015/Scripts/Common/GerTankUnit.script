@@ -1,0 +1,254 @@
+
+class CGerTankUnit
+  extends CUnit
+{
+
+  final static String DefaultNumberMaterialName = "";
+
+  final static String DefaultMarkingsMaterialName = "";
+
+  final static String DefaultK_RINGSMaterialName = "";
+
+  final static boolean DefaultSetFlagMode       = "";
+
+  Array GetDefaultProperties()
+  {
+    Array Default = CUnit::GetDefaultProperties();
+
+    Default.add([ "Number",  DefaultNumberMaterialName]);
+
+    Default.add([ "Markings",  DefaultMarkingsMaterialName]);
+
+    Default.add([ "K_RINGS",  DefaultK_RINGSMaterialName]);
+
+    Default.add(["Flag", DefaultSetFlagMode]);
+
+    return Default;
+  }
+
+  void SetFlagMode(
+      boolean _Enable
+    )
+  {
+
+    if (_Enable)
+    {
+     setVisibleState(GetMeshComponent().GetJoint("Flag"), true);
+     }
+    else
+    return; //setVisibleState(GetMeshComponent().GetJoint("Flag"), false);
+ }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+    CUnit::SetProperties(_PropMap);
+
+    m_flag = _PropMap.Get("Flag", false);       //
+    SetFlagMode(m_flag);                      //
+
+    String Number   = _PropMap.Get("Number", DefaultNumberMaterialName);
+
+    Component Mesh = GetMeshComponent();
+    Component MeshMaterials = Mesh.GetMaterials();
+    if(MeshMaterials != null)
+    {
+      if(Number != DefaultNumberMaterialName)
+      {
+        Component NumberMaterials = new #MaterialManager<CNumberModelSkin>();
+        Component MainTexture     = NumberMaterials.GetMainTexture(Number);
+        if(MainTexture != null)
+        {
+          String NumberMaterial = Mesh.MaterialsNameId["NumberMaterial"];
+          MeshMaterials.SetMainTexture(NumberMaterial, MainTexture);
+        }
+        else
+          logError("MainTexture == null");
+      }
+      else
+        logError("Number == DefaultNumberMaterialName");
+    }
+    else
+      logError("MeshMaterials == null");
+    //$LOG
+    //logMessage("number " + Number);
+
+    String Markings   = _PropMap.Get("Markings", DefaultMarkingsMaterialName);
+
+    Component Mesh = GetMeshComponent();
+    Component MeshMaterials = Mesh.GetMaterials();
+    if(MeshMaterials != null)
+    {
+      if(Markings != DefaultMarkingsMaterialName)
+      {
+        Component MarkingsMaterials = new #MaterialManager<CMarkingsModelSkin>();
+        Component MainTexture     = MarkingsMaterials.GetMainTexture(Markings);
+        if(MainTexture != null)
+        {
+          String MarkingsMaterial = Mesh.MaterialsNameId["Hull_MarkingsMaterial"];
+          MeshMaterials.SetMainTexture(MarkingsMaterial, MainTexture);
+        }
+        else
+          logError("MainTexture == null");
+      }
+      else
+        logError("Markings == DefaultMarkingsMaterialName");
+    }
+    else
+      logError("MeshMaterials == null");
+    //$LOG
+    //logMessage("Markings " + Markings);
+    
+
+    String K_RINGS   = _PropMap.Get("K_RINGS", DefaultK_RINGSMaterialName);
+
+    Component Mesh = GetMeshComponent();
+    Component MeshMaterials = Mesh.GetMaterials();
+    if(MeshMaterials != null)
+    {
+      if(K_RINGS != DefaultK_RINGSMaterialName)
+      {
+        Component K_RINGSMaterials = new #MaterialManager<CK_RINGSModelSkin>();
+        Component MainTexture     = K_RINGSMaterials.GetMainTexture(K_RINGS);
+        if(MainTexture != null)
+        {
+          String K_RINGSMaterial = Mesh.MaterialsNameId["K_RINGSMaterial"];
+          MeshMaterials.SetMainTexture(K_RINGSMaterial, MainTexture);
+        }
+        else
+          logError("MainTexture == null");
+      }
+      else
+        logError("K_RINGS == DefaultK_RINGSMaterialName");
+    }
+    else
+      logError("MeshMaterials == null");
+    //$LOG
+    logMessage("K_RINGS " + K_RINGS);  //
+
+
+
+  }
+}
+
+class CGerTankPlayerUnit
+  extends CPlayerUnit
+{
+  final static String DefaultNumberMaterialName = "";
+
+  final static String DefaultMarkingsMaterialName = "";
+
+  final static String DefaultK_RINGSMaterialName = "";
+  
+  final static boolean DefaultSetFlagMode       = "";
+
+  final static boolean DefaultSetWinterMode       = "";
+
+  Array GetDefaultProperties()
+  {
+    Array Default = CPlayerUnit::GetDefaultProperties();
+
+    Default.add([ "Number",  DefaultNumberMaterialName]);
+
+    Default.add([ "Markings",  DefaultMarkingsMaterialName]);
+
+    Default.add([ "K_RINGS",  DefaultK_RINGSMaterialName]);
+
+    Default.add(["Flag", DefaultSetFlagMode]);
+
+    return Default;
+  }
+
+  void SetProperties(
+      Component _PropMap
+    )
+  {
+    CPlayerUnit::SetProperties(_PropMap);
+
+    m_flag = _PropMap.Get("Flag", false);
+    SetFlagMode(m_flag);
+
+    String Number   = _PropMap.Get("Number", DefaultNumberMaterialName);
+
+    Component Mesh = GetMeshComponent();
+    Component MeshMaterials = Mesh.GetMaterials();
+    if(MeshMaterials != null)
+    {
+      if(Number != DefaultNumberMaterialName)
+      {
+        Component NumberMaterials = new #MaterialManager<CNumberModelSkin>();
+        Component MainTexture     = NumberMaterials.GetMainTexture(Number);
+        if(MainTexture != null)
+        {
+          String NumberMaterial = Mesh.MaterialsNameId["NumberMaterial"];
+          MeshMaterials.SetMainTexture(NumberMaterial, MainTexture);
+        }
+        else
+          logError("MainTexture == null");
+      }
+      else
+        logError("Number == DefaultNumberMaterialName");
+    }
+    else
+      logError("MeshMaterials == null");
+    //$LOG
+    //logMessage("number " + Number);
+
+    String Markings   = _PropMap.Get("Markings", DefaultMarkingsMaterialName);
+
+    Component Mesh = GetMeshComponent();
+    Component MeshMaterials = Mesh.GetMaterials();
+    if(MeshMaterials != null)
+    {
+      if(Markings != DefaultMarkingsMaterialName)
+      {
+        Component MarkingsMaterials = new #MaterialManager<CMarkingsModelSkin>();
+        Component MainTexture     = MarkingsMaterials.GetMainTexture(Markings);
+        if(MainTexture != null)
+        {
+          String MarkingsMaterial = Mesh.MaterialsNameId["Hull_MarkingsMaterial"];
+          MeshMaterials.SetMainTexture(MarkingsMaterial, MainTexture);
+        }
+        else
+          logError("MainTexture == null");
+      }
+      else
+        logError("Markings == DefaultMarkingsMaterialName");
+    }
+    else
+      logError("MeshMaterials == null");
+    //$LOG
+    //logMessage("Markings " + Markings);
+    
+
+    String K_RINGS   = _PropMap.Get("K_RINGS", DefaultK_RINGSMaterialName);
+
+    Component Mesh = GetMeshComponent();
+    Component MeshMaterials = Mesh.GetMaterials();
+    if(MeshMaterials != null)
+    {
+      if(K_RINGS != DefaultK_RINGSMaterialName)
+      {
+        Component K_RINGSMaterials = new #MaterialManager<CK_RINGSModelSkin>();
+        Component MainTexture     = K_RINGSMaterials.GetMainTexture(K_RINGS);
+        if(MainTexture != null)
+        {
+          String K_RINGSMaterial = Mesh.MaterialsNameId["K_RINGSMaterial"];
+          MeshMaterials.SetMainTexture(K_RINGSMaterial, MainTexture);
+        }
+        else
+          logError("MainTexture == null");
+      }
+      else
+        logError("K_RINGS == DefaultK_RINGSMaterialName");
+    }
+    else
+      logError("MeshMaterials == null");
+    //$LOG
+    logMessage("K_RINGS " + K_RINGS);  //
+    
+
+  }
+}
+

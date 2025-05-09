@@ -1,0 +1,23 @@
+//-------------------------------------------------------------------
+//                                                                   
+//  This code is copyright 2001 by G5 Software.                      
+//  Any unauthorized usage, either in part or in whole of this code  
+//  is strictly prohibited. Violators WILL be prosecuted to the      
+//  maximum extent allowed by law.                                   
+//                                                                   
+//-------------------------------------------------------------------
+
+
+class CwalkAnimation
+{
+  String AnimationFile = "Animations/walk.anim";
+
+  Array  Animation = [
+                       ["walk_chasovoy", ["l_Arm_Left", 0,  8], ["l_Arm_Right", 0,  8], ["l_Bedro_Left", 0,  8], ["l_Bedro_Right", 0,  8], ["l_Elbow_Left", 0,  8], ["l_Elbow_Right", 0,  8], ["l_Foot_Left", 0,  8], ["l_Foot_Right", 0,  8], ["l_Golen_Left", 0,  8], ["l_Golen_Right", 0,  8], ["l_Hand_Left", 0,  8], ["l_Hand_Right", 0,  8], ["l_Weapon", 0,  8], ["l_Head", 0,  8], ["l_Hips", 0,  8], ["l_Shoulder_Left", 0,  8], ["l_Shoulder_Right", 0,  8], ["l_Spine", 0,  8], ["l_Spine1", 0,  8], ["lo_Hips", 0,  8]],
+                       ["walk", ["l_Arm_Left", 10,  18], ["l_Arm_Right", 10,  18], ["l_Bedro_Left", 10,  18], ["l_Bedro_Right", 10,  18], ["l_Elbow_Left", 10,  18], ["l_Elbow_Right", 10,  18], ["l_Foot_Left", 10,  18], ["l_Foot_Right", 10,  18], ["l_Golen_Left", 10,  18], ["l_Golen_Right", 10,  18], ["l_Hand_Left", 10,  18], ["l_Hand_Right", 10,  18], ["l_Weapon", 10,  18], ["l_Head", 10,  18], ["l_Hips", 10,  18], ["l_Shoulder_Left", 10,  18], ["l_Shoulder_Right", 10,  18], ["l_Spine", 10,  18], ["l_Spine1", 10,  18], ["lo_Hips", 10,  18]],
+                       ["walk_carry", ["l_Arm_Left", 20,  28], ["l_Arm_Right", 20,  28], ["l_Bedro_Left", 20,  28], ["l_Bedro_Right", 20,  28], ["l_Elbow_Left", 20,  28], ["l_Elbow_Right", 20,  28], ["l_Foot_Left", 20,  28], ["l_Foot_Right", 20,  28], ["l_Golen_Left", 20,  28], ["l_Golen_Right", 20,  28], ["l_Hand_Left", 20,  28], ["l_Hand_Right", 20,  28], ["l_Weapon", 20,  28], ["l_Head", 20,  28], ["l_Hips", 20,  28], ["l_Shoulder_Left", 20,  28], ["l_Shoulder_Right", 20,  28], ["l_Spine", 20,  28], ["l_Spine1", 20,  28], ["lo_Hips", 20,  28]],
+                       ["walk_carry_bh", ["l_Arm_Left", 30,  38], ["l_Arm_Right", 30,  38], ["l_Bedro_Left", 30,  38], ["l_Bedro_Right", 30,  38], ["l_Elbow_Left", 30,  38], ["l_Elbow_Right", 30,  38], ["l_Foot_Left", 30,  38], ["l_Foot_Right", 30,  38], ["l_Golen_Left", 30,  38], ["l_Golen_Right", 30,  38], ["l_Hand_Left", 30,  38], ["l_Hand_Right", 30,  38], ["l_Weapon", 30,  38], ["l_Head", 30,  38], ["l_Hips", 30,  38], ["l_Shoulder_Left", 30,  38], ["l_Shoulder_Right", 30,  38], ["l_Spine", 30,  38], ["l_Spine1", 30,  38], ["lo_Hips", 30,  38]],
+                       ["walk_attack", ["l_Arm_Left", 40,  49], ["l_Arm_Right", 40,  49], ["l_Bedro_Left", 40,  49], ["l_Bedro_Right", 40,  49], ["l_Elbow_Left", 40,  49], ["l_Elbow_Right", 40,  49], ["l_Foot_Left", 40,  49], ["l_Foot_Right", 40,  49], ["l_Golen_Left", 40,  49], ["l_Golen_Right", 40,  49], ["l_Hand_Left", 40,  49], ["l_Hand_Right", 40,  49], ["l_Weapon", 40,  49], ["l_Head", 40,  49], ["l_Hips", 40,  49], ["l_Shoulder_Left", 40,  49], ["l_Shoulder_Right", 40,  49], ["l_Spine", 40,  49], ["l_Spine1", 40,  49], ["lo_Hips", 40,  49]]
+                     ];
+}
+

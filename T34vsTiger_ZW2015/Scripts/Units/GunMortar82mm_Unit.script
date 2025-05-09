@@ -1,0 +1,344 @@
+//-------------------------------------------------------------------
+/*
+   Array  Animation = [
+      ["gun_a", ["Weapon_A", 0, 20],["YLegs", 0, 20], ["Vert_Scew", 0, 20]],
+      ["gun_a_recoil", ["Body", 0, 2]],
+      ["turret_a", ["Turret_A", 0, 1]]
+  ];
+
+
+  Map    ConfigSets = new Map([
+      [ "Body_NormalSet", [ "Body"] ],
+      [ "Body_crashedSet", [ "crashed"] ]
+    ]);
+
+*/
+//
+//-------------------------------------------------------------------
+
+class CGun82mmMortarFireAnimation
+{
+  final static String  AnimationName     = "gun_a_recoil";
+  final static float   AnimationTime     = 0.1;
+}
+class CGun82mmMortarExplosion
+  extends CUnitExplosion
+{
+  float  Damage   = 5.0;
+  float  Radius   = 1.0;
+  String SoundId  = "GunPak40ExplosionSound";
+}
+
+
+class CGun82mmMortarGunHEBulletExplosion
+  extends CHEGun88BulletExplosion
+{
+  float  Damage   = CPiercing::Gun82mmMortarHEDamage;
+  float  FireDamage   = CPiercing::Gun82mmMortarHEFireDamage;
+  float  Radius = CPiercing::Gun82mmMortarHERadius;
+  Component Debris = new CGun82mmMortarGunHEBulletDebrisCloud();      //
+}
+
+class CGun82mmMortarGunHEBulletDebrisCloud
+{
+  int    DebrisQuantity  = CPiercing::Gun82mmMortarHEDebrisQuantity;
+  String DebrisPatternID = "TankT34_76_42GunHEBulletDebris";
+  float  DebrisSpeed     = 300.0;
+  float  DebrisSpeedDev  = 50.0;
+  Vector DebrisDir       = new Vector(0.8, 0.8, 1.0);
+  float  DebrisMinAngle  = 0.0;
+  float  DebrisMaxAngle  = 90.0;
+}
+class CGun82mmMortarGunHEBulletDebrisControl
+{
+  Array     Classificator = [];
+  boolean   IsMotionBlur  = true;
+  float     MaxDistance   = CPiercing::Gun82mmMortarHEDebrisMaxDistance;
+  String    ExplosionId   = "TankT34_76_42GunHEBulletDebrisExplosion";
+  float     Mass          = 0.02;
+}
+
+class CGun82mmMortarGunHEBulletDebrisExplosion
+  extends CBaseExplosion
+{
+  String EffectId = "";
+  String SoundId  = "";
+  float  Damage   = CPiercing::Gun82mmMortarHEDebrisDamage;
+}
+class CGun82mmMortarGunHEBulletControl
+  extends  CHEBulletControl //      CHeavyGunBulletControl
+{
+  String    ExplosionId  = "TankT34_76_42GunCalibreBulletExplosion";
+  float     BulletSpeed  = CPiercing::Gun82mmMortarHEBulletSpeed;
+  Vector    GravityAccel =  new Vector( 0.0, 0.0, -20.0);        //     CPiercing::ShellGravityVector;
+  float     MaxDistance           = CPiercing::Gun82mmMortarHEMaxDistance;
+  float     PenetrationPower      = CPiercing::Gun82mmMortarHEPenetrationPower;
+  Array     PenetrationByDistance = CPiercing::Gun82mmMortarHEPenetrationByDistance;
+}
+
+class CGun82mmMortarHEAmmo
+{
+  final static String BulletPatternId = "Gun82mmMortarGunHEBullet";
+  final static int    Ammunition      = 2000;
+  final static Array  TargetMask      = [[],[]];
+  final static float  LoadingTime     = 0.0f;
+}
+
+class CGun82mmMortarTargetingAnimatorA
+  extends CTargetingAnimator
+{
+  String HorAnimName    = "turret_a";
+  String VerAnimName    = "gun_a";
+
+  float  LeftEndAngle   =  90.0;
+  float  RightEndAngle  =  -90.0;
+  float  TopEndAngle    =  -25.0;
+  float  BottomEndAngle =  25.0;
+}
+
+class CGun82mmMortarGun
+  extends CHeavyGun
+{
+  String CloudEffectId   = "HeavyGunNoMuzzleCloudEffect";    // HeavyGunNoMuzzleGroundEffect  
+  float  InitBulletSpeed = 0.0f;
+  float  FireDeviation   = 3.75;
+  float  MinFireDeviation   = 1.55;
+  String BulletPatternId = "Gun82mmMortarGunHEBullet";
+
+  // *** Gun parameters for behavior
+  Vector GravityVector   =  new Vector( 0.0, 0.0, -20.0);        //     CPiercing::ShellGravityVector;
+  boolean SpecialWeapon  = false;
+  final static boolean HighTrajectory  = false;
+  final static String BulletPatternId = "Gun82mmMortarGunHEBullet";
+  String    FireSoundId     = "MortarGunFireSound";
+
+  final static Array Ammo = [
+                             new CGun82mmMortarHEAmmo()
+                            ];
+
+  final static float    LockAngleHMin     = -90.0;
+  final static float    LockAngleHMax     =  90.0;
+  final static float    LockAngleVMin     =  -25.0;
+  final static float    LockAngleVMax     =  25.0;
+  final static float    BlockedLockAngle  =  0.0;
+
+  final static float DirectionSpeedH  = 6.0; // deg / sec  • horizontal
+  final static float DirectionSpeedV  = 3.0; // deg / sec  • vertical
+
+
+
+
+  // *** Gun parameters for behavior
+  int  FirePeriod        = 6000;  // ms
+  int  FirePeriodRandAdd = 2000;   // ms
+
+  boolean BurstFire      = false;
+  int  BurstTime         = 2000; // ms
+  int  BurstTimeRandAdd  = 0; // ms
+
+  final static int  BurstDelay        = 4000; // ms
+  final static int  BurstDelayRandAdd = 0; // ms
+
+   final static Array GunSpecificFireMask = [
+                                [["GROUND"],[]], // low priority mask: RestrictTo, Exclude
+                                [["HUMAN"],[]]
+                                 ];          /* */
+ Component FireAnimator = new #LineAnimator<CGun82mmMortarFireAnimation>();    // 
+}
+
+// Behavior
+
+class CGun82mmMortarUnitBehavior
+  extends CBaseGroundBehavior
+{
+  boolean  CanMove   = false;
+  boolean  HasRouter = false;
+  boolean  HasRadar  = true;
+        /**/
+  Array EnemyRankDangerByDistance =  [    
+                                       [[ ["HEAVYTANK"],[] ], [ [ 0.0, 200.0, 2500.0, 100.0 ], [ [1000.0, 150.0] ] ] ],
+                                       [[ ["TANK"],[] ],      [ [ 0.0, 150.0, 2500.0, 100.0 ], [ [1000.0, 140.0] ] ] ], // [ Mask, PiercLinFunctionByDist]
+                                       [[ ["BTR"],[] ],       [ [ 0.0, 130.0, 2500.0, 90.0 ], [ [1000.0, 125.0] ] ] ],
+                                       [[ ["VEHICLE"],[] ],   [ [ 0.0,  10.0, 2500.0, 85.0 ],  [ [1000.0,  100.0] ] ] ],
+                                       [[ ["HUMAN"],[] ],     [ [ 0.0,  35.0, 2500.0, 20.0 ],  [ [1000.0,   95.0] ] ] ]
+                                     ]; // default Rank = distance if object not fit any mask              
+
+  // *** radar parameters
+
+  float  MaxRadarDistance = 3100; // m
+  float  MinRadarDistance = 50;    // m
+  float  MaxRadarAngle    = 90.0;
+
+  int    UpdateRadarPeriod        = 3000; // ms
+  int    UpdateRadarPeriodRandAdd = 1000; // ms
+
+ // static Array Mask        = [["", "CLASSIFICATOR_GROUND"], ["", ""]];
+  
+      // radar visibility
+  float  StaySpeed            = 0.5f;
+  String MovingClassificator  = "MOVING_UNIT";
+  String FireingClassificator = "TARGETING_UNIT";
+
+  boolean SpecVisibilityCheck = true;
+
+  Array ViewProbabilityByDistance = [[MinRadarDistance, 1.0f, MaxRadarDistance, 0.9],
+                                            [
+                                            ]
+                                           ];
+
+  final static Array ViewProbabilityByAngle = [[- Math_PI, 0.3f, Math_PI, 0.3],
+                                         [
+                                          [0.0f, 1.0f]
+                                         ]
+                                        ];
+
+  final static Array ViewProbabilityByState = [
+                                          [1, 1.5f] // UST_ATTACK
+                                        ];
+
+  final static Array ViewProbabilityByMask =  [
+                                          [["MOVING_UNIT"],[], 2.0f],
+                                          [["TARGETING_UNIT"],[], 2.0f],
+                                          [["OPENLANDSCAPE_UNIT"],[], 2.0f],
+                                          [["BUSHLANDSCAPE_UNIT"],[], 2.0f],
+                                          [["FORESTLANDSCAPE_UNIT"],[], 0.9f],
+                                          [["CLOSELANDSCAPE_UNIT"],[], 0.9f]
+                                        ];
+
+  float ViewProbabilityByPreviousStep = 2.0f;
+
+  // *** movement physical parameters
+
+  // physical limitations
+  Vector MaxSpeed = new Vector( -1.0, 0, 0);
+  float  MinRotateRadius = 0; // unit can turn when staying
+}
+
+
+class CGun82mmMortarSubstance
+  extends CMetalSubstance
+{
+  Vector MainFrictionAxis = new Vector(1.0, 0.0, 0.0);
+  float  Friction         = 0.4;
+  float  Friction1        = 0.4;
+  float  Elasticity       = 0.04;
+}
+
+class CGun82mmMortarUnit extends CUnit, CPushVehicleObject
+{
+  final static float DefaultHitPoints = CHitPoints::Gun82mmMortarUnitHitPoints; //-1;        
+  boolean   m_PassiveUnit           = true;
+
+   static Array PrevDeathEffect = [
+                                  ["",  "GenericUnitExplosionSmokeEffect"] //,
+                                       ];
+
+  static category UnitType = CLASSIFICATOR_T34_GUN;  //  
+
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND", "ANTITANK", "RU" ];
+
+  final static String DefaultSurfaceControl = "PutonGroundLandingJoints";
+
+  static Array  LandingJoints = ["Corner_FL", "Corner_RL", "Corner_RR", "Corner_FR"];
+
+  boolean m_Objectdestroyed = false;
+  
+
+  
+    void CGun82mmMortarUnitDamaged()
+  {
+    Component Behavior = _HostObject.GetObject("Behavior");
+    if (Behavior != null)
+    {
+      Behavior.SetAimAbility(false, 20);
+    }
+     if ((HitPoints <= 0.0)) //   && (!m_Objectdestroyed)
+    {
+       Behavior.SetAimAbility(false,0);
+       Behavior.SetFireAbility(false,0);
+       user.DestroyObject();
+        m_Objectdestroyed = true;
+       logWarning("Mortar dead");
+   }                                              
+
+  }
+/*   event void SetModelLifeState(
+      boolean   _State
+  )
+  {
+    logMessage(getIdentificator(this) + ": SetModelLifeState");
+    m_IsAlive = _State;
+
+    sendEvent(0.0,getIdentificator(this), "SetModelViewState", [true]);
+  } */
+
+  boolean m_Objectdestroyed = false;
+  boolean m_AITankCollisionShape = false;
+
+  event void OnSuccessTouchTrigger(
+      float _Energy
+    )
+  {
+    // create new trigger
+    logWarning("82mmMortarUnit damaged with Energy = "+new String(_Energy));
+
+    Component PhysicsController = GetPhysicsController();
+    if (null != PhysicsController)
+      PhysicsController.CreateTouchTrigger(0.0);
+
+   Component StateControl = GetStateControl();
+    if (null != StateControl)
+    {
+      float HitPoints = StateControl.GetHitPoints() - _Energy * EnergyToHP;
+      //logWarning("Pak40 sucsess touch _Energy = "+new String(_Energy)+" EnergytoHP = "+new String(EnergyToHP)+" and Pak40 have now HP = "+new String(HitPoints)+" and Pak40 has HP = " +new String(StateControl.GetHitPoints()) );
+      StateControl.SetHitPoints(HitPoints);
+
+      if ((HitPoints <= 0.0) && (!m_Objectdestroyed))
+      {
+        user.DestroyObject();
+        m_Objectdestroyed = true;
+        //logWarning("Pak40Unit destroyed");
+      }       /*   */
+     }
+
+    // play touch sound
+    if(_Energy > MinEnergyToSound)
+      (new #SoundsArray()).CreateSound("TankCollisionTruckLowSpeedSound", getPosition(this));
+}
+
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CGun82mmMortarUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cu_stat_82mmMortarModel>(), [0]);
+
+    // Setup Weapon
+    SetupWeapon("Weapon_A", new #Weapon<CGun82mmMortarGun>(),["Fire_A1"],new #TargetingAnimator<CGun82mmMortarTargetingAnimatorA>());
+
+    PutonGround();
+    SetupBehavior( new #VehicleBehavior<CGun82mmMortarUnitBehavior>());
+  }
+
+  void Construct(
+      Component _Mission,
+      Component _PropMap
+    )
+  {
+    CUnit::Construct(_Mission, _PropMap);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET762792, 0.00f);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET127,    0.0);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_SUBCALIBREBULLET7576, 0.6);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_SUBCALIBREBULLET85,   0.6);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_SUBCALIBREBULLET88,   0.6);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BUILDING, 0.0);
+
+    SetupPhysicaleObject("CGun82mmMortarSubstance", 100.0*6, 0.1);
+  }
+}

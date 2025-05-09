@@ -1,0 +1,671 @@
+//----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//
+//-----------------------------------------------------------------
+
+//--------------------------------------------------------------------------------
+//Make Array KillList with ERT_AGGRESSIVE must attack ignored other units       CFieldGunTask_R
+//--------------------------------------------------------------------------------
+
+class CEFKM2_TigerGrp1 extends CBaseUnitGroup
+{
+
+
+}
+class CEFKM2_TigerTask1 extends CBaseAITankTask, CBaseAITask
+{
+
+     boolean isActive;
+     boolean First;
+     boolean Second; 
+     boolean Third;
+     boolean Forth;
+     
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+    First = false;
+    Second = true;
+    Third = true;
+    Forth = true;
+    sendEvent(80.0, getIdentificator(user), "SetActiveGroup", []);
+    sendEvent(536.0, getIdentificator(user), "ToggelOn2B", []);
+    sendEvent(920.0, getIdentificator(user), "ToggelOn2C", []);
+    sendEvent(1067.0, getIdentificator(user), "ToggelOn2E", []);   //
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    isActive = true;
+    sendEvent(1.0, getIdentificator(user), "PointVec2A", []);
+  }
+
+  event void PointVec2A()
+  {
+    if (!First )
+    {
+    CBaseAITankTask::Init();
+    ActivateMovement(true);
+    float Radius = randnum(30);
+    Vector RandomVector = new Vector(rand(Radius), rand(Radius), 0.0);
+    Vector  PreDestinationA2Vec =  GetNavPointBehPos("NavPoint_Tig_A1");
+    Vector  DestinationT1AVec = PreDestinationA2Vec + RandomVector;
+    SetOrder_MoveTo((DestinationT1AVec), 4.0f );
+    sendEvent(33.0, getIdentificator(user), "PointVec2A", []);
+    }
+   else if (!Second)
+    {
+    CBaseAITankTask::Init();
+    Vector  DestinationT2BVec =  GetNavPointBehPos("NavPoint_Tig_B1");
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE); //
+    SetOrder_MoveTo((DestinationT2BVec), 4.0f);
+    sendEvent(30.0, getIdentificator(user), "PointVec2A", []);
+     }
+   else if(!Third)
+    {
+    CBaseAITankTask::Init();
+    Vector  DestinationT1BVec =  GetNavPointBehPos("NavPoint_Tig_C1");
+    SetOrder_MoveTo((DestinationT1BVec), 4.0f);
+    sendEvent(33.0, getIdentificator(user), "PointVec2A", []);
+    }
+   else if(!Forth)
+   {
+    CBaseAITankTask::Init();
+    float RadiusX = randnum(-99.99);
+    float RadiusY = randnum(136.66);
+    Vector RandomVector = new Vector(rand(RadiusX), rand(RadiusY), 0.0);
+    Vector  PreDestinationE1Vec =  GetNavPointBehPos("NavPoint_Tig_E1");
+    Vector  DestinationE1Vec = PreDestinationE1Vec + RandomVector;
+    SetOrder_MoveTo((DestinationE1Vec), 3.3f);
+    sendEvent(66.0, getIdentificator(user), "PointVec2A", []);
+   }
+ }
+  event void ToggelOn2B()
+  {
+
+    Second = false;
+    First = true;
+    Third = true;
+    Forth = true;
+    sendEvent(1.0, getIdentificator(user), "PointVec2A", []);
+  }
+   event void ToggelOn2C()
+  {
+     Third = false;
+     First = true;
+     Second = true;
+     Forth = true;
+     sendEvent(1.0, getIdentificator(user), "PointVec2A", []);
+  }
+    event void ToggelOn2E()
+  {
+     Forth = false;
+     First = true;
+     Second = true;
+     Third = true;
+     sendEvent(1.0, getIdentificator(user), "PointVec2A", []);
+ }
+ event void EndAssault()
+  {
+
+  ActivateMovement(false);
+
+  }
+}
+class CEFKM2Tiger2Task extends CBaseAITankTask, CBaseAITask
+{
+  
+     boolean isActive;
+     boolean First;
+     boolean Second; 
+     boolean Third;
+     boolean Forth;
+     
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+    First = false;
+    Second = true;
+    Third = true;
+    Forth = true;
+    sendEvent(120.0, getIdentificator(user), "SetActiveGroup", []);
+    sendEvent(636.0, getIdentificator(user), "ToggelOn2B", []);
+    sendEvent(1140.0, getIdentificator(user), "ToggelOn2C", []);
+    sendEvent(1197.0, getIdentificator(user), "ToggelOn2E", []);   //
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    isActive = true;
+    sendEvent(1.0, getIdentificator(user), "PointVec2A", []);
+  }
+
+  event void PointVec2A()
+  {
+    if (!First )
+    {
+    CBaseAITankTask::Init();
+    ActivateMovement(true);
+    float Radius = randnum(100);
+    Vector RandomVector = new Vector(rand(Radius), rand(Radius), 0.0);
+    Vector  PreDestinationA2Vec =  GetNavPointBehPos("NavPoint_Tig_A1");
+    Vector  DestinationT1AVec = PreDestinationA2Vec + RandomVector;
+    SetOrder_MoveTo_Direct((DestinationT1AVec), 4.0f );
+    sendEvent(31.0, getIdentificator(user), "PointVec2A", []);
+    }
+   else if (!Second)
+    {
+    CBaseAITankTask::Init();
+    Vector  DestinationT2BVec =  GetNavPointBehPos("NavPoint_Tig_B1");
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE); //
+    SetOrder_MoveTo_Direct((DestinationT2BVec), 4.0f);
+    sendEvent(30.0, getIdentificator(user), "PointVec2A", []);
+     }
+   else if(!Third)
+    {
+    CBaseAITankTask::Init();
+    Vector  DestinationT3BVec =  GetNavPointBehPos("NavPoint_Tig_C1");
+    SetOrder_MoveTo_Direct((DestinationT3BVec), 4.0f);
+    sendEvent(32.0, getIdentificator(user), "PointVec2A", []);
+    }
+   else if(!Forth)
+   {
+    CBaseAITankTask::Init();
+    float RadiusX = randnum(99.99);
+    float RadiusY = randnum(-166.66);
+    Vector RandomVector = new Vector(rand(RadiusX), rand(RadiusY), 0.0);
+    Vector  PreDestinationE2Vec =  GetNavPointBehPos("NavPoint_Tig_E1");
+    Vector  DestinationE2Vec = PreDestinationE2Vec + RandomVector;
+    SetOrder_MoveTo((DestinationE2Vec), 3.3f);
+    sendEvent(65.0, getIdentificator(user), "PointVec2A", []);
+   }
+ }
+  event void ToggelOn2B()
+  {
+
+    Second = false;
+    First = true;
+    Third = true;
+    Forth = true;
+    sendEvent(1.0, getIdentificator(user), "PointVec2A", []);
+  }
+   event void ToggelOn2C()
+  {
+     Third = false;
+     First = true;
+     Second = true;
+     Forth = true;
+     sendEvent(1.0, getIdentificator(user), "PointVec2A", []);
+  }
+    event void ToggelOn2E()
+  {
+     Forth = false;
+     First = true;
+     Second = true;
+     Third = true;
+     sendEvent(1.0, getIdentificator(user), "PointVec2A", []);
+ }
+ event void EndAssault()
+  {
+
+  ActivateMovement(false);
+
+  }
+}
+class CEFKM2_SturmGroupI extends CBaseUnitGroup
+{
+
+}
+
+class CEFKM2_PanzerTask extends CBaseAITankTask //CBaseUnitGroup,, CBaseAITask  extends CBaseAITankTask
+{
+     boolean First;
+     boolean Second;
+     boolean Third;
+     boolean Forth;;
+
+    void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    First = false;
+    Second = true;
+    Third = true;
+    Forth = true;
+   sendEvent(181.0,  getIdentificator(user), "MoveToAttackPosition", []);   //
+   sendEvent(671.0, getIdentificator(user), "ToggelS2C", []);
+   sendEvent(1205.0, getIdentificator(user), "ToggelS2D", []);
+   sendEvent(1297.0, getIdentificator(user), "ToggelS2E", []);//
+  }
+
+  event void MoveToAttackPosition()
+  {
+    if (!First )
+    {
+    CBaseAITankTask::Init();
+    float Radius = randnum(100);
+    Vector RandomSAVector = new Vector(rand(Radius), rand(Radius), 0.0);
+    Vector  PreDestinationASTVec =  GetNavPointBehPos("NavPoint_Tig_A1");
+    Vector  DestinationASTVec = PreDestinationASTVec + RandomSAVector;
+    SetOrder_MoveTo((DestinationASTVec), 4.0f);
+    sendEvent(42.0, getIdentificator(user), "MoveToAttackPosition", []);
+    }
+  }
+  event void PointVecS2C()
+  {
+    if (!Second)
+    {
+    CBaseAITankTask::Init();
+    Vector  DestinationS2CVec =  GetNavPointBehPos("NavPoint_Tig_B1");
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE); //
+    SetOrder_MoveTo((DestinationS2CVec), 4.5f);
+    sendEvent(28.0, getIdentificator(user), "PointVecS2C", []);
+
+    }
+  }
+   event void PointVec2D()
+  {
+    if (!Third)
+    {
+    CBaseAITankTask::Init();
+    Vector  DestinationS2DVec =  GetNavPointBehPos("NavPoint_Tig_C1");
+    SetOrder_MoveTo_Direct((DestinationS2DVec), 4.5f);
+    sendEvent(36.0, getIdentificator(user), "ToggelOnE", []);
+    }
+   }
+    event void PointVec2E()
+  {
+    if (!Forth)
+    {
+    CBaseAITankTask::Init();
+    float Radius = randnum(100);
+    Vector RandomSTVector = new Vector(rand(Radius), rand(Radius), 0.0);
+    Vector  PreDestinationESTVec =  GetNavPointBehPos("NavPoint_Tig_E1");
+    Vector  DestinationESTVec = PreDestinationESTVec + RandomSTVector;
+    SetOrder_MoveTo((DestinationESTVec), 4.5f);
+    sendEvent(33.0, getIdentificator(user), "PointVec2E", []);
+    }
+ }
+   event void ToggelS2C()
+  {
+     Second = false;
+     First = true;
+     Third = true;
+     Forth = true;
+     sendEvent(1.0, getIdentificator(user), "PointVecS2C", []);
+
+  }
+
+   event void ToggelS2D()
+  {
+     Third = false;
+     First = true;
+     Second = true;
+     Forth = true;
+     sendEvent(1.0, getIdentificator(user), "PointVec2D", []);
+  }
+
+    event void ToggelS2E()
+  {
+     Forth = false;
+     First = true;
+     Second = true;
+     Third = true;
+     sendEvent(1.0, getIdentificator(user), "PointVec2E", []);
+  }
+ }
+
+
+class CEFKM2_SturmTask extends CBaseAISAUTask //CBaseUnitGroup,, CBaseAITask  extends CBaseAITankTask
+{
+     boolean First;
+     boolean Second;
+     boolean Third;
+     boolean Forth;;
+
+    void Init()
+  {
+    CBaseAISAUTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    First = false;
+    Second = true;
+    Third = true;
+    Forth = true;
+   sendEvent(121.0,  getIdentificator(user), "MoveToAttackPosition", []);   //
+   sendEvent(641.0, getIdentificator(user), "ToggelS2C", []);
+   sendEvent(1205.0, getIdentificator(user), "ToggelS2D", []);
+   sendEvent(1297.0, getIdentificator(user), "ToggelS2E", []);//
+  }
+
+  event void MoveToAttackPosition()
+  {
+    if (!First )
+    {
+    CBaseAISAUTask::Init();
+    Vector  DestinationSA1Vec =  GetNavPointBehPos("NavPoint_Tig_A1");
+    SetOrder_MoveTo_Direct((DestinationSA1Vec), 4.5f );
+    sendEvent(32.0, getIdentificator(user), "MoveToAttackPosition", []);
+    }
+  }
+  event void PointVecS2C()
+  {
+    if (!Second)
+    {
+    CBaseAISAUTask::Init();
+    Vector  DestinationS2CVec =  GetNavPointBehPos("NavPoint_Tig_B1");
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE); //
+    SetOrder_MoveTo((DestinationS2CVec), 4.0f);
+    sendEvent(38.0, getIdentificator(user), "PointVecS2C", []);
+
+    }
+  }
+   event void PointVec2D()
+  {
+    if (!Third)
+    {
+    CBaseAITankTask::Init();
+    Vector  DestinationS2DVec =  GetNavPointBehPos("NavPoint_Tig_C1");
+    SetOrder_MoveTo_Direct((DestinationS2DVec), 4.5f);
+    sendEvent(36.0, getIdentificator(user), "ToggelOnE", []);
+    }
+   }
+    event void PointVec2E()
+  {
+    if (!Forth)
+    {
+    CBaseAITankTask::Init();
+    float Radius = randnum(100);
+    Vector RandomSTVector = new Vector(rand(Radius), rand(Radius), 0.0);
+    Vector  PreDestinationESTVec =  GetNavPointBehPos("NavPoint_Tig_E1");
+    Vector  DestinationESTVec = PreDestinationESTVec + RandomSTVector;
+    SetOrder_MoveTo((DestinationESTVec), 4.0f);
+    sendEvent(33.0, getIdentificator(user), "PointVec2E", []);
+    }
+ }
+   event void ToggelS2C()
+  {
+     Second = false;
+     First = true;
+     Third = true;
+     Forth = true;
+     sendEvent(1.0, getIdentificator(user), "PointVecS2C", []);
+
+  }
+
+   event void ToggelS2D()
+  {
+     Third = false;
+     First = true;
+     Second = true;
+     Forth = true;
+     sendEvent(1.0, getIdentificator(user), "PointVec2D", []);
+  }
+
+    event void ToggelS2E()
+  {
+     Forth = false;
+     First = true;
+     Second = true;
+     Third = true;
+     sendEvent(1.0, getIdentificator(user), "PointVec2E", []);
+  }
+ }
+/*
+class CEFKM2ENEMY2_Task extends CBaseAITankTask, CBaseAITask
+{
+
+     boolean isActive;
+
+  void Init()
+
+  {
+   // ShowUnit(false);
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+   // sendEvent(1400.0, getIdentificator(user), "ShowEnemytank", []); //
+    sendEvent(1010.0, getIdentificator(user), "SetActiveGroup", []);  // 1080
+  }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+  //  ShowUnit(true);
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    isActive = true;
+    sendEvent(1.0, getIdentificator(user), "PointVecEnemy", []);
+  }
+
+  event void ShowEnemytank()
+  {
+    ShowUnit(true);
+  }
+
+  event void PointVecEnemy()
+  {
+    float Radius = randnum(100);
+    Vector RandomSTVector = new Vector(rand(Radius), rand(Radius), 0.0);
+    Vector  PreDestinationEAVec =  GetNavPointBehPos("NavPointPhase2");
+    Vector  DestinationEnemyVec = PreDestinationEAVec + RandomSTVector;
+    SetOrder_MoveTo((DestinationEnemyVec), 4.5f);
+    sendEvent(23.0, getIdentificator(user), "PointVecEnemy", []);
+
+ }
+} */  
+
+class CEFKM2_HeavyGrp extends CBaseUnitGroup, CBaseAITankTask, CBaseAISAUTask, CBaseAITask
+{
+        boolean isActive;
+
+  void Init()
+
+  {
+    //ShowGroup(false);
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+    sendEvent(1861.0, getIdentificator(user), "SetActiveGroup", []);
+
+   }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    CBaseUnitGroup::Init(); //
+    PopDelayedOrder();
+    CBaseAITankTask::Init(); //
+    CBaseAISAUTask::Init(); //
+    ActivateFire(true);
+    ActivateRadar(true);
+    isActive = true;
+    ActivateMovement(true);
+  }
+
+}
+class CEFKM2_ShockGrp  extends CBaseUnitGroup, CBaseAITankTask, CBaseAISAUTask, CBaseAITask
+{
+
+        boolean isActive;
+
+  void Init()
+
+  {
+    //ShowGroup(false);
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+    sendEvent(1010.0, getIdentificator(user), "SetActiveGroup", []);
+
+   }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    CBaseUnitGroup::Init(); //
+    PopDelayedOrder();
+    CBaseAITankTask::Init(); //
+    CBaseAISAUTask::Init(); //
+    ActivateFire(true);
+    ActivateRadar(true);
+    isActive = true;
+    ActivateMovement(true);
+  }
+}
+
+class CZ2GerSPTask extends CBaseAISAUTask// , CFieldGunTask_G    
+{
+   boolean isActive;
+
+  void Init()
+  {
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+    sendEvent(70.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    ActivateFire(true);
+    ActivateRadar(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    isActive = true;
+  }
+}
+
+class CZ2GerGunTask extends CBaseAITask//, CFieldGunTask_G
+{
+   boolean isActive;
+
+  void Init()
+  {
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+    sendEvent(40.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+
+  event void SetActiveGroup()
+  {
+     if (!isActive)
+   {          //
+    ActivateFire(true);
+    ActivateRadar(true);
+    isActive = true;
+   }
+  }
+}
+class CZ2RedGunTask extends CBaseAITask, CFieldGunTask_R    //extends
+{
+   boolean isActive;
+
+  void Init()
+  {
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+  //  sendEvent(130.0, "CZ2RedGunTask", "SetActiveGroup", []);
+  sendEvent(190.0, getIdentificator(user), "SetActiveGroup", []);  //
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+   //    CFieldGunTask_R::Init();         //
+    ActivateFire(true);
+    ActivateRadar(true);
+    isActive = true;
+  }
+}
+
+class CZ2_22RedGunTask extends CBaseAITask, CFieldGunTask_R    //extends
+{
+   boolean is2Active;
+
+  void Init()
+  {
+    ActivateFire(false);
+    ActivateRadar(false);
+    is2Active = false;
+    sendEvent(193.0, getIdentificator(user), "SetActiveGun2Group", []);
+  }
+
+  event void SetActiveGun2Group()
+  {
+    if (!is2Active)
+    ActivateFire(true);
+    ActivateRadar(true);
+
+    is2Active = true;
+  }
+}
+
+class CZ2_33RedGunTask extends CBaseAITask, CFieldGunTask_R  //extends
+{
+   boolean is3Active;
+
+  void Init()
+  {
+    ActivateFire(false);
+    ActivateRadar(false);
+    is3Active = false;
+    sendEvent(191.0, getIdentificator(user), "SetActiveGun3Group", []);
+  }
+
+  event void SetActiveGun3Group()
+  {
+    if (!is3Active)
+    ActivateFire(true);
+    ActivateRadar(true);
+
+    is3Active = true;
+  }
+}
+
+class CZ2KatushaGrp1 extends CBaseUnitGroup
+{
+
+
+  void Init()
+  {
+    ActivateFire(false);
+    ActivateRadar(false);
+    sendEvent(70.0, getIdentificator(user), "SetActiveKatushaGroup", []);
+  }
+
+  event void SetActiveKatushaGroup()
+  {   
+   //CReFillBM13Task_R::Init();   
+    ActivateFire(true);
+    ActivateRadar(true);  //
+
+  }
+
+}

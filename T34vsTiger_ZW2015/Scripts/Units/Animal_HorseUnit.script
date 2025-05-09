@@ -1,0 +1,52 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+// Unit Explosion
+
+class CAnimal_HorseUnit
+  extends CObject
+{
+
+  final static float DefaultHitPoints = -1;
+
+  static category UnitType = CLASSIFICATOR_CREATURE;   //  
+
+
+ //  final static int    UnitMenacePower        =MENACE_GODZILLA;  Heavy weapon
+
+  final static String DefaultSurfaceControl = "PutonGroundUpright";
+
+  boolean m_Objectdestroyed = false;
+  // Automatic classificators of this object
+  final static Array AutomaticClassificators  = ["GROUND"];      //
+
+  // =======================================
+  // Contruction and initialization
+  // =======================================
+
+  void CAnimal_HorseUnit()
+  {
+    SetupMesh(new #AnimatedObject<Cenv_Animal_HorseModel>(), [0]);
+  }
+
+
+  void Construct(
+    Component _Mission,
+    Component _PropMap
+    )
+  {
+
+    CUnit::Construct(_Mission, _PropMap);
+
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET762792, 0.1);
+    GetDamageHandler().SetDamageTypeModifier(CBaseExplosion::CLASSIFICATOR_DAMAGE_BULLET127,    0.1);
+
+  }
+
+}

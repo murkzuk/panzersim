@@ -1,0 +1,71 @@
+//-------------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-------------------------------------------------------------------
+
+class CSingleMenu
+  extends CBaseMenu, CSingleControls
+{
+  static String m_MenuClassName = "CSingleMenu";
+
+  void OnInitMenu()
+  {
+    m_MenuController.SetDefaultCommands("", "QuitButton");
+    GetObject("NewGameUSSR").SetText(L"USSR");
+    GetObject("NewGameGERMANY").SetText(L"GERMANY");
+    GetObject("NewGameZITADELLE").SetText(L"ZITADELLE");
+    GetObject("NewGameWINTER43").SetText(L"WINTER43");
+    GetObject("NewGamePANTHER43").SetText(L"PANTHER43");
+  }
+  
+  void OnControlActivated(
+      String _ID
+    )
+  {
+//   logWarning(_ID);
+    if ("NewGameUSSR" == _ID)
+    {
+      CMissionsMenu::CampaignName   = CCampaignNames::str_CAMPAIGN1;
+      CMissionsMenu::CampaignNumber = 1;
+      Invoke("MissionsMenu");
+    }
+    else
+    if ("NewGameGERMANY" == _ID)
+    {
+      CMissionsMenu::CampaignName   = CCampaignNames::str_CAMPAIGN2;
+      CMissionsMenu::CampaignNumber = 2;
+      Invoke("MissionsMenu");
+    }
+    else
+    if ("NewGameZITADELLE" == _ID)
+    {
+      CMissionsMenu::CampaignName   = CCampaignNames::str_CAMPAIGN3;
+      CMissionsMenu::CampaignNumber = 3;
+      Invoke("MissionsMenu");
+    }
+    else
+    if ("NewGameWINTER43" == _ID)
+    {
+      CMissionsMenu::CampaignName   = CCampaignNames::str_CAMPAIGN4;
+      CMissionsMenu::CampaignNumber = 4;
+      Invoke("MissionsMenu");
+    }
+    else
+    if ("NewGamePANTHER43" == _ID)
+    {
+      CMissionsMenu::CampaignName   = CCampaignNames::str_CAMPAIGN5;
+      CMissionsMenu::CampaignNumber = 5;
+      Invoke("MissionsMenu");
+    }
+    if ("Options" == _ID)
+      Invoke("SettingsMenu");
+    if ("Credits" == _ID)
+      Invoke("CreditsMenu");
+    if ("QuitButton" == _ID)
+      GoBack();
+  }
+}

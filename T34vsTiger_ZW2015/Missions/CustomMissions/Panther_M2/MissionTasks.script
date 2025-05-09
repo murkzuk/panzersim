@@ -1,0 +1,236 @@
+//-----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-----------------------------------------------------------------
+class CC5M2BaseUnitGroup extends CBaseUnitGroup
+{
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    //SetEnemyReactionType(ERT_FRIGID);
+  }
+
+  event void SetActive()
+  {
+//    if(GetMission().isDebug)
+//        logWarning("CC5M2BaseUnitGroup  call SetActive for Group with ID=" + getIdentificator(user));
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+  }
+}
+class CC5M2_PantherTask extends CBaseAITankTask
+{
+
+    void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    sendEvent(21.0,  getIdentificator(user), "StartPanthers", []);   //
+  }
+
+  event void StartPanthers()
+  {
+
+//    CBaseAITankTask::Init();
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE); 
+
+
+  }
+}
+
+class CC5M2RusGroup1 extends CBaseUnitGroup
+{
+
+}
+
+class CC5M2RusTankTask1 extends CBaseAITankTask
+{
+     boolean isActive;
+     boolean First;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+    First = false;
+    sendEvent(5.0, getIdentificator(user), "SetActiveGroup", []);
+    sendEvent(120.0, getIdentificator(user), "Grp1RadarON", []);
+  }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    isActive = true;
+    ActivateMovement(true);
+    sendEvent(0.0, getIdentificator(user), "PointVecB", []);
+  }
+  event void Grp1RadarON()
+  {
+   SetEnemyReactionType(ERT_AGGRESSIVE); //
+    ActivateFire(true);
+    ActivateRadar(true);
+  }
+
+  event void PointVecB()
+  {
+    if (!First )
+    {
+    Vector  DestinationVec =  GetNavPointBehPos("C5M2_AttackNavPoint_1");
+    SetOrder_MoveTo_Direct((DestinationVec), 6.5f );
+    sendEvent(40.0, getIdentificator(user), "PointVecB", []);
+    }
+    return;
+   }
+}
+class CC5M2RusTankTask2 extends CBaseAITankTask
+{
+     boolean isActive;
+     boolean First;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+    First = false;
+    sendEvent(6.0, getIdentificator(user), "SetActiveGroup", []);
+    sendEvent(122.0, getIdentificator(user), "Grp2RadarON", []);
+  }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    isActive = true;
+    ActivateMovement(true);
+    sendEvent(0.0, getIdentificator(user), "PointVecB", []);
+  }
+
+  event void Grp2RadarON()
+  {
+   SetEnemyReactionType(ERT_AGGRESSIVE); //
+    ActivateFire(true);
+    ActivateRadar(true);
+  }
+
+  event void PointVecB()
+  {
+    if (!First )
+    {
+    Vector  DestinationVec =  GetNavPointBehPos("C5M2_AttackNavPoint_2");
+    SetOrder_MoveTo_Direct((DestinationVec), 6.5f );
+    sendEvent(38.0, getIdentificator(user), "PointVecB", []);
+    }
+    return;
+   }
+}
+
+class CC5M2RusTankTask3 extends CBaseAITankTask //, CC2M6Broken
+{
+     boolean isActive;
+     boolean First;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+    First = false;
+    sendEvent(7.0, getIdentificator(user), "SetActiveGroup", []);
+    sendEvent(123.0, getIdentificator(user), "Grp3RadarON", []);
+  }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    isActive = true;
+    ActivateMovement(true);
+    sendEvent(0.0, getIdentificator(user), "PointVecB", []);
+  }
+
+  event void Grp3RadarON()
+  {
+   SetEnemyReactionType(ERT_AGGRESSIVE); //
+    ActivateFire(true);
+    ActivateRadar(true);
+  }
+
+  event void PointVecB()
+  {
+    if (!First )
+    {
+    Vector  DestinationVec =  GetNavPointBehPos("C5M2_AttackNavPoint_3");
+    SetOrder_MoveTo_Direct((DestinationVec), 6.5f );
+    sendEvent(35.0, getIdentificator(user), "PointVecB", []);
+    }
+    return;
+   }
+}
+
+class CC5M2RusTankTask4 extends CBaseAITankTask //, CC2M6Broken
+{
+     boolean isActive;
+     boolean First;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+    First = false;
+    sendEvent(8.0, getIdentificator(user), "SetActiveGroup", []);
+    sendEvent(124.0, getIdentificator(user), "Grp4RadarON", []);
+  }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    isActive = true;
+    ActivateMovement(true);
+    sendEvent(0.0, getIdentificator(user), "PointVecB", []);
+  }
+
+  event void Grp4RadarON()
+  {
+   SetEnemyReactionType(ERT_AGGRESSIVE); //
+    ActivateFire(true);
+    ActivateRadar(true);
+  }
+
+  event void PointVecB()
+  {
+    if (!First )
+    {
+    Vector  DestinationVec =  GetNavPointBehPos("C5M2_AttackNavPoint_4");
+    SetOrder_MoveTo_Direct((DestinationVec), 6.5f );
+    sendEvent(37.0, getIdentificator(user), "PointVecB", []);
+    }
+    return;
+   }
+}
+
+class CC5M2RusGroup2 extends CC5M2BaseUnitGroup
+{
+
+}
+
+
+

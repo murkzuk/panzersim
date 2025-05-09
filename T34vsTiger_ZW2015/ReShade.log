@@ -1,0 +1,121 @@
+08:44:23:603 [14200] | INFO  | Initializing crosire's ReShade version '6.1.0.1835' (32-bit) loaded from "M:\T34vsTiger_ZW2015\D3D9.DLL" into "M:\T34vsTiger_ZW2015\Editor.exe" (0x4968bf98) ...
+08:44:23:603 [14200] | INFO  | Registering hooks for "user32.dll" ...
+08:44:23:603 [14200] | INFO  | > Libraries loaded.
+08:44:23:603 [14200] | INFO  | > Found 14 match(es). Installing ...
+08:44:23:620 [14200] | INFO  | Registering hooks for "C:\windows\system32\dinput.dll" ...
+08:44:23:620 [14200] | INFO  | > Delayed.
+08:44:23:620 [14200] | INFO  | Registering hooks for "ws2_32.dll" ...
+08:44:23:620 [14200] | INFO  | > Libraries loaded.
+08:44:23:621 [14200] | INFO  | > Found 8 match(es). Installing ...
+08:44:23:636 [14200] | INFO  | Registering hooks for "C:\windows\system32\d2d1.dll" ...
+08:44:23:637 [14200] | INFO  | > Delayed.
+08:44:23:637 [14200] | INFO  | Registering hooks for "C:\windows\system32\d3d9.dll" ...
+08:44:23:637 [14200] | INFO  | > Delayed until first call to an exported function.
+08:44:23:637 [14200] | INFO  | Registering hooks for "C:\windows\system32\d3d10.dll" ...
+08:44:23:638 [14200] | INFO  | > Delayed.
+08:44:23:638 [14200] | INFO  | Registering hooks for "C:\windows\system32\d3d10_1.dll" ...
+08:44:23:638 [14200] | INFO  | > Delayed.
+08:44:23:638 [14200] | INFO  | Registering hooks for "C:\windows\system32\d3d11.dll" ...
+08:44:23:638 [14200] | INFO  | > Delayed.
+08:44:23:639 [14200] | INFO  | Registering hooks for "C:\windows\system32\d3d12.dll" ...
+08:44:23:639 [14200] | INFO  | > Delayed.
+08:44:23:640 [14200] | INFO  | Registering hooks for "C:\windows\system32\dxgi.dll" ...
+08:44:23:640 [14200] | INFO  | > Delayed.
+08:44:23:640 [14200] | INFO  | Registering hooks for "vrclient.dll" ...
+08:44:23:640 [14200] | INFO  | > Delayed.
+08:44:23:640 [14200] | INFO  | Initialized.
+08:44:23:640 [14200] | INFO  | Redirecting Direct3DCreate9(SDKVersion = 32) ...
+08:44:23:641 [14200] | INFO  | Installing export hooks for "C:\windows\system32\d3d9.dll" ...
+08:44:23:642 [14200] | INFO  | > Found 11 match(es). Installing ...
+08:44:23:772 [14200] | INFO  | Redirecting IDirect3D9::CreateDevice(this = 04090560, Adapter = 0, DeviceType = 1, hFocusWindow = 000607AC, BehaviorFlags = 0x50, pPresentationParameters = 04501310, ppReturnedDeviceInterface = 04501398) ...
+08:44:23:775 [14200] | INFO  | Searching for add-ons (*.addon, *.addon32) in "M:\T34vsTiger_ZW2015" ...
+08:44:23:775 [14200] | INFO  | Dumping presentation parameters:
+08:44:23:775 [14200] | INFO  |   +-----------------------------------------+-----------------------------------------+
+08:44:23:776 [14200] | INFO  |   | Parameter                               | Value                                   |
+08:44:23:776 [14200] | INFO  |   +-----------------------------------------+-----------------------------------------+
+08:44:23:776 [14200] | INFO  |   | BackBufferWidth                         | 1920                                    |
+08:44:23:776 [14200] | INFO  |   | BackBufferHeight                        | 1080                                    |
+08:44:23:776 [14200] | INFO  |   | BackBufferFormat                        | D3DFMT_X8R8G8B8                         |
+08:44:23:776 [14200] | INFO  |   | BackBufferCount                         | 1                                       |
+08:44:23:776 [14200] | INFO  |   | MultiSampleType                         | 8                                       |
+08:44:23:776 [14200] | INFO  |   | MultiSampleQuality                      | 0                                       |
+08:44:23:776 [14200] | INFO  |   | SwapEffect                              | 1                                       |
+08:44:23:776 [14200] | INFO  |   | DeviceWindow                            | 000607AC                                |
+08:44:23:776 [14200] | INFO  |   | Windowed                                | TRUE                                    |
+08:44:23:776 [14200] | INFO  |   | EnableAutoDepthStencil                  | FALSE                                   |
+08:44:23:776 [14200] | INFO  |   | AutoDepthStencilFormat                  | 0                                       |
+08:44:23:776 [14200] | INFO  |   | Flags                                   | 0                                       |
+08:44:23:776 [14200] | INFO  |   | FullScreen_RefreshRateInHz              | 0                                       |
+08:44:23:776 [14200] | INFO  |   | PresentationInterval                    | 0x80000000                              |
+08:44:23:776 [14200] | INFO  |   +-----------------------------------------+-----------------------------------------+
+08:44:23:862 [14200] | INFO  | Running on NVIDIA GeForce RTX 4070 Driver 576.28.
+08:44:24:120 [14200] | INFO  | Recreated runtime environment on runtime 0CC154F8 ("M:\T34vsTiger_ZW2015\ReShade.ini").
+08:44:24:124 [14200] | INFO  | Redirecting IDirect3DDevice9::Reset(this = 0408B498, pPresentationParameters = 0019FD50) ...
+08:44:24:125 [14200] | INFO  | Dumping presentation parameters:
+08:44:24:125 [14200] | INFO  |   +-----------------------------------------+-----------------------------------------+
+08:44:24:125 [14200] | INFO  |   | Parameter                               | Value                                   |
+08:44:24:125 [14200] | INFO  |   +-----------------------------------------+-----------------------------------------+
+08:44:24:125 [14200] | INFO  |   | BackBufferWidth                         | 1920                                    |
+08:44:24:125 [14200] | INFO  |   | BackBufferHeight                        | 1080                                    |
+08:44:24:125 [14200] | INFO  |   | BackBufferFormat                        | D3DFMT_X8R8G8B8                         |
+08:44:24:125 [14200] | INFO  |   | BackBufferCount                         | 1                                       |
+08:44:24:125 [14200] | INFO  |   | MultiSampleType                         | 8                                       |
+08:44:24:125 [14200] | INFO  |   | MultiSampleQuality                      | 0                                       |
+08:44:24:125 [14200] | INFO  |   | SwapEffect                              | 1                                       |
+08:44:24:125 [14200] | INFO  |   | DeviceWindow                            | 000607AC                                |
+08:44:24:125 [14200] | INFO  |   | Windowed                                | TRUE                                    |
+08:44:24:126 [14200] | INFO  |   | EnableAutoDepthStencil                  | FALSE                                   |
+08:44:24:126 [14200] | INFO  |   | AutoDepthStencilFormat                  | 0                                       |
+08:44:24:126 [14200] | INFO  |   | Flags                                   | 0                                       |
+08:44:24:126 [14200] | INFO  |   | FullScreen_RefreshRateInHz              | 0                                       |
+08:44:24:126 [14200] | INFO  |   | PresentationInterval                    | 0x80000000                              |
+08:44:24:126 [14200] | INFO  |   +-----------------------------------------+-----------------------------------------+
+08:44:24:126 [14200] | INFO  | Destroyed runtime environment on runtime 0CC154F8 ("M:\T34vsTiger_ZW2015\ReShade.ini").
+08:44:24:128 [14200] | INFO  | Recreated runtime environment on runtime 0CC154F8 ("M:\T34vsTiger_ZW2015\ReShade.ini").
+08:44:28:198 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\ASCII.fx" in 0.004 s.
+08:44:28:199 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Nostalgia.fx" in 0.005 s.
+08:44:28:201 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Border.fx" in 0.002 s.
+08:44:28:202 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_CLARITY.fx" in 0.007 s.
+08:44:28:202 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Sepia.fx" in 0.002 s.
+08:44:28:204 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Cartoon.fx" in 0.003 s.
+08:44:28:207 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\CAS.fx" in 0.002 s.
+08:44:28:210 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\ChromaticAberration.fx" in 0.002 s.
+08:44:28:210 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\SMAA.fx" in 0.007 s.
+08:44:28:212 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\ColorMatrix.fx" in 0.002 s.
+08:44:28:213 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Splitscreen.fx" in 0.002 s.
+08:44:28:216 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Technicolor.fx" in 0.002 s.
+08:44:28:216 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Depth3D\SuperDepth3D_VR+.fx" in 0.022 s.
+08:44:28:216 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\CRT.fx" in 0.003 s.
+08:44:28:219 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Technicolor2.fx" in 0.002 s.
+08:44:28:219 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\DisplayDepth.fx" in 0.003 s.
+08:44:28:219 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Curves.fx" in 0.003 s.
+08:44:28:221 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_DEPTHOFFIELD.fx" in 0.019 s.
+08:44:28:221 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Tonemap.fx" in 0.002 s.
+08:44:28:222 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\DPX.fx" in 0.003 s.
+08:44:28:222 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Daltonize.fx" in 0.002 s.
+08:44:28:225 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\UIMask.fx" in 0.003 s.
+08:44:28:226 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\FakeHDR.fx" in 0.003 s.
+08:44:28:226 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Deband.fx" in 0.003 s.
+08:44:28:228 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Vibrance.fx" in 0.002 s.
+08:44:28:229 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\FilmGrain.fx" in 0.002 s.
+08:44:28:231 [05736] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Vignette.fx" in 0.003 s.
+08:44:28:234 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\FXAA.fx" in 0.004 s.
+08:44:28:236 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Layer.fx" in 0.002 s.
+08:44:28:238 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_INSIGHT.fx" in 0.016 s.
+08:44:28:239 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Levels.fx" in 0.002 s.
+08:44:28:242 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\LiftGammaGain.fx" in 0.002 s.
+08:44:28:245 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\LumaSharpen.fx" in 0.002 s.
+08:44:28:248 [03776] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\LUT.fx" in 0.002 s.
+08:44:28:249 [02692] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Depth3D\SuperDepth3D.fx" in 0.023 s.
+08:44:28:254 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_LAUNCHPAD.fx" in 0.016 s.
+08:44:28:263 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_MXAO.fx" in 0.008 s.
+08:44:28:274 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_REGRADE.fx" in 0.011 s.
+08:44:28:291 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_RTGI.fx" in 0.016 s.
+08:44:28:294 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_SHARPEN.fx" in 0.003 s.
+08:44:28:305 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_SMAA.fx" in 0.009 s.
+08:44:28:313 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\MartysMods_SOLARIS.fx" in 0.008 s.
+08:44:28:316 [04492] | INFO  | Successfully compiled "M:\T34vsTiger_ZW2015\reshade-shaders\Shaders\Monochrome.fx" in 0.002 s.
+08:47:02:827 [14200] | WARN  | Reference count for IDirect3DDevice9 object 0408B498 (0CCC5F60) is inconsistent! Leaking resources ...
+08:47:05:013 [14200] | INFO  | Exiting ...
+08:47:05:014 [14200] | INFO  | Uninstalling 34 hook(s) ...
+08:47:06:030 [14200] | INFO  | Finished exiting.

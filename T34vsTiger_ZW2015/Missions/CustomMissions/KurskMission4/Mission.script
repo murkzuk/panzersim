@@ -1,0 +1,245 @@
+//-------------------------------------------------------------------
+//
+//
+//-------------------------------------------------------------------
+
+class KurskM4Mission extends CSPMission
+{
+  //
+  // Contruction and initialization
+  //
+
+  String  m_LocalTime       = "6:29:00";
+  String m_TerrainMapTextureName = "Textures/Kursk_MAP1.tex";
+
+  static String m_MissionBriefingPicMaterial = "CEFKM4BriefingPic";
+/* */
+  static Array  m_MissionObjectives = [
+      [MOTID_Primary, KurskM4Mission_Strings::Objective01, MOSID_InProgress, true], //
+      [MOTID_Primary, KurskM4Mission_Strings::Objective02, MOSID_InProgress, true]  //
+                               ];
+
+  static WString ObjectivesText = KurskM4Mission_Strings::ObjectivesText;
+  boolean isDebug = true;
+  boolean MainPlayerStartEgine = false;
+
+    Array m_NavpointsForPlayerMap = [
+
+                            [
+                              ["NavPoint_Pokrovka"],
+                               CBaseCockpitTerrainMap::NAV_RENDER_Default,  // flags
+                               new Color(244.0/256.0, 10.0/120.0, 10.0/120.0)   // NavColor
+                            ]
+
+                                   ];
+
+  float  CockpitMapMinRange        = 1000.0;
+  float  CockpitMapMaxRange        = 5000.0;
+  float  CockpitMapNavNameMaxRange = 2000.0;
+  int    CockpitMapZoomSteps       = 5;
+  Vector MarksInitPoint            = new Vector(1600.0, 1600.0, 0.0);
+  Array  CockpitMapAccessBox       = [new Vector(2, 2.0, 0.0), new Vector(18000.0, 18000.0, 0.0)];
+
+
+  final static Array RouterWorkingZones = [
+    [-1000.0 , -1000.0, 20000.0, 20000.0]
+                                          ];
+ /*  */
+  final static Array DefaultMask = [["ENEMY", "MainMesh"], ["NEUTRAL", "AIR"]];
+  final static Array Mask        = [["ENEMY", "MainMesh"], ["NEUTRAL", "AIR"]];                                          
+
+
+//  Array KillList_Primary = [ "Ru_Tank_A1", "Ru_Tank_A2", "Ru_Tank_A3", "Ru_Tank_A4", "Ru_Tank_A5", "Ru_Tank_B1", "Ru_Tank_B2", "Ru_Tank_B3", "Ru_Tank_B4", "Ru_Tank_B5", "Ru_Tank_C1", "Ru_Tank_C2", "Ru_Tank_C3", "Ru_Tank_C4", "Ru_Tank_C5"];
+
+//  Array KillList_Secondary = ["FirePoint_Zis76_1", "FirePoint_Zis76_2", "FirePoint_Zis76_3", "AISU85Unit_1", "AISU85Unit_3", "AI_T34-76Unit_1", "AI_T34-76Unit_2", "AI_T34-76Unit_3", "AI_T34-76Unit_4", "AI_T34-76Unit_5"];
+  
+
+  void KurskM4Mission()
+  {
+    // Construct mission
+    CSPMission("KurskM4Mission", "KurskM4Content");
+
+    // Set mission properties
+    SetMissionTerrain(new #ChunkedTerrain<KurskM4Terrain>());
+    SetMissionAtmosphere(new #Atmosphere<KurskM4Atmosphere>());
+    SetMissionSky(new #SkyObject<CSky01Model>());
+
+    if (CDebugSettings::LoadForest)
+      SetMissionForest(new CSTBaseLowLandForestC1(GetMissionAtmosphere()));
+    if (CDebugSettings::LoadRoads)
+      SetMissionRoadsParms(new CBaseRoadC1());
+    if (CDebugSettings::LoadGrass)
+      RegisterObject("Grass", new #Grass<CBaseGrassC1>());
+
+   m_MissionLensFlare =  new #LensFlare<CLensFlare>();
+
+    SetMissionWorldMatrices(new #WorldMatrices<KurskM4WorldMatrices>(), [
+        [ LAYER_TERRAIN_NAME, "KurskM4LandscapeLayer"   ],
+        [ LAYER_TERRAIN_ZONE, "KurskM4TerrainZoneLayer" ],
+        [ LAYER_ROUTER_ZONE,   "KurskM4RouterZoneLayer" ],//
+        [ LAYER_MICROTEXTURE_MAP1, "KurskM4MicroTextures1" ],  //
+        [ LAYER_TERRAIN_WATERHEIGHTS, "KurskM4WaterHeights"]
+      ]);
+
+    SetRouterPrecalculatedGraph(
+      new #RouterPrecalculatedGraph<CRouterPrecalculatedGraph>());
+
+    SetRouterMap("RouterMap_Layer1", new #RouterMap<CC1RouterMap>(), 64, RouterWorkingZones);
+  }
+
+// TODO
+  void StartMission()
+  {
+    // call inherited
+   CSPMission::StartMission();
+   sendEvent(35.0, "TigerGrp1_DR_Tiger7", "WMFollow", []);
+   sendEvent(100.0, SOID_MissionController, "StartDistanceCheck", []);
+  }
+
+  event void OnEngineStateChanged(boolean _IsWorkEngine)
+  {
+     MainPlayerStartEgine = true;
+  }
+
+ event void StartDistanceCheck()
+ {
+   if(distance("NavPoint_Tig_Pokrovka", "MainPlayerUnit") >= 100)
+   {
+   sendEvent(0.0, SOID_MissionController, "OnDistanceObject", []);
+   }
+
+  sendEvent(40.0, SOID_MissionController, "StartDistanceCheck", []);
+ }
+
+  event void OnDistanceObject()
+  {
+    if (distance("NavPoint_Tig_Pokrovka", "MainPlayerUnit") <= 1000)
+    {
+     // FailMission(10.0);
+      //sendEvent(1.0, SOID_MissionController, "Shutdown", []);
+      SetObjectiveStatus(0, MOSID_Completed);
+      SetObjectiveStatus(1, MOSID_Completed);
+
+    }
+  }
+  void OnObjectEnterNavPoint( String _NavPointID, String _ObjectID)
+  {
+
+    if (((_NavPointID == "NavPoint_Tig_Pokrovka")) && ((_ObjectID.IsStartsWith("TigerGrp1_DR_"))))
+      {
+       
+      SetObjectiveStatus(0, MOSID_Completed);
+      SetObjectiveStatus(1, MOSID_Completed);
+     // sendEvent( 0.0, SOID_MissionController, "OnDistanceObject",  []);
+
+        //
+      }
+
+   }
+
+
+  void OnObjectLeaveNavPoint( String _NavPointID, String _ObjectID)
+  {
+      /*    if (_NavPointID == "NavPoint_BattleFront")
+       {
+        logWarning("Object: " + _ObjectID + " leave NavPoint: " +  _NavPointID); //
+       } */
+
+
+  }
+
+  //----------------
+  // Another Classes
+  //----------------
+  event void SetNavPointIdentifiersArray(String _NavPointID, Array _ID)
+  {
+    Component NavPoint = GetMission().GetObject(_NavPointID);
+
+    if (null != NavPoint)
+    {
+      NavPoint.SetIdentifiers(_ID);
+    }
+    else
+      logError("Component NavPoint with ID = " + _NavPointID + " - null!" );
+  }
+
+  event void OnObjectDestroyed( String _ObjectID)
+  {
+    CMission::OnObjectDestroyed(_ObjectID);
+    // TMP
+    Component DeadThing = GetObject(_ObjectID);
+    if (null == DeadThing)
+    {
+      logError("Component 'DeadThing' == null");//
+      return;
+    }
+
+    String Affiliation  = DeadThing.GetAffiliation();
+    String Damager      = DeadThing.GetLastDamager();
+
+    if (Damager == "MainPlayerUnit")
+    {
+      if (!checkMask(DeadThing, ["HUMAN"], []))
+      {
+        //logWarning("MadPlayer_kill_Non_Human");
+
+        if (Affiliation == "FRIEND")
+        {
+          //logWarning("MissionWillBeKilledByFriendlyFire");
+          Penalty_count = Penalty_count + 1;
+          SendCockpitMessage(CGameMessages::msg_FriendlyFireWarning, new Color(1.0, 1.0, 0.0));
+          // New report for Cocpit: "You kill friendly unit. Mission will be fail"  
+          if (Penalty_count >= 2)
+          {
+            //logWarning("MissionKillingByFriendlyFire");
+            SendCockpitMessage(CGameMessages::msg_FriendlyFireFailed, new Color(1.0, 0.0, 0.0));
+            sendEvent(2.0, SOID_MissionController, "FailMissionMad", []);
+          }
+        }
+      }
+    }
+
+/*  if (_ObjectID.IsStartsWith("Ru_Tank_"))
+   {
+    int _Index = KillList_Primary.find(_ObjectID);
+
+    if(_Index != -1)
+    {
+      KillList_Primary.remove(_Index);
+    }
+    if((KillList_Primary.size() == 0))
+    {
+      SetObjectiveStatus(0, MOSID_Completed);
+      //CompleteObjective(0);
+    }
+  } */
+}
+
+  event void FailMissionMad()
+  {
+    FailMission(0.0);
+  }
+
+  float distance(String _BetweenID_1, String _BetweenID_2)
+  {
+     Component Between_1 = new #GameController().GetObject(_BetweenID_1);
+     Component Between_2 = new #GameController().GetObject(_BetweenID_2);
+     if ( null == Between_1 && null == Between_2)
+     {
+      logError(" Component -- null");
+      return;
+     }
+       Vector m_Pos_1 = getPosition(Between_1).origin;
+       Vector m_Pos_2 = getPosition(Between_2).origin;
+
+     logWarning("Distance between " + _BetweenID_1 + " and " + _BetweenID_2+ " is now " + new String ( (m_Pos_1 - m_Pos_2).Magnitude() ));
+
+    return (m_Pos_1 - m_Pos_2).Magnitude();
+  }
+
+ void Shutdown()
+  {
+    CSPMission::Shutdown();  
+    //CMission::Shutdown();
+  }
+}

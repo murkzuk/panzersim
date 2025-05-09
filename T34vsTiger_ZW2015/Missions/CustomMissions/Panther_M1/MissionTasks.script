@@ -1,0 +1,627 @@
+//-----------------------------------------------------------------
+//
+//  This code is copyright 2001 by G5 Software.
+//  Any unauthorized usage, either in part or in whole of this code
+//  is strictly prohibited. Violators WILL be prosecuted to the
+//  maximum extent allowed by law.
+//
+//-----------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// // Base class for group unit (function SetActive remove ERT_FRIGID and set enemy reaction type ERT_AGGRESSIVE)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1BaseUnitGroup extends CBaseUnitGroup
+{
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    //SetEnemyReactionType(ERT_FRIGID);
+  }
+
+  event void SetActive()
+  {
+//    if(GetMission().isDebug)
+//        logWarning("CC5M1BaseUnitGroup  call SetActive for Group with ID=" + getIdentificator(user));
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+  }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// // Base class for group unit (function SetActive remove ERT_FRIGID and set enemy reaction type ERT_AGGRESSIVE)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// Russian
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1RusGroup1_76Tank extends CBaseUnitGroup
+{
+  float SpeedAttackVyso4ani = 4.0;
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    ShowGroup(false);
+  }
+
+  event void StartAttack()
+  {
+    ShowGroup(true);
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+//    if(GetMission().isDebug)
+//      logWarning("CC5M1RusGroup1_76Tank_call_StartAttack");
+
+//    SetFormation("CWedgeFormation", 30.0, false, true);
+//    logWarning("CC5M1RusGroup1_76Tank_call_Battlefront");
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPoint_RussianT76_AttackFlang"),
+                    GetNavPointBehPos("NavPoint_RussianT76_AttackFlang_0_1"),
+                    GetNavPointBehPos("NavPoint_RussianT76_AttackFlang_1")
+                           ];
+    SetFirstQueueOrders([
+                          ["CC5M1RusGroup1_76Tank_StartAttack", "SetOrder_MoveToEx", [ApproachPoints, SpeedAttackVyso4ani], ""],
+                          ["CC5M1RusGroup1_76Tank_StartAttack", "SetEnemyReactionType", [], ""]
+                        ]);
+  }
+
+
+  event void ContinueAttack()
+  {
+//    if(GetMission().isDebug)
+//      logWarning("ContinueAttack_for_group_CC5M1RusGroup1_76Tank. m_GroupTargets.size() = " +new String(m_GroupTargets.size()));
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPoint_RussianT76_AttackFlang_2"),
+                    GetNavPointBehPos("NavPoint_Russian1T76_AttackFinished")
+                    ];
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+      SetFirstQueueOrders([
+                          ["CC5M1RusGroup1_76Tank_ContinueAttack", "SetOrder_MoveToEx", [ApproachPoints, SpeedAttackVyso4ani], ""],
+                          ["CC5M1RusGroup1_76Tank_ContinueAttack", "SetEnemyReactionType", [], ""]
+                        ]);
+  }
+}
+
+class CC5M1RusTank76Task1 extends CBaseAITankTask
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1MPUGroupTank extends CC5M1BaseUnitGroup
+{
+  float m_SpeedAttack = 4.0;
+  boolean ContAttack = false;
+  Array m_Targets1 = ["MainPlayerUnit","German_TankGroup_T4_1", "German_TankGroup_T4_8", "German_TankGroup_T4_2", "German_Pak40_3", "German_Pak40_2"];
+
+  event void StartRussianGroups()
+  {
+//    if(GetMission().isDebug)
+//    logWarning(" CC5M1MPUGroupTank  -  StartRussianGroups");
+
+    //SetEnemyReactionType(ERT_FRIGID);
+
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFlang_1"),
+                    GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFlang_1_1"),
+                    GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFlang_1_2"),
+                    GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFlang_2")
+                           ];
+
+    SetFormation("CFrontFormation", 40.0, true, true);
+    SetFirstQueueOrders([
+                    ["RussianAttack", "SetOrder_MoveToEx", [ApproachPoints, m_SpeedAttack], ""],
+                    ["AttackRussian", "SetEnemyReactionType", [ERT_AGGRESSIVE], ""]
+                        ]);
+    setOrder_MoveTo(GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFlang_2"), m_SpeedAttack,true);
+  }
+
+  event void StartRussianAttackDzot()
+  {
+//    if(GetMission().isDebug)
+//      logWarning(" CC5M1MPUGroupTank  -  StartRussianAttackDzot. CurrentOrder is "+ m_CurrentOrder.m_Order);
+
+    SetOrder_Attack(m_Targets1, ERT_AGGRESSIVE);
+  }
+
+  event void ContinueAttack()
+  {
+    if(!ContAttack)
+    {
+      // Before use the m_GroupTargets, call UpdateGroupTargets
+      RefreshUnitsList();
+      m_Group.activateGroup = true;
+
+ //     if(GetMission().isDebug)
+  //      logWarning("ContinueAttack_for_CC5M1MPUGroupTank. m_GroupTargets.size() = " +new String(m_GroupTargets.size()));
+
+      //CancelAllOrders();
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+
+      Array Path = [
+                     GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFinished_0111"),
+                     GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFinished_011"),
+                     GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFinished_01"),
+                     GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFinished")
+                   ];
+
+      SetFirstQueueOrders([
+          ["CC5M1MPUGroupTankFinished", "SetOrder_MoveToEx",[Path, m_SpeedAttack],""],
+          ["CC5M1MPUGroupTankFinished", "SetEnemyReactionType", [ERT_AGGRESSIVE], ""]
+                          ]);
+
+//      logWarning("ContinueAttack_begin_for_CC5M1MPUGroupTank");
+      ContAttack = true;
+    }
+  }
+
+  event void ContinueAttack2()
+  {
+    // Before use the m_GroupTargets, call UpdateGroupTargets
+
+//    if(GetMission().isDebug)
+//     logWarning("ContinueAttack2_for_CC5M1MPUGroupTank. m_GroupTargets.size() = " +new String(m_GroupTargets.size()));
+
+    RefreshUnitsList();
+    ActivateRadar(true);
+    ActivateFire(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    //m_Group.activateGroup = true;
+
+    Array Path = [
+                   //GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFinished_0111"),
+                   //GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFinished_011"),
+                   //GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFinished_01"),
+                   GetNavPointBehPos("NavPoint_RussianMPUT85_AttackFinished"),
+                   GetNavPointBehPos("NavPoint_Russian1T76_AttackFinished")
+                 ];
+
+    SetFirstQueueOrders([
+        ["CC5M1MPUGroupTankFinished", "SetOrder_MoveToEx",[Path, m_SpeedAttack],""],
+        ["CC5M1MPUGroupTankFinished", "SetEnemyReactionType", [ERT_AGGRESSIVE], ""]
+                        ]);
+
+  //   if(GetMission().isDebug)
+  //   logWarning("ContinueAttack2_begin_for_CC5M1MPUGroupTank");
+  }
+}
+
+class CC5M1MPURusTank85Task extends CBaseAITankTask
+{
+     boolean isActive;
+     boolean First;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+    First = false;
+    sendEvent(0.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    isActive = true;
+    SetEnemyReactionType(ERT_AGGRESSIVE); //
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    sendEvent(1.0, getIdentificator(user), "PointVecAA", []);
+  }
+
+
+  event void PointVecAA()
+  {
+    if (!First )
+    {
+    Vector  DestinationVec =  GetNavPointBehPos("NavPoint_RussianT85_AttackFlang_2");
+    SetOrder_MoveTo_Direct((DestinationVec), 4.0f );
+    sendEvent(33.0, getIdentificator(user), "PointVecAA", []);
+    }
+    return;
+   }
+}
+/////////////////////////////////////////////////////////////////////////////////////
+//Front attack group  NavPoint_RussianT85_AttackFlang_2
+/////////////////////////////////////////////////////////////////////////////////////
+
+class CC5M1RusTank76Task2 extends CBaseAITankTask //, CC2M6Broken
+{
+     boolean isActive;
+     boolean First;
+
+  void Init()
+  {
+    CBaseAITankTask::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    isActive = false;
+    First = false;
+    sendEvent(0.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    isActive = true;
+    SetEnemyReactionType(ERT_AGGRESSIVE); //
+    ActivateFire(true);
+    ActivateRadar(true);
+    ActivateMovement(true);
+    sendEvent(14.0, getIdentificator(user), "PointVecB", []);
+  }
+
+
+  event void PointVecB()
+  {
+    if (!First )
+    {
+    Vector  DestinationVec =  GetNavPointBehPos("NavPoint_RussianT76_AttackFront_0_2");
+    SetOrder_MoveTo_Direct((DestinationVec), 4.0f );
+    sendEvent(20.0, getIdentificator(user), "PointVecB", []);
+    }
+    return;
+   }
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+//infantry
+//////////////////////////////////////////////////////////////////////////////////////////
+
+class CC5M1RusSoldierGroupTask extends CBaseAITask
+{
+   boolean isActive;
+
+  void Init()
+  {
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+    sendEvent(15.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    ActivateFire(true);
+    ActivateRadar(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    Vector  DestinationVec =  GetNavPointBehPos("NavPoint_RussianT85_AttackFlang_2");
+    SetOrder_MoveTo_Direct((DestinationVec), 3.5f );
+    isActive = true;
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// German
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1GerGroup_StuGTask extends CBaseAISAUTask
+{
+   boolean isActive;
+
+  void Init()
+  {
+    ActivateFire(false);
+    ActivateRadar(false);
+    isActive = false;
+    sendEvent(10.0, getIdentificator(user), "SetActiveGroup", []);
+  }
+
+  event void SetActiveGroup()
+  {
+    if (!isActive)
+    ActivateFire(true);
+    ActivateRadar(true);
+    SetEnemyReactionType(ERT_AGGRESSIVE);
+    isActive = true;
+  }
+}
+
+class CC5M1OnUnreacheableSAUProcessingTask extends CBaseAISAUTask
+{
+  void OnUnreacheable(Vector _Destination)
+ {
+    if (m_Group != null)
+      m_Group.PushOrder();
+
+    Component me = GetMission().GetObject(getIdentificator(user));
+     if (me == null)
+      logError("Component 'me' == null!!!");
+
+    Array ApproachPoints = SplitPath(getPosition(me).origin, _Destination);
+
+    SetFirstQueueOrders([
+      ["OnUnreacheable", "SetOrder_MoveToEx", [ApproachPoints, m_Group.m_CurrentOrder.m_MovingSpeed], ""],
+      ["OnUnreacheable", "EndOnUnreacheable", [ERT_AGGRESSIVE], ""]
+                        ]);
+
+  }
+
+  void EndOnUnreacheable()
+  {
+//    if (GetMission().isDebug)
+//      logWarning("EndOnUnreacheable");
+
+    if (m_Group != null)
+      m_Group.PopOrder();
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1GerDzotTask extends CBaseAITask
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1GerGroup_Pak1 extends CC5M1BaseUnitGroup
+{
+}
+class CC5M1GerPak40Task1 extends CBaseAITask
+{
+}
+/*
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1GerGroup_Pak2 extends CC5M1BaseUnitGroup
+{
+  Array m_Targets = [
+                     "SovietTank_T34_85_1", "SovietTank_T34_85_2",
+                     "MainPlayerUnit", "Russian_TankGroup1_76_3", "Russian_TankGroup1_76_2",
+                     "Russian_TankGroup1_76_2", "Russian_TankGroup2_76_1", "Russian_TankGroup2_76_2",
+                     "Russian_TankGroup2_76_3"
+                    ];
+
+  boolean activateGroup = false;
+
+  void Init()
+  {
+    CC5M1BaseUnitGroup::Init();
+    ActivateMovement(false);
+  }
+
+  event void StartAttackStug()
+  {
+//    if(GetMission().isDebug)
+//      logWarning("CC5M1GerGroup_Stug1_StartAttackStug");
+
+    ActivateMovement(true);
+    SetOrder_Attack(m_Targets, ERT_AGGRESSIVE);
+    activateGroup = true;
+  }
+}
+class CC5M1GerStugTask2 extends CC5M1OnUnreacheableSAUProcessingTask
+{
+
+}
+
+*/
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1GerGroup1_T4Tank extends CBaseUnitGroup
+{
+  boolean activateGroup = false;
+  float SpeedParad = 3.5;
+
+    void Init ()
+   {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    sendEvent(48.0, getIdentificator(user), "StartGermanPanzer1", []);//
+   }
+
+  event void StartGermanPanzer1()
+  {
+      activateGroup = true;
+      ActivateFire(true);
+      ActivateRadar(true);
+      ActivateMovement(true);
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+      activateGroup = true;
+      SetFormation("CFrontFormation", 40.0, false, false);
+
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPoint_GermanT4_1_Attack_1"),
+                    GetNavPointBehPos("NavPoint_GermanT4_1_Attack")
+                           ];
+    SetFirstQueueOrders([
+                          ["StartGermanPanzer1", "SetOrder_MoveToEx", [ApproachPoints, SpeedParad], ""],
+                          ["StartGermanPanzer1", "ParadeIsFinished1", [], ""]
+                        ]);
+  }
+
+  void ParadeIsFinished1()
+  {
+ //   if(GetMission().isDebug)
+ //     logWarning("CC5M1GerGroup1_T4Tank  call ParadeIsFinished1");
+
+    SetEnemyReactionType(ERT_PASSIVE);
+  }
+}
+class CC5M1GerT4Task1 extends CBaseAITankTask
+{
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1GerGroup2_T4Tank extends CBaseUnitGroup
+{
+  boolean activateGroup = false;
+  float SpeedParad = 3.0;
+    void Init ()
+   {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    sendEvent(23.0, getIdentificator(user), "StartGermanPanzer2", []);//
+   }
+  event void StartGermanPanzer2()
+  {
+      PopDelayedOrder();
+      activateGroup = true;
+      ActivateFire(true);
+      ActivateRadar(true);
+      ActivateMovement(true);
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+      activateGroup = true;
+      SetFormation("CFrontFormation", 40.0, false, true);
+
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPoint_GermanT4_2_Attack_1"),
+                    GetNavPointBehPos("NavPoint_GermanT4_2_Attack")
+                           ];
+    SetFirstQueueOrders([
+                          ["StartGermanPanzer2", "SetOrder_MoveToEx", [ApproachPoints, SpeedParad], ""],
+                          ["StartGermanPanzer2", "ParadeIsFinished2", [], ""]
+                        ]);
+  }
+
+  void ParadeIsFinished2()
+  {
+//    if(GetMission().isDebug)
+//      logWarning("CC5M1GerGroup2_T4Tank  call ParadeIsFinished2");
+
+    SetEnemyReactionType(ERT_PASSIVE);
+  }
+}
+class CC5M1GerT4Task2 extends CBaseAITankTask
+{
+
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1GerGroup3_T4Tank extends CBaseUnitGroup
+{
+  boolean activateGroup = false;
+    void Init ()
+   {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    sendEvent(31.0, getIdentificator(user), "StartGermanPanzer3", []);//
+   }
+  event void StartGermanPanzer3()
+  {
+      float SpeedParad = 4.0;
+
+      CBaseUnitGroup::Init();
+      PopDelayedOrder();
+      ActivateFire(true);
+      ActivateRadar(true);
+      ActivateMovement(true);
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+      activateGroup = true;
+      //SetFormation("CFrontFormation", 20.0, false, false);
+      Array ApproachPoints = [
+                      GetNavPointBehPos("NavPoint_GermanT4_3_Attack_1"),
+                      GetNavPointBehPos("NavPoint_GermanT4_3_Attack")
+                             ];
+      SetFirstQueueOrders([
+                            ["StartGermanPanzer3", "SetOrder_MoveToEx", [ApproachPoints, SpeedParad], ""],
+                            ["StartGermanPanzer3", "ParadeIsFinished2", [], ""]
+                          ]);
+
+
+  }
+
+  void ParadeIsFinished3()
+  {
+//    if(GetMission().isDebug)
+//      logWarning("CC5M1GerGroup3_T4Tank  call ParadeIsFinished3");
+
+    SetEnemyReactionType(ERT_PASSIVE);
+  }
+}
+class CC5M1GerT4Task3 extends CBaseAITankTask
+{
+
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1GerSoldierGroupTask extends CBaseAITask
+{
+}
+class CC5M1GerSoldierGroup extends CC5M1BaseUnitGroup
+{
+  float SpeedAttackVyso4ani = 3.0;
+  Array ArrayRusSoldier = ["RussianSoldierGroup1_0", "RussianSoldierGroup1_1", "RussianSoldierGroup1_2", "RussianSoldierGroup1_3",
+      "RussianSoldierGroup1_4", "RussianSoldierGroup1_5", "RussianSoldierGroup1_6", "RussianSoldierGroup1_7", "RussianSoldierGroup1_8", "RussianSoldierGroup1_9"];
+
+  event void StartAttackGermanSoldier()
+  {
+//    if(GetMission().isDebug)
+//      logWarning("CC5M1GerSoldierGroup  call StartAttackGermanSoldier");
+
+    SetFormation("CFrontFormation", 14.0, true, false);
+
+    SetEnemyReactionType(ERT_PASSIVE);
+    Array ApproachPoints = [
+                    GetNavPointBehPos("NavPoint_GermanSoldier_Attack"),
+                    GetNavPointBehPos("NavPoint_GermanSoldier_Attack_1")
+                           ];
+    SetFirstQueueOrders([
+                          ["AttackGermanSoldier", "SetOrder_MoveToEx", [ApproachPoints, SpeedAttackVyso4ani], ""],
+                          ["AttackGermanSoldier", "SetEnemyReactionType", [ERT_AGGRESSIVE], ""]
+                        ]);
+
+  }
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+class CC5M1_WingmanTask extends CWingmanTask, CBaseAITankTask
+{
+  void Init()
+
+  {
+    CWingmanTask::Init();
+    CBaseAITankTask::Init();
+    sendEvent(10.0, getIdentificator(user), "WMFollow", []);
+  }
+
+ event void WMFollow()
+  {
+    CWingmanTask::Init();
+    Wingman_SetOrder(0 /*Follow*/, m_LeaderID, "");
+    sendEvent(30.0, getIdentificator(user), "WMFollow", []); //
+  }
+
+}
+class CC5M1GermanPantherGroupTank extends CBaseUnitGroup
+{
+
+  void Init()
+  {
+    CBaseUnitGroup::Init();
+    ActivateFire(false);
+    ActivateRadar(false);
+    ActivateMovement(false);
+    sendEvent(0.0, "getIdentificator(user)", "StartGermanPanther", []);
+
+  }
+  event void StartGermanPanther()
+  {
+      CBaseUnitGroup::Init();
+      PopDelayedOrder();
+      ActivateFire(true);
+      ActivateRadar(true);
+      ActivateMovement(true);
+      SetEnemyReactionType(ERT_AGGRESSIVE);
+ }
+}
+///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
