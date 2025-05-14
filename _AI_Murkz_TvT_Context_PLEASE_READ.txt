@@ -8,9 +8,7 @@ Section 1: Identity & Platforms
 "I am Murkz. My primary online community hub is the PanzerSims forum (https://panzersim.forumotion.com/f1-t34-vs-tiger), which I administer. This forum is dedicated to the game "T-34 vs Tiger" (TvT) and other WWII tank simulations. I am also known as murkzuk on GitHub and jmurkz elsewhere."
 
 Section 2: Gaming & Modding Experience
-"While my forum covers various WWII tank simulations, my personal focus and gameplay are primarily on "T-34 vs Tiger" (TvT) and "Panzer Elite" (PE). I have modding experience with both titles:
-
-For Panzer Elite, my 3D models are included in the 'Ostpak Redux' and 'PP2-X' mods.
+"While my forum covers various WWII tank simulations, my personal focus and gameplay are primarily on "T-34 vs Tiger" (TvT)
 
 For T-34 vs Tiger, my early modding work involved testing and successfully adding a new 3D model (a toolbox) into the game using Maya 5.
 I am also dyslexic, which may influence how I process and communicate information."
@@ -69,3 +67,486 @@ Comprehensive Picture: The five sections together now paint a very complete pict
 This document is now an exceptionally strong "persona" or context brief. If I were a new AI instance starting a chat with you and was given this about me.txt upfront, I would have a very solid and accurate understanding, minimizing the need for you to repeat background information and allowing us to get to the core of your query much faster and more effectively.
 
 Is there anything in this latest complete draft that you'd like to tweak, add, or rephrase? Or does this feel like a good final version for your about me.txt?
+
+
+T-34 vs Tiger: Verified Folder Structure (MMP7 Clean Build, Updated)
+====================================================================
+
+📁 Root Folder (T34vsTiger)
+├── Animations/               - Animation data for infantry and humans
+│   ├── humans.anim           - Binary animation data
+│   └── humans.script         - Script to define animation sequences
+├── Cache/                    - Unused or runtime-generated (usually empty)
+├── Icons/                    - Currently empty (likely reserved for GUI elements)
+├── Missions/                 - Individual missions with their own scripts
+│   ├── mission.script        - Main mission logic
+│   └── briefing.script       - Optional briefing script
+├── Models/                   - Static models and world props
+│   ├── *.ms2                 - Model geometry
+│   ├── *.script              - Hitbox, damage, behavior configs
+│   ├── Skins/                - Visual variants
+│   └── Trees/                - Environmental trees
+├── Music/                    - Background music
+│   └── *.wav                 - Intro/menu/campaign music
+├── Resources/                - Shared GUI, mission maps, and static assets
+│   ├── *.tex                 - Interface graphics, map overlays
+│   ├── *.rsr                 - Resolution/scaling references
+│   └── *.wav                 - Menu sounds and audio cues
+├── Scripts/                  - Core game and UI logic
+│   ├── Buildings/            - Structures
+│   ├── Common/               - Shared base scripts
+│   ├── Editor/               - Editor logic
+│   ├── Groups/               - Group behaviors or templates
+│   ├── Menus/                - All menu logic and controls (e.g., MainMenu.script, AudioSettingsMenu.script)
+│   ├── Units/                - Vehicle and infantry logic
+│   ├── Commands.script       - Global command mappings
+│   └── GameSettings.script   - Defines key gameplay rules/settings
+├── Shaders/                  - .fxo shader binaries
+│   └── SceneMesh_*.fxo       - Compiled material shaders for various effects
+├── Sounds/                   - All SFX
+│   └── *.wav                 - Impacts, footsteps, gunshots, ambient effects
+├── Textures/                 - All game textures
+│   ├── *.tex                 - World, object, and vehicle textures
+│   ├── *.bmp                 - Overlays for terrain and detail
+│   ├── Skins/, Trees/, LoQuality/ - Organized texture categories
+├── Tools/                    - Dev utilities
+│   ├── lightmaps/            - Generated light/shadow data
+│   ├── Scripts/              - MEL scripts
+│   ├── MayaExp.mll           - Maya plugin for export
+│   ├── LOD_CM_SCRIPT.mel     - Maya LOD export logic
+│   └── InitMayaExp.bat       - Batch launcher for Maya exporter
+├── Video/                    - Intro/branding videos
+│   └── *.avi                 - Startup animations and credits
+
+📄 Also Present in Root:
+├── TvsT.exe                  - Main game executable
+├── execution.log / .html     - Logs from last game run
+├── *.dll                     - Engine and support libraries
+├── usermsgs.log              - Additional log data (possibly crash reports)
+├── Uninstall.exe             - Game uninstaller
+├── EULA.rtf                  - End-user license agreement
+
+📌 Notes:
+- No `.loc` or `.inc` files were found in this or any TvT build.
+- All menu systems are script-driven inside `Scripts/Menus/`.
+
+Quick final technical summary Mission naming and structure
+
+Item	What matters
+Mission Script Class Name	CMurkz2025Mission
+Strings Script Class Name	CMurkz2025Mission_Strings
+RSR block name	[MissionMurkz2025]
+MissionName inside RSR	Must exist
+MissionsMenu.script	Points to correct .rsr file
+
+https://chatgpt.com/share/68241c0f-8afc-8000-903e-3dd0b66e7316
+
+📜 How to Get a Mission Name into the Mission List in T-34 vs Tiger
+
+(confirmed working 29 April 2025)
+https://chatgpt.com/share/68241c0f-8afc-8000-903e-3dd0b66e7316
+1. Folder and Files Setup
+
+You must have:
+
+✅ Folder:
+/Missions/MyMission/YourMissionName/
+
+✅ Core Files inside that folder:
+
+    Mission.script
+
+    Content.script
+
+    YourMissionNameMission_Strings.script
+
+    (Optional): Terrain.script, Atmosphere.script, MissionTasks.script, etc.
+
+✅ RSR File placed inside /Resources/:
+
+    MissionYourMissionName.rsr
+
+2. Correct Class Naming
+
+✅ Mission script class must be:
+
+class CYourMissionNameMission extends CSPMission
+
+✅ Strings script class must be:
+
+class YourMissionNameMission_Strings
+
+✅ Example you just used:
+
+class CMurkz2025Mission extends CSPMission
+class Murkz2025Mission_Strings
+
+3. Mission.script Requirements
+
+✅ In your Mission.script, your ObjectivesText must point to the Strings class:
+
+static WString ObjectivesText = Murkz2025Mission_Strings::ObjectivesText;
+
+(NOT hardcoded directly anymore.)
+
+✅ Your constructor must correctly define mission type:
+
+void CMurkz2025Mission()
+{
+    CSPMission("CMurkz2025Mission", "Murkz2025Content");
+    ...
+}
+
+4. Mission Strings File Requirements
+
+✅ Your YourMissionNameMission_Strings.script must include:
+
+class Murkz2025Mission_Strings
+{
+  static WString MissionName = L"Forward Probe";
+  static WString ObjectivesText = L"Advance to the crossroads\nLocate enemy anti-tank positions\nEngage and destroy enemy forces\nReturn safely if possible";
+
+  static WString Objective01 = L"Advance to the crossroads";
+  static WString Objective02 = L"Locate enemy anti-tank positions";
+  static WString Objective03 = L"Engage and destroy enemy forces";
+  static WString Objective04 = L"Return safely if possible";
+}
+
+✅ CRITICAL:
+The line
+
+static WString MissionName = L"Forward Probe";
+
+must exist — THIS is what finally fixes the "TEXT" problem!
+5. RSR File Setup (in Resources)
+
+✅ Name the RSR file:
+
+MissionYourMissionName.rsr
+
+(e.g., MissionMurkz2025.rsr)
+
+✅ Inside the .rsr:
+
+[MissionMurkz2025]
+MissionName    = "Forward Probe"
+BriefingText   = "Your briefing text here"
+ObjectivesText = "Objective lines separated by \n"
+
+✅ Make sure the [MissionMurkz2025] block matches the filename.
+6. MissionsMenu.script Setup
+
+✅ You must add your mission entry into MissionsMenu.script.
+
+Example entry:
+
+{
+  "Resources/MissionMurkz2025.rsr",
+  new #MissionCSPData<CMurkz2025Mission>(),
+  0 // optional parameters like "campaign"
+},
+
+✅ This tells the game there’s a new mission available!
+7. Final Checkpoints Before Loading
+
+✅ .rsr filename, section name inside, and path must all match.
+
+✅ .rsr has MissionName, BriefingText, and ObjectivesText.
+
+✅ Mission.script and Strings.script classes correctly named and linked.
+
+✅ MissionsMenu.script properly includes the new mission.
+
+✅ Content (Content.script) points to correct objects and terrain.
+
+✅ All files in correct folders.
+✅ If all these are done, your mission name will 100% appear in the mission list.
+
+NO MORE "TEXT".
+⭐ Your Mission Load Pipeline Now
+
+    MissionsMenu.script → loads your .rsr
+
+    .rsr defines MissionName
+
+    Mission.script uses class name matching .rsr
+
+    Strings.script injects proper WString data
+
+    Menu displays clean mission name
+	
+	TvT Mission Folder Structure & Interconnectivity
+================================================
+
+📁 /Missions/
+  └── YourMissionName/
+      ├── Mission.script
+      ├── Content.script
+      ├── YourMissionNameMission_Strings.script
+      ├── (Optional) Terrain.script
+      ├── (Optional) Atmosphere.script
+      └── (Optional) MissionTasks.script
+
+Key File Roles
+--------------
+- Mission.script
+  • Defines mission logic and flow
+  • Class: CYourMissionNameMission extends CSPMission
+  • Constructor registers mission type and content folder
+
+- Content.script
+  • Lists actors, triggers, waypoints used in this mission
+
+- YourMissionNameMission_Strings.script
+  • Provides text constants:
+    - static WString MissionName
+    - static WString ObjectivesText
+    - static WString Objective01, Objective02, etc.
+
+Supporting Assets
+-----------------
+- /Resources/MissionYourMissionName.rsr
+  • Contains [MissionYourMissionName] block
+    - MissionName = "Your Title"
+    - BriefingText = "..."
+    - ObjectivesText = "Line1\nLine2"
+
+Registration
+------------
+- Scripts/Menus/MissionsMenu.script
+  • Add entry:
+    {
+      "Resources/MissionYourMissionName.rsr",
+      new #MissionCSPData<CYourMissionNameMission>(),
+      0
+    }
+
+Runtime Flow
+------------
+1. MissionsMenu.script loads .rsr and reads MissionName for menu display
+2. Selecting mission instantiates CYourMissionNameMission
+3. Mission.script uses Strings class for objectives and UI text
+4. Content.script spawns actors via Scripts/Units and Models/
+5. Resources (textures, sounds) are loaded as referenced by scripts/models
+
+Ensure:
+- Folder and filenames match class names
+- .rsr block name matches filename and class
+- MissionsMenu.script entry points to correct .rsr and class
+- All optional scripts in folder are included if referenced in Mission.script
+
+TVT Unified Build: Handover Summary
+
+Prepared for new assistant session or future self
+🗂 Current Lab Structure
+
+Located on: O:\TVT_Lab\
+
+├─ 00_ISO              ← Game installer + serial.txt
+├─ 01_VanillaClean     ← Clean stock install, verified boot
+├─ 02_MMP_Clean        ← Final MMP7 install, verified boot
+├─ 03_ZW_Clean         ← ZeeWolf final mod, verified boot
+├─ 04_Working          ← Active mod sandbox (cloned per session)
+├─ 05_Tools            ← Maya 5 plugin, Notepad++, batch files
+├─ 06_Backups          ← Zipped restore points (one per change)
+├─ 07_Logs             ← First-run execution logs (all builds)
+
+🔧 Utility Scripts (all working)
+
+    clone_from.bat — choose 1/2/3 to clone Vanilla/MMP/ZW into 04_Working
+
+    backup_now.bat — creates zipped snapshot of 04_Working into 06_Backups
+
+    save_log.bat — archives execution.log + .html to 07_Logs with timestamp
+
+    README_NEXT.md — tracks next task so Jeff can leave and return safely
+
+✅ Completed Milestones
+Task	Status
+Folder lab built and stable	✅
+Vanilla, MMP7, and ZW all installed and boot verified	✅
+Execution logs saved and archived per build	✅
+Asset types confirmed (no .rrf, no .fsd)	✅
+.tex and .rsr format fully understood (standard DDS, text maps)	✅
+Real .tex and .rsr crossmap generated from actual uploads	✅
+Confirmed .tex and .rsr files are safe to merge (dormant until called)	✅
+⚠️ Current Pause Point
+
+
+Jeff’s Expectations
+
+    💯 Accuracy (no guesswork or fake filenames)
+
+    ✅ Explicit folder paths
+
+    🧠 Context awareness of the real dev tools (Maya 5, DDS .tex)
+
+    🔄 Full rollback safety
+
+    🔇 Avoid filler tasks
+
+    💬 Help only when needed — not lectures
+	
+	TvT Mission Folder Structure & Interconnectivity
+================================================
+
+Each mission resides in its own folder under /Missions/ within the game root.
+
+Folder: /Missions/<CampaignName>/<MissionFolder>/
+  - <MissionFolder>.script            (e.g. Mission.script or DM1.script)
+    • Main mission logic class (class C<CampaignMission> extends CSPMission)
+  - Content.script                    (generic name for content definitions)
+    • Defines actors, groups, triggers used in this mission
+  - <MissionFolder>Strings.script     (e.g. MissionC2M1Strings.script)
+    • Provides WString fields:
+      - MissionName = L"<Display Title>"
+      - ObjectivesText = L"..."
+      - Objective01, Objective02, etc.
+  - MissionTasks.script               (optional: task definitions)
+  - PositionWatchers.script           (optional: position-based triggers)
+  - WorldMatrices.script              (optional: coordinate transforms)
+  - C<CampaignMission>LensFlare.script (optional: lens flare config)
+  - Atmosphere.script                 (optional: atmosphere/weather settings)
+  - Terrain.script                    (optional: terrain settings)
+  
+Map & Visual Assets:
+  - *.tex (e.g. forest_c2m1.tex, ind_c2m1.tex)      • Terrain and prop textures
+  - *.raw (e.g. hmap.raw, hwater.raw)               • Raw heightmaps for terrain and water
+  - *.bmp (e.g. micro_C2M1.bmp, RouterZone_c2m1.bmp, TerrainZone_c2m1.bmp)
+                                                    • Mini‑map and zone overlays
+
+Version Control File:
+  - vssver.scc                           • Source‑control metadata
+
+Interconnectivity:
+1. MissionsMenu.script (in Scripts/Menus/) lists available missions by referencing the .rsr in /Resources/.
+2. Selecting a mission loads its <MissionFolder>.script and Content.script.
+3. <MissionFolder>Strings.script supplies localized text to Mission.script.
+4. Content.script spawns models (from /Models/), uses textures (/Textures/ and /Resources/), and plays sounds (/Sounds/).
+5. Optional scripts (Tasks, PositionWatchers, etc.) enable mission-specific behaviors.
+6. .tex, .raw, and .bmp files define terrain, minimap, and environmental visuals used by scripts.
+
+Ensure:
+- Folder name and <MissionFolder> prefix matches in script class names and Strings file.
+- All referenced assets exist in their respective folders.
+- Campaign hierarchy (/Missions/<Campaign>/<Mission>/) aligns with MissionsMenu configuration.
+
+Mission Integration Findings for T-34 vs Tiger
+==============================================
+
+Required Components:
+--------------------
+1. Mission Folder:
+   Path: /Missions/<Campaign>/<MissionName>/
+   - Mission.script
+     • Class: C<MissionName>Mission extends CSPMission
+   - Content.script
+     • Defines actors, triggers, waypoints
+   - <MissionName>Mission_Strings.script
+     • static WString MissionName, ObjectivesText, Objective01...
+   - Optional scripts: Terrain.script, Atmosphere.script, MissionTasks.script, etc.
+
+2. RSR File:
+   Path: /Resources/Mission<MissionName>.rsr
+   - Block: [Mission<MissionName>]
+     • MissionName    = "Display Title"
+     • BriefingText   = "..."
+     • ObjectivesText = "Line1\nLine2"
+
+3. Menu Registration:
+   File: /Scripts/Menus/MissionsMenu.script
+   Entry:
+     {
+       "Resources/Mission<MissionName>.rsr",
+       new #MissionCSPData<C<MissionName>Mission>(),
+       0
+     }
+
+Optional / Editor UI:
+---------------------
+- Editor scripts (Scripts/Editor/*) and MenuConfig.script are only for mission-building tools, not required for loading.
+
+Key Validation Checks:
+----------------------
+- RSR block name matches file and class prefix (Mission<MissionName>).
+- Class names inside Mission.script and Strings.script exactly match C<MissionName>Mission and <MissionName>Mission_Strings.
+- MissionsMenu entry uses correct, case-sensitive paths and class name.
+- All referenced assets (models, textures, sounds) exist in their respective folders.
+
+Result:
+-------
+With these components in place and validated, the custom mission will appear in the game menu with its proper title instead of 'TEXT'.
+- Some script folders may contain vssver.scc files (source‐control metadata); these are optional and not required for game/runtime loading.
+
+https://chatgpt.com/share/68242d93-4b60-8000-89bb-886a15c0da48
+
+Known Gaps & Open Challenges
+
+*(Last Updated: 2025-05-14)*
+1. Reverse-Engineering the .exe
+
+Goal: Understand core engine behaviors (e.g., rendering, physics) to fix hardcoded limits or crashes.
+Current Barrier: No AI tool yet can reliably analyze TvT’s compiled binaries (*.exe, .dlls) or suggest actionable patches.
+Ask for AI Help:
+
+    "Can you parse execution.log for patterns in crash addresses or memory errors?"
+
+    "How might we infer engine rules from .script file interactions?"
+
+2. Unused/Undocumented File Formats
+
+Examples: .ms2 (models), .fxo (shaders), .anim (animations).
+Ask for AI Help:
+
+    "Here’s a hex dump of humans.anim—does this resemble any known animation formats?"
+
+    "Can we correlate .ms2 headers with Maya 5 export templates?"
+
+3. Multiplayer Restoration, FIXED BY USING MMP7 AS THE BASE
+
+
+
+4. Dynamic Asset Loading
+
+Problem: TvT loads all assets at startup, causing long load times.
+Ask for AI Help:
+
+    "Could we hack in lazy-loading by modifying .script file references?"
+
+5. Community Tools
+
+Need: A modernized mission editor or debug GUI.
+Ask for AI Help:
+
+    "Generate a Python script to validate .rsr/.script linkages automatically."
+
+Section 6: Game Configuration & Registry Settings
+
+"T-34 vs Tiger" stores its primary configuration settings within the Windows Registry, typically located at the path 
+`HKEY_USERS\[USER_SID]\Software\G5 Software\T34` (where `[USER_SID]` is the specific user's Security Identifier).
+
+A detailed analysis of these registry entries reveals a significant number of settings that appear to be directly inherited from its predecessor, 
+"Whirlwinds over Vietnam" (WoV). This includes many parameters clearly specific to aviation (e.g., 'WingmanMenuStyle', 'DynamicLift', 
+'RetreatingBladeStallMode', 'FlaterMode'), which strongly substantiates the game's WoV lineage and explains some of its underlying 
+architecture and potential quirks.
+
+The registry controls a comprehensive array of options, including:
+*   Video & Graphics: Screen resolution, color depth, refresh rate, terrain detail, water detail, lighting models, shadow quality, anti-aliasing, 
+and bloom.
+*   Audio: Sound volume, music volume, and EAX support.
+*   Controls & Input: Mouse/joystick sensitivity, dead zones, axis inversion, force feedback, and detailed axis interpolation curves.
+*   Gameplay & Difficulty: Difficulty level, targeting modes, unlimited fuel/ammo flags, GodMode, and various physics/realism toggles 
+(many seemingly WoV-specific).
+*   Network Configuration: Player name, vehicle type, session name, and limits for multiplayer matches.
+*   Campaign Progress: Tracking for various campaigns.
+*   Debugging Remnants: Keys related to a "J5 Debugger" and VSS (Visual SourceSafe) integration, indicating development tools.
+
+Understanding these registry settings is valuable for fine-tuning the game beyond what is available in the in-game menus, troubleshooting 
+configuration-specific issues, and potentially enabling hidden features. A detailed example dump of these registry settings is maintained 
+for reference within the 'panzersim' GitHub repository, typically located at a path like `docs/technical_references/TvT_Registry_Settings_Example.reg` 
+(or `.txt`). This allows for deeper insight into the game's configurable parameters.
+
+v1.3 (2025-05-14): Added Registry Settings
+v1.2 (2025-05-14): Added Known gaps
+v1.1 (2025-05-14): Added mission integration flowchart.  
+v1.0 (2025-05-10): Initial draft.  
