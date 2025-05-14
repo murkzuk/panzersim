@@ -1,3 +1,0 @@
-select -all -hi;
-polyCleanupArgList 3 { "1","2","0","0","0","0","0","1","0","1e-005","0","1e-005","0","1e-005","0","-1","0" };
-polyTriangulate -ch 1;
